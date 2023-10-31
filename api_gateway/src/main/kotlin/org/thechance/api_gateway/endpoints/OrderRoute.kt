@@ -7,6 +7,8 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import org.koin.ktor.ext.inject
+import org.thechance.api_gateway.data.model.notification.NotificationDto
+import org.thechance.api_gateway.data.service.NotificationService
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.endpoints.utils.WebSocketServerHandler
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
@@ -19,6 +21,7 @@ fun Route.orderRoutes() {
 
     val webSocketServerHandler: WebSocketServerHandler by inject()
     val restaurantService: RestaurantService by inject()
+    val notificationService: NotificationService by inject()
 
     authenticateWithRole(Role.RESTAURANT_OWNER) {
 
@@ -81,6 +84,8 @@ fun Route.orderRoutes() {
             val language = extractLocalizationHeader()
             val result = restaurantService.updateOrderStatus(orderId, language)
             respondWithResult(HttpStatusCode.OK, result)
+            val orderNotification = NotificationDto(result.restaurantName!!, "your order is updated")
+            notificationService.sendNotificationToUser(result.userId!!, orderNotification, language)
         }
 
         put("order/cancel/{orderId}") {
@@ -88,6 +93,8 @@ fun Route.orderRoutes() {
             val language = extractLocalizationHeader()
             val result = restaurantService.cancelOrder(orderId, language)
             respondWithResult(HttpStatusCode.OK, result)
+            val orderNotification = NotificationDto(result.restaurantName!!, "your order is Canceled")
+            notificationService.sendNotificationToUser(result.userId!!, orderNotification, language)
         }
 
     }

@@ -45,9 +45,6 @@ fun Route.notificationRoutes() {
         post("/send/user/{userId}") {
             val userId = call.parameters.requireNotEmpty("userId")
             val receivedData = call.receive<NotificationDto>()
-            println("AAAAA : UserId = $userId")
-            println("AAAAA : title = ${receivedData.title}")
-            println("AAAAA : body = ${receivedData.body}")
             val result = notificationManagement.sendNotificationToUser(
                 userId,
                 receivedData.title,

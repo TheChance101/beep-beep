@@ -43,7 +43,6 @@ class PushNotificationGateway(private val firebaseMessaging: FirebaseMessaging) 
                 .setToken(it)
                 .build()
         })
-        println(response.responses.map { it.isSuccessful })
         return response.failureCount == 0
     }
 
