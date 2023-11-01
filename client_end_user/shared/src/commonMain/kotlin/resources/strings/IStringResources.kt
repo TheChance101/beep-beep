@@ -113,4 +113,5 @@ interface IStringResources {
     val whereToGo: String
     val searchDestinationHint: String
     val setDestination: String
+    val searchDestination:String
 }
