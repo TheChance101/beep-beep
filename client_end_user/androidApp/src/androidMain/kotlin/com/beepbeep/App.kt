@@ -2,6 +2,7 @@ package com.beepbeep
 
 import android.app.Application
 import com.beepbeep.di.fcmNotificationModule
+import com.beepbeep.di.firebaseMessagingImplementationModule
 import com.beepbeep.di.firebaseMessagingModule
 import com.beepbeep.di.locationDataSourceModule
 import com.beepbeep.di.locationServiceModule
@@ -24,6 +25,7 @@ class App : Application() {
                 locationDataSourceModule,
                 fcmNotificationModule,
                 firebaseMessagingModule,
+                firebaseMessagingImplementationModule
             )
         }
     }

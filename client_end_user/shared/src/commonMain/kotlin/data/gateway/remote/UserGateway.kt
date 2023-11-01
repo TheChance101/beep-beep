@@ -27,11 +27,12 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.Parameters
 import io.ktor.util.InternalAPI
 import kotlinx.serialization.json.Json
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class UserGateway(
-    client: HttpClient,
-    private val firebaseService: IFireBaseMessageService,
-) : BaseGateway(client), IUserGateway {
+class UserGateway(client: HttpClient) : BaseGateway(client), IUserGateway , KoinComponent {
+
+    private val firebaseService: IFireBaseMessageService by inject()
 
 
     @OptIn(InternalAPI::class)

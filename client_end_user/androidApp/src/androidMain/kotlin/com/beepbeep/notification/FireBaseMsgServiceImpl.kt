@@ -2,6 +2,7 @@ package com.beepbeep.notification
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
@@ -14,9 +15,10 @@ import data.gateway.service.IFireBaseMessageService
 import kotlinx.coroutines.tasks.await
 import org.thechance.beepbeep.R
 
-class FireBaseMsgServiceImpl() : FirebaseMessagingService(), IFireBaseMessageService {
-    private val firebaseMessaging = FirebaseMessaging.getInstance()
-    private val clickPendingIntent = ServiceLocator.getFCMNotification()?.getClickPendingIntent()
+class FireBaseMsgServiceImpl(
+    private val firebaseMessaging: FirebaseMessaging,
+    private val clickPendingIntent: PendingIntent?,
+) : FirebaseMessagingService(), IFireBaseMessageService {
 
     override fun onNewToken(token: String) {
         Log.d("TAG", "Refreshed token: $token")
