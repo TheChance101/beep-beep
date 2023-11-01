@@ -37,7 +37,6 @@ import org.thechance.common.presentation.composables.table.TotalItemsIndicator
 import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.kms
 import java.awt.Dimension
-import java.io.File
 import kotlin.reflect.KFunction1
 
 class RestaurantScreen :
@@ -420,25 +419,15 @@ class RestaurantScreen :
                         Image(
                             painter = painterResource(Resources.Drawable.addImage),
                             contentDescription = null,
-                            modifier = Modifier
-                                .size(32.dp)
-                                .align(Alignment.Center)
+                            modifier = Modifier.size(32.dp).align(Alignment.Center)
                                 .noRipple(listener::onClickImagePicker),
-                            colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
+                            colorFilter = ColorFilter.tint(color = if(state.cuisineImage.isNotEmpty()) Theme.colors.primary else Theme.colors.divider )
                         )
                         FilePicker(
                             state.isImagePickerVisible,
-                            fileExtensions = listOf("jpg", "png"),
-                            onFileSelected = { file ->
-                                file?.path ?: ""
-                                listener.onSelectedImage(file?.path?:"" )
-
-//                                if (file != null){
-//                                    listener.onSelectedImage(file.platformFile as File)
-//                                }else{
-//                                    listener.onSelectedImage(File(""))
-//                                }
-                            })
+                            fileExtensions = listOf("jpg", "png", "jpeg"),
+                            onFileSelected = { type -> listener.onSelectedImage(type?.platformFile) }
+                        )
                     }
                 }
 

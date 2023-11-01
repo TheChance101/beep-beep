@@ -5,17 +5,14 @@ import io.ktor.client.request.delete
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.get
-import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import io.ktor.http.appendPathSegments
 import io.ktor.util.InternalAPI
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.thechance.common.data.gateway.remote.mapper.getPriceLevelOrNull
 import org.thechance.common.data.gateway.remote.mapper.getRatingOrNull
@@ -56,22 +53,21 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
 
     override suspend fun createCuisine(cuisineName: String, image: ByteArray): Cuisine {
         val cuisineDto = Cuisine(name = cuisineName, image = "", id = "")
-        println("image : ${image.size}")
-        println("encodeToString : ${Json.encodeToString(CuisineDto.serializer(), cuisineDto.toDto())}")
         return tryToExecute<ServerResponse<CuisineDto>>(client) {
             post(urlString = "/cuisine") {
-                  setBody(
-                      MultiPartFormDataContent(
-                          formData {
-                              header("Content-Type", ContentType.MultiPart.FormData.toString())
-                              append("data", Json.encodeToString(CuisineDto.serializer(), cuisineDto.toDto()))
-                              append("image", image)
-                          },
-                          contentType = ContentType.MultiPart.FormData,
-                      )
-                  )
+                setBody(MultiPartFormDataContent(
+                    formData {
+                        append("data", Json.encodeToString(CuisineDto.serializer(), cuisineDto.toDto()))
+                        append("image", image, Headers.build {
+                                append(HttpHeaders.ContentType, "image/png/jpg/jpeg")
+                                append(HttpHeaders.ContentDisposition, "form-data; name=image; filename=image.png")
+                            }
+                        )
+                    }
+                ))
             }
-        }.value?.toEntity() ?: throw UnknownError()    }
+        }.value?.toEntity() ?: throw UnknownError()
+    }
 
     override suspend fun deleteCuisine(cuisineId: String) {
         tryToExecute<ServerResponse<Boolean>>(client) {

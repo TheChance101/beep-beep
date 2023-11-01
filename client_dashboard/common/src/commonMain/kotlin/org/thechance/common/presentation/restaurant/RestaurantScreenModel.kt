@@ -492,24 +492,20 @@ class RestaurantScreenModel(
         }
     }
 
-    override fun onSelectedImage(image: String) {
+    override fun onSelectedImage(image: Any?) {
+        val imageFile = image?.let {  it as File }
         state.value.restaurantAddCuisineDialogUiState.run {
-            if(cuisineName.isNotEmpty() && imagePickerUri.isNotEmpty()){
+            if(cuisineName.isNotEmpty() && this.cuisineImage.isNotEmpty()){
                 updateState { it.copy(restaurantAddCuisineDialogUiState =
                 it.restaurantAddCuisineDialogUiState.copy(isAddCuisineEnabled = true))
                 }
             }
         }
-        updateState {
-            it.copy(
-                restaurantAddCuisineDialogUiState =
-                it.restaurantAddCuisineDialogUiState.copy(
-                    isImagePickerVisible = false,
-                    imagePickerUri =  image.byteInputStream().readAllBytes()
-                )
-            )
+        updateState { it.copy(restaurantAddCuisineDialogUiState =
+        it.restaurantAddCuisineDialogUiState.copy(
+            isImagePickerVisible = false, cuisineImage =  imageFile?.readBytes()?: byteArrayOf())
+        )
         }
-        println("onSelectedImage ${image.byteInputStream().readAllBytes()}")
     }
 
 
@@ -518,7 +514,7 @@ class RestaurantScreenModel(
         updateState {
             it.copy(
                     restaurantAddCuisineDialogUiState =
-                    it.restaurantAddCuisineDialogUiState.copy(isVisible = false, cuisineName = "")
+                    it.restaurantAddCuisineDialogUiState.copy(isVisible = false, cuisineName = "", cuisineImage = byteArrayOf())
             )
         }
     }
@@ -527,7 +523,7 @@ class RestaurantScreenModel(
         tryToExecute(
             {
                 state.value.restaurantAddCuisineDialogUiState.run {
-                    mangeCuisines.createCuisine(cuisineName, imagePickerUri)
+                    mangeCuisines.createCuisine(cuisineName, cuisineImage)
                 }
             },
             ::onCreateCuisinesSuccessfully,
@@ -575,7 +571,7 @@ class RestaurantScreenModel(
 
     override fun onChangeCuisineName(cuisineName: String) {
         state.value.restaurantAddCuisineDialogUiState.run {
-            if(cuisineName.isNotEmpty() && imagePickerUri.isNotEmpty()){
+            if(cuisineName.isNotEmpty() && cuisineImage.isNotEmpty()){
                 updateState { it.copy(restaurantAddCuisineDialogUiState =
                 it.restaurantAddCuisineDialogUiState.copy(isAddCuisineEnabled = true))
                 }

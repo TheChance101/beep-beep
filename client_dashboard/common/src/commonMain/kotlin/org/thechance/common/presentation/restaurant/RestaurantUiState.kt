@@ -119,7 +119,7 @@ data class RestaurantAddCuisineDialogUiState(
     val cuisineName: String = "",
     val isAddCuisineEnabled: Boolean = false,
     val isImagePickerVisible: Boolean = false,
-    val imagePickerUri: ByteArray= byteArrayOf(),
+    val cuisineImage: ByteArray= byteArrayOf(),
     val cuisines: List<CuisineUiState> = emptyList(),
     val cuisineNameError: ErrorWrapper = ErrorWrapper(),
 )
