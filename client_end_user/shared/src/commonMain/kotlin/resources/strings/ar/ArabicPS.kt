@@ -115,4 +115,5 @@ data class ArabicPS(
     override val whereToGo: String = "رايح فين؟",
     override val searchDestinationHint: String = "العنوان",
     override val setDestination: String = "ضع المكان ",
+    override val searchDestination: String = "ابحث عن مكان",
     ) : IStringResources

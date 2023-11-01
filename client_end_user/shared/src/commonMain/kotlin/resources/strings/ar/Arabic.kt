@@ -115,4 +115,5 @@ data class Arabic(
     override val whereToGo: String = "الى اين تذهب؟",
     override val searchDestinationHint: String = "العنوان",
     override val setDestination: String = "ضع المكان ",
-    ) : IStringResources
+    override val searchDestination: String = "ابحث عن مكان",
+) : IStringResources
