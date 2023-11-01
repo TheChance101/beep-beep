@@ -10,6 +10,7 @@ import org.thechance.common.domain.usecase.IManageRestaurantUseCase
 import org.thechance.common.domain.usecase.IMangeCuisinesUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
+import java.io.File
 
 
 class RestaurantScreenModel(
@@ -481,6 +482,37 @@ class RestaurantScreenModel(
         }
     }
 
+    override fun onClickImagePicker() {
+        updateState {
+            it.copy(
+                restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
+                    isImagePickerVisible = true
+                )
+            )
+        }
+    }
+
+    override fun onSelectedImage(image: String) {
+        state.value.restaurantAddCuisineDialogUiState.run {
+            if(cuisineName.isNotEmpty() && imagePickerUri.isNotEmpty()){
+                updateState { it.copy(restaurantAddCuisineDialogUiState =
+                it.restaurantAddCuisineDialogUiState.copy(isAddCuisineEnabled = true))
+                }
+            }
+        }
+        updateState {
+            it.copy(
+                restaurantAddCuisineDialogUiState =
+                it.restaurantAddCuisineDialogUiState.copy(
+                    isImagePickerVisible = false,
+                    imagePickerUri =  image.byteInputStream().readAllBytes()
+                )
+            )
+        }
+        println("onSelectedImage ${image.byteInputStream().readAllBytes()}")
+    }
+
+
     override fun onCloseAddCuisineDialog() {
         clearCuisineErrorState()
         updateState {
@@ -493,9 +525,13 @@ class RestaurantScreenModel(
 
     override fun onClickCreateCuisine() {
         tryToExecute(
-                { mangeCuisines.createCuisine(state.value.restaurantAddCuisineDialogUiState.cuisineName) },
-                ::onCreateCuisinesSuccessfully,
-                ::onError
+            {
+                state.value.restaurantAddCuisineDialogUiState.run {
+                    mangeCuisines.createCuisine(cuisineName, imagePickerUri)
+                }
+            },
+            ::onCreateCuisinesSuccessfully,
+            ::onError
         )
     }
 
@@ -538,6 +574,13 @@ class RestaurantScreenModel(
     }
 
     override fun onChangeCuisineName(cuisineName: String) {
+        state.value.restaurantAddCuisineDialogUiState.run {
+            if(cuisineName.isNotEmpty() && imagePickerUri.isNotEmpty()){
+                updateState { it.copy(restaurantAddCuisineDialogUiState =
+                it.restaurantAddCuisineDialogUiState.copy(isAddCuisineEnabled = true))
+                }
+            }
+        }
         clearCuisineErrorState()
         updateState {
             it.copy(

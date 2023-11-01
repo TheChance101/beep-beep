@@ -1,6 +1,7 @@
 package org.thechance.common.presentation.restaurant
 
 import org.thechance.common.presentation.base.BaseInteractionListener
+import java.io.File
 
 interface RestaurantInteractionListener : BaseInteractionListener, AddCuisineInteractionListener,
     AddRestaurantInteractionListener, FilterRestaurantsInteractionListener {
@@ -34,6 +35,8 @@ interface RestaurantInteractionListener : BaseInteractionListener, AddCuisineInt
 interface AddCuisineInteractionListener {
   
     fun onClickAddCuisine()
+    fun onClickImagePicker()
+    fun onSelectedImage(image: String)
 
     fun onClickDeleteCuisine(cuisineId: String)
 
