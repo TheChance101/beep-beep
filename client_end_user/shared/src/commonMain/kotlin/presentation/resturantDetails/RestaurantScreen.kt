@@ -74,6 +74,7 @@ data class RestaurantScreen(val restaurantId: String) :
                         MealBottomSheet(
                             modifier = Modifier.padding(getNavigationBarPadding()),
                             meal = state.selectedMeal,
+                            isLoading = state.isAddToCartLoading,
                             onAddToCart = listener::onAddToCart,
                             onDismissSheet = listener::onDismissSheet,
                             onIncreaseQuantity = listener::onIncreaseMealQuantity,
@@ -121,6 +122,7 @@ data class RestaurantScreen(val restaurantId: String) :
                             style = Theme.typography.headline,
                             color = Theme.colors.contentPrimary
                         )
+
                         Image(
                             painter = painterResource(if (state.isFavourite) Resources.images.heartFilled else Resources.images.heart),
                             contentDescription = null,
@@ -221,9 +223,14 @@ data class RestaurantScreen(val restaurantId: String) :
             }
 
             ToastMessage(
-                state = state.showToast,
-                message = Resources.strings.mealAddedToYourCart,
                 modifier = Modifier.align(Alignment.BottomCenter)
+                    .padding(getNavigationBarPadding()),
+                state = state.showToast,
+                message = if (state.errorAddToCart == null) {
+                    Resources.strings.mealAddedToYourCart
+                } else {
+                    Resources.strings.mealFailedToAddInCart
+                },
             )
         }
     }

@@ -101,6 +101,7 @@ data class English(
     override val loginToAddToFavourite: String = "Please login to add",
     override val addToCart: String = "Add to cart",
     override val mealAddedToYourCart: String = "Meal added to your cart",
+    override val mealFailedToAddInCart: String = "error while add Meal to your cart",
     override val pleaseLogin: String = "Please log in to access your profile",
     override val message: String = "Message",
     override val supportTeam: String = "Support team",
@@ -111,4 +112,8 @@ data class English(
     override val orderInCooking: String = "Your meal in the oven.",
     override val orderInTheRoute: String = "Your food is on the route.",
     override val accessDeniedMessage: String = "To continue, Please access location permission",
-    ) : IStringResources
+    override val whereToGo: String = "Where to go?",
+    override val searchDestinationHint: String = "address",
+    override val setDestination: String = "Set destination ",
+    override val searchDestination: String = "Search for Destination"
+) : IStringResources

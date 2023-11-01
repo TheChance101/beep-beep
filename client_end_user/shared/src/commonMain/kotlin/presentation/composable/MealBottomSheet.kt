@@ -32,11 +32,12 @@ import resources.Resources
 @Composable
 fun MealBottomSheet(
     meal: MealUIState,
+    isLoading: Boolean = false,
     onDismissSheet: () -> Unit,
     onDecreaseQuantity: () -> Unit,
     onIncreaseQuantity: () -> Unit,
     onAddToCart: () -> Unit,
-    modifier: Modifier= Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Box(
@@ -97,6 +98,7 @@ fun MealBottomSheet(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 24.dp),
             title = Resources.strings.addToCart,
             onClick = onAddToCart,
+            isLoading = isLoading
         )
     }
 }

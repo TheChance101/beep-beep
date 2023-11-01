@@ -95,7 +95,7 @@ fun Route.restaurantRoutes() {
                 val multipartDto = receiveMultipart<RestaurantDto>(imageValidator)
                 val user = identityService.getUserByUsername(multipartDto.data.ownerUserName, language)
                 identityService.updateUserPermission(
-                    userId = user.id, permission = listOf(Role.RESTAURANT_OWNER), language
+                    userId = user.id, permission = listOf(user.permission, Role.RESTAURANT_OWNER), language
                 )
                 val imageUrl =
                     multipartDto.image?.let { image ->
