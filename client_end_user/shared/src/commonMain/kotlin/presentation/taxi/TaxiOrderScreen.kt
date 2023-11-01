@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
@@ -24,12 +25,16 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
+import presentation.cart.CartScreen
 import presentation.composable.BackButton
+import presentation.orderFoodTracking.OrderFoodTrackingUiEffect
 import presentation.orderFoodTracking.OrderFoodTrackingUiState
 import presentation.orderFoodTracking.composables.MapView
+import presentation.taxi.destinationSearch.SearchDestinationScreen
 import resources.Resources
 import util.getNavigationBarPadding
 import util.getStatusBarPadding
+import util.root
 
 class TaxiOrderScreen :
     BaseScreen<TaxiOrderScreenModel, TaxiOrderUiState, TaxiOrderUiEffect, TaxiOrderInteractionListener>() {
@@ -39,7 +44,10 @@ class TaxiOrderScreen :
     }
 
     override fun onEffect(effect: TaxiOrderUiEffect, navigator: Navigator) {
-        TODO("Not yet implemented")
+        when (effect) {
+            TaxiOrderUiEffect.NavigateBack -> navigator.pop()
+            TaxiOrderUiEffect.NavigateToSearch -> navigator.push(SearchDestinationScreen())
+        }
     }
 
     @Composable
@@ -98,13 +106,18 @@ class TaxiOrderScreen :
             )
 
             BpSimpleTextField(
-                state.query,
+                text = state.query,
                 hint = Resources.strings.searchDestinationHint,
                 hintColor = Theme.colors.contentSecondary,
-                onValueChange = listener::onSearchInputChanged,
-                onClick = {},
+                onValueChange = {},
+                onTrailingIconClick = listener::onSearchDestination,
+                onClick = listener::onSearchDestination,
                 leadingPainter = painterResource(Resources.images.searchOutlined),
-                modifier = Modifier.background(Theme.colors.background),
+                modifier = Modifier.onFocusChanged {
+                    if (it.hasFocus) {
+                        listener.onSearchDestination()
+                    }
+                }.background(Theme.colors.background),
             )
 
             BpButton(
