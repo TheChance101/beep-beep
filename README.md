@@ -30,10 +30,27 @@ Using beep beep as a project name describes how fast you can build with Kotlin, 
 
 <img width="940" alt="Screenshot 2023-11-02 at 1 14 40 PM" src="https://github.com/TheChance101/beep-beep/assets/34461597/d5d509e7-1adb-4fe5-9cf7-9dd550eb86f2">
 
+# BeepBeep (End-User) App
+> The Beep Beep end-user application is a Kmp mobile app for Android and iOS that allows users to order food and book taxis. It also has features for saving favorite restaurants and more.
+
+## Features
+- [x] Authentication (sign in and sign up)
+- [x] Personalized recommendations: The app uses the user's preferences to recommend cuisines, restaurants, and meals that they are likely to enjoy.
+- [x] Real-time order tracking: Users can track the status of their food orders and taxi rides in real-time.
+- [x] Users can order food from restaurants with just a few taps.
+- [x] Discavor restaurants/ meals: Users can browse all restaurants and their meals, and filter by cuisine to create their own order.
+- [x] Search restaurants/ meals: Users can search for restaurants and/or meals.
+- [x] Discounts and deals: users can see discounts and deals on restaurants.
+- [x] Favorite restaurants and cuisines: Users can save their favorite restaurants and cuisines to make it easy to order again in the future.
+- [x] Order history: Users can view their order history to keep track of their past orders and rides.
+- [x] Cart: Users can add, remove, or edit meals in their cart and then checkout.
+- [ ] Chat support: Users can contact customer support via chat for assistance with any issues they may have.
+- [ ] Book Taxi: Users can book taxis and track them.
+- [ ] Notifications: Users receive notifications about changes to their orders and taxi rides, as well as offers.
 
 ## Restaurant Management App
 
-Welcome to the Restaurant Management App, a versatile solution built with Compose Multiplatform for
+> Welcome to the Restaurant Management App, a versatile solution built with Compose Multiplatform for
 both Android and iOS users, including iPad and Android tablets. This powerful management tool
 empowers restaurant owners to streamline their menus and efficiently manage customer orders. With
 its user-friendly interface, it's the ideal choice for enhancing restaurant operations and ensuring
@@ -57,8 +74,7 @@ to a streamlined approach for managing meals and orders, all within a single app
 - [ ] Change order status (approve or cancel).
 
 ## Food Delivery App
-
-Introducing the Food Delivery app, a versatile platform that enables authorized delivery personnel
+> Introducing the Food Delivery app, a versatile platform that enables authorized delivery personnel
 to efficiently transport orders from restaurants to eager clients. Built with Compose Multiplatform,
 this app ensures a smooth and unified experience for both Android and iOS users.
 
@@ -75,30 +91,9 @@ this app ensures a smooth and unified experience for both Android and iOS users.
 - [ ] Update order status after acceptance in real-time.
 
 
-# EndUse Application
-> The Beep Beep end-user application is a Kmp mobile app for Android and iOS that allows users to order food and book taxis. It also has features for saving favorite restaurants and more.
-
-## Features
-- [x] Authentication (sign in and sign up)
-- [x] Personalized recommendations: The app uses the user's preferences to recommend cuisines, restaurants, and meals that they are likely to enjoy.
-- [x] Real-time order tracking: Users can track the status of their food orders and taxi rides in real-time.
-- [x] Users can order food from restaurants with just a few taps.
-- [x] Discavor restaurants/ meals: Users can browse all restaurants and their meals, and filter by cuisine to create their own order.
-- [x] Search restaurants/ meals: Users can search for restaurants and/or meals.
-- [x] Discounts and deals: users can see discounts and deals on restaurants.
-- [x] Favorite restaurants and cuisines: Users can save their favorite restaurants and cuisines to make it easy to order again in the future.
-- [x] Order history: Users can view their order history to keep track of their past orders and rides.
-- [x] Cart: Users can add, remove, or edit meals in their cart and then checkout.
-- [ ] Chat support: Users can contact customer support via chat for assistance with any issues they may have.
-- [ ] Book Taxi: Users can book taxis and track them.
-- [ ] Notifications: Users receive notifications about changes to their orders and taxi rides, as well as offers.
-
-
-
-
 ## Taxi App
 
-Introducing the Taxi Driver app, a comprehensive platform tailored for licensed taxi drivers who
+> Introducing the Taxi Driver app, a comprehensive platform tailored for licensed taxi drivers who
 have the authority to transport clients to their desired destinations. This app, compatible with
 both Android and iOS, equips drivers with the essential tools and capabilities needed to offer safe
 and reliable transportation services to passengers.
@@ -113,7 +108,7 @@ and reliable transportation services to passengers.
 - [ ] Show ride information and the live location of the taxi on the map.
 
 ## Support App
-is a desktop application designed for support agents to efficiently manage and respond to user support requests. This app enables support agents to provide assistance, manage support tickets, and engage in real-time chat with users.**
+> is a desktop application designed for support agents to efficiently manage and respond to user support requests. This app enables support agents to provide assistance, manage support tickets, and engage in real-time chat with users.**
 
 ### Features
 
