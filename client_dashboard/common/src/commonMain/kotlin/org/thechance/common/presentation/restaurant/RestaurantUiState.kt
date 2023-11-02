@@ -117,6 +117,9 @@ data class RestaurantFilterDropdownMenuUiState(
 data class RestaurantAddCuisineDialogUiState(
     val isVisible: Boolean = false,
     val cuisineName: String = "",
+    val isAddCuisineEnabled: Boolean = false,
+    val isImagePickerVisible: Boolean = false,
+    val cuisineImage: ByteArray= byteArrayOf(),
     val cuisines: List<CuisineUiState> = emptyList(),
     val cuisineNameError: ErrorWrapper = ErrorWrapper(),
 )

@@ -6,7 +6,8 @@ plugins {
     alias(libs.plugins.kotlinKsp)
     id("org.openjfx.javafxplugin") version "0.0.14"
     id("io.realm.kotlin") version "1.10.2"
-    kotlin("plugin.serialization") version "1.8.10"
+    kotlin("plugin.serialization") version "1.9.0"
+
 }
 
 group = "org.thechance"
@@ -24,7 +25,7 @@ kotlin {
                 api(libs.compose.runtime)
                 api(libs.compose.foundation)
                 api(libs.compose.material3)
-
+                implementation("com.darkrockstudios:mpfilepicker:2.1.0")
                 implementation(libs.voyager.navigator)
                 implementation(libs.voyager.bottomsheet.navigator)
                 implementation(libs.voyager.tab.navigator)
