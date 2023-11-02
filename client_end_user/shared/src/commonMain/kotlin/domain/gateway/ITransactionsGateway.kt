@@ -13,6 +13,8 @@ interface ITransactionsGateway {
     suspend fun getTripHistory(page: Int, limit: Int): PaginationItems<Trip>
     suspend fun getOrderHistoryGateway(page: Int, limit: Int): PaginationItems<FoodOrder>
     suspend fun getCart(): Cart
+    suspend fun addMealToCart(mealId: String, restaurantId: String, quantity: Int): Cart
+
     suspend fun orderNow(): Boolean
     suspend fun updateCart(cart: Cart)
     suspend fun getActiveTaxiTrips(): List<Trip>

@@ -102,6 +102,7 @@ data class Arabic(
     override val loginToAddToFavourite: String = "الرجاء تسجيل الدخول للاضافه",
     override val addToCart: String = "أضف إلى العربة",
     override val mealAddedToYourCart: String = "تمت إضافة الوجبة إلى عربة التسوق الخاصة بك",
+    override val mealFailedToAddInCart: String = "خطا اثناء الاضافه",
     override val message: String = "الرسالة",
     override val supportTeam: String = "فريق الدعم",
     override val sendMessageToStartLiveChat: String = "أرسل رسالة لتبدأ المحادثة!",
@@ -111,5 +112,8 @@ data class Arabic(
     override val orderInCooking: String = "جاري الطبخ",
     override val orderInTheRoute: String = "في الطريق",
     override val accessDeniedMessage: String = "يجب السماح اولاً بإمكانية الوصول للموقع",
-
-    ) : IStringResources
+    override val whereToGo: String = "الى اين تذهب؟",
+    override val searchDestinationHint: String = "العنوان",
+    override val setDestination: String = "ضع المكان ",
+    override val searchDestination: String = "ابحث عن مكان",
+) : IStringResources

@@ -16,7 +16,8 @@ data class RestaurantDto(
     val address: String? = null,
     val openingTime: String? = null,
     val closingTime: String? = null,
-    val location: LocationDto? = null
+    val location: LocationDto? = null,
+    val image: String? = null
 )
 
 

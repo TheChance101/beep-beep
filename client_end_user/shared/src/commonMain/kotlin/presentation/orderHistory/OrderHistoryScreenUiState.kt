@@ -4,6 +4,7 @@ import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import presentation.base.ErrorState
+import presentation.orderFoodTracking.LocationUiState
 
 data class OrderScreenUiState(
     val selectedType: OrderSelectType = OrderSelectType.MEALS,
@@ -36,8 +37,6 @@ data class TripHistoryUiState(
     val destination: LocationUiState = LocationUiState(),
     val price: Double = 0.0,
     val endDate: String = "",
-) {
-    data class LocationUiState(val latitude: Double = 0.0, val longitude: Double = 0.0)
-}
+)
 
 

@@ -16,7 +16,7 @@ fun Restaurant.toUIState() = RestaurantInfoUIState(
     address = address,
     rating = rate,
     priceLevel = priceLevel,
-    image = "",
+    image = image,
     discount = doubleToPercentage(1500.0),
     hasFreeDelivery = true,
     description = description,
@@ -37,6 +37,7 @@ fun doubleToPercentage(value: Double): Int {
 fun Meal.toUIState() = MealUIState(
     id = id,
     name = name,
+    restaurantId = restaurantId,
     restaurantName = restaurantName,
     price = price.value,
     totalPrice = price.value,
@@ -55,9 +56,9 @@ fun RestaurantInfoUIState.toRestaurant() = Restaurant(
     image = image,
     description = description,
     phone = "", // never used
-    openingTime = Time(12,0), // never used
-    closingTime = Time(23,0), // never used
-    location = Location(0.0,0.0), // never used
+    openingTime = Time(12, 0), // never used
+    closingTime = Time(23, 0), // never used
+    location = Location(0.0, 0.0), // never used
     ownerId = "", // never used
     ownerUsername = "" // never used
 )
@@ -65,5 +66,5 @@ fun RestaurantInfoUIState.toRestaurant() = Restaurant(
 fun List<Meal>.toUIState() = map(Meal::toUIState)
 
 fun Flow<PagingData<Meal>>.toUIState(): Flow<PagingData<MealUIState>> {
-    return this.map { pagingData -> pagingData.map { it.toUIState()} }
+    return this.map { pagingData -> pagingData.map { it.toUIState() } }
 }

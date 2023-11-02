@@ -7,4 +7,5 @@ import kotlinx.serialization.Serializable
 data class OfferDto(
     @SerialName("id") val id: String? = null,
     @SerialName("name") val name: String,
+    @SerialName("image") val image: String? = null,
 )

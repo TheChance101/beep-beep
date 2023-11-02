@@ -23,7 +23,8 @@ import resources.Resources
 fun OrderInfoCard(
     onClickOrderNow: () -> Unit,
     totalPrice: String,
-    modifier: Modifier = Modifier
+    isLoading: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier.fillMaxWidth().height(96.dp).background(Theme.colors.surface)
@@ -40,6 +41,7 @@ fun OrderInfoCard(
         }
         Spacer(modifier = Modifier.weight(1f))
         BpButton(
+            isLoading = isLoading,
             title = Resources.strings.orderNow,
             onClick = { onClickOrderNow() },
             modifier = Modifier.width(208.dp).padding(end = 16.dp, top = 16.dp)

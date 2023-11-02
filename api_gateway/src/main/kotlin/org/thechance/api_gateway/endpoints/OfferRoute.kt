@@ -6,6 +6,9 @@ import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
+import org.thechance.api_gateway.data.model.offer.OfferDto
+import org.thechance.api_gateway.data.model.restaurant.RestaurantDto
+import org.thechance.api_gateway.data.service.ImageService
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.endpoints.utils.*
 import org.thechance.api_gateway.util.Role
@@ -13,6 +16,8 @@ import org.thechance.api_gateway.util.Role
 fun Route.offerRoute() {
 
     val restaurantService: RestaurantService by inject()
+    val imageValidator: ImageValidator by inject()
+    val imageService: ImageService by inject()
 
     route("/offers") {
         get {
@@ -33,9 +38,15 @@ fun Route.offerRoute() {
         authenticateWithRole(Role.DASHBOARD_ADMIN) {
             post {
                 val language = extractLocalizationHeader()
-                val params = call.receiveParameters()
-                val offerTitle = params["offerTitle"]?.trim().toString()
-                val offer = restaurantService.addOffer(offerTitle, language)
+                val multipartDto = receiveMultipart<OfferDto>(imageValidator)
+                val imageUrl =
+                    multipartDto.image?.let { image ->
+                        imageService.uploadImage(image, multipartDto.data.name)
+                    }
+                val offerDto = multipartDto.data.copy(image = imageUrl)
+                val offer = restaurantService.addOffer(
+                    offerDto, language
+                )
                 respondWithResult(HttpStatusCode.Created, offer)
             }
 
