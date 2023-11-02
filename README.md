@@ -57,15 +57,12 @@ and reliable transportation services to passengers.
 - [ ] Accept or reject ride requests shown on the map.
 - [ ] Show ride information and the live location of the taxi on the map.
 
-* **Support App is a desktop application designed for support agents to efficiently manage and respond to user support requests. This app enables support agents to provide assistance, manage support tickets, and engage in real-time chat with users.**
-## Features
+## Support App is a desktop application designed for support agents to efficiently manage and respond to user support requests. This app enables support agents to provide assistance, manage support tickets, and engage in real-time chat with users.**
 
-- &#9745; **User Authentication**: Support agents can securely log in to their accounts.
+### Features
 
-- &#9745; **Ticket Management**: Support agents can view, prioritize, and address user support tickets.
-
-- &#9744; **Real-time Chat**: Support agents can engage in real-time chat sessions with users to address their issues.
-
-- &#9744; **Ticket Closure**: Support agents can mark tickets as completed when issues are resolved.
-
-- &#9745; **Logout**: Support agents can securely log out of the application.
+- [x] User Authentication**: Support agents can securely log in to their accounts.
+- [x] Ticket Management**: Support agents can view, prioritize, and address user support tickets.
+- [ ] Real-time Chat**: Support agents can engage in real-time chat sessions with users to address their issues.
+- [ ] Ticket Closure**: Support agents can mark tickets as completed when issues are resolved.
+- [x] Logout**: Support agents can securely log out of the application.
