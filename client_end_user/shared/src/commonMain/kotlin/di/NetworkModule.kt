@@ -30,13 +30,13 @@ val networkModule = module {
             defaultRequest {
                 header("Content-Type", "application/json")
 //                url("https://beep-beep-api-gateway-nap2u.ondigitalocean.app/")
-                url("http://10.0.2.2:8081/")
+                url("http://192.168.1.17:8081/")
             }
 
             install(WebSockets) {
                 contentConverter = KotlinxWebsocketSerializationConverter(Json)
 //                Url("ws://beep-beep-api-gateway-nap2u.ondigitalocean.app/")
-                Url("ws://192.168.1.10:8081/")
+                Url("ws://192.168.1.17:8081/")
             }
 
             install(ContentNegotiation) {

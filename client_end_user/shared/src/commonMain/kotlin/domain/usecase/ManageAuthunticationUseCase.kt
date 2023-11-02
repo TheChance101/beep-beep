@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface IManageAuthenticationUseCase {
     suspend fun createUser(account: Account): Boolean
-
     suspend fun loginUser(username: String, password: String, keepLoggedIn: Boolean): Boolean
     suspend fun logout()
     suspend fun getAccessToken(): Flow<String>

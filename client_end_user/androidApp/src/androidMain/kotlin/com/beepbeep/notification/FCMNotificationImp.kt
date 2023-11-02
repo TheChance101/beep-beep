@@ -11,7 +11,8 @@ class FCMNotificationImp (private val context: Context) : IFCMNotification {
     private val flag = PendingIntent.FLAG_IMMUTABLE
 
     companion object{
-        const val USER_NOTIFICATION_URI = "https://beep-beep-notification-cp5hp.ondigitalocean.app/"
+//        const val USER_NOTIFICATION_URI = "https://beep-beep-notification-cp5hp.ondigitalocean.app/"
+        const val USER_NOTIFICATION_URI = "http://192.168.1.17:8086/"
     }
 
     override fun getClickPendingIntent(): PendingIntent {
