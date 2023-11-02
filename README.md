@@ -58,16 +58,6 @@ and reliable transportation services to passengers.
 - [ ] Show ride information and the live location of the taxi on the map.
 
 * **Support App is a desktop application designed for support agents to efficiently manage and respond to user support requests. This app enables support agents to provide assistance, manage support tickets, and engage in real-time chat with users.**
-
-## Built With
-
-- **Jetpack Compose**: For modern and flexible UI design.
-- **Ktor**: For networking and real-time communication.
-- **Koin**: For dependency injection.
-- **Coroutines**: For asynchronous programming.
-- **StateFlow**: For reactive programming.
-- **Realm Database**: For efficient local data caching.
-
 ## Features
 
 - &#9745; **User Authentication**: Support agents can securely log in to their accounts.
