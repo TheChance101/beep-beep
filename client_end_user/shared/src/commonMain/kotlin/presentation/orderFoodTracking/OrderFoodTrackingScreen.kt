@@ -85,7 +85,6 @@ class OrderFoodTrackingScreen(private val orderId: String, private val tripId: S
                 )
             }
         }
-
     }
 
 

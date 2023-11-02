@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,8 +39,10 @@ import presentation.composable.ModalBottomSheetState
 import presentation.composable.modifier.noRippleEffect
 import presentation.composable.modifier.roundedBorderShape
 import presentation.resturantDetails.Composable.NeedToLoginSheet
+import presentation.resturantDetails.Composable.ToastMessage
 import presentation.resturantDetails.RestaurantScreen
 import resources.Resources
+import util.getNavigationBarPadding
 import util.getStatusBarPadding
 import util.root
 
@@ -61,28 +64,43 @@ class SearchScreen :
     @Composable
     override fun onRender(state: SearchUiState, listener: SearchInteractionListener) {
         val sheetState = remember { ModalBottomSheetState() }
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            BottomSheet(
+                sheetContent = {
+                    if (state.showMealSheet)
+                        MealBottomSheet(
+                            meal = state.selectedMeal,
+                            isLoading = state.isAddToCartLoading,
+                            onAddToCart = listener::onAddToCart,
+                            onDismissSheet = listener::onDismissSheet,
+                            onIncreaseQuantity = listener::onIncreaseMealQuantity,
+                            onDecreaseQuantity = listener::onDecreaseMealQuantity
+                        )
+                    if (state.showLoginSheet)
+                        NeedToLoginSheet(
+                            text = Resources.strings.loginToAddToFavourite,
+                            onClick = listener::onLoginClicked,
+                        )
+                },
+                sheetBackgroundColor = Theme.colors.background,
+                onBackGroundClicked = listener::onDismissSheet,
+                sheetState = sheetState,
+                content = { content(state, listener) }
+            )
 
-        BottomSheet(
-            sheetContent = {
-                if (state.showMealSheet)
-                    MealBottomSheet(
-                        meal = state.selectedMeal,
-                        onAddToCart = listener::onAddToCart,
-                        onDismissSheet = listener::onDismissSheet,
-                        onIncreaseQuantity = listener::onIncreaseMealQuantity,
-                        onDecreaseQuantity = listener::onDecreaseMealQuantity
-                    )
-                if (state.showLoginSheet)
-                    NeedToLoginSheet(
-                        text = Resources.strings.loginToAddToFavourite,
-                        onClick = listener::onLoginClicked,
-                    )
-            },
-            sheetBackgroundColor = Theme.colors.background,
-            onBackGroundClicked = listener::onDismissSheet,
-            sheetState = sheetState,
-            content = { content(state, listener) }
-        )
+            ToastMessage(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                state = state.showToast,
+                message = if (state.errorAddToCart == null) {
+                    Resources.strings.mealAddedToYourCart
+                } else {
+                    Resources.strings.mealFailedToAddInCart
+                },
+            )
+        }
 
         LaunchedEffect(state.showMealSheet, state.showLoginSheet) {
             if (state.showMealSheet || state.showLoginSheet) {
@@ -99,7 +117,7 @@ class SearchScreen :
     private fun content(
         state: SearchUiState,
         listener: SearchInteractionListener,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
     ) {
         LazyColumn(
             modifier = modifier

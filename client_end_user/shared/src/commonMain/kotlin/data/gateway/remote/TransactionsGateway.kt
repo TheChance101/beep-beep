@@ -9,6 +9,7 @@ import data.remote.model.CartDto
 import data.remote.model.DeliveryRideDto
 import data.remote.model.FoodOrderDto
 import data.remote.model.LocationDto
+import data.remote.model.MealCartDto
 import data.remote.model.PaginationResponse
 import data.remote.model.ServerResponse
 import data.remote.model.TaxiRideDto
@@ -25,6 +26,7 @@ import domain.utils.GeneralException
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.util.InternalAPI
 import kotlinx.coroutines.flow.Flow
@@ -66,8 +68,20 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
         }.value?.toEntity() ?: throw GeneralException.NotFoundException
     }
 
+    @OptIn(InternalAPI::class)
+    override suspend fun addMealToCart(
+        mealId: String, restaurantId: String, quantity: Int,
+    ): Cart {
+        val meal = MealCartDto(mealId = mealId, restaurantId = restaurantId, quantity = quantity)
+        return tryToExecute<ServerResponse<CartDto>> {
+            put("/cart") {
+                body = Json.encodeToString(MealCartDto.serializer(), meal)
+            }
+        }.value?.toEntity() ?: throw GeneralException.NotFoundException
+    }
+
     override suspend fun orderNow(): Boolean {
-        return tryToExecute<ServerResponse<FoodOrder>> { put("/cart/orderNow") }.value != null
+        return tryToExecute<ServerResponse<FoodOrderDto>> { post("/cart/orderNow") }.value != null
     }
 
     @OptIn(InternalAPI::class)

@@ -9,6 +9,8 @@ import domain.usecase.validation.IValidationUseCase
 import domain.utils.AuthorizationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
@@ -57,7 +59,7 @@ class ProfileScreenModel(
 
     private fun onCheckIfLoggedInSuccess(accessToken: Flow<String>) {
         coroutineScope.launch {
-            accessToken.collect { token ->
+            accessToken.distinctUntilChanged().collectLatest { token ->
                 if (token.isNotEmpty()) {
                     updateState { it.copy(isLoggedIn = true) }
                     getUserProfile()
@@ -99,7 +101,6 @@ class ProfileScreenModel(
 
     private fun onUpdateProfileError(errorState: ErrorState) {
         updateState { it.copy(isLoading = false) }
-        //TODO display toast failed to update
     }
 
     override fun onLogout() {

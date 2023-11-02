@@ -7,7 +7,7 @@ data class Order(
     val userId: String,
     val restaurantId: String,
     val restaurantName: String,
-    val restaurantImage: String,
+    val restaurantImage: String? = null,
     val meals: List<OrderedMeal>,
     val totalPrice: Double,
     val currency: String,

@@ -448,15 +448,14 @@ class RestaurantService(
 
 
     //region offer
-    suspend fun addOffer(offerTitle: String, languageCode: String) = client.tryToExecute<OfferDto>(
+    @OptIn(InternalAPI::class)
+    suspend fun addOffer(offer: OfferDto, languageCode: String) = client.tryToExecute<OfferDto>(
         APIs.RESTAURANT_API,
         attributes = attributes,
         setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
     ) {
         post("/category") {
-            formData {
-                parameter("categoryName", offerTitle)
-            }
+            body = Json.encodeToString(OfferDto.serializer(), offer)
         }
     }
 

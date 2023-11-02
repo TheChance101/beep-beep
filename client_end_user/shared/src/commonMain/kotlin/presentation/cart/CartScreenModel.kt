@@ -47,10 +47,12 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
     }
 
     private fun orderNow() {
-        tryToExecute(cartManagement::orderNow, ::onOrderNowSuccess, ::onError)
+        updateState { it.copy(isOrderNowLoading = true, orderError = null) }
+        tryToExecute(cartManagement::orderNow, ::onOrderNowSuccess, ::onOrderError)
     }
 
     private fun onOrderNowSuccess(success: Boolean) {
+        updateState { it.copy(isOrderNowLoading = false, orderError = null) }
         if (success) {
             sendNewEffect(CartUiEffect.NavigateUp)
         }
@@ -93,9 +95,10 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
     }
     // endregion
 
-    // region error handling
     private fun onError(error: ErrorState) {
-        println("error: $error")
     }
-    // endregion
+
+    private fun onOrderError(error: ErrorState) {
+        updateState { it.copy(isOrderNowLoading = false, orderError = error) }
+    }
 }

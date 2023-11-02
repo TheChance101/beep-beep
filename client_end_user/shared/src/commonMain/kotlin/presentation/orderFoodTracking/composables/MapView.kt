@@ -8,13 +8,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
 import com.mohamedrejeb.calf.ui.web.WebView
 import com.mohamedrejeb.calf.ui.web.rememberWebViewState
+import presentation.orderFoodTracking.LocationUiState
 import presentation.orderFoodTracking.OrderFoodTrackingUiState
+import presentation.orderHistory.TripHistoryUiState
 
 @Composable
 fun MapView(
     modifier: Modifier,
-    currentLocation: OrderFoodTrackingUiState.LocationUiState,
-    destination: OrderFoodTrackingUiState.LocationUiState?,
+    currentLocation: LocationUiState,
+    destination: LocationUiState?,
 ) {
     val state = rememberWebViewState(url = MAP_URL)
     state.settings.javaScriptEnabled = true

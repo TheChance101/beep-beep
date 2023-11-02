@@ -49,10 +49,6 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRes
         }.value?.toEntity() ?: throw GeneralException.NotFoundException
     }
 
-    override suspend fun getMostOrdersMeal(restaurantId: String): List<Meal> {
-        // todo: implement this when the backend is ready
-        return emptyList()
-    }
 
     override suspend fun getCuisinesWithMealsInRestaurant(restaurantId: String): List<Cuisine> {
         return tryToExecute<ServerResponse<List<CuisineDto>>> {

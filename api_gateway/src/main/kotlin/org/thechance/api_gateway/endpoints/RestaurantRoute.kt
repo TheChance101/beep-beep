@@ -6,16 +6,14 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
-import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.model.restaurant.RestaurantDto
 import org.thechance.api_gateway.data.service.IdentityService
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.data.model.restaurant.getRestaurantOptions
-import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
-import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
-import org.thechance.api_gateway.endpoints.utils.respondWithResult
+import org.thechance.api_gateway.data.service.ImageService
+import org.thechance.api_gateway.endpoints.utils.*
 import org.thechance.api_gateway.util.Claim.USER_ID
 import org.thechance.api_gateway.util.Role
 
@@ -23,6 +21,8 @@ fun Route.restaurantRoutes() {
 
     val restaurantService: RestaurantService by inject()
     val identityService: IdentityService by inject()
+    val imageValidator: ImageValidator by inject()
+    val imageService: ImageService by inject()
 
     route("/restaurants") {
 
@@ -92,12 +92,20 @@ fun Route.restaurantRoutes() {
         authenticateWithRole(Role.DASHBOARD_ADMIN) {
             post {
                 val language = extractLocalizationHeader()
-                val restaurantDto = call.receive<RestaurantDto>()
-                val user = identityService.getUserByUsername(restaurantDto.ownerUserName, language)
+                val multipartDto = receiveMultipart<RestaurantDto>(imageValidator)
+                val user = identityService.getUserByUsername(multipartDto.data.ownerUserName, language)
                 identityService.updateUserPermission(
-                    userId = user.id, permission = listOf(Role.RESTAURANT_OWNER), language
+                    userId = user.id, permission = listOf(user.permission, Role.RESTAURANT_OWNER), language
                 )
-                val newRestaurant = restaurantService.addRestaurant(restaurantDto.copy(ownerId = user.id), language)
+                val imageUrl =
+                    multipartDto.image?.let { image ->
+                        imageService.uploadImage(image, multipartDto.data.name ?: "null")
+                    }
+                val newRestaurant = restaurantService.addRestaurant(
+                    multipartDto.data.copy(
+                        ownerId = user.id, restaurantImage = imageUrl
+                    ), language
+                )
                 respondWithResult(HttpStatusCode.Created, newRestaurant)
             }
 
