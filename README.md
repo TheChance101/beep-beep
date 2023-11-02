@@ -48,6 +48,35 @@ Using beep beep as a project name describes how fast you can build with Kotlin, 
 - [ ] Book Taxi: Users can book taxis and track them.
 - [ ] Notifications: Users receive notifications about changes to their orders and taxi rides, as well as offers.
 
+
+## Admin Dashboard App
+
+> The Admin Dashboard, powered by Compose Multiplatform, provides a user-friendly interface for 
+effortless management of restaurants, users, and taxi services. This versatile application enables 
+administrators to easily handle orders, activate or deactivate user accounts, restaurants, and taxi
+drivers based on customer requests. It runs directly from your desktop, compatible with Mac, Linux,
+and Windows, ensuring convenient access across platforms.
+
+### Features
+- [x] Authentication (sign in)
+- Overview Interface:
+    - [ ] Provides statistics on registered restaurants, taxi services, and users
+- Restaurant Management:
+    - [x]  Add, modify, or delete restaurant details.
+    - [x]  Manage offers and cuisines for easy searching.
+    - [x]   Search by restaurant name, price level, or rating.
+
+- Taxi Management:
+    - [x]  Add, edit, or delete taxi services.
+    - [x]  Search by user name, car color, seat count, or driver availability.
+- User Management:
+    - [x]  Define user permissions and roles.
+    - [x]  Disable user accounts when needed.
+    - [x]  Search for users using specific filters.
+- Advanced Features:
+    - [x] Supports Dark and Light Themes for UI customization.
+    - [x] Multilingual support for Arabic and English, including regional dialects.
+
 ## Restaurant Management App
 
 > Welcome to the Restaurant Management App, a versatile solution built with Compose Multiplatform for
@@ -117,6 +146,17 @@ and reliable transportation services to passengers.
 - [ ] Real-time Chat: Support agents can engage in real-time chat sessions with users to address their issues.
 - [ ] Ticket Closure: Support agents can mark tickets as completed when issues are resolved.
 - [x] Logout: Support agents can securely log out of the application.
+
+### Tech stack
+- [voyager ](https://github.com/adrielcafe/voyager)
+- [realm](https://github.com/realm/realm-kotlin)
+- [kotlin datetime](https://github.com/Kotlin/kotlinx-datetime)
+- [MVVM](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel)
+- [AAY Chart](https://github.com/TheChance101/AAY-chart)
+- [Coroutines](https://developer.android.com/kotlin/coroutines)
+- [Compose ImageLoader](https://github.com/qdsfdhvh/compose-imageloader)
+- [Compose Multiplatform File Picker](https://github.com/Wavesonics/compose-multiplatform-file-picker)
+- [Webview](https://github.com/google/accompanist/tree/main/web)
 
 
 ## Contributors
