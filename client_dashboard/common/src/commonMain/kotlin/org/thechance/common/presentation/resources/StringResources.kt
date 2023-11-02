@@ -36,6 +36,8 @@ data class StringResources(
     val add: String = "Add",
     val update : String = "Update",
     val updateRestaurant: String = "Update Restaurant",
+    val offers: String = "Offers",
+    val addOffer: String = "Add Offer",
     //endregion Restaurant
 
     //region Taxi

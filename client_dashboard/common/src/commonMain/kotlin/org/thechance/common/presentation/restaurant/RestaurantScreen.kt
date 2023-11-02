@@ -11,12 +11,17 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
@@ -27,6 +32,14 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.*
 import com.beepbeep.designSystem.ui.theme.Theme
 import com.darkrockstudios.libraries.mpfilepicker.FilePicker
+import io.ktor.utils.io.bits.useMemory
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.res.loadImageBitmap
+import androidx.compose.ui.unit.Density
+import com.seiko.imageloader.rememberAsyncImagePainter
+import okio.ByteString.Companion.toByteString
+import org.jetbrains.skia.Image.Companion.makeFromEncoded
+
 import org.thechance.common.presentation.base.BaseScreen
 import org.thechance.common.presentation.composables.*
 import org.thechance.common.presentation.composables.modifier.cursorHoverIconHand
@@ -37,6 +50,8 @@ import org.thechance.common.presentation.composables.table.TotalItemsIndicator
 import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.kms
 import java.awt.Dimension
+import java.io.ByteArrayInputStream
+import java.io.File
 import kotlin.reflect.KFunction1
 
 class RestaurantScreen :
@@ -65,7 +80,11 @@ class RestaurantScreen :
 
         RestaurantAddCuisineDialog(
             listener = listener,
-            state = state.restaurantAddCuisineDialogUiState
+            state = state.newCuisineDialogUiState
+        )
+        NewOfferDialog(
+            listener = listener,
+            state = state.newOfferDialogUiState
         )
 
         Column(
@@ -115,8 +134,8 @@ class RestaurantScreen :
             Spacer(modifier = Modifier.weight(1f))
 
             BpOutlinedButton(
-                title = Resources.Strings.export,
-                onClick = { /* TODO: Export */ },
+                title = Resources.Strings.addOffer,
+                onClick = listener::onAddOfferClicked,
                 textPadding = PaddingValues(horizontal = 24.kms),
                 modifier = Modifier.cursorHoverIconHand()
             )
@@ -420,13 +439,13 @@ class RestaurantScreen :
                             painter = painterResource(Resources.Drawable.addImage),
                             contentDescription = null,
                             modifier = Modifier.size(32.dp).align(Alignment.Center)
-                                .noRipple(listener::onClickImagePicker),
-                            colorFilter = ColorFilter.tint(color = if(state.cuisineImage.isNotEmpty()) Theme.colors.primary else Theme.colors.divider )
+                                .noRipple(listener::onClickCuisineImage),
+                            colorFilter = ColorFilter.tint(color = if (state.cuisineImage.isNotEmpty()) Theme.colors.primary else Theme.colors.divider)
                         )
                         FilePicker(
                             state.isImagePickerVisible,
                             fileExtensions = listOf("jpg", "png", "jpeg"),
-                            onFileSelected = { type -> listener.onSelectedImage(type?.platformFile) }
+                            onFileSelected = { type -> listener.onSelectedCuisineImage(type?.platformFile) }
                         )
                     }
                 }
@@ -476,6 +495,121 @@ class RestaurantScreen :
                         modifier = Modifier.height(32.dp).weight(3f),
                         textPadding = PaddingValues(0.dp),
                         enabled = state.isAddCuisineEnabled
+                    )
+                }
+            }
+        }
+    }
+
+     @Composable
+    private fun NewOfferDialog(
+        listener: AddOfferInteractionListener,
+        state: NewOfferDialogUiState
+    ) {
+
+        Dialog(
+            visible = state.isVisible,
+            transparent = true,
+            undecorated = true,
+            resizable = false,
+            onCloseRequest = listener::onCloseAddOfferDialog,
+        ) {
+            window.minimumSize = Dimension(400, 420)
+            Column(
+                modifier = Modifier
+                    .background(Theme.colors.surface, RoundedCornerShape(8.kms))
+                    .border(
+                        1.kms,
+                        Theme.colors.divider,
+                        RoundedCornerShape(Theme.radius.medium)
+                    )
+            ) {
+                Text(
+                    text = Resources.Strings.offers,
+                    style = Theme.typography.headline,
+                    color = Theme.colors.contentPrimary,
+                    modifier = Modifier.padding(top = 24.kms, start = 24.kms)
+                )
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    BpSimpleTextField(
+                        text = state.offerName,
+                        hint = Resources.Strings.enterCuisineName,
+                        onValueChange = listener::onChangeOfferName,
+                        modifier = Modifier.padding(top = 24.kms, start = 24.kms, end = 16.kms)
+                            .weight(2f),
+                        isError = state.offerNameError.isError,
+                        errorMessage = state.offerNameError.errorMessage,
+                    )
+                }
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(top = 24.kms, start = 24.kms, end = 16.kms)
+                        .heightIn(min = 56.dp, max = 160.dp)
+                        .border(1.dp, Theme.colors.divider, RoundedCornerShape(Theme.radius.medium))
+                        .padding(horizontal = 16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        contentDescription = null,
+//                        bitmap = loadImageBitmap(File(state.offerImage.decodeToString())),
+                        painter =rememberAsyncImagePainter(state.offerImage.decodeToString()),
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.background(color = MaterialTheme.colorScheme.tertiaryContainer)
+                            .noRipple(listener::onClickOfferImagePicker),
+                        colorFilter =
+                        ColorFilter.tint(color = if (state.offerImage.isNotEmpty()) Theme.colors.primary else Theme.colors.divider)
+                    )
+                    FilePicker(
+                        state.isImagePickerVisible,
+                        fileExtensions = listOf("jpg", "png", "jpeg"),
+                        onFileSelected = { type -> listener.onSelectedOfferImage(type?.path) }
+                    )
+                }
+                LazyColumn(
+                    modifier = Modifier.padding(top = 16.kms)
+                        .background(Theme.colors.background)
+                        .fillMaxWidth().heightIn(min = 64.kms, max = 256.kms)
+                ) {
+                    items(state.offers) { offer ->
+                        Row(
+                            modifier = Modifier.padding(horizontal = 24.kms, vertical = 16.kms),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = offer.name,
+                                style = Theme.typography.caption,
+                                color = Theme.colors.contentPrimary,
+                            )
+                            Spacer(modifier = Modifier.weight(1f))
+
+                            Icon(
+                                painter = painterResource(Resources.Drawable.trashBin),
+                                contentDescription = null,
+                                tint = Theme.colors.primary,
+                                modifier = Modifier
+                                    .noRipple { listener.onClickDeleteOffer(offer.id) }
+                            )
+                        }
+                    }
+                }
+                Row(
+                    Modifier.fillMaxWidth().padding(24.kms),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+
+                    BpTransparentButton(
+                        title = Resources.Strings.cancel,
+                        onClick = listener::onCloseAddOfferDialog,
+                        modifier = Modifier.padding(end = 16.kms)
+                            .height(32.dp)
+                            .weight(1f)
+                    )
+                    BpOutlinedButton(
+                        title = Resources.Strings.add,
+                        onClick = listener::onClickCreateOffer,
+                        modifier = Modifier.height(32.dp).weight(3f),
+                        textPadding = PaddingValues(0.dp),
+                        enabled = state.isAddOfferEnabled
                     )
                 }
             }
