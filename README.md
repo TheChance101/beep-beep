@@ -28,6 +28,10 @@ Using beep beep as a project name describes how fast you can build with Kotlin, 
 # Structure
 <img width="746" alt="Screenshot 2023-11-02 at 1 09 39 PM" src="https://github.com/TheChance101/beep-beep/assets/34461597/2e6f011e-6eb5-49c5-96c1-f8f76d5f4ee0">
 
+<img width="940" alt="Screenshot 2023-11-02 at 1 14 40 PM" src="https://github.com/TheChance101/beep-beep/assets/34461597/d5d509e7-1adb-4fe5-9cf7-9dd550eb86f2">
+
+
+
 # EndUse Application
 > The Beep Beep end-user application is a Kmp mobile app for Android and iOS that allows users to order food and book taxis. It also has features for saving favorite restaurants and more.
 
