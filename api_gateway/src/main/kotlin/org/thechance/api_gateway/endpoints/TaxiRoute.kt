@@ -9,9 +9,13 @@ import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
+import org.thechance.api_gateway.data.model.notification.NotificationDto
 import org.thechance.api_gateway.data.model.taxi.TaxiDto
 import org.thechance.api_gateway.data.model.taxi.TripDto
+import org.thechance.api_gateway.data.model.taxi.TripStatus
+import org.thechance.api_gateway.data.model.taxi.TripStatus.*
 import org.thechance.api_gateway.data.service.IdentityService
+import org.thechance.api_gateway.data.service.NotificationService
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.data.service.TaxiService
 import org.thechance.api_gateway.endpoints.utils.*
@@ -24,6 +28,7 @@ fun Route.taxiRoutes() {
     val restaurantService: RestaurantService by inject()
     val localizedMessagesFactory by inject<LocalizedMessagesFactory>()
     val webSocketServerHandler: WebSocketServerHandler by inject()
+    val notificationService: NotificationService by inject()
 
     route("/taxi") {
 
@@ -249,6 +254,19 @@ fun Route.taxiRoutes() {
                 val approvedTrip =
                     taxiService.updateTrip(taxiId = taxiId, tripId = tripId, driverId = deliveryId, language)
                 respondWithResult(HttpStatusCode.OK, approvedTrip, successMessage)
+
+                val tripStatus = TripStatus.getOrderStatus(approvedTrip.tripStatus)
+                val notificationBody = when (tripStatus) {
+                    APPROVED -> localizedMessagesFactory.createLocalizedMessages(language).orderApprovedFromDelivery
+                    RECEIVED -> localizedMessagesFactory.createLocalizedMessages(language).orderArrivedToRestaurant
+                    FINISHED -> localizedMessagesFactory.createLocalizedMessages(language).orderArrivedToClient
+                    else -> ""
+                }
+                if (tripStatus != TripStatus.PENDING) {
+                    val restaurant = restaurantService.getRestaurantInfo(language, approvedTrip.restaurantId!!)
+                    val orderNotification = NotificationDto(restaurant.name!!, notificationBody)
+                    notificationService.sendNotificationToUser(approvedTrip.clientId!!, orderNotification, language)
+                }
             }
         }
     }

@@ -94,6 +94,9 @@ class EgyptianArabicLocalizedMessages : LocalizedMessages {
     override val orderFinished: String = "تم الانتحاء من تحضير طلبك وفى اتظار الديليفرى"
     override val newOrderTitle: String = "طلب جديد"
     override val newOrderBody: String = "لديك طلب جديد فى القائمة"
+    override val orderApprovedFromDelivery: String = "تم قبول الطلب من الديليفرى"
+    override val orderArrivedToRestaurant: String = "الديليفرى فى طريقه اليك"
+    override val orderArrivedToClient: String = "تم وصول طلبك بالهناء والشفاء"
     override val cartIsAlreadyEmpty: String = "هتشتري ازاي والسله فاضيه اصلا!!"
     override val invalidQuantity: String = "مدخل كميه مش صح"
 

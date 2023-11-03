@@ -175,6 +175,12 @@ interface LocalizedMessages {
 
     val newOrderBody: String
 
+    val orderApprovedFromDelivery: String
+
+    val orderArrivedToRestaurant: String
+
+    val orderArrivedToClient: String
+
     //endregion
 
 

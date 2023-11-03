@@ -93,6 +93,9 @@ class EnglishLocalizedMessages : LocalizedMessages {
     override val orderFinished: String = "Your order has been finished and awaits delivery"
     override val newOrderTitle: String = "New Order"
     override val newOrderBody: String = "You have a new order"
+    override val orderApprovedFromDelivery: String = "Your order has been approved from delivery and he is on the way to you"
+    override val orderArrivedToRestaurant: String = "Your order is on the way be ready!"
+    override val orderArrivedToClient: String = "Your order is arrived Yam-mi!!"
     override val cartIsAlreadyEmpty: String = "cart is already empty"
     override val invalidQuantity: String = "Invalid Quantity"
     //endregion
