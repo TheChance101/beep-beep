@@ -87,6 +87,12 @@ class ArabicLocalizedMessages : LocalizedMessages {
     override val tokenNotRegister: String = "رمز الجهاز غير مسجل"
     override val alreadyUpdated: String = "تم التحديث من قبل"
     override val cancelOrderError: String = "هذا الطلب تم الغائه من قبل او تم قبوله من قبل"
+    override val orderApproved: String = "تم وصول الطلب إلى المطعم وفى انتظار التحضير"
+    override val orderCanceled: String = "يؤسفنا إبلاغك بإلغاء طلبك"
+    override val orderInCooking: String = "جارى تحضير طلبك فى المطبخ الان"
+    override val orderFinished: String = "تم الانتحاء من تحضير طلبك وفى اتظار الديليفرى"
+    override val newOrderTitle: String = "طلب جديد"
+    override val newOrderBody: String = "لديك طلب جديد فى القائمة"
     override val cartIsAlreadyEmpty: String = "لا يمكن اجراء الامر لان السله فارغه"
     override val invalidQuantity: String = "مدخل كميه مش صح"
 

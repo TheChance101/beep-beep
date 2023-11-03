@@ -8,11 +8,13 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import org.koin.core.annotation.Single
+import org.thechance.api_gateway.data.model.notification.NotificationDto
 import org.thechance.api_gateway.data.model.taxi.TripDto
 import org.thechance.api_gateway.data.model.taxi.toDeliveryTripResponse
 import org.thechance.api_gateway.data.model.taxi.toRideTrackingResponse
 import org.thechance.api_gateway.data.model.taxi.toTaxiTripResponse
 import org.thechance.api_gateway.data.service.IdentityService
+import org.thechance.api_gateway.data.service.NotificationService
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.data.service.TaxiService
 import java.util.concurrent.ConcurrentHashMap
@@ -21,7 +23,8 @@ import java.util.concurrent.ConcurrentHashMap
 class WebSocketServerHandler(
     private val identityService: IdentityService,
     private val restaurantService: RestaurantService,
-    private val taxiService: TaxiService
+    private val taxiService: TaxiService,
+    val notificationService: NotificationService
 ) {
 
     val sessions: ConcurrentHashMap<String, DefaultWebSocketServerSession> = ConcurrentHashMap()
@@ -29,6 +32,23 @@ class WebSocketServerHandler(
     suspend inline fun <reified T> tryToCollect(values: Flow<T>, session: DefaultWebSocketServerSession) {
         try {
             values.flowOn(Dispatchers.IO).collect { value -> session.sendSerialized(value) }
+        } catch (e: Exception) {
+            session.close(CloseReason(CloseReason.Codes.NORMAL, e.message.toString()))
+        }
+    }
+
+    suspend inline fun <reified T> tryToCollectOrders(
+        values: Flow<T>,
+        session: DefaultWebSocketServerSession,
+        language: String,
+        orderNotification: NotificationDto,
+        ownerId: String
+    ) {
+        try {
+            values.flowOn(Dispatchers.IO).collect { value ->
+                notificationService.sendNotificationToUser(ownerId, orderNotification, language)
+                session.sendSerialized(value)
+            }
         } catch (e: Exception) {
             session.close(CloseReason(CloseReason.Codes.NORMAL, e.message.toString()))
         }

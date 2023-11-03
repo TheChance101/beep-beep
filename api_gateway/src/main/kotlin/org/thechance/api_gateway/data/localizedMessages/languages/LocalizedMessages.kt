@@ -163,6 +163,18 @@ interface LocalizedMessages {
 
     val cancelOrderError: String
 
+    val orderApproved: String
+
+    val orderCanceled: String
+
+    val orderInCooking: String
+
+    val orderFinished: String
+
+    val newOrderTitle: String
+
+    val newOrderBody: String
+
     //endregion
 
 

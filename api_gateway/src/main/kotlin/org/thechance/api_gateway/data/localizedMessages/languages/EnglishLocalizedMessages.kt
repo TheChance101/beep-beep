@@ -87,6 +87,12 @@ class EnglishLocalizedMessages : LocalizedMessages {
     override val tokenNotRegister: String = "Token not register"
     override val alreadyUpdated: String = "This order already finished before"
     override val cancelOrderError: String = "may be canceled before or it's not on pending status"
+    override val orderApproved: String = "Your order has been approved"
+    override val orderCanceled: String = "unfortunately your order is canceled"
+    override val orderInCooking: String = "Your order is being cooking now"
+    override val orderFinished: String = "Your order has been finished and awaits delivery"
+    override val newOrderTitle: String = "New Order"
+    override val newOrderBody: String = "You have a new order"
     override val cartIsAlreadyEmpty: String = "cart is already empty"
     override val invalidQuantity: String = "Invalid Quantity"
     //endregion
