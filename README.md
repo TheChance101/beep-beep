@@ -1,22 +1,26 @@
 # beep-beep
 
-We are at https://www.linkedin.com/company/thechance101/ mentorship starting the journey of building the largest full-stack open-source Kotlin project
-
+We are at [The Chance](https://www.linkedin.com/company/thechance101/) mentorship starting the journey of building
+the largest full-stack open-source Kotlin project.
 
 ## About the project
 
-It is essentially a platform designed for food delivery and taxi ordering, intended to demonstrate the capabilities of Kotlin.
-Using beep beep as a project name describes how fast you can build with Kotlin, and if it was a real service it should be fast also 😅
-
+It is essentially a platform designed for food delivery and taxi ordering, intended to demonstrate
+the capabilities of Kotlin.
+Using beep beep as a project name describes how fast you can build with Kotlin, and if it was a real
+service it should be fast also 😅
 
 ## Project components
- 
+
 * End User app (Built with Compose Multiplatform to serve both Android and iOS).
-* Restaurant Management app (Built with Compose Multiplatform to serve both Android and iOS, supporting iPad and Android tablets).
+* Restaurant Management app (Built with Compose Multiplatform to serve both Android and iOS,
+  supporting iPad and Android tablets).
 * Taxi Driver app (Built with Compose Multiplatform to serve both Android and iOS).
 * Food Delivery app (Built with Compose Multiplatform to serve both Android and iOS).
-* Dashboard app (Built with Compose Multiplatform to run directly from your desktop, Mac, Linux, and Windows).
-* Support app (Built with Compose Multiplatform to run directly from your desktop, Mac, Linux, and Windows).
+* Dashboard app (Built with Compose Multiplatform to run directly from your desktop, Mac, Linux, and
+  Windows).
+* Support app (Built with Compose Multiplatform to run directly from your desktop, Mac, Linux, and
+  Windows).
 
 * Identity Service (A microservice written in Kotlin using Ktor framework).
 * Restaurant Service (A microservice written in Kotlin using Ktor framework).
@@ -26,36 +30,87 @@ Using beep beep as a project name describes how fast you can build with Kotlin, 
 * Chat Service (A microservice written in Kotlin using Ktor framework).
 
 # Structure
+
 <img width="746" alt="Screenshot 2023-11-02 at 1 09 39 PM" src="https://github.com/TheChance101/beep-beep/assets/34461597/2e6f011e-6eb5-49c5-96c1-f8f76d5f4ee0">
 
 <img width="940" alt="Screenshot 2023-11-02 at 1 14 40 PM" src="https://github.com/TheChance101/beep-beep/assets/34461597/d5d509e7-1adb-4fe5-9cf7-9dd550eb86f2">
 
+## Technologies
+- [compose-multiplatform](https://www.jetbrains.com/lp/compose-multiplatform/)
+- [Ktor (Client - Server)](https://ktor.io/docs/welcome.html)
+- [Koin dependency injection](https://insert-koin.io/)
+- [voyager ](https://github.com/adrielcafe/voyager)
+- [realm db](https://github.com/realm/realm-kotlin)
+- [Firebase Messaging](https://firebase.google.com/docs/cloud-messaging)
+- [AAY Chart](https://github.com/TheChance101/AAY-chart)
+- [paging with compose multiplateform](https://developer.android.com/jetpack/androidx/releases/paging)
+- [Coroutines](https://developer.android.com/kotlin/coroutines)
+- [Compose ImageLoader](https://github.com/qdsfdhvh/compose-imageloader)
+- [Compose Multiplatform File Picker](https://github.com/Wavesonics/compose-multiplatform-file-picker)
+- [Webview](https://github.com/google/accompanist/tree/main/web)
+- [kotlin datetime](https://github.com/Kotlin/kotlinx-datetime)
+- [moko-resources](https://github.com/icerockdev/moko-resources)
+
+
 ## BeepBeep (End-User) App
-> The Beep Beep end-user application is a Kmp mobile app for Android and iOS that allows users to order food and book taxis. It also has features for saving favorite restaurants and more.
+
+> The Beep Beep end-user application is a Kmp mobile app for Android and iOS that allows users to
+> order food and book taxis. It also has features for saving favorite restaurants and more.
+
+![Dribble show 56 (2)](https://github.com/TheChance101/beep-beep/assets/34461597/32a1437c-a1dd-4285-932c-e8df0fd065aa)
+
+![Dribble show 56 (3)](https://github.com/TheChance101/beep-beep/assets/34461597/11457208-569d-4781-9d68-1ef69077c2e8)
 
 ### Features
+
 - [x] Authentication (sign in and sign up)
-- [x] Personalized recommendations: The app uses the user's preferences to recommend cuisines, restaurants, and meals that they are likely to enjoy.
-- [x] Real-time order tracking: Users can track the status of their food orders and taxi rides in real-time.
+- [x] Personalized recommendations: The app uses the user's preferences to recommend cuisines,
+  restaurants, and meals that they are likely to enjoy.
+- [x] Real-time order tracking: Users can track the status of their food orders and taxi rides in
+  real-time.
 - [x] Users can order food from restaurants with just a few taps.
-- [x] Discavor restaurants/ meals: Users can browse all restaurants and their meals, and filter by cuisine to create their own order.
+- [x] Discover restaurants/ meals: Users can browse all restaurants and their meals, and filter by
+  cuisine to create their own order.
 - [x] Search restaurants/ meals: Users can search for restaurants and/or meals.
 - [x] Discounts and deals: users can see discounts and deals on restaurants.
-- [x] Favorite restaurants and cuisines: Users can save their favorite restaurants and cuisines to make it easy to order again in the future.
-- [x] Order history: Users can view their order history to keep track of their past orders and rides.
+- [x] Favorite restaurants and cuisines: Users can save their favorite restaurants and cuisines to
+  make it easy to order again in the future.
+- [x] Order history: Users can view their order history to keep track of their past orders and
+  rides.
 - [x] Cart: Users can add, remove, or edit meals in their cart and then checkout.
-- [ ] Chat support: Users can contact customer support via chat for assistance with any issues they may have.
+- [ ] Chat support: Users can contact customer support via chat for assistance with any issues they
+  may have.
 - [ ] Book Taxi: Users can book taxis and track them.
-- [ ] Notifications: Users receive notifications about changes to their orders and taxi rides, as well as offers.
+- [ ] Notifications: Users receive notifications about changes to their orders and taxi rides, as
+  well as offers.
+
+## Admin Dashboard App
+
+> A desktop App that provides a user-friendly interface for
+> effortless management of restaurants, users, and taxi services.
+
+### Features
+
+- [x] Authentication (sign in)
+- [x]  Add, modify, or delete restaurant details.
+- [x]  Manage offers and cuisines for easy searching.
+- [x]   Search by restaurant name, price level, or rating.
+- [x]  Add, edit, or delete taxi services.
+- [x]  Search by user name, car color, seat count, or driver availability.
+- [x]  Define user permissions and roles.
+- [x]  Disable user accounts when needed.
+- [x]  Search for users using specific filters.
+- [x] Supports Dark and Light Themes for UI customization.
+- [x] Multilingual support for Arabic and English,including regional dialects.
+- [ ] Provides statistics on registered restaurants,taxi services and users.
 
 ## Restaurant Management App
 
-> Welcome to the Restaurant Management App, a versatile solution built with Compose Multiplatform for
-both Android and iOS users, including iPad and Android tablets. This powerful management tool
-empowers restaurant owners to streamline their menus and efficiently manage customer orders. With
-its user-friendly interface, it's the ideal choice for enhancing restaurant operations and ensuring
-a seamless experience for both restaurant staff and customers. Say goodbye to manual tasks and hello
-to a streamlined approach for managing meals and orders, all within a single app.
+> An App empowers restaurant owners to streamline their menus and efficiently manage customer orders. With
+> its user-friendly interface.
+
+![Dribble show 56 (1)](https://github.com/TheChance101/beep-beep/assets/34461597/987f4fc5-09af-4ec0-90d4-b18f5638dd6f)
+
 
 ### Features
 
@@ -74,58 +129,54 @@ to a streamlined approach for managing meals and orders, all within a single app
 - [ ] Change order status (approve or cancel).
 
 ## Food Delivery App
-> Introducing the Food Delivery app, a versatile platform that enables authorized delivery personnel
-to efficiently transport orders from restaurants to eager clients. Built with Compose Multiplatform,
-this app ensures a smooth and unified experience for both Android and iOS users.
+
+> An app that enables authorized delivery personnel
+> to efficiently transport orders from restaurants to eager clients.
+
+![Dribble show 40 (2)](https://github.com/TheChance101/beep-beep/assets/34461597/9d4be2c1-e84c-42a1-85c0-96d2db7d5844)
+
 
 ### Features
 
 - [x] Submit a request with form data to access the delivery app.
 - [x] Authenticate in the delivery app with necessary permissions.
-- [x] Receive new restaurant orders in real-time using websockets.
-- [x] View order details, including location and restaurant name.
-- [x] Accept or reject orders.
-- [ ] Provide estimated time and distance to the client.
-- [ ] Track order location on the map.
+- [ ] Receive new restaurant orders in real-time using websockets.
 - [ ] Display the path on the map to the order after accepting it.
-- [ ] Update order status after acceptance in real-time.
-
 
 ## Taxi App
 
-> Introducing the Taxi Driver app, a comprehensive platform tailored for licensed taxi drivers who
-have the authority to transport clients to their desired destinations. This app, compatible with
-both Android and iOS, equips drivers with the essential tools and capabilities needed to offer safe
-and reliable transportation services to passengers.
+> An app tailored for licensed taxi drivers who
+> have the authority to transport clients to their desired destinations.
+
+![Dribble show 42](https://github.com/TheChance101/beep-beep/assets/34461597/19ce5bd8-d800-42ba-85f3-513cf207bca5)
+
 
 ### Features
 
 - [x] Request permission for a Taxi driver with the required information.
 - [x] Authenticate in the Taxi app with necessary permissions.
-- [x] Listen to incoming nearby ride requests from clients in real-time.
+- [ ] Listen to incoming nearby ride requests from clients in real-time.
 - [ ] Display the location of the client and their destination on the map.
-- [ ] Accept or reject ride requests shown on the map.
-- [ ] Show ride information and the live location of the taxi on the map.
 
 ## Support App
-> is a desktop application designed for support agents to efficiently manage and respond to user support requests. This app enables support agents to provide assistance, manage support tickets, and engage in real-time chat with users.**
+
+> A desktop application designed for support agents to efficiently manage and respond to user
+> support requests.
 
 ### Features
 
 - [x] User Authentication: Support agents can securely log in to their accounts.
-- [x] Ticket Management: Support agents can view, prioritize, and address user support tickets.
+- [ ] Ticket Management: Support agents can view, prioritize, and address user support tickets.
 - [ ] Real-time Chat: Support agents can engage in real-time chat sessions with users to address their issues.
-- [ ] Ticket Closure: Support agents can mark tickets as completed when issues are resolved.
-- [x] Logout: Support agents can securely log out of the application.
 
 
 ## Contributors
+
 <a href="https://github.com/TheChance101/beep-beep/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=TheChance101/beep-beep" />
 </a>
 
-
-## License: 
+## License:
 
     Copyright 2023 The Chance
 
