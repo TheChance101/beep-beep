@@ -105,6 +105,9 @@ service it should be fast also 😅
 > An App empowers restaurant owners to streamline their menus and efficiently manage customer orders. With
 > its user-friendly interface.
 
+![Dribble show 56 (1)](https://github.com/TheChance101/beep-beep/assets/34461597/987f4fc5-09af-4ec0-90d4-b18f5638dd6f)
+
+
 ### Features
 
 - [x] Create a new restaurant with details and owner info.
