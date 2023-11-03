@@ -141,6 +141,8 @@ service it should be fast also 😅
 > An app tailored for licensed taxi drivers who
 > have the authority to transport clients to their desired destinations.
 
+![Dribble show 40 (1)](https://github.com/TheChance101/beep-beep/assets/34461597/e488f5ad-1140-4f8f-8e3b-472fe897f856)
+
 ### Features
 
 - [x] Request permission for a Taxi driver with the required information.
