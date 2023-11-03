@@ -239,6 +239,18 @@ fun Route.taxiRoutes() {
                 val approvedTrip =
                     taxiService.updateTrip(taxiId = taxiId, tripId = tripId, driverId = driverId, language)
                 respondWithResult(HttpStatusCode.OK, approvedTrip, successMessage)
+
+                val tripStatus = TripStatus.getOrderStatus(approvedTrip.tripStatus)
+                val notificationBody = when (tripStatus) {
+                    APPROVED -> localizedMessagesFactory.createLocalizedMessages(language).rideApproved
+                    RECEIVED -> localizedMessagesFactory.createLocalizedMessages(language).taxiArrivedToUserLocation
+                    FINISHED -> localizedMessagesFactory.createLocalizedMessages(language).taxiArrivedToDestination
+                    else -> ""
+                }
+                if (tripStatus != TripStatus.PENDING) {
+                    val orderNotification = NotificationDto(approvedTrip.destinationAddress!!, notificationBody)
+                    notificationService.sendNotificationToUser(approvedTrip.clientId!!, orderNotification, language)
+                }
             }
         }
 

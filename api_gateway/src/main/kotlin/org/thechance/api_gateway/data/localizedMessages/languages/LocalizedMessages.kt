@@ -87,6 +87,11 @@ interface LocalizedMessages {
 
     val requiredQuery: String
 
+    val rideApproved: String
+
+    val taxiArrivedToUserLocation: String
+
+    val taxiArrivedToDestination: String
 
     // endregion
 

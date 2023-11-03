@@ -49,6 +49,9 @@ class EnglishLocalizedMessages : LocalizedMessages {
     override val invalidPrice: String = "Invalid price"
     override val alreadyExist: String = "Already exist"
     override val requiredQuery: String = "Required query"
+    override val rideApproved: String = "Your ride has been approved and taxi on the way to you"
+    override val taxiArrivedToUserLocation: String = "Your Taxi ride is on the location you mentioned "
+    override val taxiArrivedToDestination: String = "Your ride has been arrived 🎉"
     // endregion
 
     //region restaurant

@@ -50,6 +50,9 @@ class SyrianArabicLocalizedMessages : LocalizedMessages {
     override val invalidPrice: String= "السعر مالو صحيح"
     override val alreadyExist: String= "هاد التاكسي موجود من قبل يا جار!"
     override val requiredQuery: String ="في معلومات ناقصة يا جار!"
+    override val rideApproved: String = "تم قبول رحلتك والتاكسى فى طريقه اليك"
+    override val taxiArrivedToUserLocation: String = "تم وصول التاكسى الى موقعك"
+    override val taxiArrivedToDestination: String = "حمد لله على سلامتك تم الوصول الى الوجهة"
     // endregion
 
     //region restaurant
