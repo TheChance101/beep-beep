@@ -59,6 +59,8 @@ service it should be fast also 😅
 
 ![Dribble show 56 (2)](https://github.com/TheChance101/beep-beep/assets/34461597/32a1437c-a1dd-4285-932c-e8df0fd065aa)
 
+![Dribble show 56 (3)](https://github.com/TheChance101/beep-beep/assets/34461597/11457208-569d-4781-9d68-1ef69077c2e8)
+
 ### Features
 
 - [x] Authentication (sign in and sign up)
