@@ -129,8 +129,7 @@ service it should be fast also 😅
 > An app that enables authorized delivery personnel
 > to efficiently transport orders from restaurants to eager clients.
 
-![Dribble show 40](https://github.com/TheChance101/beep-beep/assets/34461597/c57b47e2-92bd-4a7d-b348-c5b406b72f7a)
-
+![Dribble show 40 (2)](https://github.com/TheChance101/beep-beep/assets/34461597/9d4be2c1-e84c-42a1-85c0-96d2db7d5844)
 
 ### Features
 
@@ -144,7 +143,7 @@ service it should be fast also 😅
 > An app tailored for licensed taxi drivers who
 > have the authority to transport clients to their desired destinations.
 
-![Dribble show 40 (1)](https://github.com/TheChance101/beep-beep/assets/34461597/e488f5ad-1140-4f8f-8e3b-472fe897f856)
+![Dribble show 40](https://github.com/TheChance101/beep-beep/assets/34461597/c57b47e2-92bd-4a7d-b348-c5b406b72f7a)
 
 ### Features
 
