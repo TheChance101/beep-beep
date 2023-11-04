@@ -11,6 +11,7 @@ import java.util.*
 @SerialName("categoryCollection")
 data class CategoryCollection(
     val name: String,
+    val image: String,
     val restaurantIds: MutableList<@Contextual ObjectId> = mutableListOf()
 ) {
     @BsonId

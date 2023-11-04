@@ -46,7 +46,7 @@ class ManageAuthenticationUseCase(
     override suspend fun logout() {
         localGateway.removeAccessToken()
         localGateway.removeRefreshToken()
-        localRestaurantGateway.clearFavoriteRestaurants()
+//        localRestaurantGateway.clearFavoriteRestaurants()
     }
 
     override suspend fun getAccessToken(): Flow<String> {

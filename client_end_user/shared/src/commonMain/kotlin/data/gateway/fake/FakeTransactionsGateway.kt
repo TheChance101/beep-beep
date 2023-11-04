@@ -25,6 +25,10 @@ class FakeTransactionsGateway : ITransactionsGateway {
         TODO("Not yet implemented")
     }
 
+    override suspend fun addMealToCart(mealId: String, restaurantId: String, quantity: Int): Cart {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun orderNow(): Boolean {
         TODO("Not yet implemented")
     }

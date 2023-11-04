@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
 import org.thechance.service_identity.domain.entity.Address
+import org.thechance.service_identity.domain.util.Role
 
 @Serializable
 data class DetailedUser(
@@ -16,9 +17,9 @@ data class DetailedUser(
     val fullName: String,
     val username: String,
     val email: String,
-    val phone: String,
-    val country: String,
-    val permission: Int,
+    val phone: String = "",
+    val country: String = "",
+    val permission: Int = Role.END_USER,
     val wallet: WalletCollection,
     val addresses: List<AddressCollection> = emptyList()
 )

@@ -23,6 +23,9 @@ interface ILocalConfigurationGateway {
     suspend fun savePreferredFood(food: List<String>)
     suspend fun getPreferredFood(): List<String>
 
+    suspend fun saveCartStatus(isCartEmpty: Boolean)
+    suspend fun getCartStatus(): Flow<Boolean>
+
     suspend fun removeAccessToken()
     suspend fun removeRefreshToken()
 }

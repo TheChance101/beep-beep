@@ -26,6 +26,7 @@ import androidx.compose.ui.window.Dialog
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.*
 import com.beepbeep.designSystem.ui.theme.Theme
+import com.darkrockstudios.libraries.mpfilepicker.FilePicker
 import org.thechance.common.presentation.base.BaseScreen
 import org.thechance.common.presentation.composables.*
 import org.thechance.common.presentation.composables.modifier.cursorHoverIconHand
@@ -151,7 +152,7 @@ class RestaurantScreen :
                     onClickEditRestaurant = listener::onShowRestaurantMenu,
                     onEditRestaurantDismiss = listener::onHideRestaurantMenu,
                     onClickDeleteRestaurantMenuItem = listener::onClickDeleteRestaurantMenuItem,
-                    onClickEditRestaurantMenuItem = { listener.onClickEditRestaurantMenuItem(it) },
+                    onClickEditRestaurantMenuItem = listener::onClickEditRestaurantMenuItem,
                     position = state.restaurants.indexOf(restaurant) + 1,
                     restaurant = restaurant,
                 )
@@ -255,7 +256,7 @@ class RestaurantScreen :
             )
             EditRestaurantDropdownMenu(
                 restaurant = restaurant,
-                onClickEdit = { onClickEditRestaurantMenuItem(it) },
+                onClickEdit = onClickEditRestaurantMenuItem,
                 onClickDelete = onClickDeleteRestaurantMenuItem,
                 onDismissRequest = onEditRestaurantDismiss,
             )
@@ -394,14 +395,42 @@ class RestaurantScreen :
                     color = Theme.colors.contentPrimary,
                     modifier = Modifier.padding(top = 24.kms, start = 24.kms)
                 )
-                BpSimpleTextField(
-                    text = state.cuisineName,
-                    hint = Resources.Strings.enterCuisineName,
-                    onValueChange = listener::onChangeCuisineName,
-                    modifier = Modifier.padding(top = 24.kms, start = 24.kms, end = 24.kms),
-                    isError = state.cuisineNameError.isError,
-                    errorMessage = state.cuisineNameError.errorMessage,
-                )
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    BpSimpleTextField(
+                        text = state.cuisineName,
+                        hint = Resources.Strings.enterCuisineName,
+                        onValueChange = listener::onChangeCuisineName,
+                        modifier = Modifier.padding(top = 24.kms, start = 24.kms, end = 16.kms)
+                            .weight(2f),
+                        isError = state.cuisineNameError.isError,
+                        errorMessage = state.cuisineNameError.errorMessage,
+                    )
+                    Box(
+                        modifier = Modifier.padding(top = 24.kms, end = 24.kms)
+                            .heightIn(min = 56.dp, max = 160.dp)
+                            .wrapContentWidth()
+                            .border(
+                                1.dp,
+                                Theme.colors.divider,
+                                RoundedCornerShape(Theme.radius.medium)
+                            ).padding(horizontal = 16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            painter = painterResource(Resources.Drawable.addImage),
+                            contentDescription = null,
+                            modifier = Modifier.size(32.dp).align(Alignment.Center)
+                                .noRipple(listener::onClickImagePicker),
+                            colorFilter = ColorFilter.tint(color = if(state.cuisineImage.isNotEmpty()) Theme.colors.primary else Theme.colors.divider )
+                        )
+                        FilePicker(
+                            state.isImagePickerVisible,
+                            fileExtensions = listOf("jpg", "png", "jpeg"),
+                            onFileSelected = { type -> listener.onSelectedImage(type?.platformFile) }
+                        )
+                    }
+                }
+
                 LazyColumn(
                     modifier = Modifier.padding(top = 16.kms)
                         .background(Theme.colors.background)
@@ -445,7 +474,8 @@ class RestaurantScreen :
                         title = Resources.Strings.add,
                         onClick = listener::onClickCreateCuisine,
                         modifier = Modifier.height(32.dp).weight(3f),
-                        textPadding = PaddingValues(0.dp)
+                        textPadding = PaddingValues(0.dp),
+                        enabled = state.isAddCuisineEnabled
                     )
                 }
             }
@@ -455,7 +485,7 @@ class RestaurantScreen :
     @Composable
     private fun EditRestaurantDropdownMenu(
         restaurant: RestaurantUiState.RestaurantDetailsUiState,
-        onClickEdit: (restaurantId : String) -> Unit,
+        onClickEdit: (restaurantId: String) -> Unit,
         onClickDelete: (id: String) -> Unit,
         onDismissRequest: (String) -> Unit,
     ) {

@@ -111,8 +111,8 @@ class RestaurantFakeGateway : IRestaurantGateway {
     }
 
 
-    override suspend fun createCuisine(cuisineName: String): Cuisine {
-        val newCuisine = Cuisine(UUID.randomUUID().toString(), cuisineName)
+    override suspend fun createCuisine(cuisineName: String,image:ByteArray): Cuisine {
+        val newCuisine = Cuisine(UUID.randomUUID().toString(), cuisineName, image.toString())
         cuisines.add(newCuisine)
         return newCuisine
     }
@@ -124,26 +124,26 @@ class RestaurantFakeGateway : IRestaurantGateway {
     }
 
     private val cuisines = mutableListOf<Cuisine>(
-        Cuisine("1", "Angolan cuisine"),
-        Cuisine("", "Cameroonian cuisine"),
-        Cuisine("", "Chadian cuisine"),
-        Cuisine("", "Congolese cuisine"),
-        Cuisine("", "Centrafrican cuisine"),
-        Cuisine("", "Equatorial Guinea cuisine"),
-        Cuisine("", "Gabonese cuisine"),
-        Cuisine("", "Santomean cuisine"),
-        Cuisine("", "Burundian cuisine"),
-        Cuisine("", "Djiboutian cuisine"),
-        Cuisine("", "Eritrean cuisine"),
-        Cuisine("", "Ethiopian cuisine"),
-        Cuisine("", "Kenyan cuisine"),
-        Cuisine("", "Maasai cuisine"),
-        Cuisine("", "Rwandan cuisine"),
-        Cuisine("", "Somali cuisine"),
-        Cuisine("", "South Sudanese cuisine"),
-        Cuisine("", "Tanzanian cuisine"),
-        Cuisine("", "Zanzibari cuisine"),
-        Cuisine("", "Ugandan cuisine"),
+//        Cuisine("1", "Angolan cuisine"),
+//        Cuisine("", "Cameroonian cuisine"),
+//        Cuisine("", "Chadian cuisine"),
+//        Cuisine("", "Congolese cuisine"),
+//        Cuisine("", "Centrafrican cuisine"),
+//        Cuisine("", "Equatorial Guinea cuisine"),
+//        Cuisine("", "Gabonese cuisine"),
+//        Cuisine("", "Santomean cuisine"),
+//        Cuisine("", "Burundian cuisine"),
+//        Cuisine("", "Djiboutian cuisine"),
+//        Cuisine("", "Eritrean cuisine"),
+//        Cuisine("", "Ethiopian cuisine"),
+//        Cuisine("", "Kenyan cuisine"),
+//        Cuisine("", "Maasai cuisine"),
+//        Cuisine("", "Rwandan cuisine"),
+//        Cuisine("", "Somali cuisine"),
+//        Cuisine("", "South Sudanese cuisine"),
+//        Cuisine("", "Tanzanian cuisine"),
+//        Cuisine("", "Zanzibari cuisine"),
+//        Cuisine("", "Ugandan cuisine"),
     )
 
     private val restaurants = mutableListOf(

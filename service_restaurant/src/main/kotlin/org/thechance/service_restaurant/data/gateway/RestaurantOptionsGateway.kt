@@ -96,8 +96,8 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         ).toList().first().categories.filterNot { it.isDeleted }.toEntity()
     }
 
-    override suspend fun addCategory(categoryName: String): Category {
-        val addedCategory = CategoryCollection(name = categoryName)
+    override suspend fun addCategory(category: Category): Category {
+        val addedCategory = CategoryCollection(name = category.name, image = category.image)
         container.categoryCollection.insertOne(addedCategory)
         return addedCategory.toEntity()
     }
@@ -197,14 +197,14 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
     override suspend fun getCuisineById(id: String): Cuisine? =
         container.cuisineCollection.findOneById(ObjectId(id))?.takeIf { !it.isDeleted }?.toEntity()
 
-    override suspend fun getMealsInCuisine(cuisineId: String,page:Int,limit:Int): List<Meal> {
+    override suspend fun getMealsInCuisine(cuisineId: String, page: Int, limit: Int): List<Meal> {
         val mealsId = getMealsIdsByCuisine(cuisineId)
         return container.mealCollection.find(
             and(
                 MealCollection::id `in` mealsId,
                 MealCollection::isDeleted eq false
             )
-        ).paginate(page,limit).toList().toMealEntity()
+        ).paginate(page, limit).toList().toMealEntity()
     }
 
     private suspend fun getMealsIdsByCuisine(cuisineId: String): List<ObjectId> {

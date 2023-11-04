@@ -29,10 +29,6 @@ class FakeRestaurantGateway : IRestaurantGateway {
         return offers.map { it.toEntity() }
     }
 
-    override suspend fun getMostOrdersMeal(restaurantId: String): List<Meal> {
-        return meals.map { it.toEntity() }
-    }
-
     override suspend fun getCuisinesWithMealsInRestaurant(restaurantId: String): List<Cuisine> {
         TODO("Not yet implemented")
     }

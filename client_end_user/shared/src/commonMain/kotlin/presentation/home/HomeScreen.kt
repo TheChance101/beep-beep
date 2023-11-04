@@ -65,16 +65,14 @@ import presentation.main.SearchTab
 import presentation.meals.MealsScreen
 import presentation.orderFoodTracking.OrderFoodTrackingScreen
 import presentation.resturantDetails.RestaurantScreen
+import presentation.taxi.TaxiOrderScreen
+import presentation.taxi.TaxiOrderScreenModel
 import resources.Resources
 import util.getNavigationBarPadding
 import util.root
 
 class HomeScreen : BaseScreen<
-        HomeScreenModel,
-        HomeScreenUiState,
-        HomeScreenUiEffect,
-        HomeScreenInteractionListener
-        >() {
+        HomeScreenModel, HomeScreenUiState, HomeScreenUiEffect, HomeScreenInteractionListener>() {
 
     @Composable
     override fun Content() {
@@ -90,7 +88,7 @@ class HomeScreen : BaseScreen<
 
             is HomeScreenUiEffect.NavigateToCuisines -> navigator.root?.push(CuisinesScreen())
             is HomeScreenUiEffect.NavigateToChatSupport -> navigator.root?.push(ChatSupportScreen())
-            is HomeScreenUiEffect.NavigateToOrderTaxi -> println("Navigate to Order Taxi screen")
+            is HomeScreenUiEffect.NavigateToOrderTaxi -> navigator.root?.push(TaxiOrderScreen())
             is HomeScreenUiEffect.ScrollDownToRecommendedRestaurants -> println("Scroll down home screen")
             is HomeScreenUiEffect.NavigateToOfferItem -> println("Navigate to offer item details ${effect.offerId}")
             is HomeScreenUiEffect.NavigateToOrderDetails -> println("Navigate to order details ${effect.orderId}")

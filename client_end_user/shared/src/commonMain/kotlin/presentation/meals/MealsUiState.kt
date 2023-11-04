@@ -17,7 +17,10 @@ data class MealsUiState(
 
     val isLogin: Boolean = false,
     val showLoginSheet: Boolean = false,
+    val isAddToCartLoading: Boolean = false,
+    val showToast: Boolean = false,
 
     val isLoading: Boolean = false,
-    val error: ErrorState? = null
+    val error: ErrorState? = null,
+    val errorAddToCart: ErrorState? = null,
 )

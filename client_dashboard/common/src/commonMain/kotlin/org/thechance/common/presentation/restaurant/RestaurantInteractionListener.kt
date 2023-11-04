@@ -34,6 +34,8 @@ interface RestaurantInteractionListener : BaseInteractionListener, AddCuisineInt
 interface AddCuisineInteractionListener {
   
     fun onClickAddCuisine()
+    fun onClickImagePicker()
+    fun onSelectedImage(image: Any?)
 
     fun onClickDeleteCuisine(cuisineId: String)
 
