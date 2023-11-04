@@ -1,4 +1,4 @@
-package org.thechance.api_gateway.data.model
+package org.thechance.api_gateway.data.model.notification
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
