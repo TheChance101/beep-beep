@@ -7,11 +7,16 @@ import android.graphics.Color
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import data.gateway.service.IFireBaseMessageService
 import org.thechance.beepbeep.R
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
-class FireBaseMsgServiceImpl() : FirebaseMessagingService() {
+class FireBaseMsgServiceImpl() : FirebaseMessagingService() , IFireBaseMessageService {
 
     override fun onNewToken(token: String) {
         Log.d("TAG", "Refreshed token: $token")
@@ -59,6 +64,16 @@ class FireBaseMsgServiceImpl() : FirebaseMessagingService() {
         }
 
         notificationManager.notify(notificationId, builder.build())
+    }
+
+    override suspend fun getDeviceToken(): String {
+        return suspendCoroutine {
+            FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
+                it.resume(token)
+            }.addOnFailureListener { exception ->
+                it.resumeWithException(exception)
+            }
+        }
     }
 
 }

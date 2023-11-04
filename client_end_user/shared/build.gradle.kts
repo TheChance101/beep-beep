@@ -8,8 +8,7 @@ plugins {
     alias(libs.plugins.kotlinKsp)
     id("io.realm.kotlin") version "1.10.0"
     kotlin("plugin.serialization") version "1.9.0"
-    id("com.google.gms.google-services").version("4.3.14").apply(false)
-
+    alias(libs.plugins.google.services)
 }
 
 group = "org.thechance"
@@ -74,8 +73,7 @@ kotlin {
                 implementation(libs.paging.common)
 
                 //firebase
-                implementation("dev.gitlive:firebase-firestore:1.8.1")
-                implementation("dev.gitlive:firebase-common:1.8.1")
+                implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
             }
         }
         val androidMain by getting {
