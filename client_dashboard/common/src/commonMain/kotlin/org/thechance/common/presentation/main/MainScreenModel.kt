@@ -4,17 +4,17 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.thechance.common.domain.usecase.IExploreDashboardUseCase
 import org.thechance.common.domain.usecase.ILogoutUserUseCase
-import org.thechance.common.domain.usecase.IThemeManagementUseCase
-import org.thechance.common.domain.usecase.IUsersManagementUseCase
+import org.thechance.common.domain.usecase.IManageThemeUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 
 class MainScreenModel(
-    private val userManagement: IUsersManagementUseCase,
+    private val exploreDashboard: IExploreDashboardUseCase,
     private val logout: ILogoutUserUseCase,
-    private val themeManagement: IThemeManagementUseCase
+    private val themeManagement: IManageThemeUseCase
 ) : BaseScreenModel<MainUiState, MainUiEffect>(MainUiState()), MainInteractionListener {
 
 
@@ -25,7 +25,7 @@ class MainScreenModel(
 
     private fun getUserInfo() {
         tryToExecute(
-            userManagement::getUserInfo,
+            exploreDashboard::getUserInfo,
             ::onGetUserInfoSuccessfully,
             ::onError
         )

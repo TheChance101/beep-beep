@@ -14,18 +14,9 @@ interface IManageTaxisUseCase {
 
     suspend fun createTaxiReport()
 
-    suspend fun getTaxis(
-        username: String?,
-        taxiFiltration: TaxiFiltration,
-        page: Int,
-        limit: Int
-    ): DataWrapper<Taxi>
-
     suspend fun updateTaxi(addTaxi: NewTaxiInfo,taxiId:String): Taxi
 
     suspend fun deleteTaxi(taxiId: String): Taxi
-
-    suspend fun getTaxiById(id: String): Taxi
 
 }
 
@@ -41,26 +32,8 @@ class ManageTaxisUseCase(
         return taxiGateway.getPdfTaxiReport()
     }
 
-    override suspend fun getTaxis(
-        username: String?,
-        taxiFiltration: TaxiFiltration,
-        page: Int,
-        limit: Int
-    ): DataWrapper<Taxi> {
-        return taxiGateway.getTaxis(
-            page = page,
-            limit = limit,
-            username = username,
-            taxiFiltration = taxiFiltration
-        )
-    }
-
     override suspend fun deleteTaxi(taxiId: String): Taxi {
         return taxiGateway.deleteTaxi(taxiId)
-    }
-
-    override suspend fun getTaxiById(id: String): Taxi {
-        return taxiGateway.getTaxiById(id)
     }
 
     override suspend fun updateTaxi(addTaxi: NewTaxiInfo,taxiId:String): Taxi {

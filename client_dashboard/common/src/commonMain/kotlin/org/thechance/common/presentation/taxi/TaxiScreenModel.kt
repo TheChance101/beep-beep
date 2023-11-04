@@ -1,13 +1,10 @@
 package org.thechance.common.presentation.taxi
 
-import cafe.adriel.voyager.core.model.coroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Taxi
+import org.thechance.common.domain.usecase.IExploreDashboardUseCase
 import org.thechance.common.domain.usecase.IManageTaxisUseCase
 import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.base.BaseScreenModel
@@ -15,8 +12,9 @@ import org.thechance.common.presentation.restaurant.ErrorWrapper
 import org.thechance.common.presentation.util.ErrorState
 
 class TaxiScreenModel(
-    private val manageTaxis: IManageTaxisUseCase
-) : BaseScreenModel<TaxiUiState, TaxiUiEffect>(TaxiUiState()), TaxiInteractionListener {
+    private val manageTaxis: IManageTaxisUseCase,
+    private val exploreDashboard: IExploreDashboardUseCase,
+    ) : BaseScreenModel<TaxiUiState, TaxiUiEffect>(TaxiUiState()), TaxiInteractionListener {
 
     private var searchJob: Job? = null
     private var limitJob: Job? = null
@@ -39,7 +37,7 @@ class TaxiScreenModel(
         updateState { it.copy(isLoading = true) }
         tryToExecute(
             { state.value.run{
-                manageTaxis.getTaxis(
+                exploreDashboard.getTaxis(
                         username= searchQuery.trim(),
                         taxiFiltration=taxiFilterUiState.toEntity(),
                         page= currentPage,
@@ -336,7 +334,7 @@ class TaxiScreenModel(
         updateState { it.copy(isEditMode = true, isAddNewTaxiDialogVisible = true) }
         setTaxiMenuVisibility(taxiId, false)
         tryToExecute(
-            { manageTaxis.getTaxiById(taxiId) },
+            { exploreDashboard.getTaxiById(taxiId) },
             ::onGetTaxiByIdSuccess,
             ::onError
         )

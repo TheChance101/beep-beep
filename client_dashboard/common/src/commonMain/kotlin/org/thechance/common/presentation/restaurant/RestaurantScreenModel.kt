@@ -5,7 +5,7 @@ import org.thechance.common.domain.entity.Cuisine
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.LocationInfo
 import org.thechance.common.domain.entity.Restaurant
-import org.thechance.common.domain.usecase.IManageLocationUseCase
+import org.thechance.common.domain.usecase.IExploreDashboardUseCase
 import org.thechance.common.domain.usecase.IManageRestaurantUseCase
 import org.thechance.common.domain.usecase.IMangeCuisinesUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
@@ -15,7 +15,7 @@ import java.io.File
 
 class RestaurantScreenModel(
     private val manageRestaurant: IManageRestaurantUseCase,
-    private val manageLocation: IManageLocationUseCase,
+    private val exploreDashboard: IExploreDashboardUseCase,
     private val mangeCuisines: IMangeCuisinesUseCase,
 ) : BaseScreenModel<RestaurantUiState, RestaurantUIEffect>(RestaurantUiState()),
     RestaurantInteractionListener {
@@ -39,7 +39,7 @@ class RestaurantScreenModel(
         tryToExecute(
             {
                 mutableState.value.run {
-                    manageRestaurant.getRestaurant(
+                    exploreDashboard.getRestaurant(
                         selectedPageNumber,
                         numberOfRestaurantsInPage,
                         searchQuery,
@@ -70,7 +70,7 @@ class RestaurantScreenModel(
 
     private fun getCuisines() {
         tryToExecute(
-            mangeCuisines::getCuisines,
+            exploreDashboard::getCuisines,
             ::onGetCuisinesSuccessfully,
             ::onError
         )
@@ -262,7 +262,7 @@ class RestaurantScreenModel(
 
     private fun getCurrentLocation() {
         tryToExecute(
-            callee = { manageLocation.getCurrentLocation() },
+            callee = { exploreDashboard.getCurrentLocation() },
             onSuccess = ::onGetCurrentLocationSuccess,
             onError = ::onError,
         )
@@ -355,9 +355,7 @@ class RestaurantScreenModel(
     }
 
     private fun setRestaurantMenuVisibility(id: String, isExpanded: Boolean) {
-        println("setRestaurantMenuVisibility $id $isExpanded")
         val currentRestaurantState = state.value.restaurants
-        println("currentRestaurantState $currentRestaurantState")
         val selectedRestaurantState = currentRestaurantState.first { it.id == id }
         val updateRestaurantState = selectedRestaurantState.copy(isExpanded = isExpanded)
         updateState {
@@ -383,7 +381,7 @@ class RestaurantScreenModel(
 
     private fun getRestaurantById(id: String) {
         tryToExecute(
-            { manageRestaurant.getRestaurantById(id) },
+            { exploreDashboard.getRestaurantById(id) },
             ::onGetRestaurantByIdSuccessfully,
             ::onError
         )
@@ -565,23 +563,33 @@ class RestaurantScreenModel(
     }
 
     override fun onSelectedCuisineImage(image: Any?) {
-        val imageFile = image?.let {  it as File }
+        val imageFile = image?.let { it as File }
         state.value.newCuisineDialogUiState.run {
-            if(cuisineName.isNotEmpty() && this.cuisineImage.isNotEmpty()){
-                updateState { it.copy(newCuisineDialogUiState =
-                it.newCuisineDialogUiState.copy(isAddCuisineEnabled = true))
+            if (cuisineName.isNotEmpty() && this.cuisineImage.isNotEmpty()) {
+                updateState {
+                    it.copy(
+                        newCuisineDialogUiState =
+                        it.newCuisineDialogUiState.copy(isAddCuisineEnabled = true)
+                    )
                 }
             }
         }
-        updateState { it.copy(newCuisineDialogUiState = it.newCuisineDialogUiState.copy(
-            isImagePickerVisible = false, cuisineImage =  imageFile?.readBytes()?: byteArrayOf()))
+        updateState {
+            it.copy(
+                newCuisineDialogUiState = it.newCuisineDialogUiState.copy(
+                    isImagePickerVisible = false,
+                    cuisineImage = imageFile?.readBytes() ?: byteArrayOf()
+                )
+            )
         }
     }
 
 
     override fun onCloseAddCuisineDialog() {
         clearCuisineErrorState()
-        updateState { it.copy(newCuisineDialogUiState =
+        updateState {
+            it.copy(
+                newCuisineDialogUiState =
                 it.newCuisineDialogUiState.copy(
                     isVisible = false,
                     cuisineName = "",
@@ -606,9 +614,12 @@ class RestaurantScreenModel(
 
     private fun onCreateCuisinesSuccessfully(cuisine: Cuisine) {
         clearCuisineErrorState()
-        updateState { it.copy(newCuisineDialogUiState = it.newCuisineDialogUiState.copy(
+        updateState {
+            it.copy(
+                newCuisineDialogUiState = it.newCuisineDialogUiState.copy(
                     cuisines = it.newCuisineDialogUiState.cuisines.toMutableList().apply {
-                            add(cuisine.toUiState()) }, cuisineName = "", cuisineImage = byteArrayOf()
+                        add(cuisine.toUiState())
+                    }, cuisineName = "", cuisineImage = byteArrayOf()
                 )
             )
         }
@@ -639,9 +650,12 @@ class RestaurantScreenModel(
 
     override fun onChangeCuisineName(cuisineName: String) {
         state.value.newCuisineDialogUiState.run {
-            if(cuisineName.isNotEmpty() && cuisineImage.isNotEmpty()){
-                updateState { it.copy(newCuisineDialogUiState =
-                it.newCuisineDialogUiState.copy(isAddCuisineEnabled = true))
+            if (cuisineName.isNotEmpty() && cuisineImage.isNotEmpty()) {
+                updateState {
+                    it.copy(
+                        newCuisineDialogUiState =
+                        it.newCuisineDialogUiState.copy(isAddCuisineEnabled = true)
+                    )
                 }
             }
         }

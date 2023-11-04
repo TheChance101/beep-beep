@@ -3,7 +3,7 @@ package org.thechance.common.domain.usecase
 import kotlinx.coroutines.flow.Flow
 import org.thechance.common.domain.getway.IUserLocalGateway
 
-interface IThemeManagementUseCase {
+interface IManageThemeUseCase {
 
     suspend fun switchTheme(mode: Boolean)
 
@@ -11,7 +11,7 @@ interface IThemeManagementUseCase {
 
 }
 
-class ThemeManagementUseCase(private val userLocalGateway: IUserLocalGateway) : IThemeManagementUseCase {
+class ManageThemeUseCase(private val userLocalGateway: IUserLocalGateway) : IManageThemeUseCase {
 
     override suspend fun switchTheme(mode: Boolean) {
         userLocalGateway.updateThemeMode(mode)

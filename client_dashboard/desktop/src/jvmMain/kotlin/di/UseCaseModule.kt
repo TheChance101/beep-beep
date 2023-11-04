@@ -8,13 +8,10 @@ import org.thechance.common.domain.usecase.*
 val UseCaseModule = module {
     singleOf(::LoginUserUseCase) { bind<ILoginUserUseCase>() }
     singleOf(::ManageRestaurantUseCase) { bind<IManageRestaurantUseCase>() }
-    singleOf(::ManageLocationUseCase) { bind<IManageLocationUseCase>() }
-    singleOf(::UsersManagementUseCase) { bind<IUsersManagementUseCase>() }
-    singleOf(::ThemeManagementUseCase) { bind<IThemeManagementUseCase>() }
+    singleOf(::ManageUsersUseCase) { bind<IManageUsersUseCase>() }
+    singleOf(::ManageThemeUseCase) { bind<IManageThemeUseCase>() }
     singleOf(::ManageTaxisUseCase) { bind<IManageTaxisUseCase>() }
     singleOf(::LogoutUserUseCase) { bind<ILogoutUserUseCase>() }
     singleOf(::MangeCuisinesUseCase) { bind<IMangeCuisinesUseCase>() }
-    singleOf(::ValidateRestaurantUseCase) { bind<IValidateRestaurantUseCase>() }
-    singleOf(::TaxiValidationUseCase) { bind<ITaxiValidationUseCase>() }
-    singleOf(::ManageRevenueShareUseCase) { bind<IManageRevenueShareUseCase>() }
+    singleOf(::ExploreDashboardUseCase) { bind<IExploreDashboardUseCase>() }
 }

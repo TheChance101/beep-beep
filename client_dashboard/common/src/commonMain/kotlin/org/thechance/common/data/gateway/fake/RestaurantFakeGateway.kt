@@ -110,6 +110,10 @@ class RestaurantFakeGateway : IRestaurantGateway {
         return cuisines
     }
 
+    override suspend fun getOffers(): List<Offer> {
+        return offers
+    }
+
 
     override suspend fun createCuisine(cuisineName: String,image:ByteArray): Cuisine {
         val newCuisine = Cuisine(UUID.randomUUID().toString(), cuisineName, image.toString())
@@ -123,27 +127,40 @@ class RestaurantFakeGateway : IRestaurantGateway {
         }
     }
 
+    override suspend fun createOffer(offerName: String, image: ByteArray): Offer {
+        val newOffer =Offer(UUID.randomUUID().toString(), offerName, image.toString())
+        offers.add(newOffer)
+        return newOffer
+    }
+
     private val cuisines = mutableListOf<Cuisine>(
-//        Cuisine("1", "Angolan cuisine"),
-//        Cuisine("", "Cameroonian cuisine"),
-//        Cuisine("", "Chadian cuisine"),
-//        Cuisine("", "Congolese cuisine"),
-//        Cuisine("", "Centrafrican cuisine"),
-//        Cuisine("", "Equatorial Guinea cuisine"),
-//        Cuisine("", "Gabonese cuisine"),
-//        Cuisine("", "Santomean cuisine"),
-//        Cuisine("", "Burundian cuisine"),
-//        Cuisine("", "Djiboutian cuisine"),
-//        Cuisine("", "Eritrean cuisine"),
-//        Cuisine("", "Ethiopian cuisine"),
-//        Cuisine("", "Kenyan cuisine"),
-//        Cuisine("", "Maasai cuisine"),
-//        Cuisine("", "Rwandan cuisine"),
-//        Cuisine("", "Somali cuisine"),
-//        Cuisine("", "South Sudanese cuisine"),
-//        Cuisine("", "Tanzanian cuisine"),
-//        Cuisine("", "Zanzibari cuisine"),
-//        Cuisine("", "Ugandan cuisine"),
+        Cuisine("1", "Angolan cuisine",""),
+        Cuisine("", "Cameroonian cuisine",""),
+        Cuisine("", "Chadian cuisine",""),
+        Cuisine("", "Congolese cuisine",""),
+        Cuisine("", "Centrafrican cuisine",""),
+        Cuisine("", "Equatorial Guinea cuisine",""),
+        Cuisine("", "Gabonese cuisine",""),
+        Cuisine("", "Santomean cuisine",""),
+        Cuisine("", "Burundian cuisine",""),
+        Cuisine("", "Djiboutian cuisine",""),
+        Cuisine("", "Eritrean cuisine",""),
+        Cuisine("", "Ethiopian cuisine",""),
+        Cuisine("", "Kenyan cuisine",""),
+        Cuisine("", "Maasai cuisine",""),
+        Cuisine("", "Rwandan cuisine",""),
+        Cuisine("", "Somali cuisine","")
+    )
+    private val offers = mutableListOf<Offer>(
+        Offer("1", "Angolan cuisine",""),
+        Offer("2", "Cameroonian cuisine",""),
+        Offer("3", "Chadian cuisine",""),
+        Offer("4", "Congolese cuisine",""),
+        Offer("5", "Centrafrican cuisine",""),
+        Offer("6", "Equatorial Guinea cuisine",""),
+        Offer("7", "Gabonese cuisine",""),
+        Offer("8", "Santomean cuisine",""),
+        Offer("9", "Burundian cuisine",""),
     )
 
     private val restaurants = mutableListOf(

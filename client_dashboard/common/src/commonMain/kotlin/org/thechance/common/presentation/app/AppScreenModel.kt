@@ -5,10 +5,10 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.thechance.common.domain.usecase.IThemeManagementUseCase
+import org.thechance.common.domain.usecase.IManageThemeUseCase
 
 class AppScreenModel(
-    private val themeManagement: IThemeManagementUseCase
+    private val themeManagement: IManageThemeUseCase
 ) : StateScreenModel<Boolean>(false) {
 
     init {
