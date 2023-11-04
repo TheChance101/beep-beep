@@ -327,15 +327,6 @@ class RestaurantScreenModel(
     override fun onWorkingStartHourChange(hour: String) {
         updateState {
             it.copy(restaurantInformationUIState = it.restaurantInformationUIState.copy(openingTime = hour))
-            it.copy(
-                restaurantInformationUIState = it.restaurantInformationUIState.copy(
-                    openingTime = hour,
-//                    startTimeError = ErrorWrapper(
-//                        "write in valid format 00:00",
-////                        !iValidateRestaurantUseCase.validateStartTime(hour)
-//                    ),
-                )
-            )
         }
     }
 
@@ -430,11 +421,42 @@ class RestaurantScreenModel(
     }
 
     override fun onClickOfferImagePicker() {
-        TODO("Not yet implemented")
+        updateState {
+            it.copy(
+                newOfferDialogUiState = it.newOfferDialogUiState.copy(
+                    isImagePickerVisible = true
+                )
+            )
+        }
     }
 
     override fun onSelectedOfferImage(image: Any?) {
-        TODO("Not yet implemented")
+        val imageFile = image?.let { it as File }
+        state.value.newOfferDialogUiState.run {
+            if (offerName.isNotEmpty() && this.selectedOfferImage.isNotEmpty()) {
+                updateState {
+                    it.copy(
+                        newOfferDialogUiState =
+                        it.newOfferDialogUiState.copy(
+                            isAddOfferEnabled = true,
+                        )
+                    )
+                }
+            }
+        }
+        updateState {
+            it.copy(
+                newOfferDialogUiState =
+                it.newOfferDialogUiState.copy(
+                    isImagePickerVisible = false,
+                    selectedOfferImage = imageFile?.readBytes() ?: byteArrayOf()
+                )
+            )
+        }
+    }
+
+    override fun onAddOfferClicked() {
+        updateState { it.copy(newOfferDialogUiState = it.newOfferDialogUiState.copy(isVisible = true)) }
     }
 
     override fun onClickDeleteOffer(cuisineId: String) {
@@ -442,7 +464,7 @@ class RestaurantScreenModel(
     }
 
     override fun onCloseAddOfferDialog() {
-        TODO("Not yet implemented")
+        updateState { it.copy(newOfferDialogUiState = it.newOfferDialogUiState.copy(isVisible = false)) }
     }
 
     override fun onClickCreateOffer() {
@@ -450,7 +472,23 @@ class RestaurantScreenModel(
     }
 
     override fun onChangeOfferName(offerName: String) {
-        TODO("Not yet implemented")
+        state.value.newOfferDialogUiState.run {
+            if (offerName.isNotEmpty() && selectedOfferImage.isNotEmpty()) {
+                updateState {
+                    it.copy(
+                        newOfferDialogUiState =
+                        it.newOfferDialogUiState.copy(isAddOfferEnabled = true)
+                    )
+                }
+            }
+        }
+        clearCuisineErrorState()
+        updateState {
+            it.copy(
+                newOfferDialogUiState =
+                it.newOfferDialogUiState.copy(offerName = offerName)
+            )
+        }
     }
 
     override fun onCreateNewRestaurantClicked() {
@@ -535,20 +573,20 @@ class RestaurantScreenModel(
                 }
             }
         }
-        updateState { it.copy(newCuisineDialogUiState =
-        it.newCuisineDialogUiState.copy(
-            isImagePickerVisible = false, cuisineImage =  imageFile?.readBytes()?: byteArrayOf())
-        )
+        updateState { it.copy(newCuisineDialogUiState = it.newCuisineDialogUiState.copy(
+            isImagePickerVisible = false, cuisineImage =  imageFile?.readBytes()?: byteArrayOf()))
         }
     }
 
 
     override fun onCloseAddCuisineDialog() {
         clearCuisineErrorState()
-        updateState {
-            it.copy(
-                newCuisineDialogUiState =
-                it.newCuisineDialogUiState.copy(isVisible = false, cuisineName = "", cuisineImage = byteArrayOf())
+        updateState { it.copy(newCuisineDialogUiState =
+                it.newCuisineDialogUiState.copy(
+                    isVisible = false,
+                    cuisineName = "",
+                    cuisineImage = byteArrayOf()
+                )
             )
         }
     }
@@ -565,20 +603,12 @@ class RestaurantScreenModel(
         )
     }
 
-    override fun onAddOfferClicked() {
-        updateState { it.copy(newOfferDialogUiState= it .newOfferDialogUiState.copy(isVisible = true)) }
-    }
 
     private fun onCreateCuisinesSuccessfully(cuisine: Cuisine) {
         clearCuisineErrorState()
-        updateState {
-            it.copy(
-                newCuisineDialogUiState = it.newCuisineDialogUiState.copy(
-                    cuisines = it.newCuisineDialogUiState.cuisines.toMutableList()
-                        .apply {
-                            add(cuisine.toUiState())
-                        },
-                    cuisineName = ""
+        updateState { it.copy(newCuisineDialogUiState = it.newCuisineDialogUiState.copy(
+                    cuisines = it.newCuisineDialogUiState.cuisines.toMutableList().apply {
+                            add(cuisine.toUiState()) }, cuisineName = "", cuisineImage = byteArrayOf()
                 )
             )
         }

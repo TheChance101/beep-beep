@@ -129,13 +129,14 @@ data class NewOfferDialogUiState(
     val offerName: String = "",
     val isAddOfferEnabled: Boolean = false,
     val isImagePickerVisible: Boolean = false,
-    val offerImage: ByteArray= byteArrayOf(),
+    val selectedOfferImage: ByteArray= byteArrayOf(),
     val offers: List<OfferUiState> = emptyList(),
     val offerNameError: ErrorWrapper = ErrorWrapper(),
 )
 data class OfferUiState(
     val id: String,
     val name: String,
+    val image: String,
 )
 
 

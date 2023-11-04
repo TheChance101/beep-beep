@@ -39,8 +39,6 @@ kotlin {
                 implementation(libs.compose.coil)
                 implementation("io.github.qdsfdhvh:image-loader:1.6.7")
 
-//                implementation("io.coil-kt:coil-compose:2.5.0")
-
                 api(libs.ktor.client.core)
                 api(libs.ktor.client.cio)
                 api(libs.ktor.json.serialization)

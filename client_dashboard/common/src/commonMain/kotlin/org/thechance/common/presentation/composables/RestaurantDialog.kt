@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogWindow
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTextField
@@ -63,11 +63,11 @@ private fun RestaurantDialog(
     isEditMode: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    Dialog(
+    DialogWindow(
+        onCloseRequest = onCancelClicked,
         visible = isVisible,
         undecorated = true,
-        onCloseRequest = onCancelClicked,
-        resizable = false,
+        resizable = false
     ) {
         window.minimumSize = Dimension(1100, 664)
         Column(
@@ -169,7 +169,8 @@ private fun RestaurantDialog(
                         BpOutlinedButton(
                             title = Resources.Strings.cancel,
                             onClick = onCancelClicked,
-                            modifier = Modifier.padding(end = Theme.dimens.space16).width(120.kms)
+                            modifier = Modifier.padding(end = Theme.dimens.space16)
+                                .width(120.kms)
                         )
                         BpButton(
                             title = if (isEditMode) Resources.Strings.update else Resources.Strings.create,

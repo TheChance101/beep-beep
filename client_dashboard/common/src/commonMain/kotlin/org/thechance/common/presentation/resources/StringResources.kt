@@ -38,6 +38,7 @@ data class StringResources(
     val updateRestaurant: String = "Update Restaurant",
     val offers: String = "Offers",
     val addOffer: String = "Add Offer",
+    val noOffers: String = "No offers add yet",
     //endregion Restaurant
 
     //region Taxi

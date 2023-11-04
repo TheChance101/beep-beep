@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -11,35 +12,26 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogWindow
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.*
 import com.beepbeep.designSystem.ui.theme.Theme
 import com.darkrockstudios.libraries.mpfilepicker.FilePicker
-import io.ktor.utils.io.bits.useMemory
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.res.loadImageBitmap
-import androidx.compose.ui.unit.Density
-import com.seiko.imageloader.rememberAsyncImagePainter
-import okio.ByteString.Companion.toByteString
-import org.jetbrains.skia.Image.Companion.makeFromEncoded
-
+import com.seiko.imageloader.rememberImagePainter
 import org.thechance.common.presentation.base.BaseScreen
 import org.thechance.common.presentation.composables.*
 import org.thechance.common.presentation.composables.modifier.cursorHoverIconHand
@@ -49,9 +41,8 @@ import org.thechance.common.presentation.composables.table.BpTable
 import org.thechance.common.presentation.composables.table.TotalItemsIndicator
 import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.kms
+import org.thechance.common.presentation.util.toImageBitmap
 import java.awt.Dimension
-import java.io.ByteArrayInputStream
-import java.io.File
 import kotlin.reflect.KFunction1
 
 class RestaurantScreen :
@@ -63,16 +54,13 @@ class RestaurantScreen :
     }
 
     override fun onEffect(effect: RestaurantUIEffect, navigator: Navigator) {
-        when (effect) {
-            else -> {}
-        }
+
     }
 
     @Composable
     override fun OnRender(state: RestaurantUiState, listener: RestaurantInteractionListener) {
         AnimatedVisibility(visible = state.isNewRestaurantInfoDialogVisible) {
             NewRestaurantInfoDialog(
-                modifier = Modifier,
                 state = state,
                 listener = listener,
             )
@@ -359,7 +347,7 @@ class RestaurantScreen :
                             .padding(top = 16.kms)
                             .background(color = Theme.colors.background)
                             .padding(horizontal = 24.kms, vertical = 16.kms),
-                        onClick = { onClickRating(it) }
+                        onClick = onClickRating
                     )
                     Text(
                         text = Resources.Strings.priceLevel,
@@ -379,7 +367,7 @@ class RestaurantScreen :
                             .padding(top = 16.kms)
                             .background(color = Theme.colors.background)
                             .padding(horizontal = 24.kms, vertical = 16.kms),
-                        onClick = { onClickPrice(it) }
+                        onClick = onClickPrice
                     )
                 }
             }
@@ -391,12 +379,12 @@ class RestaurantScreen :
         listener: AddCuisineInteractionListener,
         state: RestaurantAddCuisineDialogUiState
     ) {
-        Dialog(
-            visible = state.isVisible,
-            transparent = true,
-            undecorated = true,
-            resizable = false,
+        DialogWindow(
             onCloseRequest = listener::onCloseAddCuisineDialog,
+            visible = state.isVisible,
+            undecorated = true,
+            transparent = true,
+            resizable = false
         ) {
             window.minimumSize = Dimension(400, 420)
             Column(
@@ -440,7 +428,10 @@ class RestaurantScreen :
                             contentDescription = null,
                             modifier = Modifier.size(32.dp).align(Alignment.Center)
                                 .noRipple(listener::onClickCuisineImage),
-                            colorFilter = ColorFilter.tint(color = if (state.cuisineImage.isNotEmpty()) Theme.colors.primary else Theme.colors.divider)
+                            colorFilter = ColorFilter.tint(
+                                color =
+                                if (state.cuisineImage.isNotEmpty()) Theme.colors.primary else Theme.colors.divider
+                            )
                         )
                         FilePicker(
                             state.isImagePickerVisible,
@@ -501,21 +492,21 @@ class RestaurantScreen :
         }
     }
 
-     @Composable
+    @Composable
     private fun NewOfferDialog(
         listener: AddOfferInteractionListener,
         state: NewOfferDialogUiState
     ) {
 
-        Dialog(
-            visible = state.isVisible,
-            transparent = true,
-            undecorated = true,
-            resizable = false,
+        DialogWindow(
             onCloseRequest = listener::onCloseAddOfferDialog,
+            visible = state.isVisible,
+            undecorated = true,
+            transparent = true,
+            resizable = false
         ) {
-            window.minimumSize = Dimension(400, 420)
-            Column(
+            window.minimumSize = Dimension(1000, 500)
+            Row(
                 modifier = Modifier
                     .background(Theme.colors.surface, RoundedCornerShape(8.kms))
                     .border(
@@ -524,93 +515,109 @@ class RestaurantScreen :
                         RoundedCornerShape(Theme.radius.medium)
                     )
             ) {
-                Text(
-                    text = Resources.Strings.offers,
-                    style = Theme.typography.headline,
-                    color = Theme.colors.contentPrimary,
-                    modifier = Modifier.padding(top = 24.kms, start = 24.kms)
-                )
-                Row(modifier = Modifier.fillMaxWidth()) {
+                Column(modifier = Modifier.weight(1f).fillMaxHeight()) {
+                    Text(
+                        text = Resources.Strings.offers,
+                        style = Theme.typography.headline,
+                        color = Theme.colors.contentPrimary,
+                        modifier = Modifier.padding(top = 24.kms, start = 24.kms)
+                    )
                     BpSimpleTextField(
                         text = state.offerName,
                         hint = Resources.Strings.enterCuisineName,
                         onValueChange = listener::onChangeOfferName,
-                        modifier = Modifier.padding(top = 24.kms, start = 24.kms, end = 16.kms)
-                            .weight(2f),
+                        modifier = Modifier.padding(top = 24.kms, start = 24.kms, end = 16.kms),
                         isError = state.offerNameError.isError,
                         errorMessage = state.offerNameError.errorMessage,
                     )
-                }
-                Box(
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(top = 24.kms, start = 24.kms, end = 16.kms)
-                        .heightIn(min = 56.dp, max = 160.dp)
-                        .border(1.dp, Theme.colors.divider, RoundedCornerShape(Theme.radius.medium))
-                        .padding(horizontal = 16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Image(
-                        contentDescription = null,
-//                        bitmap = loadImageBitmap(File(state.offerImage.decodeToString())),
-                        painter =rememberAsyncImagePainter(state.offerImage.decodeToString()),
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.background(color = MaterialTheme.colorScheme.tertiaryContainer)
-                            .noRipple(listener::onClickOfferImagePicker),
-                        colorFilter =
-                        ColorFilter.tint(color = if (state.offerImage.isNotEmpty()) Theme.colors.primary else Theme.colors.divider)
-                    )
-                    FilePicker(
-                        state.isImagePickerVisible,
-                        fileExtensions = listOf("jpg", "png", "jpeg"),
-                        onFileSelected = { type -> listener.onSelectedOfferImage(type?.path) }
-                    )
-                }
-                LazyColumn(
-                    modifier = Modifier.padding(top = 16.kms)
-                        .background(Theme.colors.background)
-                        .fillMaxWidth().heightIn(min = 64.kms, max = 256.kms)
-                ) {
-                    items(state.offers) { offer ->
-                        Row(
-                            modifier = Modifier.padding(horizontal = 24.kms, vertical = 16.kms),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = offer.name,
-                                style = Theme.typography.caption,
-                                color = Theme.colors.contentPrimary,
-                            )
-                            Spacer(modifier = Modifier.weight(1f))
 
-                            Icon(
-                                painter = painterResource(Resources.Drawable.trashBin),
-                                contentDescription = null,
-                                tint = Theme.colors.primary,
-                                modifier = Modifier
-                                    .noRipple { listener.onClickDeleteOffer(offer.id) }
+                    Box(
+                        modifier = Modifier.fillMaxWidth()
+                            .cursorHoverIconHand()
+                            .padding(top = 24.kms, start = 24.kms, end = 16.kms).weight(1f)
+                            .border(
+                                1.dp,
+                                Theme.colors.divider,
+                                RoundedCornerShape(Theme.radius.medium)
                             )
-                        }
+                            .clickable(
+                                onClick = listener::onClickOfferImagePicker,
+                                role = Role.Image
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        FilePicker(
+                            state.isImagePickerVisible,
+                            fileExtensions = listOf("jpg", "png", "jpeg"),
+                            onFileSelected = { type -> listener.onSelectedOfferImage(type?.platformFile) }
+                        )
+                        state.selectedOfferImage.toImageBitmap()?.let {
+                            Image(
+                                contentDescription = null,
+                                bitmap = it,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.matchParentSize()
+                                    .clip(RoundedCornerShape(Theme.radius.medium)),
+
+                                )
+                            Box(
+                                modifier = Modifier.matchParentSize()
+                                    .background(Theme.colors.surface.copy(alpha = 0.5f))
+                            ) {
+                                Image(
+                                    contentDescription = null,
+                                    painter = painterResource(Resources.Drawable.editImage),
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.size(56.dp).align(Alignment.Center),
+                                    colorFilter = ColorFilter.tint(color = Theme.colors.disable)
+                                )
+                            }
+
+                        } ?: Image(
+                            contentDescription = null,
+                            painter = painterResource(Resources.Drawable.addImage),
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.size(56.dp),
+                            colorFilter = ColorFilter.tint(color = Theme.colors.disable)
+                        )
+                    }
+                    Row(
+                        Modifier.fillMaxWidth().padding(24.kms),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+
+                        BpTransparentButton(
+                            title = Resources.Strings.cancel,
+                            onClick = listener::onCloseAddOfferDialog,
+                            modifier = Modifier.padding(end = 16.kms)
+                                .height(32.dp)
+                                .weight(1f)
+                        )
+                        BpOutlinedButton(
+                            title = Resources.Strings.add,
+                            onClick = listener::onClickCreateOffer,
+                            modifier = Modifier.height(32.dp).weight(3f),
+                            textPadding = PaddingValues(0.dp),
+                            enabled = state.isAddOfferEnabled
+                        )
                     }
                 }
-                Row(
-                    Modifier.fillMaxWidth().padding(24.kms),
-                    horizontalArrangement = Arrangement.Center
+                LazyColumn(
+                    modifier = Modifier.weight(1f)
+                        .padding(top = 24.kms, bottom = 24.kms, end = 16.kms)
+                        .background(Theme.colors.background).fillMaxHeight()
+                        .border(
+                            1.dp,
+                            Theme.colors.divider,
+                            RoundedCornerShape(Theme.radius.medium)
+                        ),
+                    verticalArrangement = Arrangement.spacedBy(16.kms),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    contentPadding = PaddingValues(16.kms)
                 ) {
-
-                    BpTransparentButton(
-                        title = Resources.Strings.cancel,
-                        onClick = listener::onCloseAddOfferDialog,
-                        modifier = Modifier.padding(end = 16.kms)
-                            .height(32.dp)
-                            .weight(1f)
-                    )
-                    BpOutlinedButton(
-                        title = Resources.Strings.add,
-                        onClick = listener::onClickCreateOffer,
-                        modifier = Modifier.height(32.dp).weight(3f),
-                        textPadding = PaddingValues(0.dp),
-                        enabled = state.isAddOfferEnabled
-                    )
+                    items(state.offers) { offer ->
+                        OfferItem(offer = offer)
+                    }
                 }
             }
         }
@@ -649,6 +656,36 @@ class RestaurantScreen :
                     showBottomDivider = false
                 )
             }
+        }
+    }
+
+    @Composable
+    fun OfferItem(
+        offer: OfferUiState,
+    ) {
+        Column(
+            modifier = Modifier
+                .size(200.dp)
+                .border(1.dp, Theme.colors.divider, RoundedCornerShape(Theme.radius.medium)),
+            horizontalAlignment = Alignment.CenterHorizontally
+
+        ) {
+            Image(
+                contentDescription = null,
+                painter = rememberImagePainter(offer.image),
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(Theme.radius.medium))
+                    .background(Theme.colors.primary).weight(1f),
+
+                )
+
+            Text(
+                text = offer.name,
+                style = Theme.typography.caption,
+                color = Theme.colors.contentPrimary,
+                modifier = Modifier.padding(8.kms).background(Theme.colors.onPrimary)
+            )
         }
     }
 }
