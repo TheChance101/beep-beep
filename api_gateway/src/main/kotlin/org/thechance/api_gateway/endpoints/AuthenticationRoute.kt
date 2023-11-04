@@ -45,7 +45,9 @@ fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
         val language = extractLocalizationHeader()
         val appId = extractApplicationIdHeader()
         val token = identityService.loginUser(userName, password, tokenConfiguration, language, appId)
-        notificationService.saveToken(token.userId, deviceToken, language)
+        if (deviceToken.isNotEmpty()){
+            notificationService.saveToken(token.userId, deviceToken, language)
+        }
         respondWithResult(HttpStatusCode.OK, token)
     }
 
