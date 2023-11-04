@@ -16,7 +16,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class FireBaseMsgServiceImpl() : FirebaseMessagingService() , IFireBaseMessageService {
+class FireBaseMsgServiceImpl() : FirebaseMessagingService(), IFireBaseMessageService {
 
     override fun onNewToken(token: String) {
         Log.d("TAG", "Refreshed token: $token")
@@ -62,7 +62,6 @@ class FireBaseMsgServiceImpl() : FirebaseMessagingService() , IFireBaseMessageSe
             }
             notificationManager.createNotificationChannel(channel)
         }
-
         notificationManager.notify(notificationId, builder.build())
     }
 
@@ -75,5 +74,4 @@ class FireBaseMsgServiceImpl() : FirebaseMessagingService() , IFireBaseMessageSe
             }
         }
     }
-
 }
