@@ -87,6 +87,11 @@ interface LocalizedMessages {
 
     val requiredQuery: String
 
+    val rideApproved: String
+
+    val taxiArrivedToUserLocation: String
+
+    val taxiArrivedToDestination: String
 
     // endregion
 
@@ -162,6 +167,24 @@ interface LocalizedMessages {
     val alreadyUpdated: String
 
     val cancelOrderError: String
+
+    val orderApproved: String
+
+    val orderCanceled: String
+
+    val orderInCooking: String
+
+    val orderFinished: String
+
+    val newOrderTitle: String
+
+    val newOrderBody: String
+
+    val orderApprovedFromDelivery: String
+
+    val orderArrivedToRestaurant: String
+
+    val orderArrivedToClient: String
 
     //endregion
 
