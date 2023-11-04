@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.kotlinKsp)
     id("io.realm.kotlin") version "1.10.0"
     kotlin("plugin.serialization") version "1.9.0"
+    alias(libs.plugins.google.services)
 }
 
 group = "org.thechance"
@@ -70,6 +71,9 @@ kotlin {
                 //paging3
                 implementation(libs.paging.compose)
                 implementation(libs.paging.common)
+
+                //firebase
+                implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
             }
         }
         val androidMain by getting {
@@ -80,7 +84,6 @@ kotlin {
                 api(libs.koin.android)
                 implementation(libs.androidx.constraint)
                 implementation(libs.ktor.client.cio)
-
                 implementation("io.ktor:ktor-client-android:2.3.3")
             }
         }

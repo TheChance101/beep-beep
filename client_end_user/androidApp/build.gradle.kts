@@ -2,6 +2,7 @@ plugins {
     kotlin("multiplatform")
     id("com.android.application")
     id("org.jetbrains.compose")
+    id("com.google.gms.google-services") version "4.4.0"
 }
 
 kotlin {
@@ -10,6 +11,8 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation(project(":client_end_user:shared"))
+                //firebase
+                implementation(platform("com.google.firebase:firebase-bom:32.4.1"))
             }
         }
     }
@@ -37,6 +40,8 @@ android {
         jvmToolchain(libs.versions.jvmToolchain.get().toInt())
     }
 }
-dependencies{
+dependencies {
     implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation("com.google.firebase:firebase-common-ktx:20.4.2")
+    implementation(libs.firebase.messaging.ktx)
 }

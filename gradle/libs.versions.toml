@@ -39,6 +39,7 @@ androidx-material3-version = "1.1.1"
 koin-compose-version = "1.0.4"
 moko-geo-version = "0.6.0"
 paging-compose-version="3.3.0-alpha02-0.4.0"
+google-services-version = "4.4.0"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
@@ -95,6 +96,7 @@ calf = { module = "com.mohamedrejeb.calf:calf-ui", version.ref = "calf" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlin-datetime-version" }
 androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "androidx-foundation-layout-android-version" }
 moko-geo = {module = "dev.icerock.moko:geo", version.ref = "moko-geo-version"}
+firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version = "23.3.1" }
 
 [bundles]
 voyager = ["voyager-navigator", "voyager-koin", "voyager-transitions"]
@@ -111,4 +113,4 @@ google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hil
 kotlinKsp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 realm = { id = "io.realm.kotlin", version.ref = "realm-version" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinx-serialization-version" }
-
+google-services = { id = "com.google.gms.google-services",  version.ref = "google-services-version" }

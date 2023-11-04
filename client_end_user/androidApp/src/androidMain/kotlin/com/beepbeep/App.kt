@@ -1,6 +1,10 @@
 package com.beepbeep
 
 import android.app.Application
+import com.beepbeep.di.firebaseModule
+import com.beepbeep.di.locationDataSourceModule
+import com.beepbeep.di.locationServiceModule
+import com.beepbeep.di.locationTrackerModule
 import di.appModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -16,7 +20,8 @@ class App : Application() {
                 appModule(),
                 locationTrackerModule,
                 locationServiceModule,
-                locationDataSourceModule
+                locationDataSourceModule,
+                firebaseModule
             )
         }
     }
