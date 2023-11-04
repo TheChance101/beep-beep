@@ -12,7 +12,6 @@ import io.ktor.client.request.setBody
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import io.ktor.http.appendPathSegments
-import io.ktor.util.InternalAPI
 import kotlinx.serialization.json.Json
 import org.thechance.common.data.gateway.remote.mapper.getPriceLevelOrNull
 import org.thechance.common.data.gateway.remote.mapper.getRatingOrNull
@@ -20,11 +19,13 @@ import org.thechance.common.data.gateway.remote.mapper.toDto
 import org.thechance.common.data.gateway.remote.mapper.toEntity
 import org.thechance.common.data.gateway.remote.model.CuisineDto
 import org.thechance.common.data.gateway.remote.model.LocationDto
+import org.thechance.common.data.gateway.remote.model.OfferDto
 import org.thechance.common.data.gateway.remote.model.RestaurantDto
 import org.thechance.common.data.gateway.remote.model.RestaurantResponse
 import org.thechance.common.data.gateway.remote.model.ServerResponse
 import org.thechance.common.domain.entity.Cuisine
 import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.Offer
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.entity.RestaurantInformation
 import org.thechance.common.domain.getway.IRestaurantGateway
@@ -51,6 +52,11 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
         }.value?.toEntity() ?: throw UnknownError()
     }
 
+    override suspend fun getOffers(): List<Offer> {
+        return tryToExecute<ServerResponse<List<OfferDto>>>(client) {
+            get(urlString = "/offers")
+        }.value?.toEntity() ?: throw UnknownError()    }
+
     override suspend fun createCuisine(cuisineName: String, image: ByteArray): Cuisine {
         val cuisineDto = Cuisine(name = cuisineName, image = "", id = "")
         return tryToExecute<ServerResponse<CuisineDto>>(client) {
@@ -58,6 +64,23 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
                 setBody(MultiPartFormDataContent(
                     formData {
                         append("data", Json.encodeToString(CuisineDto.serializer(), cuisineDto.toDto()))
+                        append("image", image, Headers.build {
+                                append(HttpHeaders.ContentType, "image/png/jpg/jpeg")
+                                append(HttpHeaders.ContentDisposition, "form-data; name=image; filename=image.png")
+                            }
+                        )
+                    }
+                ))
+            }
+        }.value?.toEntity() ?: throw UnknownError()
+    }
+    override suspend fun createOffer(offerName: String, image: ByteArray): Offer {
+        val offerDto = Offer(name = offerName, image = "", id = "")
+        return tryToExecute<ServerResponse<OfferDto>>(client) {
+            post(urlString = "/offer") {
+                setBody(MultiPartFormDataContent(
+                    formData {
+                        append("data", Json.encodeToString(OfferDto.serializer(), offerDto.toDto()))
                         append("image", image, Headers.build {
                                 append(HttpHeaders.ContentType, "image/png/jpg/jpeg")
                                 append(HttpHeaders.ContentDisposition, "form-data; name=image; filename=image.png")
