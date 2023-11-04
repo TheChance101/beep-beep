@@ -228,7 +228,7 @@ fun Route.taxiRoutes() {
         }
 
         authenticateWithRole(Role.TAXI_DRIVER) {
-            put("/update") {
+            put("/update/taxi-ride") {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val language = extractLocalizationHeader()
                 val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripUpdated
@@ -247,7 +247,7 @@ fun Route.taxiRoutes() {
                     FINISHED -> localizedMessagesFactory.createLocalizedMessages(language).taxiArrivedToDestination
                     else -> ""
                 }
-                if (tripStatus != TripStatus.PENDING) {
+                if (tripStatus != TripStatus.PENDING ) {
                     val orderNotification = NotificationDto(approvedTrip.destinationAddress!!, notificationBody)
                     notificationService.sendNotificationToUser(approvedTrip.clientId!!, orderNotification, language)
                 }
@@ -255,7 +255,7 @@ fun Route.taxiRoutes() {
         }
 
         authenticateWithRole(Role.DELIVERY) {
-            put("/update") {
+            put("/update/delivery-order") {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val language = extractLocalizationHeader()
                 val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripUpdated
