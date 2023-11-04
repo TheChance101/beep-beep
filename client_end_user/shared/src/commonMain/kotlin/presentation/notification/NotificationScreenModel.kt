@@ -1,7 +1,7 @@
 package presentation.notification
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.entity.Notification
+import domain.entity.NotificationHistory
 import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.GetNotificationsUseCase
 import kotlinx.coroutines.CoroutineScope
@@ -71,12 +71,12 @@ class NotificationScreenModel(
         sendNewEffect(NotificationUiEffect.NavigateToLoginScreen)
     }
 
-    private fun onGetTodayNotificationsSuccess(todayNotifications: List<Notification>) {
-        updateState { it.copy(todayNotifications = todayNotifications.toUiState()) }
+    private fun onGetTodayNotificationsSuccess(todayNotificationHistories: List<NotificationHistory>) {
+        updateState { it.copy(todayNotifications = todayNotificationHistories.toUiState()) }
     }
 
-    private fun onGetThisWeekNotificationsSuccess(weekNotifications: List<Notification>) {
-        updateState { it.copy(thisWeekNotifications = weekNotifications.toUiState()) }
+    private fun onGetThisWeekNotificationsSuccess(weekNotificationHistories: List<NotificationHistory>) {
+        updateState { it.copy(thisWeekNotifications = weekNotificationHistories.toUiState()) }
     }
 
     private fun onError(error: ErrorState) {

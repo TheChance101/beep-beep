@@ -1,10 +1,10 @@
 package data.remote.mapper
 
-import data.remote.model.NotificationDto
-import domain.entity.Notification
+import data.remote.model.NotificationHistoryDto
+import domain.entity.NotificationHistory
 
-fun NotificationDto.toEntity(): Notification {
-    return Notification(
+fun NotificationHistoryDto.toEntity(): NotificationHistory {
+    return NotificationHistory(
         id = id ?: "",
         title = title,
         body = body,

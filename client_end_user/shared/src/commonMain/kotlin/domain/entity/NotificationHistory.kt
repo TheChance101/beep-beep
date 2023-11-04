@@ -2,7 +2,7 @@ package domain.entity
 
 import kotlinx.datetime.LocalDate
 
-data class Notification(
+data class NotificationHistory(
     val id: String,
     val title: String,
     val body: String,

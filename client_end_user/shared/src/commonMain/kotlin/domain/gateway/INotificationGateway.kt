@@ -1,8 +1,8 @@
 package domain.gateway
 
-import domain.entity.Notification
+import domain.entity.NotificationHistory
 
 interface INotificationGateway {
-    suspend fun getNotificationHistory(): List<Notification>
+    suspend fun getNotificationHistory(): List<NotificationHistory>
 
 }

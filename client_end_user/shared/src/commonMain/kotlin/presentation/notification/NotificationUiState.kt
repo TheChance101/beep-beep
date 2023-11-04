@@ -1,6 +1,6 @@
 package presentation.notification
 
-import domain.entity.Notification
+import domain.entity.NotificationHistory
 import domain.entity.Time
 
 data class NotificationsUiState(
@@ -17,7 +17,7 @@ data class NotificationUiState(
     val time: Time = Time(0, 0),
 )
 
-fun Notification.toUiState(): NotificationUiState {
+fun NotificationHistory.toUiState(): NotificationUiState {
     return NotificationUiState(
         title = title,
         body = body,
@@ -25,6 +25,6 @@ fun Notification.toUiState(): NotificationUiState {
     )
 }
 
-fun List<Notification>.toUiState(): List<NotificationUiState> {
+fun List<NotificationHistory>.toUiState(): List<NotificationUiState> {
     return this.map { it.toUiState() }
 }
