@@ -14,6 +14,7 @@ import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.PaginationResponse
 import org.thechance.api_gateway.data.model.notification.NotificationDto
+import org.thechance.api_gateway.data.model.notification.NotificationHistoryDto
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
 import org.thechance.api_gateway.util.APIs
@@ -75,8 +76,8 @@ class NotificationService(
         page: String,
         limit: String,
         languageCode: String
-    ): PaginationResponse<NotificationDto> {
-        return client.tryToExecute<PaginationResponse<NotificationDto>>(
+    ): PaginationResponse<NotificationHistoryDto> {
+        return client.tryToExecute<PaginationResponse<NotificationHistoryDto>>(
             APIs.NOTIFICATION_API,
             attributes = attributes,
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }

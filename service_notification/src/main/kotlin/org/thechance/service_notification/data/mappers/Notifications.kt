@@ -45,6 +45,7 @@ fun NotificationHistoryDto.toEntity(): NotificationHistory {
 
 fun NotificationHistory.toDto(): NotificationHistoryDto =
     NotificationHistoryDto(
+        id = id,
         title = title,
         topicId = topicId,
         sender = sender.code,

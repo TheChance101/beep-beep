@@ -65,7 +65,7 @@ class DatabaseGateway(
     override suspend fun getNotificationHistoryForUser(page: Int, limit: Int, userId: String): List<NotificationHistory> {
         return historyCollection.find(
             and(
-                NotificationHistoryCollection::id eq ObjectId(userId),
+                NotificationHistoryCollection::userId eq userId,
                 NotificationHistoryCollection::isDeleted eq false
             )
         ).paginate(page, limit).toList().toNotificationEntity()
