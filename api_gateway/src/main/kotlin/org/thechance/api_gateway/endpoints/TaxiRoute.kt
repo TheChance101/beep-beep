@@ -10,6 +10,7 @@ import io.ktor.server.websocket.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
 import org.thechance.api_gateway.data.model.notification.NotificationDto
+import org.thechance.api_gateway.data.model.notification.NotificationSender
 import org.thechance.api_gateway.data.model.taxi.TaxiDto
 import org.thechance.api_gateway.data.model.taxi.TripDto
 import org.thechance.api_gateway.data.model.taxi.TripStatus
@@ -247,9 +248,15 @@ fun Route.taxiRoutes() {
                     FINISHED -> localizedMessagesFactory.createLocalizedMessages(language).taxiArrivedToDestination
                     else -> ""
                 }
-                if (tripStatus != TripStatus.PENDING ) {
-                    val orderNotification = NotificationDto(approvedTrip.destinationAddress!!, notificationBody)
-                    notificationService.sendNotificationToUser(approvedTrip.clientId!!, orderNotification, language)
+                if (tripStatus != TripStatus.PENDING) {
+                    val orderNotification = NotificationDto(
+                        userId = approvedTrip.clientId,
+                        topicId = approvedTrip.id,
+                        title = approvedTrip.destinationAddress!!,
+                        body = notificationBody,
+                        sender = NotificationSender.TAXI.code
+                    )
+                    notificationService.sendNotificationToUser(orderNotification, language)
                 }
             }
         }
@@ -276,8 +283,14 @@ fun Route.taxiRoutes() {
                 }
                 if (tripStatus != TripStatus.PENDING) {
                     val restaurant = restaurantService.getRestaurantInfo(language, approvedTrip.restaurantId!!)
-                    val orderNotification = NotificationDto(restaurant.name!!, notificationBody)
-                    notificationService.sendNotificationToUser(approvedTrip.clientId!!, orderNotification, language)
+                    val orderNotification = NotificationDto(
+                        userId = approvedTrip.clientId,
+                        topicId = approvedTrip.id,
+                        title = restaurant.name!!,
+                        body = notificationBody,
+                        sender = NotificationSender.DELIVERY.code
+                    )
+                    notificationService.sendNotificationToUser(orderNotification, language)
                 }
             }
         }

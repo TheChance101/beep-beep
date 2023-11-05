@@ -46,11 +46,10 @@ fun Route.notificationRoute() {
     }
 
     route("notifications") {
-        post("send/user/{userId}") {
+        post("send/user") {
             val language = extractLocalizationHeader()
-            val userId = call.parameters["userId"]?.trim().orEmpty()
             val receivedData = call.receive<NotificationDto>()
-            val result = notificationService.sendNotificationToUser(userId, receivedData, language)
+            val result = notificationService.sendNotificationToUser(receivedData, language)
             respondWithResult(HttpStatusCode.OK, result)
         }
         authenticateWithRole(Role.END_USER) {

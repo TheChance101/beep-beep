@@ -42,11 +42,10 @@ class WebSocketServerHandler(
         session: DefaultWebSocketServerSession,
         language: String,
         orderNotification: NotificationDto,
-        ownerId: String
     ) {
         try {
             values.flowOn(Dispatchers.IO).collect { value ->
-                notificationService.sendNotificationToUser(ownerId, orderNotification, language)
+                notificationService.sendNotificationToUser(orderNotification, language)
                 session.sendSerialized(value)
             }
         } catch (e: Exception) {

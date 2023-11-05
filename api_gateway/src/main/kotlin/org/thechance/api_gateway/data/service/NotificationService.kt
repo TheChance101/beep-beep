@@ -58,17 +58,13 @@ class NotificationService(
     }
 
     @OptIn(InternalAPI::class)
-    suspend fun sendNotificationToUser(
-        userId: String,
-        notificationDto: NotificationDto,
-        languageCode: String
-    ): Boolean {
+    suspend fun sendNotificationToUser(notificationDto: NotificationDto, languageCode: String): Boolean {
         return client.tryToExecute<Boolean>(
             api = APIs.NOTIFICATION_API,
             attributes = attributes,
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
         ) {
-            post("notifications/send/user/$userId") {
+            post("notifications/send/user") {
                 body = Json.encodeToString(NotificationDto.serializer(), notificationDto)
             }
         }
