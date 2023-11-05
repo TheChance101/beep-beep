@@ -10,7 +10,6 @@ import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
 import org.thechance.api_gateway.data.model.authenticate.TokenConfiguration
 import org.thechance.api_gateway.data.model.identity.UserRegistrationDto
-import org.thechance.api_gateway.data.model.restaurant.RestaurantDto
 import org.thechance.api_gateway.data.service.IdentityService
 import org.thechance.api_gateway.data.service.NotificationService
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
@@ -19,7 +18,6 @@ import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
 import org.thechance.api_gateway.util.Claim
 import org.thechance.api_gateway.util.Role
-
 
 fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
     val identityService: IdentityService by inject()

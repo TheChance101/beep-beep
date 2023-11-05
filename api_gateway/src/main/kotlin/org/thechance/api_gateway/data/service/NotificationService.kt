@@ -68,7 +68,7 @@ class NotificationService(
             attributes = attributes,
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
         ) {
-            post("notifications/send/user/$userId}") {
+            post("notifications/send/user/$userId") {
                 body = Json.encodeToString(NotificationDto.serializer(), notificationDto)
             }
         }
