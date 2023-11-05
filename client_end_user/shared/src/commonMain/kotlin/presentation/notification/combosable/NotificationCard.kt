@@ -38,7 +38,9 @@ fun NotificationCard(
     ) {
         AnimatedVisibility(showDate) {
             Row(
-                modifier = Modifier.background(Theme.colors.primary).fillMaxWidth()
+                modifier = Modifier
+                    .background(Theme.colors.primary)
+                    .fillMaxWidth()
                     .padding(16.dp)
             ) {
                 Text(

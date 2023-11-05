@@ -9,6 +9,7 @@ fun NotificationHistoryDto.toEntity(): NotificationHistory {
         topicId = topicId ?: "",
         title = title,
         body = body,
+        sender = NotificationHistory.getNotificationSender(sender),
         date = date.toDate(),
         time = date.toTime(),
         userId = userId ?: "",

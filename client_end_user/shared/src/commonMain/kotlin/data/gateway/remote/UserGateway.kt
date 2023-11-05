@@ -168,6 +168,9 @@ class UserGateway(
             }
         }.value
 
+        println("History before mapping = ${result?.items}")
+        println("History After mapping = ${result?.items?.map { it.toEntity() }}")
+
         return paginateData(
             result = result?.items?.map { it.toEntity() } ?: emptyList(),
             page = page,

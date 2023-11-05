@@ -1,9 +1,11 @@
 package presentation.notification
 
+import androidx.paging.PagingData
+import androidx.paging.map
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.NotificationHistory
+import domain.usecase.IGetTransactionHistoryUseCase
 import domain.usecase.IManageAuthenticationUseCase
-import domain.usecase.GetNotificationsUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -11,15 +13,15 @@ import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class NotificationScreenModel(
-    private val notificationManagement: GetNotificationsUseCase,
-    private val manageAuthentication: IManageAuthenticationUseCase
+    private val transaction: IGetTransactionHistoryUseCase,
+    private val manageAuthentication: IManageAuthenticationUseCase,
 ) : BaseScreenModel<NotificationsUiState, NotificationUiEffect>(NotificationsUiState()),
     NotificationInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
 
     init {
         checkIfLoggedIn()
-        getNotifications()
+        getNotificationHistory()
     }
 
     private fun checkIfLoggedIn() {
@@ -46,41 +48,32 @@ class NotificationScreenModel(
         updateState { it.copy(isLoggedIn = false) }
     }
 
-    private fun getNotifications() {
+    private fun getNotificationHistory() {
         tryToExecute(
-            { notificationManagement.getTodayNotifications() },
-            ::onGetTodayNotificationsSuccess,
-            ::onError
+            function = transaction::getNotificationHistory,
+            onSuccess = ::onGetNotificationHistorySuccess,
+            onError = ::onGetNotificationHistoryError
         )
-        tryToExecute(
-            { notificationManagement.getThisWeekNotifications() },
-            ::onGetThisWeekNotificationsSuccess,
-            ::onError
-        )
+    }
+
+    private fun onGetNotificationHistorySuccess(notification: Flow<PagingData<NotificationHistory>>) {
+        updateState {
+            it.copy(notifications = notification.toUiState())
+        }
+    }
+
+    private fun onGetNotificationHistoryError(errorState: ErrorState) {
+
     }
 
     override fun onClickTrackOrder() {
-        TODO("Not yet implemented")
     }
 
     override fun onClickTryAgain() {
-        TODO("Not yet implemented")
     }
 
     override fun onClickLogin() {
         sendNewEffect(NotificationUiEffect.NavigateToLoginScreen)
-    }
-
-    private fun onGetTodayNotificationsSuccess(todayNotificationHistories: List<NotificationHistory>) {
-        updateState { it.copy(todayNotifications = todayNotificationHistories.toUiState()) }
-    }
-
-    private fun onGetThisWeekNotificationsSuccess(weekNotificationHistories: List<NotificationHistory>) {
-        updateState { it.copy(thisWeekNotifications = weekNotificationHistories.toUiState()) }
-    }
-
-    private fun onError(error: ErrorState) {
-        println("error is $error")
     }
 
 }
