@@ -26,7 +26,14 @@ class RestaurantInformationScreenModel(
     }
 
     private fun onError(error: ErrorState) {
-        updateState { it.copy(isLoading = false, error = error) }
+        updateState {
+            it.copy(
+                isLoading = false, error = error,
+                restaurant = state.value.restaurant.copy(
+                    isSaveButtonEnabled = true
+                )
+            )
+        }
         handleErrorState(error)
     }
 
@@ -128,7 +135,14 @@ class RestaurantInformationScreenModel(
 
     override fun onClickSave() {
         val restaurant = state.value.restaurant.toRestaurant()
-        updateState { it.copy(isLoading = true) }
+        updateState {
+            it.copy(
+                isLoading = true,
+                restaurant = state.value.restaurant.copy(
+                    isSaveButtonEnabled = false
+                )
+            )
+        }
         tryToExecute(
             { manageRestaurantInformation.updateRestaurantInformation(restaurant) },
             ::onUpdateRestaurantInfoSuccess,
@@ -145,12 +159,20 @@ class RestaurantInformationScreenModel(
             state.phoneNumber,
             state.description,
         )
-        val updatedState = state.copy(isSaveButtonEnabled = validationResult)
+
+        val updatedState = state.copy(validationState = validationResult)
         updateState { it.copy(restaurant = updatedState) }
     }
 
     private fun onUpdateRestaurantInfoSuccess(result: Boolean) {
-        updateState { it.copy(isLoading = false, error = null) }
+        updateState {
+            it.copy(
+                isLoading = false, error = null,
+                restaurant = state.value.restaurant.copy(
+                    isSaveButtonEnabled = true
+                )
+            )
+        }
         sendNewEffect(RestaurantInformationUiEffect.UpdateInformationSuccess)
     }
 

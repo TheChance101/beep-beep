@@ -225,7 +225,7 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
             BpButton(
                 title = Resources.strings.save,
                 onClick = { listener.onClickSave() },
-                enabled = state.restaurant.isSaveButtonEnabled,
+                enabled = state.restaurant.isSaveButtonEnabled && state.restaurant.validationState,
                 isLoading = state.isLoading,
                 modifier = Modifier.fillMaxWidth().padding(
                     start = 16.dp,
