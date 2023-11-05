@@ -1,5 +1,6 @@
-package com.beepbeep
+package com.beepbeep.di
 
+import com.beepbeep.location.LocationService
 import data.gateway.local.LocationGateway
 import data.gateway.service.ILocationService
 import dev.icerock.moko.geo.LocationTracker
@@ -9,7 +10,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val locationDataSourceModule = module {
-    single<ILocationGateway> { LocationGateway(get(),get()) }
+    single<ILocationGateway> { LocationGateway(get(), get()) }
 }
 
 val locationTrackerModule = module {
