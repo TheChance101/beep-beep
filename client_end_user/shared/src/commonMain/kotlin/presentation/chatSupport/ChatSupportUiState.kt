@@ -1,6 +1,7 @@
 package presentation.chatSupport
 
 import domain.entity.Message
+import domain.entity.Time
 
 data class ChatUIState(
     val ticketId: String = "",
@@ -18,18 +19,20 @@ data class MessageUIState(
 fun MessageUIState.toEntity(ticketId: String): Message{
     return Message(
         id = id,
-        message = message,
-        isMe = isMe,
+//        message = message,
+//        isMe = isMe,
         senderId = senderId,
-        avatarUrl = "",
-        ticketId = ticketId
+//        avatarUrl = "",
+//        ticketId = ticketId,
+        content = "",
+        time = Time(0,0)
     )
 }
 fun Message.toUIState(): MessageUIState {
     return MessageUIState(
         id = id,
-        message = message,
-        isMe = isMe,
+        message = "message",
+        isMe = true,
         senderId = senderId
     )
 }

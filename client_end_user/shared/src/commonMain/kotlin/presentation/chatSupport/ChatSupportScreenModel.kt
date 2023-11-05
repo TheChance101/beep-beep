@@ -19,8 +19,8 @@ class ChatSupportScreenModel(
     }
 
     private fun getTickets() {
-        tryToCollect(
-            { manageChat.getTickets() },
+        tryToExecute(
+            { manageChat.openNewTicket("64fc7ac0caa12e39d6a34213") },
             ::onGetTicketsSuccess,
             ::onError
         )
