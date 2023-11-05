@@ -59,12 +59,11 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
                     .wrapContentSize()
                     .background(Theme.colors.background)
             ) {
-                val informationState = state.restaurant
                 RestaurantInfoCard(
-                    informationState.ownerUsername,
-                    informationState.address,
-                    informationState.rating,
-                    informationState.priceLevel
+                    state.restaurant.ownerUsername,
+                    state.restaurant.address,
+                    state.restaurant.rating,
+                    state.restaurant.priceLevel
                 )
 
                 RestaurantUpdateInformationCard(state, listener)
