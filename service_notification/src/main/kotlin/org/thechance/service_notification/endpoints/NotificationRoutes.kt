@@ -67,7 +67,7 @@ fun Route.notificationRoutes() {
             val limit = call.parameters["limit"]?.toInt() ?: 10
             val page = call.parameters["page"]?.toInt() ?: 1
             val userId = call.parameters.requireNotEmpty("userId")
-            val result = notificationManagement.getNotificationHistoryForUser(page, limit, userId)
+            val result = notificationManagement.getNotificationHistoryForUser(page, limit, userId).toDto()
             val total = notificationManagement.getTotalCountsOfNotificationHistoryForUser(userId)
             call.respond(HttpStatusCode.OK, BasePaginationResponseDto(items = result, page = page, total = total))
         }

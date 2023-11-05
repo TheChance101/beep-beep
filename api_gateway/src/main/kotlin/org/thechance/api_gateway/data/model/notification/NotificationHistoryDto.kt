@@ -5,10 +5,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NotificationHistoryDto(
-    @SerialName("id") val id: String? = null,
-    @SerialName("title") val title: String,
-    @SerialName("body") val body: String,
-    @SerialName("date") val date: Long,
-    @SerialName("userId") val userId: String? = null,
-    @SerialName("topic") val topic: String? = null,
+    val id: String? = null,
+    val topicId: String? = null,
+    val sender: Int,
+    val title: String,
+    val body: String,
+    val date: Long,
+    val userId: String? = null,
+    val topic: String? = null
 )

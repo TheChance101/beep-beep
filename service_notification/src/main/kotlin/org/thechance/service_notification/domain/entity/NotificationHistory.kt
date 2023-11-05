@@ -15,7 +15,6 @@ data class NotificationHistory(
         DELIVERY(1),
         TAXI(2),
         UNDEFINED(4);
-
     }
 
     companion object {

@@ -45,7 +45,7 @@ fun Route.notificationRoute() {
         }
     }
 
-    route("notifications") {
+    route("/notifications") {
         post("send/user") {
             val language = extractLocalizationHeader()
             val receivedData = call.receive<NotificationDto>()
@@ -53,7 +53,7 @@ fun Route.notificationRoute() {
             respondWithResult(HttpStatusCode.OK, result)
         }
         authenticateWithRole(Role.END_USER) {
-            get("/history/{userId}") {
+            get("/history") {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val userId = tokenClaim?.get(Claim.USER_ID).toString()
                 val language = extractLocalizationHeader()
