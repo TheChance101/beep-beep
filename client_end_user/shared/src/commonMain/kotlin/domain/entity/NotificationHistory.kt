@@ -4,6 +4,7 @@ import kotlinx.datetime.LocalDate
 
 data class NotificationHistory(
     val id: String,
+    val topicId: String,
     val title: String,
     val body: String,
     val date: LocalDate,

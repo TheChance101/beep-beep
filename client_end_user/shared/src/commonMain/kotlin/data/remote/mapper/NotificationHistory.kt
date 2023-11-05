@@ -6,6 +6,7 @@ import domain.entity.NotificationHistory
 fun NotificationHistoryDto.toEntity(): NotificationHistory {
     return NotificationHistory(
         id = id ?: "",
+        topicId = topicId ?: "",
         title = title,
         body = body,
         date = date.toDate(),
