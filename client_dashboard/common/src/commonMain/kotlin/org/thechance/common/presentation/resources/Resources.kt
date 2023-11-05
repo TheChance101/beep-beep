@@ -7,8 +7,6 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.intl.Locale
-import com.seiko.imageloader.LocalImageLoader
-import org.thechance.common.presentation.composables.generateImageLoader
 
 private val stringResources = staticCompositionLocalOf<StringResources> {
     throw Exception("string resources is not provided make sure you are using ProvideResources")
@@ -41,8 +39,6 @@ fun ProvideResources(
     CompositionLocalProvider(
         stringResources provides LocalizationManager.getStringResources(languageCode = localLanguage),
         LocalLayoutDirection provides LocalizationManager.getLayoutDirection(languageCode = localLanguage),
-        LocalImageLoader provides generateImageLoader(),
-
         drawables provides drawableResources,
     ) {
         content()

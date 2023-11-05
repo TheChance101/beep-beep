@@ -1,12 +1,19 @@
 package org.thechance.common.presentation.restaurant
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindow
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.*
+import com.beepbeep.designSystem.ui.composable.modifier.shimmerEffect
 import com.beepbeep.designSystem.ui.theme.Theme
 import com.darkrockstudios.libraries.mpfilepicker.FilePicker
 import com.seiko.imageloader.rememberImagePainter
@@ -66,11 +75,11 @@ class RestaurantScreen :
             )
         }
 
-        RestaurantAddCuisineDialog(
+        CuisineDialog(
             listener = listener,
             state = state.newCuisineDialogUiState
         )
-        NewOfferDialog(
+        OfferDialog(
             listener = listener,
             state = state.newOfferDialogUiState
         )
@@ -117,7 +126,36 @@ class RestaurantScreen :
                 )
             )
 
-            RestaurantFilterRow(state, listener)
+            Column {
+                BpIconButton(
+                    content = {
+                        Text(
+                            text = Resources.Strings.filter,
+                            style = Theme.typography.titleMedium
+                                .copy(color = Theme.colors.contentTertiary),
+                        )
+                    },
+                    onClick = listener::onClickDropDownMenu,
+                    painter = painterResource(Resources.Drawable.filter),
+                    modifier = Modifier.cursorHoverIconHand()
+                )
+                FilterRestaurantDropdownMenu(
+                    onClickRating = listener::onClickFilterRatingBar,
+                    onClickPrice = listener::onClickFilterPriceBar,
+                    onDismissRequest = listener::onDismissDropDownMenu,
+                    onClickCancel = listener::onCancelFilterRestaurantsClicked,
+                    onClickSave = {
+                        listener.onSaveFilterRestaurantsClicked(
+                            state.restaurantFilterDropdownMenuUiState.filterRating,
+                            state.restaurantFilterDropdownMenuUiState.filterPriceLevel.toString()
+                        )
+                    },
+                    expanded = state.restaurantFilterDropdownMenuUiState.isFilterDropdownMenuExpanded,
+                    rating = state.restaurantFilterDropdownMenuUiState.filterRating,
+                    priceLevel = state.restaurantFilterDropdownMenuUiState.filterPriceLevel,
+                    onFilterClearAllClicked = listener::onFilterClearAllClicked,
+                )
+            }
 
             Spacer(modifier = Modifier.weight(1f))
 
@@ -155,7 +193,7 @@ class RestaurantScreen :
             modifier = Modifier.fillMaxWidth(),
             isVisible = state.hasConnection,
             rowContent = { restaurant ->
-                RestaurantRow(
+                RestaurantTableRow(
                     onClickEditRestaurant = listener::onShowRestaurantMenu,
                     onEditRestaurantDismiss = listener::onHideRestaurantMenu,
                     onClickDeleteRestaurantMenuItem = listener::onClickDeleteRestaurantMenuItem,
@@ -192,7 +230,7 @@ class RestaurantScreen :
     }
 
     @Composable
-    private fun RowScope.RestaurantRow(
+    private fun RowScope.RestaurantTableRow(
         onClickEditRestaurant: (restaurantId: String) -> Unit,
         onEditRestaurantDismiss: (String) -> Unit,
         onClickEditRestaurantMenuItem: (restaurantId: String) -> Unit,
@@ -271,41 +309,7 @@ class RestaurantScreen :
     }
 
     @Composable
-    fun RestaurantFilterRow(state: RestaurantUiState, listener: RestaurantInteractionListener) {
-        Column {
-            BpIconButton(
-                content = {
-                    Text(
-                        text = Resources.Strings.filter,
-                        style = Theme.typography.titleMedium
-                            .copy(color = Theme.colors.contentTertiary),
-                    )
-                },
-                onClick = listener::onClickDropDownMenu,
-                painter = painterResource(Resources.Drawable.filter),
-                modifier = Modifier.cursorHoverIconHand()
-            )
-            RestaurantFilterDropdownMenu(
-                onClickRating = listener::onClickFilterRatingBar,
-                onClickPrice = listener::onClickFilterPriceBar,
-                onDismissRequest = listener::onDismissDropDownMenu,
-                onClickCancel = listener::onCancelFilterRestaurantsClicked,
-                onClickSave = {
-                    listener.onSaveFilterRestaurantsClicked(
-                        state.restaurantFilterDropdownMenuUiState.filterRating,
-                        state.restaurantFilterDropdownMenuUiState.filterPriceLevel.toString()
-                    )
-                },
-                expanded = state.restaurantFilterDropdownMenuUiState.isFilterDropdownMenuExpanded,
-                rating = state.restaurantFilterDropdownMenuUiState.filterRating,
-                priceLevel = state.restaurantFilterDropdownMenuUiState.filterPriceLevel,
-                onFilterClearAllClicked = listener::onFilterClearAllClicked,
-            )
-        }
-    }
-
-    @Composable
-    private fun RestaurantFilterDropdownMenu(
+    private fun FilterRestaurantDropdownMenu(
         onClickRating: (Double) -> Unit,
         onClickPrice: KFunction1<Int, Unit>,
         onDismissRequest: () -> Unit,
@@ -375,7 +379,44 @@ class RestaurantScreen :
     }
 
     @Composable
-    private fun RestaurantAddCuisineDialog(
+    private fun EditRestaurantDropdownMenu(
+        restaurant: RestaurantUiState.RestaurantDetailsUiState,
+        onClickEdit: (restaurantId: String) -> Unit,
+        onClickDelete: (id: String) -> Unit,
+        onDismissRequest: (String) -> Unit,
+    ) {
+        BpDropdownMenu(
+            expanded = restaurant.isExpanded,
+            onDismissRequest = { onDismissRequest(restaurant.id) },
+            shape = RoundedCornerShape(Theme.radius.medium).copy(topEnd = CornerSize(0.dp)),
+            offset = DpOffset.Zero.copy(x = (-178).kms)
+        ) {
+            Column {
+                BpDropdownMenuItem(
+                    onClick = {
+                        onClickEdit(restaurant.id)
+                    },
+                    text = Resources.Strings.edit,
+                    leadingIconPath = Resources.Drawable.permission,
+                    isSecondary = false,
+                    showBottomDivider = true
+                )
+                BpDropdownMenuItem(
+                    onClick = {
+                        onClickDelete(restaurant.id)
+                    },
+                    text = Resources.Strings.delete,
+                    leadingIconPath = Resources.Drawable.delete,
+                    isSecondary = true,
+                    showBottomDivider = false
+                )
+            }
+        }
+    }
+
+
+    @Composable
+    private fun CuisineDialog(
         listener: AddCuisineInteractionListener,
         state: RestaurantAddCuisineDialogUiState
     ) {
@@ -430,7 +471,7 @@ class RestaurantScreen :
                                 .noRipple(listener::onClickCuisineImage),
                             colorFilter = ColorFilter.tint(
                                 color =
-                                if (state.cuisineImage.isNotEmpty()) Theme.colors.primary else Theme.colors.divider
+                                if (state.selectedCuisineImage.isNotEmpty()) Theme.colors.primary else Theme.colors.divider
                             )
                         )
                         FilePicker(
@@ -493,7 +534,7 @@ class RestaurantScreen :
     }
 
     @Composable
-    private fun NewOfferDialog(
+    private fun OfferDialog(
         listener: AddOfferInteractionListener,
         state: NewOfferDialogUiState
     ) {
@@ -524,7 +565,7 @@ class RestaurantScreen :
                     )
                     BpSimpleTextField(
                         text = state.offerName,
-                        hint = Resources.Strings.enterCuisineName,
+                        hint = Resources.Strings.enterOfferName,
                         onValueChange = listener::onChangeOfferName,
                         modifier = Modifier.padding(top = 24.kms, start = 24.kms, end = 16.kms),
                         isError = state.offerNameError.isError,
@@ -602,59 +643,41 @@ class RestaurantScreen :
                         )
                     }
                 }
-                LazyColumn(
+                LazyVerticalGrid(
                     modifier = Modifier.weight(1f)
-                        .padding(top = 24.kms, bottom = 24.kms, end = 16.kms)
-                        .background(Theme.colors.background).fillMaxHeight()
+                        .fillMaxHeight()
+                        .padding(top = 24.dp, bottom = 24.dp, end = 16.dp)
+                        .background(Theme.colors.background)
                         .border(
-                            1.dp,
-                            Theme.colors.divider,
-                            RoundedCornerShape(Theme.radius.medium)
+                            width = 1.dp,
+                            color = Theme.colors.divider,
+                            shape = RoundedCornerShape(Theme.radius.medium)
                         ),
-                    verticalArrangement = Arrangement.spacedBy(16.kms),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    contentPadding = PaddingValues(16.kms)
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    contentPadding = PaddingValues(16.dp),
+                    columns = GridCells.Fixed(2),
                 ) {
-                    items(state.offers) { offer ->
-                        OfferItem(offer = offer)
+                    if (state.offers.isNotEmpty()) {
+                        items(state.offers) { offer ->
+                            AnimatedVisibility(!state.isLoading) {
+                                OfferItem(offer = offer)
+                            }
+                        }
                     }
-                }
-            }
-        }
-    }
 
-    @Composable
-    private fun EditRestaurantDropdownMenu(
-        restaurant: RestaurantUiState.RestaurantDetailsUiState,
-        onClickEdit: (restaurantId: String) -> Unit,
-        onClickDelete: (id: String) -> Unit,
-        onDismissRequest: (String) -> Unit,
-    ) {
-        BpDropdownMenu(
-            expanded = restaurant.isExpanded,
-            onDismissRequest = { onDismissRequest(restaurant.id) },
-            shape = RoundedCornerShape(Theme.radius.medium).copy(topEnd = CornerSize(0.dp)),
-            offset = DpOffset.Zero.copy(x = (-178).kms)
-        ) {
-            Column {
-                BpDropdownMenuItem(
-                    onClick = {
-                        onClickEdit(restaurant.id)
-                    },
-                    text = Resources.Strings.edit,
-                    leadingIconPath = Resources.Drawable.permission,
-                    isSecondary = false,
-                    showBottomDivider = true
-                )
-                BpDropdownMenuItem(
-                    onClick = {
-                        onClickDelete(restaurant.id)
-                    },
-                    text = Resources.Strings.delete,
-                    leadingIconPath = Resources.Drawable.delete,
-                    isSecondary = true,
-                    showBottomDivider = false
-                )
+                    items(10) {
+                        AnimatedVisibility(
+                            state.isLoading,
+                            enter = fadeIn(animationSpec = tween(1000)),
+                            exit = fadeOut(animationSpec = tween(1000))
+                        ) {
+                            OfferItemLoading()
+                        }
+                    }
+
+                }
+
             }
         }
     }
@@ -674,18 +697,50 @@ class RestaurantScreen :
                 contentDescription = null,
                 painter = rememberImagePainter(offer.image),
                 contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(Theme.radius.medium))
-                    .background(Theme.colors.primary).weight(1f),
-
-                )
+                modifier = Modifier.clip(RoundedCornerShape(
+                        topStart = Theme.radius.medium,
+                        topEnd = Theme.radius.medium
+                    )
+                ).weight(1f)
+            )
 
             Text(
                 text = offer.name,
-                style = Theme.typography.caption,
+                style = Theme.typography.body,
                 color = Theme.colors.contentPrimary,
-                modifier = Modifier.padding(8.kms).background(Theme.colors.onPrimary)
+                modifier = Modifier.padding(16.kms)
             )
+        }
+    }
+
+    @Preview
+    @Composable
+    fun OfferItemLoading() {
+        val randomFloat = remember { (50..100).random().dp }
+        Column(
+            modifier = Modifier.clip(
+                RoundedCornerShape(
+                    topStart = Theme.radius.medium,
+                    topEnd = Theme.radius.medium
+                )
+            ).shimmerEffect(durationMillis = 1500).size(200.dp)
+                .border(1.dp, Theme.colors.divider,
+                    RoundedCornerShape(Theme.radius.medium)
+                ),
+            horizontalAlignment = Alignment.CenterHorizontally
+
+        ) {
+            Box(modifier = Modifier.weight(1f))
+            Box(modifier = Modifier.fillMaxWidth().background(color = Theme.colors.background)
+                .padding(16.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .clip(shape = RoundedCornerShape(Theme.radius.medium))
+                        .shimmerEffect(durationMillis = 1500).height(22.dp)
+                        .width(randomFloat).align(Alignment.Center)
+                )
+            }
         }
     }
 }

@@ -33,6 +33,7 @@ data class StringResources(
     val restaurants: String = "Restaurants",
     val cuisines: String = "Cuisines",
     val enterCuisineName: String = "Enter cuisine name",
+    val enterOfferName: String = "Enter Offer name",
     val add: String = "Add",
     val update : String = "Update",
     val updateRestaurant: String = "Update Restaurant",

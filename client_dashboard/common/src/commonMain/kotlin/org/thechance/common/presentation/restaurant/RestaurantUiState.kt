@@ -2,8 +2,9 @@ package org.thechance.common.presentation.restaurant
 
 import androidx.compose.runtime.Composable
 import org.thechance.common.domain.entity.Cuisine
-import org.thechance.common.domain.entity.RestaurantInformation
+import org.thechance.common.domain.entity.Offer
 import org.thechance.common.domain.entity.Restaurant
+import org.thechance.common.domain.entity.RestaurantInformation
 import org.thechance.common.presentation.composables.table.Header
 import org.thechance.common.presentation.resources.Resources
 
@@ -26,7 +27,7 @@ data class RestaurantUiState(
     val isEditMode: Boolean = false,
 ) {
     val tableHeader: List<Header>
-       @Composable get() = listOf(
+        @Composable get() = listOf(
             Header(Resources.Strings.number, 1f),
             Header(Resources.Strings.name, 3f),
             Header(Resources.Strings.ownerUsername, 3f),
@@ -35,7 +36,8 @@ data class RestaurantUiState(
             Header(Resources.Strings.priceLevel, 3f),
             Header(Resources.Strings.workingHours, 3f),
             Header("", 1f),
-    )
+        )
+
     data class RestaurantDetailsUiState(
         val id: String,
         val name: String,
@@ -120,24 +122,37 @@ data class RestaurantAddCuisineDialogUiState(
     val cuisineName: String = "",
     val isAddCuisineEnabled: Boolean = false,
     val isImagePickerVisible: Boolean = false,
-    val cuisineImage: ByteArray= byteArrayOf(),
+    val selectedCuisineImage: ByteArray = byteArrayOf(),
     val cuisines: List<CuisineUiState> = emptyList(),
     val cuisineNameError: ErrorWrapper = ErrorWrapper(),
 )
+
 data class NewOfferDialogUiState(
+    val isLoading: Boolean = true,
     val isVisible: Boolean = false,
     val offerName: String = "",
     val isAddOfferEnabled: Boolean = false,
     val isImagePickerVisible: Boolean = false,
-    val selectedOfferImage: ByteArray= byteArrayOf(),
+    val selectedOfferImage: ByteArray = byteArrayOf(),
     val offers: List<OfferUiState> = emptyList(),
     val offerNameError: ErrorWrapper = ErrorWrapper(),
 )
+
 data class OfferUiState(
     val id: String,
     val name: String,
     val image: String,
 )
+
+fun Offer.toUiState(): OfferUiState {
+    return OfferUiState(
+        id = id,
+        name = name,
+        image = image,
+    )
+}
+
+fun List<Offer>.toOfferUiState(): List<OfferUiState> = map { it.toUiState() }
 
 
 data class CuisineUiState(

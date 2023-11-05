@@ -14,4 +14,5 @@ val UseCaseModule = module {
     singleOf(::LogoutUserUseCase) { bind<ILogoutUserUseCase>() }
     singleOf(::MangeCuisinesUseCase) { bind<IMangeCuisinesUseCase>() }
     singleOf(::ExploreDashboardUseCase) { bind<IExploreDashboardUseCase>() }
+    singleOf(::MangeOffersUseCase) { bind<IMangeOffersUseCase>() }
 }

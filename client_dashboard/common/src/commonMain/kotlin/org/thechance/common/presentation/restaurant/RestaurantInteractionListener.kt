@@ -48,12 +48,8 @@ interface AddCuisineInteractionListener {
 }
 
 interface AddOfferInteractionListener {
-
-    fun onClickAddOffer()
     fun onClickOfferImagePicker()
     fun onSelectedOfferImage(image: Any?)
-
-    fun onClickDeleteOffer(cuisineId: String)
 
     fun onCloseAddOfferDialog()
 
