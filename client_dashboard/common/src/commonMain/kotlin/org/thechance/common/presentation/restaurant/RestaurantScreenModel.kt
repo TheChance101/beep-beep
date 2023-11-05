@@ -4,10 +4,12 @@ import kotlinx.coroutines.Job
 import org.thechance.common.domain.entity.Cuisine
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.LocationInfo
+import org.thechance.common.domain.entity.Offer
 import org.thechance.common.domain.entity.Restaurant
-import org.thechance.common.domain.usecase.IManageLocationUseCase
+import org.thechance.common.domain.usecase.IExploreDashboardUseCase
 import org.thechance.common.domain.usecase.IManageRestaurantUseCase
 import org.thechance.common.domain.usecase.IMangeCuisinesUseCase
+import org.thechance.common.domain.usecase.IMangeOffersUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 import java.io.File
@@ -15,8 +17,9 @@ import java.io.File
 
 class RestaurantScreenModel(
     private val manageRestaurant: IManageRestaurantUseCase,
-    private val manageLocation: IManageLocationUseCase,
+    private val exploreDashboard: IExploreDashboardUseCase,
     private val mangeCuisines: IMangeCuisinesUseCase,
+    private val manageOffers: IMangeOffersUseCase,
 ) : BaseScreenModel<RestaurantUiState, RestaurantUIEffect>(RestaurantUiState()),
     RestaurantInteractionListener {
 
@@ -39,7 +42,7 @@ class RestaurantScreenModel(
         tryToExecute(
             {
                 mutableState.value.run {
-                    manageRestaurant.getRestaurant(
+                    exploreDashboard.getRestaurant(
                         selectedPageNumber,
                         numberOfRestaurantsInPage,
                         searchQuery,
@@ -70,8 +73,17 @@ class RestaurantScreenModel(
 
     private fun getCuisines() {
         tryToExecute(
-            mangeCuisines::getCuisines,
+            exploreDashboard::getCuisines,
             ::onGetCuisinesSuccessfully,
+            ::onError
+        )
+    }
+
+    private fun getOffers() {
+        updateState { it.copy(newOfferDialogUiState = it.newOfferDialogUiState.copy(isLoading = true)) }
+        tryToExecute(
+            exploreDashboard::getOffers,
+            ::onGetOffersSuccessfully,
             ::onError
         )
     }
@@ -79,9 +91,14 @@ class RestaurantScreenModel(
     private fun onGetCuisinesSuccessfully(cuisines: List<Cuisine>) {
         updateState {
             it.copy(
-                restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
-                    cuisines = cuisines.toUiState(),
-                )
+                newCuisineDialogUiState = it.newCuisineDialogUiState.copy(cuisines = cuisines.toUiState())
+            )
+        }
+    }
+
+    private fun onGetOffersSuccessfully(offers: List<Offer>) {
+        updateState { it.copy(newOfferDialogUiState =
+                it.newOfferDialogUiState.copy(offers = offers.toOfferUiState(),isLoading = false)
             )
         }
     }
@@ -123,7 +140,7 @@ class RestaurantScreenModel(
                 }
                 updateState {
                     it.copy(
-                        restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
+                        newCuisineDialogUiState = it.newCuisineDialogUiState.copy(
                             cuisineNameError = ErrorWrapper(
                                 errorStates
                                     .firstInstanceOfOrNull<ErrorState.CuisineNameAlreadyExisted>()
@@ -262,7 +279,7 @@ class RestaurantScreenModel(
 
     private fun getCurrentLocation() {
         tryToExecute(
-            callee = { manageLocation.getCurrentLocation() },
+            callee = { exploreDashboard.getCurrentLocation() },
             onSuccess = ::onGetCurrentLocationSuccess,
             onError = ::onError,
         )
@@ -327,15 +344,6 @@ class RestaurantScreenModel(
     override fun onWorkingStartHourChange(hour: String) {
         updateState {
             it.copy(restaurantInformationUIState = it.restaurantInformationUIState.copy(openingTime = hour))
-            it.copy(
-                restaurantInformationUIState = it.restaurantInformationUIState.copy(
-                    openingTime = hour,
-//                    startTimeError = ErrorWrapper(
-//                        "write in valid format 00:00",
-////                        !iValidateRestaurantUseCase.validateStartTime(hour)
-//                    ),
-                )
-            )
         }
     }
 
@@ -364,9 +372,7 @@ class RestaurantScreenModel(
     }
 
     private fun setRestaurantMenuVisibility(id: String, isExpanded: Boolean) {
-        println("setRestaurantMenuVisibility $id $isExpanded")
         val currentRestaurantState = state.value.restaurants
-        println("currentRestaurantState $currentRestaurantState")
         val selectedRestaurantState = currentRestaurantState.first { it.id == id }
         val updateRestaurantState = selectedRestaurantState.copy(isExpanded = isExpanded)
         updateState {
@@ -392,7 +398,7 @@ class RestaurantScreenModel(
 
     private fun getRestaurantById(id: String) {
         tryToExecute(
-            { manageRestaurant.getRestaurantById(id) },
+            { exploreDashboard.getRestaurantById(id) },
             ::onGetRestaurantByIdSuccessfully,
             ::onError
         )
@@ -421,6 +427,99 @@ class RestaurantScreenModel(
                     filterPriceLevel = 0,
                     isFiltered = false
                 )
+            )
+        }
+    }
+
+
+    override fun onClickOfferImagePicker() {
+        updateState {
+            it.copy(
+                newOfferDialogUiState = it.newOfferDialogUiState.copy(
+                    isImagePickerVisible = true
+                )
+            )
+        }
+    }
+
+    override fun onSelectedOfferImage(image: Any?) {
+        val imageFile = image?.let { it as File }
+        checkOnOfferInfo()
+        updateState {
+            it.copy(
+                newOfferDialogUiState = it.newOfferDialogUiState.copy(
+                    isImagePickerVisible = false,
+                    selectedOfferImage = imageFile?.readBytes() ?: byteArrayOf()
+                )
+            )
+        }
+    }
+
+    private fun checkOnOfferInfo() {
+        state.value.newOfferDialogUiState.run {
+            if (offerName.isNotEmpty() && this.selectedOfferImage.isNotEmpty()) {
+                updateState {
+                    it.copy(
+                        newOfferDialogUiState =
+                        it.newOfferDialogUiState.copy(isAddOfferEnabled = true)
+                    )
+                }
+            }
+        }
+    }
+
+    override fun onAddOfferClicked() {
+        getOffers()
+        updateState { it.copy(newOfferDialogUiState = it.newOfferDialogUiState.copy(isVisible = true)) }
+    }
+
+    override fun onCloseAddOfferDialog() {
+        updateState { it.copy(newOfferDialogUiState = it.newOfferDialogUiState.copy(isVisible = false)) }
+    }
+
+    override fun onClickCreateOffer() {
+        updateState { it.copy(newOfferDialogUiState = it.newOfferDialogUiState.copy(isLoading = true)) }
+        tryToExecute(
+            {
+                state.value.newOfferDialogUiState.run {
+                    manageOffers.createOffer(offerName, selectedOfferImage)
+                }
+            },
+            ::onCreateOfferSuccessfully,
+            ::onError
+        )
+    }
+
+    private fun onCreateOfferSuccessfully(offer: Offer) {
+        updateState {
+            it.copy(
+                newOfferDialogUiState = it.newOfferDialogUiState.copy(
+                    offers = it.newOfferDialogUiState.offers.toMutableList()
+                        .apply { add(offer.toUiState()) },
+                    offerName = "",
+                    selectedOfferImage = byteArrayOf(),
+                    isLoading = false
+                )
+            )
+        }
+    }
+
+    override fun onChangeOfferName(offerName: String) {
+        state.value.newOfferDialogUiState.run {
+            if (offerName.isNotEmpty() && selectedOfferImage.isNotEmpty()) {
+                updateState {
+                    it.copy(
+                        newOfferDialogUiState =
+                        it.newOfferDialogUiState.copy(isAddOfferEnabled = true)
+                    )
+                }
+            }
+        }
+        clearCuisineErrorState()
+        updateState {
+            it.copy(
+                newOfferDialogUiState =
+                it.newOfferDialogUiState.copy(offerName = offerName)
             )
         }
     }
@@ -471,8 +570,8 @@ class RestaurantScreenModel(
     private fun clearCuisineErrorState() {
         updateState {
             it.copy(
-                restaurantAddCuisineDialogUiState =
-                it.restaurantAddCuisineDialogUiState.copy(cuisineNameError = ErrorWrapper())
+                newCuisineDialogUiState =
+                it.newCuisineDialogUiState.copy(cuisineNameError = ErrorWrapper())
             )
         }
     }
@@ -480,37 +579,44 @@ class RestaurantScreenModel(
 
     // region Cuisine Dialog
     override fun onClickAddCuisine() {
+        clearCuisineErrorState()
         updateState {
             it.copy(
-                restaurantAddCuisineDialogUiState =
-                it.restaurantAddCuisineDialogUiState.copy(isVisible = true)
+                newCuisineDialogUiState =
+                it.newCuisineDialogUiState.copy(isVisible = true)
             )
         }
     }
 
-    override fun onClickImagePicker() {
+    override fun onClickCuisineImage() {
         updateState {
             it.copy(
-                restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
+                newCuisineDialogUiState = it.newCuisineDialogUiState.copy(
                     isImagePickerVisible = true
                 )
             )
         }
     }
 
-    override fun onSelectedImage(image: Any?) {
-        val imageFile = image?.let {  it as File }
-        state.value.restaurantAddCuisineDialogUiState.run {
-            if(cuisineName.isNotEmpty() && this.cuisineImage.isNotEmpty()){
-                updateState { it.copy(restaurantAddCuisineDialogUiState =
-                it.restaurantAddCuisineDialogUiState.copy(isAddCuisineEnabled = true))
+    override fun onSelectedCuisineImage(image: Any?) {
+        val imageFile = image?.let { it as File }
+        state.value.newCuisineDialogUiState.run {
+            if (cuisineName.isNotEmpty() && this.selectedCuisineImage.isNotEmpty()) {
+                updateState {
+                    it.copy(
+                        newCuisineDialogUiState =
+                        it.newCuisineDialogUiState.copy(isAddCuisineEnabled = true)
+                    )
                 }
             }
         }
-        updateState { it.copy(restaurantAddCuisineDialogUiState =
-        it.restaurantAddCuisineDialogUiState.copy(
-            isImagePickerVisible = false, cuisineImage =  imageFile?.readBytes()?: byteArrayOf())
-        )
+        updateState {
+            it.copy(
+                newCuisineDialogUiState = it.newCuisineDialogUiState.copy(
+                    isImagePickerVisible = false,
+                    selectedCuisineImage = imageFile?.readBytes() ?: byteArrayOf()
+                )
+            )
         }
     }
 
@@ -519,8 +625,12 @@ class RestaurantScreenModel(
         clearCuisineErrorState()
         updateState {
             it.copy(
-                restaurantAddCuisineDialogUiState =
-                it.restaurantAddCuisineDialogUiState.copy(isVisible = false, cuisineName = "", cuisineImage = byteArrayOf())
+                newCuisineDialogUiState =
+                it.newCuisineDialogUiState.copy(
+                    isVisible = false,
+                    cuisineName = "",
+                    selectedCuisineImage = byteArrayOf()
+                )
             )
         }
     }
@@ -528,8 +638,8 @@ class RestaurantScreenModel(
     override fun onClickCreateCuisine() {
         tryToExecute(
             {
-                state.value.restaurantAddCuisineDialogUiState.run {
-                    mangeCuisines.createCuisine(cuisineName, cuisineImage)
+                state.value.newCuisineDialogUiState.run {
+                    mangeCuisines.createCuisine(cuisineName, selectedCuisineImage)
                 }
             },
             ::onCreateCuisinesSuccessfully,
@@ -537,16 +647,15 @@ class RestaurantScreenModel(
         )
     }
 
+
     private fun onCreateCuisinesSuccessfully(cuisine: Cuisine) {
         clearCuisineErrorState()
         updateState {
             it.copy(
-                restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
-                    cuisines = it.restaurantAddCuisineDialogUiState.cuisines.toMutableList()
-                        .apply {
-                            add(cuisine.toUiState())
-                        },
-                    cuisineName = ""
+                newCuisineDialogUiState = it.newCuisineDialogUiState.copy(
+                    cuisines = it.newCuisineDialogUiState.cuisines.toMutableList().apply {
+                        add(cuisine.toUiState())
+                    }, cuisineName = "", selectedCuisineImage = byteArrayOf()
                 )
             )
         }
@@ -563,8 +672,8 @@ class RestaurantScreenModel(
     private fun onDeleteCuisinesSuccessfully(cuisineId: String) {
         updateState {
             it.copy(
-                restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
-                    cuisines = it.restaurantAddCuisineDialogUiState.cuisines.toMutableList()
+                newCuisineDialogUiState = it.newCuisineDialogUiState.copy(
+                    cuisines = it.newCuisineDialogUiState.cuisines.toMutableList()
                         .apply {
                             val cuisine =
                                 this.find { cuisineUiState -> cuisineUiState.id == cuisineId }
@@ -576,18 +685,21 @@ class RestaurantScreenModel(
     }
 
     override fun onChangeCuisineName(cuisineName: String) {
-        state.value.restaurantAddCuisineDialogUiState.run {
-            if(cuisineName.isNotEmpty() && cuisineImage.isNotEmpty()){
-                updateState { it.copy(restaurantAddCuisineDialogUiState =
-                it.restaurantAddCuisineDialogUiState.copy(isAddCuisineEnabled = true))
+        state.value.newCuisineDialogUiState.run {
+            if (cuisineName.isNotEmpty() && selectedCuisineImage.isNotEmpty()) {
+                updateState {
+                    it.copy(
+                        newCuisineDialogUiState =
+                        it.newCuisineDialogUiState.copy(isAddCuisineEnabled = true)
+                    )
                 }
             }
         }
         clearCuisineErrorState()
         updateState {
             it.copy(
-                restaurantAddCuisineDialogUiState =
-                it.restaurantAddCuisineDialogUiState.copy(cuisineName = cuisineName)
+                newCuisineDialogUiState =
+                it.newCuisineDialogUiState.copy(cuisineName = cuisineName)
             )
         }
     }
