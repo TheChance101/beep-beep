@@ -1,7 +1,6 @@
 package domain.usecase
 
 import domain.entity.NotificationHistory
-import domain.gateway.INotificationGateway
 
 interface IGetNotificationsUseCase {
     suspend fun getTodayNotifications(): List<NotificationHistory>

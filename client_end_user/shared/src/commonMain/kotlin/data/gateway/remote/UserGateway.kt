@@ -5,6 +5,8 @@ import data.remote.mapper.toEntity
 import data.remote.mapper.toSessionEntity
 import data.remote.mapper.toUserRegistrationDto
 import data.remote.model.AddressDto
+import data.remote.model.NotificationHistoryDto
+import data.remote.model.PaginationResponse
 import data.remote.model.RestaurantDto
 import data.remote.model.ServerResponse
 import data.remote.model.SessionDto
@@ -12,6 +14,8 @@ import data.remote.model.UserDetailsDto
 import data.remote.model.UserRegistrationDto
 import domain.entity.Account
 import domain.entity.Address
+import domain.entity.NotificationHistory
+import domain.entity.PaginationItems
 import domain.entity.Restaurant
 import domain.entity.Session
 import domain.entity.User
@@ -21,6 +25,7 @@ import domain.utils.GeneralException
 import io.ktor.client.HttpClient
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.url
 import io.ktor.http.HttpMethod
@@ -150,5 +155,23 @@ class UserGateway(
                 method = HttpMethod.Delete
             }
         }.value ?: throw GeneralException.NotFoundException
+    }
+
+    override suspend fun getNotificationHistory(
+        page: Int,
+        limit: Int,
+    ): PaginationItems<NotificationHistory> {
+        val result = tryToExecute<ServerResponse<PaginationResponse<NotificationHistoryDto>>> {
+            get("/notifications/history") {
+                parameter("page", page)
+                parameter("limit", limit)
+            }
+        }.value
+
+        return paginateData(
+            result = result?.items?.map { it.toEntity() } ?: emptyList(),
+            page = page,
+            total = limit.toLong(),
+        )
     }
 }
