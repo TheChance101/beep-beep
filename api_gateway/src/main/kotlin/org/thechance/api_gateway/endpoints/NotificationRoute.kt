@@ -62,6 +62,14 @@ fun Route.notificationRoute() {
                 val result = notificationService.getNotificationHistoryForUser(userId, page, limit, language)
                 respondWithResult(HttpStatusCode.OK, result)
             }
+
+            get("/history-24hours") {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val userId = tokenClaim?.get(Claim.USER_ID).toString()
+                val language = extractLocalizationHeader()
+                val result = notificationService.getNotificationHistoryForUserInLast24Hours(userId, language)
+                respondWithResult(HttpStatusCode.OK, result)
+            }
         }
     }
 }

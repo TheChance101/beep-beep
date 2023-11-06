@@ -22,6 +22,8 @@ interface INotificationManagementUseCase {
     suspend fun getTotalCountsOfNotificationHistoryForUser(userId: String): Long
 
     suspend fun getNotificationHistoryForUser(page: Int, limit: Int, userId: String): List<NotificationHistory>
+
+    suspend fun getNotificationHistoryInTheLast24Hours(userId: String): List<NotificationHistory>
 }
 
 @Single
@@ -68,5 +70,9 @@ class NotificationManagementUseCase(
         userId: String
     ): List<NotificationHistory> {
         return databaseGateway.getNotificationHistoryForUser(page = page, limit = limit, userId = userId)
+    }
+
+    override suspend fun getNotificationHistoryInTheLast24Hours(userId: String): List<NotificationHistory> {
+        return databaseGateway.getNotificationHistoryInTheLast24Hours(userId)
     }
 }

@@ -71,6 +71,12 @@ fun Route.notificationRoutes() {
             val total = notificationManagement.getTotalCountsOfNotificationHistoryForUser(userId)
             call.respond(HttpStatusCode.OK, BasePaginationResponseDto(items = result, page = page, total = total))
         }
+
+        get("/history-24hours/{userId}") {
+            val userId = call.parameters.requireNotEmpty("userId")
+            val result = notificationManagement.getNotificationHistoryInTheLast24Hours(userId).toDto()
+            call.respond(HttpStatusCode.OK, result)
+        }
     }
 
     route("topics") {

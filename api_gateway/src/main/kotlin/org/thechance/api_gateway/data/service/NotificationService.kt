@@ -1,10 +1,5 @@
 package org.thechance.api_gateway.data.service
 
-import io.ktor.client.HttpClient
-import io.ktor.client.request.get
-import io.ktor.client.request.post
-import io.ktor.util.Attributes
-import io.ktor.util.InternalAPI
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.util.*
@@ -87,5 +82,18 @@ class NotificationService(
                 parameter("limit", limit)
             }
         }
+    }
+
+    suspend fun getNotificationHistoryForUserInLast24Hours(
+        userId: String,
+        languageCode: String
+    ): List<NotificationHistoryDto> {
+        return client.tryToExecute<List<NotificationHistoryDto>>(
+            APIs.NOTIFICATION_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { get("notifications/history-24hours/$userId") }
+        )
+
     }
 }

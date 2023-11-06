@@ -12,6 +12,8 @@ interface IDatabaseGateway {
 
     suspend fun getNotificationHistoryForUser(page: Int, limit: Int, userId: String): List<NotificationHistory>
 
+    suspend fun getNotificationHistoryInTheLast24Hours(userId: String): List<NotificationHistory>
+
     suspend fun getTotalCountsOfNotificationHistoryForUser(userId: String): Long
 
     suspend fun registerToken(userId: String, token: String): Boolean
