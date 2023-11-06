@@ -47,6 +47,7 @@ import presentation.base.BaseScreen
 import presentation.composable.RestaurantInformation
 import presentation.main.MainScreen
 import resources.Resources
+import util.getNavigationBarPadding
 import util.getStatusBarPadding
 
 class RestaurantSelectionScreen : BaseScreen
@@ -151,6 +152,8 @@ class RestaurantSelectionScreen : BaseScreen
         listener: RestaurantSelectionScreenInteractionListener
     ) {
         LazyColumn(
+            modifier = Modifier.fillMaxWidth()
+                .padding(bottom = getNavigationBarPadding().calculateBottomPadding()),
             state = lazyListState,
             contentPadding = PaddingValues(
                 start = 16.dp,
