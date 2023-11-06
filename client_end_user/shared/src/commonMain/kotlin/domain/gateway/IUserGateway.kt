@@ -20,4 +20,5 @@ interface IUserGateway {
     suspend fun addRestaurantToFavorites(restaurantId: String): Boolean
     suspend fun removeRestaurantFromFavorites(restaurantId: String): Boolean
     suspend fun getNotificationHistory(page: Int, limit: Int): PaginationItems<NotificationHistory>
+    suspend fun getNotificationHistoryInLast24Hours(): List<NotificationHistory>
 }

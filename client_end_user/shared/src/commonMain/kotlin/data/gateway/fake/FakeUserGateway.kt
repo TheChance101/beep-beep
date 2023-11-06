@@ -114,6 +114,10 @@ class FakeUserGateway : IUserGateway {
         )
     }
 
+    override suspend fun getNotificationHistoryInLast24Hours(): List<NotificationHistory> {
+        TODO("Not yet implemented")
+    }
+
     private val notifications = listOf(
         NotificationHistoryDto(
             id = "64f372095fecc11e6d917656",

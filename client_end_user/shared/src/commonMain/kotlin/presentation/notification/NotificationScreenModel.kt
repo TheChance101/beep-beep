@@ -1,7 +1,6 @@
 package presentation.notification
 
 import androidx.paging.PagingData
-import androidx.paging.map
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.NotificationHistory
 import domain.usecase.IGetTransactionHistoryUseCase
@@ -21,7 +20,9 @@ class NotificationScreenModel(
 
     init {
         checkIfLoggedIn()
-        getNotificationHistory()
+        viewModelScope.launch {
+            getNotificationHistory()
+        }
     }
 
     private fun checkIfLoggedIn() {
@@ -48,12 +49,25 @@ class NotificationScreenModel(
         updateState { it.copy(isLoggedIn = false) }
     }
 
-    private fun getNotificationHistory() {
+    private suspend fun getNotificationHistory() {
+
+        tryToExecute(
+            function = transaction::getNotificationHistoryInLast24Hours,
+            onSuccess = ::onGetNotificationHistoryInLast24HoursSuccess,
+            onError = ::onGetNotificationHistoryError
+        ).join()
+
         tryToExecute(
             function = transaction::getNotificationHistory,
             onSuccess = ::onGetNotificationHistorySuccess,
             onError = ::onGetNotificationHistoryError
-        )
+        ).join()
+
+
+    }
+
+    private fun onGetNotificationHistoryInLast24HoursSuccess(notifications: List<NotificationHistory>) {
+        updateState { it.copy(todayNotifications = notifications.toUiState()) }
     }
 
     private fun onGetNotificationHistorySuccess(notification: Flow<PagingData<NotificationHistory>>) {

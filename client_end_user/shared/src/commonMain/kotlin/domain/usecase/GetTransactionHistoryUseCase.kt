@@ -9,17 +9,20 @@ import data.gateway.remote.pagesource.TaxiOrderPagingSource
 import domain.entity.FoodOrder
 import domain.entity.NotificationHistory
 import domain.entity.Trip
+import domain.gateway.IUserGateway
 import kotlinx.coroutines.flow.Flow
 
 interface IGetTransactionHistoryUseCase {
     suspend fun getOrdersHistory(): Flow<PagingData<FoodOrder>>
     suspend fun getTripsHistory(): Flow<PagingData<Trip>>
     suspend fun getNotificationHistory(): Flow<PagingData<NotificationHistory>>
+    suspend fun getNotificationHistoryInLast24Hours(): List<NotificationHistory>
 }
 
 class GetTransactionHistoryUseCase(
     private val taxiOrder: TaxiOrderPagingSource,
     private val foodOrderDataSource: FoodOrderPagingSource,
+    private val userGateway: IUserGateway,
     private val notificationPagingSource: NotificationPagingSource,
 ) : IGetTransactionHistoryUseCase {
 
@@ -39,5 +42,9 @@ class GetTransactionHistoryUseCase(
         return Pager(config = PagingConfig(pageSize = 10, enablePlaceholders = true),
             pagingSourceFactory = { notificationPagingSource }
         ).flow
+    }
+
+    override suspend fun getNotificationHistoryInLast24Hours(): List<NotificationHistory> {
+        return userGateway.getNotificationHistoryInLast24Hours()
     }
 }

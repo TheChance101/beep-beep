@@ -1,11 +1,15 @@
 package presentation.notification
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import app.cash.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpPagingList
@@ -60,17 +64,37 @@ class NotificationScreen : BaseScreen<
                     .background(Theme.colors.background)
                     .padding(getStatusBarPadding()),
             ) {
-                BpPagingList(data = notifications) { notificationUiState ->
-                    notificationUiState?.let {
-//                        if (it.time.hours < 24) {
+
+                BpPagingList(
+                    data = notifications,
+                    verticalArrangement = Arrangement.spacedBy(0.dp),
+                    optionalHeaderTitle = Resources.strings.today,
+                    optionalTopLList = state.todayNotifications,
+                    hasOptionalList = state.todayNotifications.isNotEmpty(),
+                    optionalContent = { notification ->
                         NotificationCard(
-                            title = it.title,
-                            content = it.body,
-                            time = it.time,
+                            title = notification.title,
+                            content = notification.body,
+                            time = notification.time,
+                            cardShape = if (state.todayNotifications.indexOf(notification) == 0) {
+                                RoundedCornerShape(bottomEnd = 8.dp, bottomStart = 8.dp)
+                            } else {
+                                RoundedCornerShape(8.dp)
+                            }
                         )
-//                        }
+                    },
+                    content = { notificationUiState ->
+                        notificationUiState?.let { notification ->
+                            NotificationCard(
+                                title = notification.title,
+                                content = notification.body,
+                                time = notification.time,
+                                date = notification.date,
+                                showDate = true
+                            )
+                        }
                     }
-                }
+                )
             }
         }
     }

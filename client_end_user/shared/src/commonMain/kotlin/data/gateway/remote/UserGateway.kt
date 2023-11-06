@@ -35,7 +35,7 @@ import kotlinx.serialization.json.Json
 
 class UserGateway(
     client: HttpClient,
-    private val firebaseService: IFireBaseMessageService
+    private val firebaseService: IFireBaseMessageService,
 ) : BaseGateway(client), IUserGateway {
 
     @OptIn(InternalAPI::class)
@@ -176,5 +176,11 @@ class UserGateway(
             page = page,
             total = limit.toLong(),
         )
+    }
+
+    override suspend fun getNotificationHistoryInLast24Hours(): List<NotificationHistory> {
+        return tryToExecute<ServerResponse<List<NotificationHistoryDto>>> {
+            get("/notifications/history-24hours")
+        }.value?.map { it.toEntity() } ?: throw GeneralException.NotFoundException
     }
 }
