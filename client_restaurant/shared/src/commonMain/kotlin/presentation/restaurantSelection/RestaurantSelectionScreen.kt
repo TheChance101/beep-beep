@@ -185,6 +185,7 @@ class RestaurantSelectionScreen : BaseScreen
         item: RestaurantUIState,
         listener: RestaurantSelectionScreenInteractionListener
     ) {
+        println("is open: ${item.isOpen}")
         RestaurantInformation(
             onRestaurantClick = { listener.onClickRestaurant(item.id) },
             restaurantName = item.restaurantName,
