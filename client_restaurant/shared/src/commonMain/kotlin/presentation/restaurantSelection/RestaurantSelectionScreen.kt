@@ -116,7 +116,7 @@ class RestaurantSelectionScreen : BaseScreen
 
             Image(
                 modifier = Modifier.fillMaxSize(),
-                painter = painterResource(Resources.images.backgroundPattern),
+                painter = painterResource(Resources.images.pattern),
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )

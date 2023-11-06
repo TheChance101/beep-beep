@@ -10,6 +10,7 @@ data class DrawableResources(
     val sort: String = "sort.xml",
     val sun: String = "sun.xml",
     val backgroundPattern: String = "background_pattern.png",
+    val pattern: String = "pattern.png",
     val galleryAdd: String = "gallery_add.xml",
     val edit: String = "edit.xml",
     val flag: String = "flag.xml",
