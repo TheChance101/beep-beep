@@ -47,6 +47,7 @@ import presentation.base.BaseScreen
 import presentation.composable.RestaurantInformation
 import presentation.main.MainScreen
 import resources.Resources
+import util.getStatusBarPadding
 
 class RestaurantSelectionScreen : BaseScreen
 <RestaurantSelectionScreenModel,
@@ -59,7 +60,6 @@ class RestaurantSelectionScreen : BaseScreen
         initScreen(getScreenModel())
     }
 
-    @OptIn(ExperimentalResourceApi::class, ExperimentalFoundationApi::class)
     @Composable
     override fun onRender(
         state: RestaurantScreenUIState,
@@ -77,7 +77,10 @@ class RestaurantSelectionScreen : BaseScreen
             isExpanding = lazyListState.canScrollBackward
         }
 
-        Box(modifier = Modifier.fillMaxSize().background(Theme.colors.primary)) {
+        Box(
+            modifier = Modifier.fillMaxSize()
+                .background(Theme.colors.primary)
+        ) {
 
             AppLogoHeader()
 
@@ -193,7 +196,10 @@ class RestaurantSelectionScreen : BaseScreen
 
     @Composable
     private fun HeaderTitles() {
-        Column(modifier = Modifier.fillMaxSize().background(Theme.colors.surface)) {
+        Column(
+            modifier = Modifier.fillMaxSize().background(Theme.colors.surface)
+                .padding(getStatusBarPadding()).padding(top = 16.dp)
+        ) {
             Text(
                 text = Resources.strings.chooseYourRestaurant,
                 style = Theme.typography.headline.copy(color = Theme.colors.contentPrimary)
