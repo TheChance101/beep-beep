@@ -59,12 +59,11 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
                     .wrapContentSize()
                     .background(Theme.colors.background)
             ) {
-                val informationState = state.restaurant
                 RestaurantInfoCard(
-                    informationState.ownerUsername,
-                    informationState.address,
-                    informationState.rating,
-                    informationState.priceLevel
+                    state.restaurant.ownerUsername,
+                    state.restaurant.address,
+                    state.restaurant.rating,
+                    state.restaurant.priceLevel
                 )
 
                 RestaurantUpdateInformationCard(state, listener)
@@ -226,7 +225,8 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
             BpButton(
                 title = Resources.strings.save,
                 onClick = { listener.onClickSave() },
-                enabled = state.restaurant.isSaveButtonEnabled,
+                enabled = state.restaurant.isSaveButtonEnabled && state.restaurant.validationState,
+                isLoading = state.isLoading,
                 modifier = Modifier.fillMaxWidth().padding(
                     start = 16.dp,
                     end = 16.dp,
