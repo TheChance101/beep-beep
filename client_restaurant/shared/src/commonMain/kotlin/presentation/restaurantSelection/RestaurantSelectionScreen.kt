@@ -153,7 +153,6 @@ class RestaurantSelectionScreen : BaseScreen
         LazyColumn(
             state = lazyListState,
             contentPadding = PaddingValues(
-                top = 24.dp,
                 start = 16.dp,
                 end = 16.dp,
                 bottom = 16.dp
@@ -185,7 +184,6 @@ class RestaurantSelectionScreen : BaseScreen
         item: RestaurantUIState,
         listener: RestaurantSelectionScreenInteractionListener
     ) {
-        println("is open: ${item.isOpen}")
         RestaurantInformation(
             onRestaurantClick = { listener.onClickRestaurant(item.id) },
             restaurantName = item.restaurantName,
@@ -216,8 +214,8 @@ class RestaurantSelectionScreen : BaseScreen
 
     private companion object {
         const val FULL_SCREEN = 1f
-        const val THIRTY_PERCENT_SCREEN = 0.3f
-        const val SEVENTY_PERCENT_SCREEN = 0.7f
+        const val THIRTY_PERCENT_SCREEN = 0.35f
+        const val SEVENTY_PERCENT_SCREEN = 0.65f
     }
 }
 
