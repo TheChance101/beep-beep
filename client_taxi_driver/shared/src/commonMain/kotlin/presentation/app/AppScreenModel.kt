@@ -12,8 +12,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AppScreenModel(private val manageUser: ILoginUserUseCase): ScreenModel {
-    private val _isKeptLoggedIn: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val isKeptLoggedIn: StateFlow<Boolean> = _isKeptLoggedIn.asStateFlow()
+    private val _isKeptLoggedIn: MutableStateFlow<Boolean?> = MutableStateFlow(null)
+    val isKeptLoggedIn: StateFlow<Boolean?> = _isKeptLoggedIn.asStateFlow()
 
     init {
         getIsKeptLoggedIn()
