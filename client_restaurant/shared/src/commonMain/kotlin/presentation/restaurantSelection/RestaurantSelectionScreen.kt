@@ -1,5 +1,6 @@
 package presentation.restaurantSelection
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -7,6 +8,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -35,7 +37,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BpThreeDotLoadingIndicator
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -43,6 +47,7 @@ import presentation.base.BaseScreen
 import presentation.composable.RestaurantInformation
 import presentation.main.MainScreen
 import resources.Resources
+import util.getStatusBarPadding
 
 class RestaurantSelectionScreen : BaseScreen
 <RestaurantSelectionScreenModel,
@@ -72,47 +77,71 @@ class RestaurantSelectionScreen : BaseScreen
         LaunchedEffect(lazyListState.isScrollInProgress) {
             isExpanding = lazyListState.canScrollBackward
         }
+        Box(
+            modifier = Modifier.fillMaxSize(), Alignment.Center){
+            AnimatedContent(state) {
+                if (state.isLoading) {
+                    BpThreeDotLoadingIndicator(
+                        dotColor = Theme.colors.primary,
+                        modifier = Modifier.zIndex(5f)
+                    )
+                } else {
+                    Box(modifier = Modifier.fillMaxSize().background(Theme.colors.primary)) {
 
-        Box(modifier = Modifier.fillMaxSize().background(Theme.colors.primary)) {
+                        // region header
+                        Box(modifier = Modifier.fillMaxWidth().fillMaxHeight(THIRTY_PERCENT_SCREEN)) {
 
-            // region header
-            Box(modifier = Modifier.fillMaxWidth().fillMaxHeight(THIRTY_PERCENT_SCREEN)) {
-                Image(
-                    modifier = Modifier.fillMaxSize(),
-                    painter = painterResource(Resources.images.backgroundPattern),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop
-                )
-                Icon(
-                    modifier = Modifier.height(66.dp).width(145.dp).align(Alignment.Center),
-                    tint = Color.White,
-                    painter = painterResource(Resources.images.bpLogo),
-                    contentDescription = null
-                )
-            }
-            // endregion
+                            Image(
+                                modifier = Modifier.fillMaxSize(),
+                                painter = painterResource(Resources.images.backgroundPattern),
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop
+                            )
+                            Icon(
+                                modifier = Modifier.height(66.dp).width(145.dp).align(Alignment.Center),
+                                tint = Color.White,
+                                painter = painterResource(Resources.images.bpLogo),
+                                contentDescription = null
+                            )
+                        }
+                        // endregion
 
-            // region bottom sheet
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth().fillMaxHeight(bottomSheetSize)
-                    .clip(RoundedCornerShape(topStart = roundedCornerShape, topEnd = roundedCornerShape))
-                    .background(Theme.colors.surface).align(Alignment.BottomCenter),
-                state = lazyListState,
-                contentPadding = PaddingValues(top = 24.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
-            ) {
-                stickyHeader {
-                    HeaderTitles()
-                }
-                itemsIndexed(state.restaurants) { index, item ->
-                    RestaurantSelectionItem(item, listener)
-                    AnimatedVisibility(index != state.restaurants.size - 1) {
-                        Divider(Modifier.background(Theme.colors.divider))
+                        // region bottom sheet
+                        LazyColumn(
+                            modifier = Modifier.fillMaxWidth().fillMaxHeight(bottomSheetSize)
+                                .clip(
+                                    RoundedCornerShape(
+                                        topStart = roundedCornerShape,
+                                        topEnd = roundedCornerShape
+                                    )
+                                )
+                                .background(Theme.colors.surface).align(Alignment.BottomCenter),
+                            state = lazyListState,
+                            contentPadding = PaddingValues(
+                                top = 24.dp,
+                                start = 16.dp,
+                                end = 16.dp,
+                                bottom = 16.dp
+                            )
+                        ) {
+                            stickyHeader {
+                                HeaderTitles()
+                            }
+                            itemsIndexed(state.restaurants) { index, item ->
+                                RestaurantSelectionItem(item, listener)
+                                AnimatedVisibility(index != state.restaurants.size - 1) {
+                                    Divider(Modifier.background(Theme.colors.divider))
+                                }
+                            }
+                        }
                     }
                 }
             }
-        }
-        //endregion
     }
+
+
+    //endregion
+}
 
     override fun onEffect(effect: RestaurantSelectionScreenUIEffect, navigator: Navigator) {
         when (effect) {
