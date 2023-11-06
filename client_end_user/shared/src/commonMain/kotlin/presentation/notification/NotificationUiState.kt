@@ -1,14 +1,14 @@
 package presentation.notification
 
+import androidx.compose.runtime.Composable
 import androidx.paging.PagingData
-import androidx.paging.map
 import domain.entity.Date
 import domain.entity.NotificationHistory
 import domain.entity.Time
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Month
+import resources.Resources
 
 data class NotificationsUiState(
     val notifications: Flow<PagingData<NotificationUiState>> = emptyFlow(),
@@ -25,24 +25,15 @@ data class NotificationUiState(
     val clickableText: String = "",
     val date: Date = Date(24, Month.AUGUST, 2023),
     val time: Time = Time(0, 0),
-)
-
-fun NotificationHistory.toUiState(): NotificationUiState {
-    return NotificationUiState(
-        title = title,
-        body = body,
-        time = time,
-        date = date,
-        topicId = topicId,
-        sender = sender.code
-    )
-}
-
-fun List<NotificationHistory>.toUiState(): List<NotificationUiState> {
-    return this.map { it.toUiState() }
-}
-
-
-fun Flow<PagingData<NotificationHistory>>.toUiState(): Flow<PagingData<NotificationUiState>> {
-    return this.map { pagingData -> pagingData.map { it.toUiState() } }
+) {
+    val notificationClickableText: String
+        @Composable
+        get() {
+            return when (sender) {
+                NotificationHistory.NotificationSender.RESTAURANT.code -> Resources.strings.trackYourOrder
+                NotificationHistory.NotificationSender.DELIVERY.code -> Resources.strings.trackYourOrder
+                NotificationHistory.NotificationSender.TAXI.code -> Resources.strings.trackYourRide
+                else -> ""
+            }
+        }
 }

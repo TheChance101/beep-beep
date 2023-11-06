@@ -116,5 +116,6 @@ data class ArabicEG(
     override val searchDestinationHint: String = "العنوان",
     override val setDestination: String = "ضع المكان ",
     override val searchDestination: String = "ابحث عن مكان",
+    override val trackYourRide: String = "تتبع رحلتك",
 
     ) : IStringResources

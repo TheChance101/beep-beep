@@ -80,10 +80,23 @@ class NotificationScreenModel(
 
     }
 
-    override fun onClickTrackOrder() {
-    }
+    override fun onClickNotification(topicId: String, sender: Int) {
+        when (NotificationHistory.getNotificationSender(sender)) {
+            NotificationHistory.NotificationSender.RESTAURANT -> {
+                sendNewEffect(NotificationUiEffect.NavigateToTrackFoodOrder(topicId))
+            }
 
-    override fun onClickTryAgain() {
+            NotificationHistory.NotificationSender.DELIVERY -> {
+                sendNewEffect(NotificationUiEffect.NavigateToTrackDelivery(topicId))
+
+            }
+
+            NotificationHistory.NotificationSender.TAXI -> {
+                sendNewEffect(NotificationUiEffect.NavigateToTaxiRide(topicId))
+            }
+
+            NotificationHistory.NotificationSender.UNDEFINED -> {}
+        }
     }
 
     override fun onClickLogin() {

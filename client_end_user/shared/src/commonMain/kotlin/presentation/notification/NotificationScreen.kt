@@ -3,7 +3,6 @@ package presentation.notification
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,6 +13,7 @@ import app.cash.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpPagingList
 import com.beepbeep.designSystem.ui.theme.Theme
+import domain.entity.NotificationHistory
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.auth.login.LoginScreen
@@ -21,6 +21,8 @@ import presentation.base.BaseScreen
 import presentation.composable.ContentVisibility
 import presentation.composable.LoginRequiredPlaceholder
 import presentation.notification.combosable.NotificationCard
+import presentation.orderFoodTracking.OrderFoodTrackingScreen
+import presentation.taxi.TaxiOrderScreen
 import resources.Resources
 import util.getStatusBarPadding
 import util.root
@@ -39,9 +41,16 @@ class NotificationScreen : BaseScreen<
 
     override fun onEffect(effect: NotificationUiEffect, navigator: Navigator) {
         when (effect) {
-            is NotificationUiEffect.MakeOrderAgain -> println("order again")
-            is NotificationUiEffect.NavigateToTraceOrderScreen -> println("navigate to trace order screen")
-            NotificationUiEffect.NavigateToLoginScreen -> navigator.root?.push(LoginScreen())
+            is NotificationUiEffect.NavigateToLoginScreen -> navigator.root?.push(LoginScreen())
+            is NotificationUiEffect.NavigateToTrackFoodOrder -> navigator.root?.push(
+                OrderFoodTrackingScreen(orderId = effect.orderId, tripId = "")
+            )
+
+            is NotificationUiEffect.NavigateToTrackDelivery -> navigator.root?.push(
+                OrderFoodTrackingScreen(tripId = effect.tripId, orderId = "")
+            )
+
+            is NotificationUiEffect.NavigateToTaxiRide -> navigator.root?.push(TaxiOrderScreen())
         }
     }
 
@@ -76,6 +85,16 @@ class NotificationScreen : BaseScreen<
                             title = notification.title,
                             content = notification.body,
                             time = notification.time,
+                            isClickable =
+                            NotificationHistory.getNotificationSender(notification.sender)
+                                    != NotificationHistory.NotificationSender.UNDEFINED,
+                            clickableText = notification.notificationClickableText,
+                            onClickNotification = {
+                                listener.onClickNotification(
+                                    notification.topicId,
+                                    notification.sender
+                                )
+                            },
                             cardShape = if (state.todayNotifications.indexOf(notification) == 0) {
                                 RoundedCornerShape(bottomEnd = 8.dp, bottomStart = 8.dp)
                             } else {
