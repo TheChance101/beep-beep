@@ -1,9 +1,10 @@
 package presentation.notification
 
+import androidx.paging.PagingData
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.NotificationHistory
+import domain.usecase.IGetTransactionHistoryUseCase
 import domain.usecase.IManageAuthenticationUseCase
-import domain.usecase.GetNotificationsUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -11,15 +12,17 @@ import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class NotificationScreenModel(
-    private val notificationManagement: GetNotificationsUseCase,
-    private val manageAuthentication: IManageAuthenticationUseCase
+    private val transaction: IGetTransactionHistoryUseCase,
+    private val manageAuthentication: IManageAuthenticationUseCase,
 ) : BaseScreenModel<NotificationsUiState, NotificationUiEffect>(NotificationsUiState()),
     NotificationInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
 
     init {
         checkIfLoggedIn()
-        getNotifications()
+        viewModelScope.launch {
+            getNotificationHistory()
+        }
     }
 
     private fun checkIfLoggedIn() {
@@ -46,41 +49,58 @@ class NotificationScreenModel(
         updateState { it.copy(isLoggedIn = false) }
     }
 
-    private fun getNotifications() {
+    private suspend fun getNotificationHistory() {
+
         tryToExecute(
-            { notificationManagement.getTodayNotifications() },
-            ::onGetTodayNotificationsSuccess,
-            ::onError
-        )
+            function = transaction::getNotificationHistoryInLast24Hours,
+            onSuccess = ::onGetNotificationHistoryInLast24HoursSuccess,
+            onError = ::onGetNotificationHistoryError
+        ).join()
+
         tryToExecute(
-            { notificationManagement.getThisWeekNotifications() },
-            ::onGetThisWeekNotificationsSuccess,
-            ::onError
-        )
+            function = transaction::getNotificationHistory,
+            onSuccess = ::onGetNotificationHistorySuccess,
+            onError = ::onGetNotificationHistoryError
+        ).join()
+
+
     }
 
-    override fun onClickTrackOrder() {
-        TODO("Not yet implemented")
+    private fun onGetNotificationHistoryInLast24HoursSuccess(notifications: List<NotificationHistory>) {
+        updateState { it.copy(todayNotifications = notifications.toUiState()) }
     }
 
-    override fun onClickTryAgain() {
-        TODO("Not yet implemented")
+    private fun onGetNotificationHistorySuccess(notification: Flow<PagingData<NotificationHistory>>) {
+        updateState {
+            it.copy(notifications = notification.toUiState())
+        }
+    }
+
+    private fun onGetNotificationHistoryError(errorState: ErrorState) {
+
+    }
+
+    override fun onClickNotification(topicId: String, sender: Int) {
+        when (NotificationHistory.getNotificationSender(sender)) {
+            NotificationHistory.NotificationSender.RESTAURANT -> {
+                sendNewEffect(NotificationUiEffect.NavigateToTrackFoodOrder(topicId))
+            }
+
+            NotificationHistory.NotificationSender.DELIVERY -> {
+                sendNewEffect(NotificationUiEffect.NavigateToTrackDelivery(topicId))
+
+            }
+
+            NotificationHistory.NotificationSender.TAXI -> {
+                sendNewEffect(NotificationUiEffect.NavigateToTaxiRide(topicId))
+            }
+
+            NotificationHistory.NotificationSender.UNDEFINED -> {}
+        }
     }
 
     override fun onClickLogin() {
         sendNewEffect(NotificationUiEffect.NavigateToLoginScreen)
-    }
-
-    private fun onGetTodayNotificationsSuccess(todayNotificationHistories: List<NotificationHistory>) {
-        updateState { it.copy(todayNotifications = todayNotificationHistories.toUiState()) }
-    }
-
-    private fun onGetThisWeekNotificationsSuccess(weekNotificationHistories: List<NotificationHistory>) {
-        updateState { it.copy(thisWeekNotifications = weekNotificationHistories.toUiState()) }
-    }
-
-    private fun onError(error: ErrorState) {
-        println("error is $error")
     }
 
 }

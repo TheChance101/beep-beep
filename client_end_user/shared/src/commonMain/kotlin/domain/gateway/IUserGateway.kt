@@ -4,6 +4,8 @@ import domain.entity.Account
 import domain.entity.Restaurant
 import domain.entity.Session
 import domain.entity.Address
+import domain.entity.NotificationHistory
+import domain.entity.PaginationItems
 import domain.entity.User
 
 interface IUserGateway {
@@ -17,4 +19,6 @@ interface IUserGateway {
     suspend fun getFavoriteRestaurants(): List<Restaurant>
     suspend fun addRestaurantToFavorites(restaurantId: String): Boolean
     suspend fun removeRestaurantFromFavorites(restaurantId: String): Boolean
+    suspend fun getNotificationHistory(page: Int, limit: Int): PaginationItems<NotificationHistory>
+    suspend fun getNotificationHistoryInLast24Hours(): List<NotificationHistory>
 }

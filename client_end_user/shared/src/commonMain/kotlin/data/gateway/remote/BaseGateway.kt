@@ -1,6 +1,5 @@
 package data.gateway.remote
 
-import data.remote.model.PaginationResponse
 import data.remote.model.ServerResponse
 import domain.entity.PaginationItems
 import domain.utils.AuthorizationException

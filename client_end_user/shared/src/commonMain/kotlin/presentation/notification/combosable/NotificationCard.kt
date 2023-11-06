@@ -16,7 +16,9 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
+import domain.entity.Date
 import domain.entity.Time
+import kotlinx.datetime.Month
 
 @Composable
 fun NotificationCard(
@@ -24,25 +26,28 @@ fun NotificationCard(
     title: String,
     content: String,
     time: Time,
-    modifier: Modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
+    modifier: Modifier = Modifier.fillMaxWidth(),
+    cardShape: RoundedCornerShape = RoundedCornerShape(8.dp),
     showDate: Boolean = false,
-    date: String = "",
+    date: Date = Date(24, Month.AUGUST, 1998),
     isClickable: Boolean = false,
-    clickableText: String = ""
+    clickableText: String = "",
 ) {
     val cardModifier = if (isClickable) modifier.clickable { onClickNotification() } else modifier
     Card(
-        shape = RoundedCornerShape(8.dp),
+        shape = cardShape,
         colors = CardDefaults.cardColors(Theme.colors.surface),
-        modifier = cardModifier
+        modifier = cardModifier.padding(bottom = 8.dp),
     ) {
         AnimatedVisibility(showDate) {
             Row(
-                modifier = Modifier.background(Theme.colors.primary).fillMaxWidth()
+                modifier = Modifier
+                    .background(Theme.colors.primary)
+                    .fillMaxWidth()
                     .padding(16.dp)
             ) {
                 Text(
-                    text = date,
+                    text = "${date.day} , ${date.month.toString().lowercase()} , ${date.year}",
                     style = Theme.typography.title,
                     color = Theme.colors.onPrimary
                 )
