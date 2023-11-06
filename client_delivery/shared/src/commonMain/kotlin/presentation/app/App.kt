@@ -7,6 +7,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
+import kotlinx.coroutines.flow.collectLatest
 import presentation.login.LoginScreen
 import presentation.main.MainScreen
 import resources.BeepBeepTheme
@@ -24,9 +25,10 @@ object MainApp : Screen {
         val isKeptLoggedIn by appScreenModel.isKeptLoggedIn.collectAsState()
 
         BeepBeepTheme{
-            if (isKeptLoggedIn) {
+
+            if (isKeptLoggedIn==true) {
                 Navigator(MainScreen()) { SlideTransition(it) }
-            } else {
+            } else if(isKeptLoggedIn == false){
                 Navigator(LoginScreen()) { SlideTransition(it) }
             }
         }
