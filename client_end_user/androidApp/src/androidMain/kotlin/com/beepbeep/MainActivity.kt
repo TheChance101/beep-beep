@@ -7,8 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
-import com.beepbeep.notification.FCMNotificationImp
-import com.beepbeep.notification.ServiceLocator
+import com.beepbeep.notification.fcm.FCMNotificationImp
+import com.beepbeep.notification.fcm.IFCMNotification
 import com.google.firebase.Firebase
 import com.google.firebase.initialize
 import dev.icerock.moko.geo.LocationTracker
@@ -20,7 +20,6 @@ class MainActivity : AppCompatActivity() {
         installSplashScreen()
         Firebase.initialize(this)
         super.onCreate(savedInstanceState)
-        ServiceLocator.initialize(FCMNotificationImp(applicationContext))
         locationTracker.bind(lifecycle, this, supportFragmentManager)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {

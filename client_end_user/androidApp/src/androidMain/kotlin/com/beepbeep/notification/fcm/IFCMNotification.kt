@@ -1,4 +1,4 @@
-package com.beepbeep.notification
+package com.beepbeep.notification.fcm
 
 import android.app.PendingIntent
 

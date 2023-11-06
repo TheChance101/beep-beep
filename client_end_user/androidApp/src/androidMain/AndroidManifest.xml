@@ -19,7 +19,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="tiramisu">
         <service
-            android:name="com.beepbeep.notification.FireBaseMsgServiceImpl"
+            android:name="com.beepbeep.notification.firebaseMessaaging.FireBaseMsgServiceImpl"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
