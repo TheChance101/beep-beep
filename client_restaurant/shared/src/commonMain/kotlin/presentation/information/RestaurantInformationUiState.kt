@@ -7,7 +7,9 @@ import presentation.base.ErrorState
 data class RestaurantInformationUiState(
     val restaurant: RestaurantUiState = RestaurantUiState(),
     val isLoading: Boolean = false,
-    val error: ErrorState? = null
+    val error: ErrorState? = null,
+    val showSnackBar: Boolean = false,
+    val snackBarState: Boolean = true
 )
 
 data class RestaurantUiState(

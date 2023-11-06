@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.runtime.Composable
 import io.ktor.client.engine.cio.CIO
 
-
 @Composable
 actual fun getNavigationBarPadding(): PaddingValues {
     return WindowInsets.navigationBars.asPaddingValues()
