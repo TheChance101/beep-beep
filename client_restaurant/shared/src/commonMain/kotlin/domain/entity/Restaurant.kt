@@ -26,9 +26,6 @@ data class Restaurant(
             .toLocalDateTime(TimeZone.currentSystemDefault()).time
         val openLocalTime = LocalTime.parse(openingTime)
         val closeLocalTime = LocalTime.parse(closingTime)
-        println("currentTime: $currentTime")
-        println("openLocalTime: $openLocalTime")
-        println("closeLocalTime: $closeLocalTime")
         return currentTime in openLocalTime..closeLocalTime
     }
 }
