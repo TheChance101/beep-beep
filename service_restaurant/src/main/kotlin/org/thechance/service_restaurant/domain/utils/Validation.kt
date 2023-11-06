@@ -9,7 +9,19 @@ import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorExcept
 interface IValidation {
     fun validatePagination(page: Int, limit: Int)
     fun isValidName(name: String?): Boolean
-    fun isValidPhone(phone: String?, currency: String): Boolean
+
+    /**
+     * accepts the following formats:
+     * "01" - Egypt (EGP currency).
+     * "05" - The original "ILS" currency, which is the Israeli New Shekel. (Note: This format may vary in different regions, so verify the specific usage.)
+     * "07" - Iraq (IQD currency) and Syria (SYP currency).
+     * "09" - Syria (SYP currency).
+     * "\+964" - Iraq (country code for Iraq).
+     * "\+1" - USA (country code for the United States).
+     * "\+90" - Turkey (country code for Turkey).
+     * "\+46" - Sweden (country code for Sweden).
+     */
+    fun isValidPhone(phone: String?): Boolean
     fun isValidId(id: String?): Boolean
     fun isValidatePriceLevel(priceLevel: String): Boolean
     fun isValidRate(rate: Double): Boolean
@@ -46,19 +58,9 @@ class Validation : IValidation {
         return name != null && name.matches(Regex("^[A-Za-z0-9\\s\\[\\]\\(\\)\\-.,&]{4,$NAME_MAX_LENGTH}$"))
     }
 
-    override fun isValidPhone(phone: String?, currency: String): Boolean {
-        val phoneRegex = getPhoneRegex(currency)
+    override fun isValidPhone(phone: String?): Boolean {
+        val phoneRegex = "^(01|05|07|09|964|1|90|46)\\d{9}\$"
         return phone != null && phone.matches(Regex(phoneRegex))
-    }
-
-    private fun getPhoneRegex(currency: String): String {
-        return when (currency) {
-            "EGP" -> "^01\\d{9}\$"
-            "IQD" -> "^07\\d{9}\$"
-            "SYP" -> "^09\\d{9}\$"
-            "ILS" -> "^(05|09)\\d{9}\$"
-            else -> "^\\d{10}\$"
-        }
     }
 
     override fun isValidId(id: String?): Boolean {
