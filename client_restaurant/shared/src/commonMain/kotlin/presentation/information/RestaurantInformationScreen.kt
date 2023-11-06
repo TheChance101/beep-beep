@@ -6,10 +6,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
@@ -23,6 +25,7 @@ import presentation.composable.BpRating
 import presentation.composable.BpTitleWithContentSection
 import presentation.login.LoginScreen
 import resources.Resources
+import util.getNavigationBarPadding
 
 class RestaurantInformationScreen(private val id: String) : BaseScreen<
         RestaurantInformationScreenModel,
@@ -36,6 +39,7 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
     }
 
 
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun onRender(
         state: RestaurantInformationUiState,
@@ -43,32 +47,49 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
     ) {
 
         val scrollState = rememberScrollState()
-
-        Column {
-            BpAppBar(
-                onNavigateUp = { listener.onClickBackArrow() },
-                title = Resources.strings.restaurantInfoInSingleLine,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Theme.colors.surface)
-                    .border(width = 1.dp, color = Theme.colors.divider, shape = RectangleShape)
-            )
-            Column(
-                Modifier
-                    .verticalScroll(scrollState)
-                    .wrapContentSize()
-                    .background(Theme.colors.background)
-            ) {
-                RestaurantInfoCard(
-                    state.restaurant.ownerUsername,
-                    state.restaurant.address,
-                    state.restaurant.rating,
-                    state.restaurant.priceLevel
+        Box(
+            modifier = Modifier.fillMaxSize().background(Theme.colors.background),
+            contentAlignment = Alignment.Center
+        ) {
+            Column {
+                BpAppBar(
+                    onNavigateUp = { listener.onClickBackArrow() },
+                    title = Resources.strings.restaurantInfoInSingleLine,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Theme.colors.surface)
+                        .border(width = 1.dp, color = Theme.colors.divider, shape = RectangleShape)
                 )
+                Column(
+                    Modifier
+                        .verticalScroll(scrollState)
+                        .wrapContentSize()
+                        .background(Theme.colors.background)
+                ) {
+                    RestaurantInfoCard(
+                        state.restaurant.ownerUsername,
+                        state.restaurant.address,
+                        state.restaurant.rating,
+                        state.restaurant.priceLevel
+                    )
 
-                RestaurantUpdateInformationCard(state, listener)
+                    RestaurantUpdateInformationCard(state, listener)
 
-                LogoutCard(listener::onClickLogout)
+                    LogoutCard(listener::onClickLogout)
+                }
+            }
+            BPSnackBar(
+                icon = painterResource(Resources.images.bpIcon),
+                iconBackgroundColor = Theme.colors.warningContainer,
+                iconTint = Theme.colors.warning,
+                isVisible = state.showSnackBar,
+                modifier = Modifier.padding(bottom = getNavigationBarPadding().calculateBottomPadding())
+                    .align(Alignment.BottomCenter)
+            ) {
+                Text(
+                    text = if (state.snackBarState) Resources.strings.success else Resources.strings.error,
+                    style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
+                )
             }
         }
     }
@@ -80,6 +101,7 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
             RestaurantInformationUiEffect.ShowNoInternetError -> {}
             RestaurantInformationUiEffect.ShowUnknownError -> {}
             RestaurantInformationUiEffect.UpdateInformationSuccess -> {}
+
             else -> {}
         }
     }

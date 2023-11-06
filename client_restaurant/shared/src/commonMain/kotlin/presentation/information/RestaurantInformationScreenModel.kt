@@ -6,6 +6,8 @@ import domain.usecase.IManageRestaurantInformationUseCase
 import domain.usecase.IValidateRestaurantInfoUseCase
 import domain.usecase.LogoutUserUseCase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.core.component.get
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
@@ -31,10 +33,12 @@ class RestaurantInformationScreenModel(
                 isLoading = false, error = error,
                 restaurant = state.value.restaurant.copy(
                     isSaveButtonEnabled = true
-                )
+                ),
+                snackBarState = false
             )
         }
         handleErrorState(error)
+        showSnackBar()
     }
 
     private fun handleErrorState(error: ErrorState) {
@@ -170,10 +174,20 @@ class RestaurantInformationScreenModel(
                 isLoading = false, error = null,
                 restaurant = state.value.restaurant.copy(
                     isSaveButtonEnabled = true
-                )
+                ),
+                snackBarState = true
             )
         }
         sendNewEffect(RestaurantInformationUiEffect.UpdateInformationSuccess)
+        showSnackBar()
+    }
+
+    private fun showSnackBar() {
+        viewModelScope.launch {
+            updateState { it.copy(showSnackBar = true) }
+            delay(3000)
+            updateState { it.copy(showSnackBar = false) }
+        }
     }
 
     override fun onClickLogout() {
