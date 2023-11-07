@@ -3,11 +3,10 @@ package data.gateway.fake
 import data.remote.mapper.toEntity
 import data.remote.model.LocationDto
 import data.remote.model.RestaurantDto
-import domain.entity.Restaurant
-import domain.entity.Session
 import domain.entity.Account
 import domain.entity.Address
-import domain.entity.Price
+import domain.entity.Restaurant
+import domain.entity.Session
 import domain.entity.User
 import domain.gateway.IUserGateway
 
@@ -16,7 +15,15 @@ class FakeUserGateway : IUserGateway {
         TODO("Not yet implemented")
     }
 
-    override suspend fun loginUser(username: String, password: String): Session {
+    override suspend fun getDeviceToken(): String {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun loginUser(
+        username: String,
+        password: String,
+        deviceToken: String,
+    ): Session {
         TODO("Not yet implemented")
     }
 

@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserTokensResponse(
+    @SerialName("userId") val userId: String,
     @SerialName("accessTokenExpirationDate") val accessTokenExpirationDate: Long,
     @SerialName("refreshTokenExpirationDate") val refreshTokenExpirationDate: Long,
     @SerialName("accessToken") val accessToken: String,
