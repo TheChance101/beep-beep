@@ -17,8 +17,8 @@ data class UserCollection(
     val fullName: String,
     val username: String,
     val email: String,
-    val phone: String,
-    val country: String,
+    val phone: String = "",
+    val country: String = "",
     val hashedPassword: String? = null,
     val salt: String? = null,
     @Contextual

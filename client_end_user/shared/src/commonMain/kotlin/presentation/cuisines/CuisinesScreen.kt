@@ -95,6 +95,7 @@ fun CuisinesContent(
 
 @Composable
 fun LoadingCuisines() {
+
     LazyVerticalGrid(
         contentPadding = PaddingValues(24.dp),
         columns = GridCells.Adaptive(96.dp),

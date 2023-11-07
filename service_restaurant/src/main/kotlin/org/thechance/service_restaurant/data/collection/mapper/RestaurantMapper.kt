@@ -39,6 +39,6 @@ fun Restaurant.toCollection() = RestaurantCollection(
     closingTime = closingTime,
     address = address,
     currency = currency,
-    location = location.toCollection()
+    location = location.toCollection(),
 )
 

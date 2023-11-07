@@ -148,7 +148,7 @@ class RestaurantService(
 
     suspend fun getMealsByRestaurantId(
         restaurantId: String, page: Int, limit: Int, languageCode: String
-    ): List<MealDto> {
+    ): PaginationResponse<MealDto> {
         return client.tryToExecute(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
@@ -170,12 +170,17 @@ class RestaurantService(
             get("/restaurant/$restaurantId/cuisineMeals")
         }
 
-    suspend fun getMealsByCuisineId(cuisineId: String, languageCode: String): List<MealDto> {
+    suspend fun getMealsByCuisineId(
+        cuisineId: String,
+        languageCode: String,
+        page: Int,
+        limit: Int
+    ): PaginationResponse<MealDto> {
         return client.tryToExecute(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
-            method = { get("/cuisine/$cuisineId/meals") }
+            method = { get("/cuisine/$cuisineId/meals?page=$page&limit=$limit") }
         )
     }
 
@@ -203,7 +208,7 @@ class RestaurantService(
         }
     }
 
-//endregion
+    //endregion
 
     //region cuisine
     @OptIn(InternalAPI::class)
@@ -236,7 +241,7 @@ class RestaurantService(
             method = { delete("/cuisine/$cuisineId") }
         )
     }
-//endregion
+    //endregion
 
     //region Cart
     suspend fun getUserCart(userId: String, language: String): CartDto {
@@ -261,6 +266,18 @@ class RestaurantService(
         }
     }
 
+    @OptIn(InternalAPI::class)
+    suspend fun updateCart(userId: String, cart: CartDto, language: String): CartDto {
+        return client.tryToExecute(
+            api = APIs.RESTAURANT_API, attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, language) }
+        ) {
+            put("/cart/$userId/replace") {
+                body = Json.encodeToString(CartDto.serializer(), cart)
+            }
+        }
+    }
+
     suspend fun orderCart(userId: String, language: String): OrderDto {
         return client.tryToExecute(
             api = APIs.RESTAURANT_API, attributes = attributes,
@@ -269,8 +286,7 @@ class RestaurantService(
             post("/cart/$userId/orderNow")
         }
     }
-
-//endregion
+    //endregion
 
     //region order
 
@@ -428,19 +444,18 @@ class RestaurantService(
             method = { get("/restaurant/isExisted/$restaurantId") }
         )
     }
-//endregion
+    //endregion
 
 
     //region offer
-    suspend fun addOffer(offerTitle: String, languageCode: String) = client.tryToExecute<OfferDto>(
+    @OptIn(InternalAPI::class)
+    suspend fun addOffer(offer: OfferDto, languageCode: String) = client.tryToExecute<OfferDto>(
         APIs.RESTAURANT_API,
         attributes = attributes,
         setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
     ) {
         post("/category") {
-            formData {
-                parameter("categoryName", offerTitle)
-            }
+            body = Json.encodeToString(OfferDto.serializer(), offer)
         }
     }
 
@@ -469,5 +484,5 @@ class RestaurantService(
         attributes = attributes,
         setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
     ) { get("/categories/restaurants") }
-//endregion
+    //endregion
 }

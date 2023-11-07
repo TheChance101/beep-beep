@@ -72,7 +72,9 @@ dependencies {
     implementation("io.ktor:ktor-client-websockets:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
 
-
+    implementation("aws.sdk.kotlin:s3:0.25.0-beta")
+    implementation(group = "org.slf4j", name = "slf4j-api", version = "2.0.0")
+    implementation(group = "org.slf4j", name = "slf4j-simple", version = "2.0.0")
 
 }
 

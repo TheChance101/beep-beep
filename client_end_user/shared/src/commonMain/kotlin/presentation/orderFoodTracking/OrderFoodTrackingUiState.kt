@@ -8,12 +8,6 @@ data class OrderFoodTrackingUiState(
     val userLocation: LocationUiState = LocationUiState(),
     val deliveryLocation: LocationUiState = LocationUiState(),
 ) {
-
-    data class LocationUiState(
-        val latitude: Double = 0.0,
-        val longitude: Double = 0.0,
-    )
-
     data class OrderUiState(
         val currentOrderStatus: FoodOrderStatus = FoodOrderStatus.ORDER_PLACED,
     ) {
@@ -45,7 +39,12 @@ data class OrderFoodTrackingUiState(
     }
 }
 
-fun Location.toUiState() = OrderFoodTrackingUiState.LocationUiState(
+data class LocationUiState(
+    val latitude: Double = 0.0,
+    val longitude: Double = 0.0,
+)
+
+fun Location.toUiState() = LocationUiState(
     latitude = latitude,
     longitude = longitude,
 )

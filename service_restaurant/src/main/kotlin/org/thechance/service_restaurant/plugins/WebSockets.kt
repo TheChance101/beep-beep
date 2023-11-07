@@ -9,8 +9,8 @@ import java.time.Duration
 fun Application.configureSockets() {
     install(WebSockets) {
         contentConverter = KotlinxWebsocketSerializationConverter(Json)
-        pingPeriod = Duration.ofSeconds(15)
-        timeout = Duration.ofSeconds(15)
+        pingPeriod = Duration.ofSeconds(1500)
+        timeout = Duration.ofSeconds(1500)
         maxFrameSize = Long.MAX_VALUE
         masking = false
     }

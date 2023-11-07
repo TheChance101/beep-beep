@@ -22,6 +22,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
@@ -229,12 +231,12 @@ class HomeScreenModel(
 
     private fun onCheckIfLoggedInSuccess(accessToken: Flow<String>) {
         coroutineScope.launch {
-            accessToken.collect { token ->
+            accessToken.distinctUntilChanged().collectLatest { token ->
                 if (token.isNotEmpty()) {
                     updateState { it.copy(isLoggedIn = true) }
                     getUser()
                     getFavoriteRestaurants()
-                    checkIfThereIsOrderInCart()
+                    checkCartHasMeals()
                 } else {
                     updateState { it.copy(isLoggedIn = false, showCart = false) }
                 }
@@ -250,16 +252,20 @@ class HomeScreenModel(
         updateState { it.copy(isLoading = false) }
     }
 
-    private fun checkIfThereIsOrderInCart() {
+    private fun checkCartHasMeals() {
         tryToExecute(
-            { manageCart.getCart() },
+            { manageCart.isCartEmpty() },
             ::onGetCartSuccess,
             ::onGetCartError
         )
     }
 
-    private fun onGetCartSuccess(cart: Cart) {
-        updateState { it.copy(showCart = !cart.meals.isNullOrEmpty()) }
+    private fun onGetCartSuccess(isCartEmpty: Flow<Boolean>) {
+        coroutineScope.launch {
+            isCartEmpty.distinctUntilChanged().collectLatest { isEmpty ->
+                updateState { it.copy(showCart = !isEmpty) }
+            }
+        }
     }
 
     private fun onGetCartError(errorState: ErrorState) {

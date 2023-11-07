@@ -1,5 +1,6 @@
 package data.gateway.remote
 
+import com.beepbeep.designSystem.ui.theme.body
 import data.remote.mapper.toEntity
 import data.remote.mapper.toSessionEntity
 import data.remote.mapper.toUserRegistrationDto
@@ -18,8 +19,10 @@ import domain.gateway.IUserGateway
 import domain.utils.AuthorizationException
 import domain.utils.GeneralException
 import io.ktor.client.HttpClient
+import io.ktor.client.request.forms.formData
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.url
 import io.ktor.http.HttpMethod

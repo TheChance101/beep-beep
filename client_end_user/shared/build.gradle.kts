@@ -67,6 +67,9 @@ kotlin {
                 api(libs.calf)
                 api(libs.moko.geo)
 
+                //paging3
+                implementation(libs.paging.compose)
+                implementation(libs.paging.common)
             }
         }
         val androidMain by getting {
@@ -76,9 +79,9 @@ kotlin {
                 api(libs.androidx.core.ktx)
                 api(libs.koin.android)
                 implementation(libs.androidx.constraint)
+                implementation(libs.ktor.client.cio)
 
                 implementation("io.ktor:ktor-client-android:2.3.3")
-                implementation("io.ktor:ktor-client-okhttp:2.3.3")
             }
         }
         val iosX64Main by getting
@@ -90,7 +93,7 @@ kotlin {
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
             dependencies {
-                implementation("io.ktor:ktor-client-darwin:2.3.3")
+                implementation("io.ktor:ktor-client-darwin:2.3.5")
             }
         }
     }

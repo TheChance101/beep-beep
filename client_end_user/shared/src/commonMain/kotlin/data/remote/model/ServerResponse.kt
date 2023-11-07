@@ -25,7 +25,10 @@ data class ResponseStatus(
 
 @Serializable
 data class PaginationResponse<T>(
+    @SerialName("items")
     val items: List<T>,
+    @SerialName("page")
     val page: Int,
+    @SerialName("total")
     val total: Long
 )

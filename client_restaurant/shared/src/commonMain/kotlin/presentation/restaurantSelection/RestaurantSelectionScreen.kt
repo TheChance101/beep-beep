@@ -1,5 +1,6 @@
 package presentation.restaurantSelection
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,7 +37,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BpThreeDotLoadingIndicator
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -43,6 +47,8 @@ import presentation.base.BaseScreen
 import presentation.composable.RestaurantInformation
 import presentation.main.MainScreen
 import resources.Resources
+import util.getNavigationBarPadding
+import util.getStatusBarPadding
 
 class RestaurantSelectionScreen : BaseScreen
 <RestaurantSelectionScreenModel,
@@ -55,7 +61,6 @@ class RestaurantSelectionScreen : BaseScreen
         initScreen(getScreenModel())
     }
 
-    @OptIn(ExperimentalResourceApi::class, ExperimentalFoundationApi::class)
     @Composable
     override fun onRender(
         state: RestaurantScreenUIState,
@@ -73,46 +78,101 @@ class RestaurantSelectionScreen : BaseScreen
             isExpanding = lazyListState.canScrollBackward
         }
 
-        Box(modifier = Modifier.fillMaxSize().background(Theme.colors.primary)) {
+        Box(
+            modifier = Modifier.fillMaxSize()
+                .background(Theme.colors.primary)
+        ) {
 
-            // region header
-            Box(modifier = Modifier.fillMaxWidth().fillMaxHeight(THIRTY_PERCENT_SCREEN)) {
-                Image(
-                    modifier = Modifier.fillMaxSize(),
-                    painter = painterResource(Resources.images.backgroundPattern),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop
-                )
-                Icon(
-                    modifier = Modifier.height(66.dp).width(145.dp).align(Alignment.Center),
-                    tint = Color.White,
-                    painter = painterResource(Resources.images.bpLogo),
-                    contentDescription = null
-                )
-            }
-            // endregion
+            AppLogoHeader()
 
-            // region bottom sheet
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth().fillMaxHeight(bottomSheetSize)
-                    .clip(RoundedCornerShape(topStart = roundedCornerShape, topEnd = roundedCornerShape))
-                    .background(Theme.colors.surface).align(Alignment.BottomCenter),
-                state = lazyListState,
-                contentPadding = PaddingValues(top = 24.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
+            AnimatedContent(
+                state, modifier = Modifier.fillMaxWidth()
+                    .fillMaxHeight(bottomSheetSize)
+                    .clip(
+                        RoundedCornerShape(
+                            topStart = roundedCornerShape,
+                            topEnd = roundedCornerShape
+                        )
+                    )
+                    .background(Theme.colors.surface)
+                    .align(Alignment.BottomCenter)
             ) {
-                stickyHeader {
-                    HeaderTitles()
-                }
-                itemsIndexed(state.restaurants) { index, item ->
-                    RestaurantSelectionItem(item, listener)
-                    AnimatedVisibility(index != state.restaurants.size - 1) {
-                        Divider(Modifier.background(Theme.colors.divider))
-                    }
+                if (state.isLoading) {
+                    Loading(bottomSheetSize)
+
+                } else {
+                    BottomSheetContent(lazyListState, state, listener)
                 }
             }
         }
-        //endregion
     }
+
+    @OptIn(ExperimentalResourceApi::class)
+    @Composable
+    private fun AppLogoHeader() {
+        Box(
+            modifier = Modifier.fillMaxWidth().fillMaxHeight(THIRTY_PERCENT_SCREEN)
+        ) {
+
+            Image(
+                modifier = Modifier.fillMaxSize(),
+                painter = painterResource(Resources.images.pattern),
+                contentDescription = null,
+                contentScale = ContentScale.Crop
+            )
+            Icon(
+                modifier = Modifier.height(66.dp).width(145.dp)
+                    .align(Alignment.Center),
+                tint = Color.White,
+                painter = painterResource(Resources.images.bpLogo),
+                contentDescription = null
+            )
+        }
+    }
+
+    @Composable
+    private fun Loading(bottomSheetSize: Float) {
+        Box(
+            modifier = Modifier.fillMaxWidth()
+                .fillMaxHeight(bottomSheetSize)
+        ) {
+            BpThreeDotLoadingIndicator(
+                dotColor = Theme.colors.primary,
+                modifier = Modifier.zIndex(5f)
+                    .align(Alignment.Center)
+            )
+        }
+    }
+
+    @OptIn(ExperimentalFoundationApi::class)
+    @Composable
+    private fun BottomSheetContent(
+        lazyListState: LazyListState,
+        state: RestaurantScreenUIState,
+        listener: RestaurantSelectionScreenInteractionListener
+    ) {
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth()
+                .padding(bottom = getNavigationBarPadding().calculateBottomPadding()),
+            state = lazyListState,
+            contentPadding = PaddingValues(
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 16.dp
+            )
+        ) {
+            stickyHeader {
+                HeaderTitles()
+            }
+            itemsIndexed(state.restaurants) { index, item ->
+                RestaurantSelectionItem(item, listener)
+                AnimatedVisibility(index != state.restaurants.size - 1) {
+                    Divider(Modifier.background(Theme.colors.divider))
+                }
+            }
+        }
+    }
+
 
     override fun onEffect(effect: RestaurantSelectionScreenUIEffect, navigator: Navigator) {
         when (effect) {
@@ -138,7 +198,10 @@ class RestaurantSelectionScreen : BaseScreen
 
     @Composable
     private fun HeaderTitles() {
-        Column(modifier = Modifier.fillMaxSize().background(Theme.colors.surface)) {
+        Column(
+            modifier = Modifier.fillMaxSize().background(Theme.colors.surface)
+                .padding(getStatusBarPadding()).padding(top = 8.dp)
+        ) {
             Text(
                 text = Resources.strings.chooseYourRestaurant,
                 style = Theme.typography.headline.copy(color = Theme.colors.contentPrimary)
@@ -154,8 +217,8 @@ class RestaurantSelectionScreen : BaseScreen
 
     private companion object {
         const val FULL_SCREEN = 1f
-        const val THIRTY_PERCENT_SCREEN = 0.3f
-        const val SEVENTY_PERCENT_SCREEN = 0.7f
+        const val THIRTY_PERCENT_SCREEN = 0.35f
+        const val SEVENTY_PERCENT_SCREEN = 0.65f
     }
 }
 

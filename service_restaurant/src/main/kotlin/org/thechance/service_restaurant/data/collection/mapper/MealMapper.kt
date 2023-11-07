@@ -7,7 +7,6 @@ import org.thechance.service_restaurant.data.collection.relationModels.MealWithC
 import org.thechance.service_restaurant.data.collection.relationModels.MealWithRestaurant
 import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.entity.MealDetails
-import java.util.*
 
 fun MealDetails.toCollection(): MealCollection =
     MealCollection(

@@ -24,10 +24,33 @@ import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 class RestaurantManagementGateway(private val container: DataBaseContainer) : IRestaurantManagementGateway {
 
     //region Order
-    override suspend fun addOrder(order: Order): Order {
+    override suspend fun addOrder(order: Order): Order? {
         val insertedOrder = order.toCollection()
         container.orderCollection.insertOne(insertedOrder).wasAcknowledged()
-        return insertedOrder.toEntity()
+
+        val pipeline = listOf(
+            match(OrderCollection::id eq insertedOrder.id),
+            lookup(
+                from = "restaurant",
+                localField = OrderCollection::restaurantId.name,
+                foreignField = "_id",
+                newAs = "restaurant"
+            ),
+            unwind("\$restaurant"),
+            project(
+                OrderWithRestaurant::id from "\$_id",
+                OrderWithRestaurant::userId from "\$userId",
+                OrderWithRestaurant::restaurant from "\$restaurant",
+                OrderWithRestaurant::meals from "\$meals",
+                OrderWithRestaurant::totalPrice from "\$totalPrice",
+                OrderWithRestaurant::createdAt from "\$createdAt",
+                OrderWithRestaurant::orderStatus from "\$orderStatus"
+            )
+        )
+
+        val createdOrder = container.orderCollection.aggregate<OrderWithRestaurant>(pipeline).first()
+        return createdOrder?.toOrderEntity()
+
     }
 
     override suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order> {
@@ -289,6 +312,21 @@ class RestaurantManagementGateway(private val container: DataBaseContainer) : IR
             val restaurant = cart.restaurantId?.let { container.restaurantCollection.findOneById(it) }
             cart.toCartDetails(restaurant).toEntity()
         }
+    }
+
+    override suspend fun updateCart(cart: Cart): Cart {
+        val restaurant = cart.restaurantId?.let { container.restaurantCollection.findOneById(it) }
+        val mealIds = cart.meals?.map { ObjectId(it.meadId) } ?: emptyList()
+        val meals = container.mealCollection.find(filter = MealCollection::id `in` mealIds).toList()
+        val updatedCart = container.cartCollection.findOneAndUpdate(
+            CartCollection::id eq ObjectId(cart.id),
+            update = Updates.combine(
+                Updates.set("restaurantId", ObjectId(cart.restaurantId)),
+                Updates.set("meals", meals)
+            ),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+        ) ?: throw MultiErrorException(listOf(NOT_FOUND))
+        return updatedCart.toCartDetails(restaurant).toEntity()
     }
 
     override suspend fun updateCart(cartId: String, restaurantId: String, mealId: String, quantity: Int): Cart {

@@ -4,10 +4,14 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Meal
 import domain.entity.Restaurant
 import domain.usecase.IManageAuthenticationUseCase
+import domain.usecase.IManageCartUseCase
 import domain.usecase.ISearchUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
@@ -17,8 +21,8 @@ import presentation.resturantDetails.toUIState
 class SearchScreenModel(
     private val search: ISearchUseCase,
     private val manageAuthentication: IManageAuthenticationUseCase,
-) :
-    BaseScreenModel<SearchUiState, SearchUiEffect>(SearchUiState()), SearchInteractionListener {
+    private val manageCart: IManageCartUseCase,
+) : BaseScreenModel<SearchUiState, SearchUiEffect>(SearchUiState()), SearchInteractionListener {
 
     override val viewModelScope: CoroutineScope = coroutineScope
     private var searchJob: Job? = null
@@ -38,7 +42,7 @@ class SearchScreenModel(
 
     private fun onCheckLoginSuccess(accessToken: Flow<String>) {
         coroutineScope.launch {
-            accessToken.collect { token ->
+            accessToken.distinctUntilChanged().collectLatest { token ->
                 if (token.isNotEmpty()) {
                     updateState { it.copy(isLogin = true) }
                 } else {
@@ -90,7 +94,7 @@ class SearchScreenModel(
     }
 
     private fun onError(error: ErrorState) {
-
+        updateState { it.copy(error = error) }
     }
 
     override fun onIncreaseMealQuantity() {
@@ -119,16 +123,46 @@ class SearchScreenModel(
 
     override fun onAddToCart() {
         if (state.value.isLogin) {
-            onDismissSheet()
-            //TODO call add to cart
+            updateState { it.copy(isAddToCartLoading = true) }
+            tryToExecute(
+                {
+                    manageCart.addMealTCart(
+                        restaurantId = state.value.selectedMeal.restaurantId,
+                        quantity = state.value.selectedMeal.quantity,
+                        mealId = state.value.selectedMeal.id
+                    )
+                },
+                ::onAddToCartSuccess,
+                ::onAddToCartError
+            )
         } else {
             updateState { it.copy(showMealSheet = false, showLoginSheet = true) }
         }
     }
 
+    private fun onAddToCartSuccess(success: Boolean) {
+        updateState { it.copy(isAddToCartLoading = false, errorAddToCart = null) }
+        onDismissSheet()
+        showToast()
+    }
+
+    private fun onAddToCartError(errorState: ErrorState) {
+        updateState { it.copy(isAddToCartLoading = false, errorAddToCart = errorState) }
+        showToast()
+    }
+
     override fun onLoginClicked() {
         onDismissSheet()
         sendNewEffect(SearchUiEffect.NavigateToLogin)
+    }
+
+    private fun showToast() {
+        viewModelScope.launch {
+            updateState { it.copy(showToast = true) }
+            delay(2000)
+            updateState { it.copy(showToast = false) }
+            delay(300)
+        }
     }
 
 }

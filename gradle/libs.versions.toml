@@ -38,6 +38,7 @@ androidx-ui-text-version = "1.4.3"
 androidx-material3-version = "1.1.1"
 koin-compose-version = "1.0.4"
 moko-geo-version = "0.6.0"
+paging-compose-version="3.3.0-alpha02-0.4.0"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
@@ -48,7 +49,8 @@ compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", v
 compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "compose-version" }
 compose-materialIcons = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "compose-version" }
 compose-coil = { module = "io.coil-kt:coil-compose", version.ref = "compose-coil-version" }
-
+paging-compose= { module = "app.cash.paging:paging-compose-common", version.ref = "paging-compose-version" }
+paging-common= { module = "app.cash.paging:paging-common", version.ref = "paging-compose-version" }
 compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose-version" }
 compose-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose-version" }
 androidx-ui-text = { group = "androidx.compose.ui", name = "ui-text", version.ref = "androidx-ui-text-version" }

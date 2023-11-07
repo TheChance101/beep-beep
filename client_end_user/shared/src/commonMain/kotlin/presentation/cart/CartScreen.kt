@@ -49,6 +49,7 @@ class CartScreen :
                 OrderInfoCard(
                     onClickOrderNow = { listener.onClickOrderNow() },
                     totalPrice = "${state.currency} ${state.totalPrice}",
+                    isLoading = state.isOrderNowLoading,
                     modifier = Modifier.background(Theme.colors.surface)
                         .padding(bottom = getNavigationBarPadding().calculateBottomPadding())
                 )
