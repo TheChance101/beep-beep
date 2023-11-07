@@ -4,13 +4,14 @@ import domain.entity.Order
 import domain.entity.OrderState
 import domain.gateway.remote.IOrderRemoteGateway
 import domain.utils.Constant
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import presentation.base.RequestException
 import presentation.order.toOrderUiState
 
 interface IManageOrderUseCase {
-    suspend fun getCurrentOrders(restaurantId: String): Order
+    suspend fun getCurrentOrders(restaurantId: String): Flow<Order>
     suspend fun updateOrderState(orderId: String, orderState: OrderState): Order
     suspend fun getFinishedOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
     suspend fun getCanceledOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
@@ -26,8 +27,8 @@ interface IManageOrderUseCase {
 }
 
 class ManageOrderUseCase(private val orderRemoteGateway: IOrderRemoteGateway) : IManageOrderUseCase {
-    override suspend fun getCurrentOrders(restaurantId: String): Order {
-        return orderRemoteGateway.getCurrentOrders(restaurantId)?.firstOrNull() ?: throw Exception()
+    override suspend fun getCurrentOrders(restaurantId: String): Flow<Order>{
+        return orderRemoteGateway.getCurrentOrders(restaurantId)
     }
 
     override suspend fun updateOrderState(orderId: String, orderState: OrderState): Order {

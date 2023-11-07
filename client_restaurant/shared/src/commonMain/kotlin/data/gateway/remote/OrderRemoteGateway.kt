@@ -24,9 +24,9 @@ class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway,
     override suspend fun getCurrentOrders(restaurantId: String): Flow<Order> {
         return tryToExecuteWithFlow<OrderDto> {
             wss("/orders/$restaurantId") {
-                incoming.receiveAsFlow().map { frame ->
-
+               val d = incoming.receiveAsFlow().map { frame ->
                     if (frame is Frame.Text) {
+                        println("frame: $frame")
                         val message = frame.readText()
                         val orderParser = Json.decodeFromString<OrderDto>(message)
                         orderParser.toEntity()

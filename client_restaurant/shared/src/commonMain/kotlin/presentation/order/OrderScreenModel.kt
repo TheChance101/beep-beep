@@ -1,6 +1,7 @@
 package presentation.order
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.Order
 import domain.entity.OrderState
 import domain.usecase.IManageOrderUseCase
 import kotlinx.coroutines.CoroutineScope
@@ -10,11 +11,15 @@ import presentation.base.ErrorState
 class OrderScreenModel(
     private val restaurantId: String,
     private val manageOrders: IManageOrderUseCase
-) :
-    BaseScreenModel<OrderScreenUiState, OrderScreenUiEffect>(OrderScreenUiState()),
+) : BaseScreenModel<OrderScreenUiState, OrderScreenUiEffect>(OrderScreenUiState()),
     OrderScreenInteractionListener {
 
     override val viewModelScope: CoroutineScope = coroutineScope
+
+    init {
+        getInCookingOrders()
+        getPendingOrders()
+    }
 
     override fun onClickBack() {
         sendNewEffect(OrderScreenUiEffect.Back)
@@ -32,11 +37,6 @@ class OrderScreenModel(
         updateOrderState(orderId, orderState)
     }
 
-    init {
-        getInCookingOrders()
-        getPendingOrders()
-    }
-
     private fun updateOrderState(orderId: String, orderState: OrderState) {
         tryToExecute(
             { manageOrders.updateOrderState(orderId, orderState).toOrderUiState() },
@@ -46,38 +46,38 @@ class OrderScreenModel(
     }
 
     private fun getPendingOrders() {
-        tryToExecute(
-            {
-                listOf(manageOrders.getCurrentOrders(restaurantId).toOrderUiState())
-//                    .filter { it.orderState == OrderState.PENDING }
-//                    .map { it.toOrderUiState() }
-            },
+        println("getPendingOrders")
+        tryToCollect(
+            { manageOrders.getCurrentOrders(restaurantId) },
             ::onGetPendingOrdersSuccess,
             ::onGetOrdersError
         )
     }
 
+    private fun onGetPendingOrdersSuccess(orders: Order) {
+        val pendingOrders = orders.orderState == OrderState.PENDING
+        if (pendingOrders) {
+            val totalOrders = state.value.totalOrders
+            val newTotalOrders = totalOrders.plus(1)
+            updateState { it.copy(pendingOrders = state.value.pendingOrders + orders.toOrderUiState(), totalOrders = newTotalOrders) }
+        }
+    }
+
     private fun getInCookingOrders() {
-        tryToExecute(
-            {
-                listOf(manageOrders.getCurrentOrders(restaurantId).toOrderUiState())
-            },
+        tryToCollect(
+            {manageOrders.getCurrentOrders(restaurantId)},
             ::onGetCookingSuccess,
             ::onGetOrdersError
         )
     }
 
-    private fun onGetPendingOrdersSuccess(pendingOrders: List<OrderUiState>) {
-        val totalOrders = state.value.totalOrders
-        val newTotalOrders = totalOrders + pendingOrders.size
-
-        updateState { it.copy(pendingOrders = pendingOrders, totalOrders = newTotalOrders) }
-    }
-
-    private fun onGetCookingSuccess(inCookingOrders: List<OrderUiState>) {
-        val totalOrders = state.value.totalOrders
-        val newTotalOrders = totalOrders + inCookingOrders.size
-        updateState { it.copy(inCookingOrders = inCookingOrders, totalOrders = newTotalOrders) }
+    private fun onGetCookingSuccess(orders: Order) {
+        val inCookingOrders = orders.orderState == OrderState.IN_COOKING
+        if (inCookingOrders) {
+            val totalOrders = state.value.totalOrders
+            val newTotalOrders = totalOrders.plus(1)
+            updateState { it.copy(inCookingOrders = state.value.inCookingOrders + orders.toOrderUiState(), totalOrders = newTotalOrders) }
+        }
     }
 
     private fun onUpdateOrderStateSuccess(updatedOrder: OrderUiState) {
@@ -85,7 +85,7 @@ class OrderScreenModel(
     }
 
     private fun onGetOrdersError(errorState: ErrorState) {
-        println("Error is $errorState")
+        println("onGetOrdersError is $errorState")
     }
 
     private fun onUpdateOrderStateError(errorState: ErrorState) {
