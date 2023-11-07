@@ -37,7 +37,6 @@ class MapScreenModel(
      }
 
     private fun getOrder() {
-        println("Screen Model getOrder")
         updateState { it.copy(orderState = OrderState.LOADING) }
         tryToCollect(
             function = manageOrderUseCase::getOrders,
@@ -47,14 +46,13 @@ class MapScreenModel(
     }
 
     private fun onGetOrderSuccess(order: Order) {
-        println("orderUiState: ${order.toUiState()}")
+        val newOrder=order.toUiState()
         updateState { mapScreenUiState ->
             mapScreenUiState.copy(
-                orderUiState = order.toUiState(),
+                orderUiState = newOrder,
                 orderState = OrderState.NEW_ORDER,
-                tripId = order.id,
+                tripId = newOrder.orderId,
             )
-
         }
     }
 
@@ -97,7 +95,6 @@ class MapScreenModel(
     }
 
     private fun onError(errorState: ErrorState) {
-        println("errorState: $errorState")
         updateState {
             it.copy(
                 orderState = OrderState.LOADING,

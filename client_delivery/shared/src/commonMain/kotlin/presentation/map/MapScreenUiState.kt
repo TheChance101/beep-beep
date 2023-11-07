@@ -16,6 +16,7 @@ data class MapScreenUiState(
 )
 
 data class OrderUiState(
+    val orderId: String = "",
     val restaurantLocation: LocationUiState = LocationUiState(),
     val destinationLocation: LocationUiState = LocationUiState(),
     val restaurantName: String = "",
@@ -29,12 +30,15 @@ data class LocationUiState(
     val lng: Double = 0.0,
     val addressName: String = "",
 )
+
 fun Location.toUiState() = LocationUiState(
     lat = latitude,
     lng = longitude,
     addressName = "",
 )
+
 fun Order.toUiState() = OrderUiState(
+    orderId = id,
     restaurantLocation = startPoint.toUiState(),
     destinationLocation = destination.toUiState(),
     restaurantName = restaurantName,

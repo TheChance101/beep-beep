@@ -4,6 +4,7 @@ import data.remote.model.BaseResponse
 import domain.utils.InvalidPasswordException
 import domain.utils.NoInternetException
 import domain.utils.ServerSideException
+import domain.utils.SocketException
 import domain.utils.UnAuthorizedException
 import domain.utils.UnknownErrorException
 import domain.utils.UserNotFoundException
@@ -53,13 +54,14 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
                         println("${e.message}")
                         throw NoInternetException()
                     } catch (e: Exception) {
-                        println("${e.message}")
-                        throw NoInternetException()
+                        println("Socket${e.message}")
+                        throw SocketException()
                     }
                 }
             }
         }.flowOn(Dispatchers.IO)
     }
+
     fun throwMatchingException(errorMessages: Map<String, String>) {
         when {
             errorMessages.containsErrors(WRONG_PASSWORD) ->

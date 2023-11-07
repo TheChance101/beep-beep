@@ -18,12 +18,6 @@ class MapRemoteGateway(client: HttpClient) : IMapRemoteGateway,
     BaseRemoteGateway(client = client) {
     override suspend fun getOrders(): Flow<Order> {
         val result=client.tryToExecuteWebSocket<OrderDto>("trip/incoming-delivery-orders")
-        result.collect{order->
-            println("result: $order")
-        }
-//        result.map { it.toTripEntity()}.collect{
-//            println("22result: ${ it}")
-//        }
         return result.map { it.toTripEntity() }
 
     }

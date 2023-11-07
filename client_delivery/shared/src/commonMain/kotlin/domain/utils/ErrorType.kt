@@ -20,4 +20,5 @@ class UnknownErrorException : BpException()
 class LocationAccessDeniedException: BpException()
 open class RequestException() : BpException()
 class ServerSideException : RequestException()
+class SocketException : RequestException()
 

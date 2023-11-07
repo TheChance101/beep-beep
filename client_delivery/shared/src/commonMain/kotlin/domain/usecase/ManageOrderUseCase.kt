@@ -13,7 +13,6 @@ interface IManageOrderUseCase {
 
 class ManageOrderUseCase(private val remoteGateway: IMapRemoteGateway) : IManageOrderUseCase {
     override suspend fun getOrders(): Flow<Order> {
-        println("getOrders")
         return remoteGateway.getOrders()
     }
 
