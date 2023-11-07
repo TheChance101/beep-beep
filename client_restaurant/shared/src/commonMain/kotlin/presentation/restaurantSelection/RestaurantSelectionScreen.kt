@@ -200,7 +200,7 @@ class RestaurantSelectionScreen : BaseScreen
     private fun HeaderTitles() {
         Column(
             modifier = Modifier.fillMaxSize().background(Theme.colors.surface)
-                .padding(getStatusBarPadding()).padding(top = 16.dp)
+                .padding(getStatusBarPadding()).padding(top = 8.dp)
         ) {
             Text(
                 text = Resources.strings.chooseYourRestaurant,
