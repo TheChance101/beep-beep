@@ -24,9 +24,9 @@ object MainApp : Screen {
         val isKeptLoggedIn by appScreenModel.isKeptLoggedIn.collectAsState()
 
         BpRestaurantTheme{
-            if (isKeptLoggedIn) {
+            if (isKeptLoggedIn==true) {
                 Navigator(RestaurantSelectionScreen()) { SlideTransition(it) }
-            } else {
+            } else if(isKeptLoggedIn == false){
                 Navigator(LoginScreen()) { SlideTransition(it) }
             }
         }

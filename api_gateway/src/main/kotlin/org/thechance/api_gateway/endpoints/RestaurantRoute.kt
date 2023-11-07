@@ -92,20 +92,12 @@ fun Route.restaurantRoutes() {
         authenticateWithRole(Role.DASHBOARD_ADMIN) {
             post {
                 val language = extractLocalizationHeader()
-                val multipartDto = receiveMultipart<RestaurantDto>(imageValidator)
-                val user = identityService.getUserByUsername(multipartDto.data.ownerUserName, language)
+                val restaurantDto = call.receive<RestaurantDto>()
+                val user = identityService.getUserByUsername(restaurantDto.ownerUserName, language)
                 identityService.updateUserPermission(
                     userId = user.id, permission = listOf(user.permission, Role.RESTAURANT_OWNER), language
                 )
-                val imageUrl =
-                    multipartDto.image?.let { image ->
-                        imageService.uploadImage(image, multipartDto.data.name ?: "null")
-                    }
-                val newRestaurant = restaurantService.addRestaurant(
-                    multipartDto.data.copy(
-                        ownerId = user.id, restaurantImage = imageUrl
-                    ), language
-                )
+                val newRestaurant = restaurantService.addRestaurant(restaurantDto.copy(ownerId = user.id), language)
                 respondWithResult(HttpStatusCode.Created, newRestaurant)
             }
 
@@ -123,20 +115,21 @@ fun Route.restaurantRoutes() {
                 val restaurantId = call.parameters["restaurantId"]?.trim().toString()
                 val result = restaurantService.deleteRestaurant(restaurantId, language)
                 respondWithResult(HttpStatusCode.Created, result)
-
             }
         }
 
         authenticateWithRole(Role.RESTAURANT_OWNER) {
             put("/details") {
                 val language = extractLocalizationHeader()
-                val restaurantDto = call.receive<RestaurantDto>()
+                val multipartDto = receiveMultipart<RestaurantDto>(imageValidator)
+                val imageUrl = multipartDto.image?.let { image ->
+                        imageService.uploadImage(image, multipartDto.data.name ?: "null")
+                    }
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val ownerId = tokenClaim?.get(USER_ID).toString()
+                val newRestaurantDto=    multipartDto.data.copy(ownerId = ownerId, restaurantImage = imageUrl)
                 val updatedRestaurant = restaurantService.updateRestaurant(
-                    languageCode = language,
-                    isAdmin = false,
-                    restaurantDto = restaurantDto.copy(ownerId = ownerId)
+                    languageCode = language, isAdmin = false, restaurantDto = newRestaurantDto
                 )
                 respondWithResult(HttpStatusCode.OK, updatedRestaurant)
             }

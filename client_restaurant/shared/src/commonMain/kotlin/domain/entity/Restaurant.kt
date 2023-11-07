@@ -22,7 +22,8 @@ data class Restaurant(
 ) {
     fun isRestaurantOpen(): Boolean {
         val instantNow = Clock.System.now()
-        val currentTime = Instant.parse(instantNow.toString()).toLocalDateTime(TimeZone.UTC).time
+        val currentTime = Instant.parse(instantNow.toString())
+            .toLocalDateTime(TimeZone.currentSystemDefault()).time
         val openLocalTime = LocalTime.parse(openingTime)
         val closeLocalTime = LocalTime.parse(closingTime)
         return currentTime in openLocalTime..closeLocalTime
