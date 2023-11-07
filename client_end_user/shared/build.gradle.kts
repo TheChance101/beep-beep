@@ -31,6 +31,8 @@ kotlin {
             baseName = "shared"
             isStatic = true
         }
+        pod("FirebaseFirestore", linkOnly = true)
+        pod("FirebaseMessaging")
     }
 
     sourceSets {
@@ -74,6 +76,7 @@ kotlin {
 
                 //firebase
                 implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
+                implementation("dev.gitlive:firebase-firestore:1.8.1")
             }
         }
         val androidMain by getting {
