@@ -11,7 +11,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.websocket.receiveDeserialized
-import io.ktor.client.plugins.websocket.webSocket
+import io.ktor.client.plugins.websocket.wss
 import io.ktor.client.statement.HttpResponse
 import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.coroutines.Dispatchers
@@ -40,7 +40,7 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
 
     suspend inline fun <reified T> HttpClient.tryToExecuteWebSocket(path: String): Flow<T> {
         return flow {
-            webSocket(path = path) {
+            wss(path = path) {
                 while (true) {
                     try {
                         emit(receiveDeserialized<T>())

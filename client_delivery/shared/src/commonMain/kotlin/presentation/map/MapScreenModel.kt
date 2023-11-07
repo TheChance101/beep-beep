@@ -37,6 +37,7 @@ class MapScreenModel(
      }
 
     private fun getOrder() {
+        println("Screen Model getOrder")
         updateState { it.copy(orderState = OrderState.LOADING) }
         tryToCollect(
             function = manageOrderUseCase::getOrders,
@@ -96,6 +97,7 @@ class MapScreenModel(
     }
 
     private fun onError(errorState: ErrorState) {
+        println("errorState: $errorState")
         updateState {
             it.copy(
                 orderState = OrderState.LOADING,

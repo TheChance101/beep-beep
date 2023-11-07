@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.map
 class MapRemoteGateway(client: HttpClient) : IMapRemoteGateway,
     BaseRemoteGateway(client = client) {
     override suspend fun getOrders(): Flow<Order> {
-        val result=client.tryToExecuteWebSocket<OrderDto>("ws://beep-beep-api-gateway-nap2u.ondigitalocean.app/trip/incoming-delivery-orders")
+        val result=client.tryToExecuteWebSocket<OrderDto>("trip/incoming-delivery-orders")
         result.collect{order->
             println("result: $order")
         }
