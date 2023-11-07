@@ -6,7 +6,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TicketDto(
     @SerialName("id") val id: String? = null,
-    @SerialName("username") val username: String? = null,
-    @SerialName("avatar") val avatar: String? = null,
-    @SerialName("openedAt") val openedAt: String? = null,
+    @SerialName("userId") val userId: String,
+    @SerialName("supportId") val supportId: String? = null,
+    @SerialName("time") val openedAt: Long? = null,
+    @SerialName("messages") val messages: List<MessageDto>? = null,
+    @SerialName("isOpen") val isOpen: Boolean? = null
 )
