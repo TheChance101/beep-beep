@@ -1,16 +1,18 @@
 package org.thechance.service_notification.domain.gateway
 
-import org.thechance.service_notification.domain.entity.Notification
+import org.thechance.service_notification.domain.entity.NotificationHistory
 
 interface IDatabaseGateway {
 
     suspend fun getUserTokens(userId: String): List<String>
 
-    suspend fun addNotificationToHistory(notification: Notification)
+    suspend fun addNotificationToHistory(notificationHistory: NotificationHistory)
 
-    suspend fun getNotificationHistoryForUser(page: Int, limit: Int): List<Notification>
+    suspend fun getNotificationHistoryForUser(page: Int, limit: Int): List<NotificationHistory>
 
-    suspend fun getNotificationHistoryForUser(page: Int, limit: Int, userId: String): List<Notification>
+    suspend fun getNotificationHistoryForUser(page: Int, limit: Int, userId: String): List<NotificationHistory>
+
+    suspend fun getNotificationHistoryInTheLast24Hours(userId: String): List<NotificationHistory>
 
     suspend fun getTotalCountsOfNotificationHistoryForUser(userId: String): Long
 

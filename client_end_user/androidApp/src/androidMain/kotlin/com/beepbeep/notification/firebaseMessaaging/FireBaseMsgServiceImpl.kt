@@ -1,4 +1,4 @@
-package com.beepbeep.notification
+package com.beepbeep.notification.firebaseMessaaging
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -7,16 +7,19 @@ import android.graphics.Color
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.beepbeep.notification.fcm.IFCMNotification
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import data.gateway.service.IFireBaseMessageService
+import org.koin.android.ext.android.inject
 import org.thechance.beepbeep.R
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class FireBaseMsgServiceImpl() : FirebaseMessagingService(), IFireBaseMessageService {
+    private val fcmNotification: IFCMNotification by inject()
 
     override fun onNewToken(token: String) {
         Log.d("TAG", "Refreshed token: $token")
@@ -32,7 +35,7 @@ class FireBaseMsgServiceImpl() : FirebaseMessagingService(), IFireBaseMessageSer
     }
 
     private fun showNotification(title: String?, message: String?) {
-        val clickPendingIntent = ServiceLocator.getFCMNotification()?.getClickPendingIntent()
+        val clickPendingIntent = fcmNotification.getClickPendingIntent()
         val channelId = "default_channel"
         val notificationId = 1
         val builder = NotificationCompat.Builder(this, channelId).apply {

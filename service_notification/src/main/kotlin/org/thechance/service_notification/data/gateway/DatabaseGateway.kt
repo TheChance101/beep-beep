@@ -11,8 +11,9 @@ import org.thechance.service_notification.data.collection.UserCollection
 import org.thechance.service_notification.data.mappers.toCollection
 import org.thechance.service_notification.data.mappers.toNotificationEntity
 import org.thechance.service_notification.data.utils.paginate
+import org.thechance.service_notification.data.utils.toDate
 import org.thechance.service_notification.domain.entity.NotFoundException
-import org.thechance.service_notification.domain.entity.Notification
+import org.thechance.service_notification.domain.entity.NotificationHistory
 import org.thechance.service_notification.domain.gateway.IDatabaseGateway
 import org.thechance.service_notification.endpoints.TOKENS_NOT_FOUND
 
@@ -54,21 +55,38 @@ class DatabaseGateway(
         return databaseContainer.topicCollection.findOne(TopicCollection::name eq name) != null
     }
 
-    override suspend fun addNotificationToHistory(notification: Notification) {
-        historyCollection.insertOne(notification.toCollection())
+    override suspend fun addNotificationToHistory(notificationHistory: NotificationHistory) {
+        historyCollection.insertOne(notificationHistory.toCollection())
     }
 
-    override suspend fun getNotificationHistoryForUser(page: Int, limit: Int): List<Notification> {
+    override suspend fun getNotificationHistoryForUser(page: Int, limit: Int): List<NotificationHistory> {
         return historyCollection.find().paginate(page, limit).toList().toNotificationEntity()
     }
 
-    override suspend fun getNotificationHistoryForUser(page: Int, limit: Int, userId: String): List<Notification> {
+    override suspend fun getNotificationHistoryForUser(
+        page: Int,
+        limit: Int,
+        userId: String
+    ): List<NotificationHistory> {
+        val twentyFourHoursAgo = System.currentTimeMillis() - (24 * 60 * 60 * 1000)
         return historyCollection.find(
             and(
-                NotificationHistoryCollection::id eq ObjectId(userId),
-                NotificationHistoryCollection::isDeleted eq false
+                NotificationHistoryCollection::userId eq userId,
+                NotificationHistoryCollection::isDeleted eq false,
+                NotificationHistoryCollection::date lt twentyFourHoursAgo
             )
-        ).paginate(page, limit).toList().toNotificationEntity()
+        ).sort(ascending(NotificationHistoryCollection::date)).paginate(page, limit).toList().toNotificationEntity()
+    }
+
+    override suspend fun getNotificationHistoryInTheLast24Hours(userId: String): List<NotificationHistory> {
+        val twentyFourHoursAgo = System.currentTimeMillis() - (24 * 60 * 60 * 1000)
+        return historyCollection.find(
+            and(
+                NotificationHistoryCollection::userId eq userId,
+                NotificationHistoryCollection::isDeleted eq false,
+                NotificationHistoryCollection::date gte twentyFourHoursAgo
+            )
+        ).sort(descending(NotificationHistoryCollection::date)).toList().toNotificationEntity()
     }
 
     override suspend fun getTotalCountsOfNotificationHistoryForUser(userId: String): Long {
