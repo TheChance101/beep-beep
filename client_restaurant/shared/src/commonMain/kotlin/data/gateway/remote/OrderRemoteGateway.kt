@@ -7,33 +7,21 @@ import data.remote.model.OrderDto
 import domain.entity.Order
 import domain.gateway.remote.IOrderRemoteGateway
 import io.ktor.client.HttpClient
-import io.ktor.client.plugins.websocket.wss
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.websocket.Frame
-import io.ktor.websocket.readText
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.serialization.json.Json
 
 class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway,
     BaseRemoteGateway(client = client) {
 
     override suspend fun getCurrentOrders(restaurantId: String): Flow<Order> {
-        return tryToExecuteWithFlow<OrderDto> {
-            wss("/orders/$restaurantId") {
-               val d = incoming.receiveAsFlow().map { frame ->
-                    if (frame is Frame.Text) {
-                        println("frame: $frame")
-                        val message = frame.readText()
-                        val orderParser = Json.decodeFromString<OrderDto>(message)
-                        orderParser.toEntity()
-                    }
-                }
-            }
-        }.map { it.toEntity() }
+        val result = client.tryToExecuteWebSocket<OrderDto>("/orders/$restaurantId")
+        result.collect { order ->
+            println("result: $order")
+        }
+        return result.map { it.toEntity() }
     }
 
     override suspend fun getActiveOrders(restaurantId: String): List<Order> {
@@ -44,7 +32,7 @@ class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway,
 
     override suspend fun updateOrderState(orderId: String, orderState: Int): Order {
         return tryToExecute<BaseResponse<OrderDto>>() {
-            post("/order/$orderId/status"){ setBody(orderState.toString()) }//todo check if correct
+            post("/order/$orderId/status") { setBody(orderState.toString()) }//todo check if correct
         }.value?.toEntity() ?: throw Exception("Error!")
     }
 

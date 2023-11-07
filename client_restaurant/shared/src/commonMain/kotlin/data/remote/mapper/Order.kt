@@ -28,7 +28,7 @@ fun OrderDto.toEntity(): Order {
         restaurantId = restaurantId,
         meals = meals.toOrderMeaEntity(),
         totalPrice = totalPrice ?: 0.0,
-        createdAt = createdAt?.let { LocalDateTime.parse(it) } ?: Clock.System.now()
+        createdAt = createdAt?.let { LocalDateTime.parse(it.toString()) } ?: Clock.System.now()
             .toLocalDateTime(TimeZone.currentSystemDefault()),
         orderState = when (orderState) {
             Constant.PENDING_ORDER -> OrderState.PENDING

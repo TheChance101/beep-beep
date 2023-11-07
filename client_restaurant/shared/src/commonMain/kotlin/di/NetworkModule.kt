@@ -11,6 +11,8 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.client.request.header
+import io.ktor.http.Url
+import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
@@ -39,7 +41,10 @@ val NetworkModule = module {
                     }
                 )
             }
-            install(WebSockets)
+            install(WebSockets) {
+                contentConverter = KotlinxWebsocketSerializationConverter(Json)
+                Url("ws://beep-beep-api-gateway-nap2u.ondigitalocean.app/")
+            }
         }
         intercept(client)
         client
