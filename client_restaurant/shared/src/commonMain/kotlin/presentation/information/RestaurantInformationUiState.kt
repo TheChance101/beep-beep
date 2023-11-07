@@ -7,8 +7,11 @@ import presentation.base.ErrorState
 data class RestaurantInformationUiState(
     val restaurant: RestaurantUiState = RestaurantUiState(),
     val isLoading: Boolean = false,
-    val error: ErrorState? = null
+    val error: ErrorState? = null,
+    val showSnackBar: Boolean = false,
+    val snackBarState: Boolean = true
 )
+
 data class RestaurantUiState(
     val id: String = "",
     val ownerId: String = "",
@@ -18,6 +21,7 @@ data class RestaurantUiState(
     val priceLevel: String = "",
     val restaurantName: String = "",
     val phoneNumber: String = "",
+    val validationState: Boolean = true,
     val openingTime: String = "",
     val closingTime: String = "",
     val description: String = "",

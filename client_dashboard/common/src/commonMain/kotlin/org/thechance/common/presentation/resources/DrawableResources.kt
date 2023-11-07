@@ -39,7 +39,8 @@ data class DrawableResources(
     val infoIcon: String = "ic_info_square.svg",
     val edit :String = "ic_edit.xml",
     val noConnection: String = "no_internet_connection.png",
-    val addImage:String = "add_image.svg"
+    val addImage:String = "add_image.svg",
+    val editImage:String = "edit_image.svg",
 )
 
 val darkDrawableResource = DrawableResources(

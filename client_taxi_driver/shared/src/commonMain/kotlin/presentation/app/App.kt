@@ -22,11 +22,10 @@ object MainApp : Screen {
         val appScreenModel = getScreenModel<AppScreenModel>()
 
         val isKeptLoggedIn by appScreenModel.isKeptLoggedIn.collectAsState()
-        println("isKeptLoggedIn: $isKeptLoggedIn")
         BpTaxiTheme {
-            if (isKeptLoggedIn) {
+            if (isKeptLoggedIn==true) {
                 Navigator(MainScreen()) { SlideTransition(it) }
-            } else {
+            } else if(isKeptLoggedIn == false){
                 Navigator(LoginScreen()) { SlideTransition(it) }
             }
         }

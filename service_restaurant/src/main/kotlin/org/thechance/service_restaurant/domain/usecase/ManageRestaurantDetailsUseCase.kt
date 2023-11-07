@@ -9,6 +9,7 @@ import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ONE_OR_MORE_IDS
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
+import org.thechance.service_restaurant.domain.utils.getCurrencyForLocation
 
 interface IManageRestaurantDetailsUseCase {
     suspend fun getRestaurant(restaurantId: String): Restaurant
@@ -38,9 +39,10 @@ class ManageRestaurantDetailsUseCase(
     }
 
     override suspend fun updateRestaurant(restaurant: Restaurant): Restaurant {
-        restaurantValidation.validateUpdateRestaurantDetails(restaurant)
         val existRestaurant =
             restaurantGateway.getRestaurant(restaurant.id) ?: throw MultiErrorException(listOf(NOT_FOUND))
+        val currency = getCurrencyForLocation(existRestaurant.location)
+        restaurantValidation.validateUpdateRestaurantDetails(restaurant.copy(currency = currency))
         restaurantValidation.validateRestaurantOwnership(existRestaurant, restaurant.ownerId)
         return restaurantGateway.updateRestaurant(restaurant)
     }

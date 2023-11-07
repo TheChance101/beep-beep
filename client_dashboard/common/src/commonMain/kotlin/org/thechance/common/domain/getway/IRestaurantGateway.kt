@@ -2,6 +2,7 @@ package org.thechance.common.domain.getway
 
 import org.thechance.common.domain.entity.Cuisine
 import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.Offer
 import org.thechance.common.domain.entity.RestaurantInformation
 import org.thechance.common.domain.entity.Restaurant
 
@@ -12,9 +13,11 @@ interface IRestaurantGateway {
     suspend fun deleteRestaurant(id: String): Boolean
 
     suspend fun getCuisines(): List<Cuisine>
+    suspend fun getOffers(): List<Offer>
 
     suspend fun createCuisine(cuisineName: String,image:ByteArray): Cuisine
     suspend fun deleteCuisine(cuisineId: String)
+    suspend fun createOffer(offerName: String, image: ByteArray): Offer
 
     suspend fun getRestaurants(
         pageNumber: Int,

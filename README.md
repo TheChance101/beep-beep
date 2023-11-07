@@ -89,6 +89,8 @@ service it should be fast also 😅
 > A desktop App that provides a user-friendly interface for
 > effortless management of restaurants, users, and taxi services.
 
+![dashboard](https://github.com/TheChance101/beep-beep/assets/105972942/fb43a704-67ec-4c2e-b7b1-a75aca2cc512)
+
 ### Features
 
 - [x] Authentication (sign in)
@@ -162,6 +164,8 @@ service it should be fast also 😅
 
 > A desktop application designed for support agents to efficiently manage and respond to user
 > support requests.
+
+![support](https://github.com/TheChance101/beep-beep/assets/105972942/810dd5fb-afb5-4dc0-a67e-05ab955198b3)
 
 ### Features
 
