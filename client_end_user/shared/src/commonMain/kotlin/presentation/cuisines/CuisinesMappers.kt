@@ -4,9 +4,9 @@ import domain.entity.Cuisine
 
 fun Cuisine.toCuisineUiState(): CuisineUiState {
     return CuisineUiState(
-        cuisineId = cuisineId,
-        cuisineName = cuisineName,
-        cuisineImageUrl = cuisineImageUrl,
+        cuisineId = id,
+        cuisineName = name,
+        cuisineImageUrl = imageUrl,
     )
 }
 

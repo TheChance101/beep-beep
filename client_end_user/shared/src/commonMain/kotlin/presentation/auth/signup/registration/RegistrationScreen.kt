@@ -107,7 +107,7 @@ class RegistrationScreen :
                     modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
                     title = Resources.strings.next,
                     onClick = listener::onNextButtonClicked,
-                    enabled = !state.isLoading
+                    isLoading = state.isLoading,
                 )
             }
 

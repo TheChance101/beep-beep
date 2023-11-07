@@ -6,5 +6,6 @@ data class UserManagement(
     val username: String,
     val email: String,
     val country: String,
+    val phone: String,
     val permission: Int
 )

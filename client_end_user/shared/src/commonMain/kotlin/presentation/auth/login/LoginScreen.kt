@@ -96,7 +96,7 @@ class LoginScreen :
                             keepLoggedIn = state.keepLoggedIn
                         )
                     },
-                    enabled = !state.isLoading
+                    isLoading = state.isLoading,
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(top = 32.dp, bottom = 16.dp),

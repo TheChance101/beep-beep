@@ -71,5 +71,9 @@ dependencies {
 
     //validation
     implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
+
+    //webSocket
+    implementation("io.ktor:ktor-server-websockets-jvm:$ktorVersion")
+
 }
 

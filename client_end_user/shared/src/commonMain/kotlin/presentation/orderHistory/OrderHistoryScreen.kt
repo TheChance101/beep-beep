@@ -14,9 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.lifecycle.LifecycleEffect
+import app.cash.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAnimatedTabLayout
+import com.beepbeep.designSystem.ui.composable.BpPagingList
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -24,19 +25,15 @@ import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
 import presentation.composable.ContentVisibility
 import presentation.composable.LoginRequiredPlaceholder
-import presentation.orderHistory.composable.HorizontalDivider
+import presentation.composable.HorizontalDivider
 import presentation.orderHistory.composable.MealOrderItem
 import presentation.orderHistory.composable.TripHistoryItem
 import resources.Resources
 import util.capitalizeFirstLetter
 import util.root
 
-class OrderHistoryScreen : BaseScreen<
-        OrderHistoryScreenModel,
-        OrderScreenUiState,
-        OrderHistoryScreenUiEffect,
-        OrderHistoryScreenInteractionListener
-        >() {
+class OrderHistoryScreen :
+    BaseScreen<OrderHistoryScreenModel, OrderScreenUiState, OrderHistoryScreenUiEffect, OrderHistoryScreenInteractionListener>() {
 
     @Composable
     override fun Content() {
@@ -53,8 +50,11 @@ class OrderHistoryScreen : BaseScreen<
     @Composable
     override fun onRender(
         state: OrderScreenUiState,
-        listener: OrderHistoryScreenInteractionListener
+        listener: OrderHistoryScreenInteractionListener,
     ) {
+        val foodOrders = state.ordersHistory.collectAsLazyPagingItems()
+        val trips = state.tripsHistory.collectAsLazyPagingItems()
+
         LoginRequiredPlaceholder(
             placeHolder = painterResource(Resources.images.requireLoginToShowOrdersHistoryPlaceholder),
             message = Resources.strings.ordersHistoryLoginMessage,
@@ -86,22 +86,26 @@ class OrderHistoryScreen : BaseScreen<
                         modifier = Modifier.padding(4.dp)
                     )
                 }
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(vertical = 24.dp)
-                ) {
-                    when (state.selectedType) {
-                        OrderScreenUiState.OrderSelectType.MEALS -> {
-                            items(state.ordersHistory) {
-                                MealOrderItem(orders = it)
-                                HorizontalDivider()
+                when (state.selectedType) {
+                    OrderScreenUiState.OrderSelectType.MEALS -> {
+                        BpPagingList(
+                            data = foodOrders,
+                        ) { foodOrder ->
+                            foodOrder?.let {
+                                MealOrderItem(orders = foodOrder)
+                                HorizontalDivider(modifier = Modifier.fillMaxWidth())
                             }
                         }
+                    }
 
-                        OrderScreenUiState.OrderSelectType.TRIPS -> {
-                            items(state.tripsHistory) {
+                    OrderScreenUiState.OrderSelectType.TRIPS -> {
+
+                        BpPagingList(
+                            data = trips,
+                        ) { trip ->
+                            trip?.let {
                                 TripHistoryItem(it)
-                                HorizontalDivider()
+                                HorizontalDivider(modifier = Modifier.fillMaxWidth())
                             }
                         }
                     }

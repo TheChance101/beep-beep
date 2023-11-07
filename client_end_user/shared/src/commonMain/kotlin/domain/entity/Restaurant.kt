@@ -5,6 +5,7 @@ data class Restaurant(
     val ownerId: String,
     val ownerUsername: String,
     val name: String,
+    val image: String,
     val description: String,
     val priceLevel: PriceLevel,
     val rate: Double,

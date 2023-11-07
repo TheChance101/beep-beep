@@ -31,6 +31,7 @@ class RegistrationScreenModel(private val validation: IValidationUseCase) :
         with(state.value) {
             tryCatch {
                 validation.validateUsername(username)
+                validation.validateEmail(email)
                 validation.validatePassword(password)
                 sendNewEffect(
                     RegistrationScreenEffect.NavigateToSubmitRegistrationScreen(

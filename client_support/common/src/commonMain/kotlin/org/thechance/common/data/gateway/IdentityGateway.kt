@@ -14,7 +14,7 @@ import org.thechance.common.domain.gateway.IIdentityGateway
 class IdentityGateway(private val client: HttpClient, private val realm: Realm) : IIdentityGateway, BaseGateway() {
 
     override suspend fun loginUser(username: String, password: String): Pair<String, String> {
-        val result = tryToExecute<BaseResponse<UserTokensRemoteDto>>(client) {
+        val result = tryToExecute<BaseResponse<BaseResponse<UserTokensRemoteDto>>>(client) {
             submitForm(
                 formParameters = Parameters.build {
                     append("username", username)
@@ -23,7 +23,7 @@ class IdentityGateway(private val client: HttpClient, private val realm: Realm) 
             ) { url("/login") }
         }.value
 
-        return Pair(result?.accessToken ?: "", result?.refreshToken ?: "")
+        return Pair(result?.value?.accessToken ?: "", result?.value?.refreshToken ?: "")
     }
 
     override suspend fun saveRefreshToken(token: String) {

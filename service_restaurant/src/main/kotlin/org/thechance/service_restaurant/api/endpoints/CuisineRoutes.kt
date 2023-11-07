@@ -12,6 +12,7 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 import org.koin.ktor.ext.inject
+import org.thechance.service_restaurant.api.models.BasePaginationResponseDto
 import org.thechance.service_restaurant.api.models.CuisineDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
@@ -35,8 +36,12 @@ fun Route.cuisineRoutes() {
 
         get("/{id}/meals") {
             val id = call.parameters.extractString("id") ?: throw NotFoundException()
-            val meals = discoverRestaurant.getMealsByCuisine(cuisineId=id).toDto()
-            call.respond(HttpStatusCode.OK, meals)
+            val page = call.parameters["page"]?.toInt() ?: 1
+            val limit = call.parameters["limit"]?.toInt() ?: 10
+            val meals = discoverRestaurant.getMealsByCuisine(cuisineId= id,page = page,limit = limit).toDto()
+            val total = discoverRestaurant.getTotalNumberOfMealsInCuisine(cuisineId= id)
+            call.respond(HttpStatusCode.OK, BasePaginationResponseDto(items = meals, page = page, total = total))
+            call.respond(HttpStatusCode.OK,  meals)
         }
 
         post {

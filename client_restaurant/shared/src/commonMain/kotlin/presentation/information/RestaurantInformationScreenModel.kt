@@ -6,6 +6,8 @@ import domain.usecase.IManageRestaurantInformationUseCase
 import domain.usecase.IValidateRestaurantInfoUseCase
 import domain.usecase.LogoutUserUseCase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.core.component.get
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
@@ -26,8 +28,17 @@ class RestaurantInformationScreenModel(
     }
 
     private fun onError(error: ErrorState) {
-        updateState { it.copy(isLoading = false, error = error) }
+        updateState {
+            it.copy(
+                isLoading = false, error = error,
+                restaurant = state.value.restaurant.copy(
+                    isSaveButtonEnabled = true
+                ),
+                snackBarState = false
+            )
+        }
         handleErrorState(error)
+        showSnackBar()
     }
 
     private fun handleErrorState(error: ErrorState) {
@@ -128,7 +139,14 @@ class RestaurantInformationScreenModel(
 
     override fun onClickSave() {
         val restaurant = state.value.restaurant.toRestaurant()
-        updateState { it.copy(isLoading = true) }
+        updateState {
+            it.copy(
+                isLoading = true,
+                restaurant = state.value.restaurant.copy(
+                    isSaveButtonEnabled = false
+                )
+            )
+        }
         tryToExecute(
             { manageRestaurantInformation.updateRestaurantInformation(restaurant) },
             ::onUpdateRestaurantInfoSuccess,
@@ -145,13 +163,31 @@ class RestaurantInformationScreenModel(
             state.phoneNumber,
             state.description,
         )
-        val updatedState = state.copy(isSaveButtonEnabled = validationResult)
+
+        val updatedState = state.copy(validationState = validationResult)
         updateState { it.copy(restaurant = updatedState) }
     }
 
     private fun onUpdateRestaurantInfoSuccess(result: Boolean) {
-        updateState { it.copy(isLoading = false, error = null) }
+        updateState {
+            it.copy(
+                isLoading = false, error = null,
+                restaurant = state.value.restaurant.copy(
+                    isSaveButtonEnabled = true
+                ),
+                snackBarState = true
+            )
+        }
         sendNewEffect(RestaurantInformationUiEffect.UpdateInformationSuccess)
+        showSnackBar()
+    }
+
+    private fun showSnackBar() {
+        viewModelScope.launch {
+            updateState { it.copy(showSnackBar = true) }
+            delay(3000)
+            updateState { it.copy(showSnackBar = false) }
+        }
     }
 
     override fun onClickLogout() {

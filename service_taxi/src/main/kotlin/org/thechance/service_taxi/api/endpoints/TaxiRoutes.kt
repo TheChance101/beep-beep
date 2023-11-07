@@ -26,13 +26,13 @@ fun Route.taxiRoutes() {
         }
 
         get("/{taxiId}") {
-            val id = call.parameters["taxiId"] ?: throw MissingParameterException
-            val result = manageTaxiUseCase.getTaxi(id)
+            val id = call.parameters["taxiId"] ?: throw MissingParameterException()
+            val result = manageTaxiUseCase.getTaxiByTaxiId(id)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
         put("/{taxiId}") {
-            val taxiId = call.parameters["taxiId"] ?: throw MissingParameterException
+            val taxiId = call.parameters["taxiId"] ?: throw MissingParameterException()
             val taxi = call.receive<TaxiDto>()
             val result = manageTaxiUseCase.editTaxi(taxiId, taxi.toEntity())
             call.respond(HttpStatusCode.OK, result.toDto())
@@ -45,13 +45,13 @@ fun Route.taxiRoutes() {
         }
 
         delete("/{taxiId}") {
-            val taxiId = call.parameters["taxiId"] ?: throw MissingParameterException
+            val taxiId = call.parameters["taxiId"] ?: throw MissingParameterException()
             val result = manageTaxiUseCase.deleteTaxi(taxiId)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
         delete("/driver/{driverId}") {
-            val driverId = call.parameters["driverId"] ?: throw MissingParameterException
+            val driverId = call.parameters["driverId"] ?: throw MissingParameterException()
             val result = manageTaxiUseCase.deleteTaxiByDriverId(driverId)
             call.respond(HttpStatusCode.OK, result)
         }

@@ -52,7 +52,6 @@ fun BpSimpleTextField(
                     hint,
                     style = Theme.typography.body,
                     color = hintColor,
-                    modifier = Modifier.noRippleEffect(onClick)
                 )
             },
             onValueChange = onValueChange,

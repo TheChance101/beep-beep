@@ -1,19 +1,15 @@
 package org.thechance.common.presentation.overview
 
-import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.RevenueShare
 import org.thechance.common.domain.entity.TotalRevenueShare
 import org.thechance.common.domain.entity.User
-import org.thechance.common.domain.usecase.IManageRevenueShareUseCase
-import org.thechance.common.domain.usecase.IUsersManagementUseCase
-import org.thechance.common.domain.util.NoInternetException
+import org.thechance.common.domain.usecase.IExploreDashboardUseCase
 import org.thechance.common.domain.util.RevenueShareDate
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 class OverviewScreenModel(
-    private val getUsers: IUsersManagementUseCase,
-    private val manageRevenueShare: IManageRevenueShareUseCase
+    private val exploreDashboard: IExploreDashboardUseCase
 ) : BaseScreenModel<OverviewUiState, OverviewUiEffect>(OverviewUiState()),
     OverviewInteractionListener {
 
@@ -33,7 +29,7 @@ class OverviewScreenModel(
 
     private fun getRevenueShare(revenueShareDate: RevenueShareDate) {
         tryToExecute(
-            { manageRevenueShare.getRevenueShare(revenueShareDate) },
+            { exploreDashboard.getRevenueShare(revenueShareDate) },
             ::onGetRevenueShareSuccessfully,
             ::onError
         )
@@ -41,7 +37,7 @@ class OverviewScreenModel(
 
     private fun getDashboardRevenueShare() {
         tryToExecute(
-            { manageRevenueShare.getDashboardRevenueShare() },
+            { exploreDashboard.getDashboardRevenueShare() },
             ::onGetDashboardRevenueSuccessfully,
             ::onError
         )
@@ -86,9 +82,9 @@ class OverviewScreenModel(
             )
         }
         when (index) {
-            0 -> getRevenueShare(RevenueShareDate.MONTHLY)
-            1 -> getRevenueShare(RevenueShareDate.WEEKLY)
-            2 -> getRevenueShare(RevenueShareDate.DAILY)
+            RevenueShareDate.MONTHLY.value -> getRevenueShare(RevenueShareDate.MONTHLY)
+            RevenueShareDate.WEEKLY.value-> getRevenueShare(RevenueShareDate.WEEKLY)
+            RevenueShareDate.DAILY.value -> getRevenueShare(RevenueShareDate.DAILY)
         }
     }
 
@@ -116,7 +112,7 @@ class OverviewScreenModel(
 
     private fun getLatestRegisteredUsers() {
         tryToExecute(
-            { getUsers.getLastRegisteredUsers(4) },
+            { exploreDashboard.getLastRegisteredUsers(USER_NUMBER) },
             ::onGetUsersSuccessfully,
             ::onError
         )
@@ -134,10 +130,15 @@ class OverviewScreenModel(
             is ErrorState.NoConnection -> {
                 updateState { it.copy(hasInternetConnection = false) }
             }
+
             else -> {
                 updateState { it.copy(error = error, isLoading = false) }
             }
         }
+    }
+
+    companion object {
+        private const val USER_NUMBER = 4
     }
 
 }

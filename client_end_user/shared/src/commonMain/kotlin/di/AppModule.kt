@@ -8,6 +8,6 @@ fun appModule() = module {
         localStorageModule,
         gatewayModule,
         useCaseModule,
-        screenModelsModule,
+        screenModelsModule
     )
 }

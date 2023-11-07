@@ -1,16 +1,13 @@
 package presentation.pickLanguage
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.usecase.IManageUserUseCase
-import domain.usecase.IMangeLanguageUseCase
+import domain.usecase.IManageSettingUseCase
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class PickLanguageScreenModel(
-    private val manageLanguage: IMangeLanguageUseCase
+    private val userPreferences: IManageSettingUseCase,
 ) : BaseScreenModel<PickLanguageUIState, PickLanguageUIEffect>(PickLanguageUIState()),
     PickLanguageInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
@@ -18,13 +15,13 @@ class PickLanguageScreenModel(
 
     override fun onLanguageSelected(language: LanguageUIState) {
         tryToExecute(
-            { manageLanguage.saveLanguageCode(language.code) },
+            { userPreferences.saveLanguageCode(language.code) },
             ::onSavedLanguageSuccess,
             ::onError
         )
     }
 
-    private fun onSavedLanguageSuccess(unit:Unit) {
+    private fun onSavedLanguageSuccess(unit: Unit) {
         sendNewEffect(PickLanguageUIEffect.onGoToPreferredLanguage)
     }
 

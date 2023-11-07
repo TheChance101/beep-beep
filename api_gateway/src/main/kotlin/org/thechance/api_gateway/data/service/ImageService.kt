@@ -1,37 +1,40 @@
 package org.thechance.api_gateway.data.service
 
-import io.ktor.client.*
-import io.ktor.client.request.*
-import io.ktor.client.request.forms.*
-import io.ktor.http.*
-import io.ktor.util.*
+import aws.sdk.kotlin.runtime.auth.credentials.EnvironmentCredentialsProvider
+import aws.sdk.kotlin.services.s3.S3Client
+import aws.sdk.kotlin.services.s3.model.ObjectCannedAcl
+import aws.sdk.kotlin.services.s3.model.PutObjectRequest
+import aws.smithy.kotlin.runtime.content.ByteStream
+import aws.smithy.kotlin.runtime.net.Url
 import org.koin.core.annotation.Single
-import org.thechance.api_gateway.data.model.image.ImageResponse
-import org.thechance.api_gateway.data.utils.tryToExecute
-import org.thechance.api_gateway.util.APIs
 
 @Single
-class ImageService(
-    private val client: HttpClient,
-    private val attributes: Attributes
-) {
+class ImageService {
+    suspend fun uploadImage(image: ByteArray, name: String): String {
+        val fileName = "${name.replace(" ", "_")}.png"
+        val bucketName = "beepbeep-resource"
+        val imageUrl = "https://beepbeep-resource.fra1.digitaloceanspaces.com"
 
-    private val clientId = System.getenv("CLIENT_ID").toString()
-    suspend fun uploadImage(image: ByteArray): ImageResponse {
-        return client.tryToExecute<ImageResponse>(
-            api = APIs.IMGUR_API,
-            attributes = attributes
-        ) {
-            post("/3/image") {
-                headers {
-                    append(HttpHeaders.Authorization, "Client-ID $clientId")
-                }
-                setBody(
-                    MultiPartFormDataContent(formData {
-                        append("image", image)
-                    })
-                )
-            }
+        val metadataVal = mutableMapOf<String, String>()
+        metadataVal["myVal"] = "test"
+
+        val s3Client = S3Client.fromEnvironment {
+            endpointUrl = Url.parse("https://fra1.digitaloceanspaces.com")
+            region = "us-east-1"
+            credentialsProvider = EnvironmentCredentialsProvider()
+
         }
+        val request = PutObjectRequest {
+            bucket = bucketName
+            key = fileName
+            acl = ObjectCannedAcl.fromValue("public-read")
+            metadata = metadataVal
+            body = ByteStream.fromBytes(image)
+        }
+
+        val response = s3Client.putObject(request)
+        println("Tag information is ${response.eTag}")
+
+        return "$imageUrl/$fileName"
     }
 }

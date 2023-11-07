@@ -13,6 +13,8 @@ data class StringResources(
     val signupWithBeepBeep: String = "Sign up with Beep Beep account",
     val foodsAreWaiting: String = "Foodies are waiting!",
     val tapStartTitle: String = "Tap Start and become their food \nsuperhero",
+    val invalidUsername: String = "Invalid username",
+    val invalidPassword: String = "Invalid password",
     val start: String = "Start",
     //endregion
     //region permission
@@ -37,6 +39,7 @@ data class StringResources(
     val delivered: String = "Delivered",
     val reject: String = "reject",
     val deliverAt: String = "Deliver At",
-    val welcome: String = "Welcome, "
+    val welcome: String = "Welcome, ",
+    val accessDeniedMessage: String = "To continue, Please access location permission",
     //endregion
 )

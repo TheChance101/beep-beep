@@ -1,6 +1,6 @@
 package domain.usecase
 
-import data.remote.fakegateway.MapFakeGateway
+import data.remote.fakegateway.OrderFakeGateway
 import domain.entity.Order
 
 
@@ -9,7 +9,7 @@ interface IManageOrderUseCase {
 }
 
 class ManageOrderUseCase(
-    private val fakeGateway: MapFakeGateway,
+    private val mapGateway: OrderFakeGateway,
 ) : IManageOrderUseCase {
-    override suspend fun foundNewOrder() = fakeGateway.findingNewOrder()
+    override suspend fun foundNewOrder() = mapGateway.findingNewOrder()
 }

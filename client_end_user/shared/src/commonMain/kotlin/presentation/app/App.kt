@@ -20,7 +20,6 @@ object MainApp : Screen {
     @Composable
     override fun Content() {
         val appScreenModel = getScreenModel<AppScreenModel>()
-
         val userLanguage by appScreenModel.language.collectAsState()
         val firstTime by appScreenModel.isFirstTimeOpenApp.collectAsState()
 
@@ -33,5 +32,3 @@ object MainApp : Screen {
         }
     }
 }
-
-

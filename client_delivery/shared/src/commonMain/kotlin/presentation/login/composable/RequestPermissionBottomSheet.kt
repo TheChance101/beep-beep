@@ -36,21 +36,21 @@ fun RequestPermissionBottomSheet(
             style = Theme.typography.titleLarge,
         )
         BpTextField(
-            text = state.deliveryUsername,
+            text = state.permissionUiState.deliveryUsername,
             label = Resources.strings.deliveryUsername,
             keyboardType = KeyboardType.Text,
             onValueChange = listener::onRestaurantNameChanged,
             modifier = Modifier.fillMaxWidth().padding(top = 24.dp)
         )
         BpTextField(
-            text = state.ownerEmail,
+            text = state.permissionUiState.ownerEmail,
             onValueChange = listener::onOwnerEmailChanged,
             label = Resources.strings.userEmailLabel,
             keyboardType = KeyboardType.Text,
             modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
         )
         BpExpandableTextField(
-            text = state.description,
+            text = state.permissionUiState.description,
             onValueChange = listener::onDescriptionChanged,
             label = Resources.strings.whyBeepBeep,
             hint = Resources.strings.questionHint,
@@ -60,9 +60,9 @@ fun RequestPermissionBottomSheet(
         BpButton(
             onClick = {
                 listener.onSubmitClicked(
-                    restaurantName = state.deliveryUsername,
-                    ownerEmail = state.ownerEmail,
-                    description = state.description
+                    restaurantName = state.permissionUiState.deliveryUsername,
+                    ownerEmail = state.permissionUiState.ownerEmail,
+                    description = state.permissionUiState.description
                 )
             },
             title = Resources.strings.submit,

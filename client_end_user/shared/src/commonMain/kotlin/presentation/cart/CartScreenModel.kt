@@ -15,15 +15,52 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
         getCartMeals()
     }
 
+    // region getting cart meals
     private fun getCartMeals() {
         tryToExecute(
-            { cartManagement.getAllCartMeals() },
+            cartManagement::getCart,
             ::onGetCartMealsSuccess,
             ::onError
         )
     }
 
-    override fun onClickPlus(index: Int, count: Long) {
+
+    private fun onGetCartMealsSuccess(cart: Cart) {
+        val cartUiState = cart.toUiState()
+        updateState {
+            it.copy(
+                meals = cartUiState.meals,
+                currency = cartUiState.currency
+            )
+        }
+    }
+    // endregion
+
+    // region saving cart
+    override fun onDispose() {
+        tryToExecute(
+            { cartManagement.updateCart(state.value.toEntity()) },
+            {},
+            ::onError
+        )
+        super.onDispose()
+    }
+
+    private fun orderNow() {
+        updateState { it.copy(isOrderNowLoading = true, orderError = null) }
+        tryToExecute(cartManagement::orderNow, ::onOrderNowSuccess, ::onOrderError)
+    }
+
+    private fun onOrderNowSuccess(success: Boolean) {
+        updateState { it.copy(isOrderNowLoading = false, orderError = null) }
+        if (success) {
+            sendNewEffect(CartUiEffect.NavigateUp)
+        }
+    }
+    // endregion
+
+    // region interactions
+    override fun onClickPlus(index: Int, count: Int) {
         val updatedCount = if (count < 99) count + 1 else count
         val meal = state.value.meals[index].copy(count = updatedCount)
         updateState {
@@ -36,7 +73,7 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
         }
     }
 
-    override fun onClickMinus(index: Int, count: Long) {
+    override fun onClickMinus(index: Int, count: Int) {
         val updatedCount = if (count > 1) count - 1 else count
         val meal = state.value.meals[index].copy(count = updatedCount)
         updateState {
@@ -50,26 +87,18 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
     }
 
     override fun onClickOrderNow() {
-        println("make order")
+        orderNow()
     }
 
     override fun onClickBack() {
         sendNewEffect(CartUiEffect.NavigateUp)
     }
-
-    private fun onGetCartMealsSuccess(cart: Cart) {
-        val cartUiState = cart.toUiState()
-        updateState {
-            it.copy(
-                meals = cartUiState.meals,
-                totalPrice = cartUiState.totalPrice,
-                currency = cartUiState.currency
-            )
-        }
-    }
+    // endregion
 
     private fun onError(error: ErrorState) {
-        println("error: $error")
     }
 
+    private fun onOrderError(error: ErrorState) {
+        updateState { it.copy(isOrderNowLoading = false, orderError = error) }
+    }
 }

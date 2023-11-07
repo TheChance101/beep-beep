@@ -160,7 +160,7 @@ class ManageTaxiUseCaseTest {
         // given invalid taxi id
         val taxiId = "a123"
         // when get taxi
-        val result = Executable { runBlocking { manageTaxiUseCase.getTaxi(taxiId) } }
+        val result = Executable { runBlocking { manageTaxiUseCase.getTaxiByTaxiId(taxiId) } }
         // check
         Assertions.assertThrows(ResourceNotFoundException::class.java, result)
     }
@@ -170,7 +170,7 @@ class ManageTaxiUseCaseTest {
         // given valid id
         val taxiId = FakeGateway.taxes.first().id
         // when get taxi
-        val result = runBlocking { manageTaxiUseCase.getTaxi(taxiId) }
+        val result = runBlocking { manageTaxiUseCase.getTaxiByTaxiId(taxiId) }
         // check
         Assertions.assertEquals(FakeGateway.taxes.first(), result)
     }

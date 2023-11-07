@@ -20,6 +20,7 @@ class RestaurantSelectionScreenModel(
     }
 
     private fun getData() {
+          updateState { it.copy( isLoading = true) }
         tryToExecute(this::callee, this::onSuccess, this::onError)
     }
 
@@ -28,6 +29,7 @@ class RestaurantSelectionScreenModel(
     }
 
     private fun onSuccess(restaurants: List<Restaurant>) {
+        println("restaurants: $restaurants")
         updateState { it.copy(restaurants = restaurants.toUiState(), isLoading = false) }
     }
 

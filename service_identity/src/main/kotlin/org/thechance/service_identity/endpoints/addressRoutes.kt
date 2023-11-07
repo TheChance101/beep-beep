@@ -39,7 +39,7 @@ fun Route.addressRoutes() {
 
     }
 
-    route("/user/{userId}/address"){
+    route("/user/{userId}/address") {
         get {
             val id = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val userAddresses = manageUserAddress.getUserAddresses(id)
@@ -58,14 +58,4 @@ fun Route.addressRoutes() {
             call.respond(HttpStatusCode.Created, manageUserAddress.addAddress(userId, address.toEntity()).toDto())
         }
     }
-
-    route("/user/{userId}/country"){
-        get{
-            val id = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val country = manageUserAddress.getUserCountry(id)
-            call.respond(HttpStatusCode.OK, country)
-        }
-    }
-
-
 }

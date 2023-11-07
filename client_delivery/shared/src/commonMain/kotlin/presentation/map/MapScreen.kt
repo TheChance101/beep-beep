@@ -23,6 +23,7 @@ import presentation.map.composable.AcceptedOrderCard
 import presentation.map.composable.DeliveredOrderCard
 import presentation.map.composable.LoadingCard
 import presentation.map.composable.MapCardAnimation
+import presentation.map.composable.MapView
 import presentation.map.composable.NewOrderCard
 import resources.Resources
 
@@ -34,7 +35,11 @@ class MapScreen:BaseScreen<MapScreenModel,MapScreenUiState,MapScreenUiEffect,Map
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-
+            MapView(
+                modifier = Modifier.fillMaxSize(),
+                currentLocation = state.currentLocation.toEntity(),
+                destination = state.destinationLocation.toEntity()
+            )
             BpAppBar(
                 isBackIconVisible = false,
                 title = "${Resources.strings.welcome}${state.username}"

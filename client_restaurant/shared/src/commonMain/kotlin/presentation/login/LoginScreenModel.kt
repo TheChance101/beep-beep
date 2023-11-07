@@ -15,13 +15,6 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 
-    init {
-        viewModelScope.launch {
-            if (loginUserUseCase.getKeepMeLoggedInFlag()) {
-                sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
-            }
-        }
-    }
     override fun onUserNameChanged(userName: String) {
         updateState { it.copy(userName = userName, isUsernameError = false) }
     }
@@ -39,6 +32,7 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
         password: String,
         isKeepMeLoggedInChecked: Boolean
     ) {
+        updateState { it.copy(isLoading = true, isEnable = false) }
         tryToExecute(
             { loginUserUseCase.loginUser(userName, password, isKeepMeLoggedInChecked) },
             { onLoginSuccess() },
@@ -61,7 +55,7 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
     }
 
     private fun onLoginFailed(error: ErrorState) {
-        updateState { it.copy(isLoading = false, error = error) }
+        updateState { it.copy(isLoading = false, error = error, isEnable = true) }
         handleErrorState(error)
     }
 

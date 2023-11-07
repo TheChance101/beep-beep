@@ -14,3 +14,11 @@ fun Parameters.extractInt(key: String): Int? {
 fun isRestaurantOpen(openTime: String, closeTime: String, currentTime: LocalTime = LocalTime.now()): Boolean {
     return currentTime.isAfter(LocalTime.parse(openTime)) && currentTime.isBefore(LocalTime.parse(closeTime))
 }
+
+
+fun String?.toListOfStringOrNull(): List<String>? {
+    return takeIf { !it.isNullOrBlank() }?.run {
+        val integerStrings = this.replace("[", "").replace("]", "").split(",")
+        integerStrings.map(String::trim)
+    }
+}

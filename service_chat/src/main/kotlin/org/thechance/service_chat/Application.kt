@@ -3,8 +3,7 @@ package org.thechance.service_chat
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import org.thechance.service_chat.plugins.configureMonitoring
-import org.thechance.service_chat.plugins.configureRouting
+import org.thechance.service_chat.plugins.*
 import org.thechance.service_chat.plugins.configureSerialization
 
 fun main() {
@@ -13,8 +12,10 @@ fun main() {
 }
 
 fun Application.module() {
-
+    configureDependencyInjection()
+    configureSockets()
+    configureStatusExceptions()
+    configureRouting()
     configureSerialization()
     configureMonitoring()
-    configureRouting()
 }

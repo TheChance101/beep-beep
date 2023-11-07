@@ -29,3 +29,17 @@ fun CartCollection.MealCollection.toMealHistoryEntity() = OrderedMeal(
     price = price
 )
 
+fun OrderWithRestaurant.toOrderEntity(): Order {
+    return Order(
+        id = id.toString(),
+        userId = userId.toString(),
+        restaurantId = restaurant.id.toString(),
+        restaurantName = restaurant.name,
+        restaurantImage = restaurant.restaurantImage,
+        meals = meals.map { it.toMealEntity() },
+        totalPrice = totalPrice,
+        currency = restaurant.currency,
+        createdAt = createdAt,
+        status = Order.Status.getOrderStatus(orderStatus)
+    )
+}

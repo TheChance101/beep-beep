@@ -1,5 +1,6 @@
 package org.thechance.service_restaurant.domain.usecase
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
@@ -8,15 +9,19 @@ import org.thechance.service_restaurant.domain.gateway.IRestaurantManagementGate
 import org.thechance.service_restaurant.domain.usecase.validation.IOrderValidationUseCase
 import org.thechance.service_restaurant.domain.utils.IValidation
 import org.thechance.service_restaurant.domain.utils.currentDateTime
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
-import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
+import org.thechance.service_restaurant.domain.utils.exceptions.*
 
 interface IManageOrderUseCase {
     suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order>
 
-    suspend fun updateOrderStatus(orderId: String, state: Order.Status): Order
+    suspend fun getActiveOrdersForUser(userId: String): List<Order>
+
+    suspend fun updateOrderStatus(orderId: String): Order
+    suspend fun cancelOrder(orderId: String): Order
 
     suspend fun getOrderById(orderId: String): Order
+
+    suspend fun isOrderExisted(orderId: String): Boolean
 
     suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<Order>
 
@@ -44,6 +49,10 @@ class ManageOrderUseCase(
         return restaurantOperationGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
     }
 
+    override suspend fun getActiveOrdersForUser(userId: String): List<Order> {
+        return restaurantOperationGateway.getActiveOrdersForUser(userId)
+    }
+
     override suspend fun getOrderById(orderId: String): Order {
         if (!basicValidation.isValidId(orderId)) {
             throw MultiErrorException(listOf(INVALID_ID))
@@ -51,13 +60,47 @@ class ManageOrderUseCase(
         return restaurantOperationGateway.getOrderById(orderId = orderId)!!
     }
 
-    override suspend fun updateOrderStatus(orderId: String, state: Order.Status): Order {
-        orderValidationUseCase.validateUpdateOrder(orderId = orderId, status = state)
-        return restaurantOperationGateway.updateOrderStatus(orderId = orderId, status = state)!!
+    override suspend fun isOrderExisted(orderId: String): Boolean {
+        if (!basicValidation.isValidId(orderId)) {
+            throw MultiErrorException(listOf(INVALID_ID))
+        }
+        return restaurantOperationGateway.isOrderExisted(orderId)
+    }
+
+    override suspend fun updateOrderStatus(orderId: String): Order {
+
+        orderValidationUseCase.validateUpdateOrder(orderId = orderId)
+        val currentOrderStatus = Order.Status.getOrderStatus(getOrderStatus(orderId))
+        val newOrderStatus = when (currentOrderStatus) {
+            Order.Status.PENDING -> Order.Status.APPROVED.statusCode
+            Order.Status.APPROVED -> Order.Status.IN_COOKING.statusCode
+            Order.Status.IN_COOKING -> Order.Status.DONE.statusCode
+            Order.Status.DONE -> throw MultiErrorException(listOf(ALREADY_UPDATED))
+            else -> throw MultiErrorException(listOf(INVALID_UPDATE_PARAMETER))
+        }
+
+        return restaurantOperationGateway.updateOrderStatus(orderId = orderId, status = newOrderStatus)
+            ?: throw MultiErrorException(listOf(NOT_FOUND))
+    }
+
+    override suspend fun cancelOrder(orderId: String): Order {
+        val currentOrderStatus = Order.Status.getOrderStatus(getOrderStatus(orderId))
+        if (currentOrderStatus != Order.Status.PENDING) {
+            throw MultiErrorException(listOf(CANCEL_ERROR))
+        }
+        return restaurantOperationGateway.cancelOrder(orderId) ?: throw MultiErrorException(listOf(NOT_FOUND))
+    }
+
+    private suspend fun getOrderStatus(orderId: String): Int {
+        return restaurantOperationGateway.getOrderStatus(orderId)
     }
 
     override suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<Order> {
-        return restaurantOperationGateway.getOrdersHistoryForRestaurant(restaurantId = restaurantId, page = page, limit = limit)
+        return restaurantOperationGateway.getOrdersHistoryForRestaurant(
+            restaurantId = restaurantId,
+            page = page,
+            limit = limit
+        )
     }
 
     override suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order> {
@@ -70,8 +113,9 @@ class ManageOrderUseCase(
     override suspend fun getOrdersCountByDaysBefore(restaurantId: String, daysBack: Int): List<Map<Int, Int>> {
         basicValidation.isValidId(restaurantId).takeIf { it }?.let {
             return doInRangeWithDaysBack(daysBack) { daysOfYearRange, currentDateTime ->
-                val groupedOrdersByDayOfYear = restaurantOperationGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
-                    .filter { it.createdAt.dayOfYear in daysOfYearRange }.groupBy { it.createdAt.dayOfYear }
+                val groupedOrdersByDayOfYear =
+                    restaurantOperationGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
+                        .filter { it.createdAt.dayOfYear in daysOfYearRange }.groupBy { it.createdAt.dayOfYear }
 
                 daysOfYearRange.map {
                     val count = groupedOrdersByDayOfYear[it]?.size ?: 0
@@ -84,9 +128,10 @@ class ManageOrderUseCase(
     override suspend fun getOrdersRevenueByDaysBefore(restaurantId: String, daysBack: Int): List<Map<Int, Double>> {
         basicValidation.isValidId(restaurantId).takeIf { it }?.let {
             return doInRangeWithDaysBack(daysBack) { daysOfYearRange, currentDateTime ->
-                val groupedOrdersByDayOfYear = restaurantOperationGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
-                    .filter { it.createdAt.dayOfYear in daysOfYearRange && it.status == Order.Status.DONE }
-                    .groupBy { it.createdAt.dayOfYear }
+                val groupedOrdersByDayOfYear =
+                    restaurantOperationGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
+                        .filter { it.createdAt.dayOfYear in daysOfYearRange && it.status == Order.Status.DONE }
+                        .groupBy { it.createdAt.dayOfYear }
 
                 daysOfYearRange.map { days ->
                     val prices = groupedOrdersByDayOfYear[days]?.map { it.totalPrice } ?: emptyList()

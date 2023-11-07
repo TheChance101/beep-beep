@@ -6,5 +6,6 @@ class UserConfigurationCollection : RealmObject {
     var id: Int = 0
     var accessToken: String = ""
     var refreshToken: String = ""
+    var username: String = ""
     var isKeepMeLoggedInMeChecked: Boolean = false
 }

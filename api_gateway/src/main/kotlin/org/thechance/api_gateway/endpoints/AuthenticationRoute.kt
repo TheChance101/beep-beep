@@ -9,6 +9,8 @@ import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
 import org.thechance.api_gateway.data.model.authenticate.TokenConfiguration
+import org.thechance.api_gateway.data.model.identity.UserRegistrationDto
+import org.thechance.api_gateway.data.model.restaurant.RestaurantDto
 import org.thechance.api_gateway.data.service.IdentityService
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractApplicationIdHeader
@@ -24,23 +26,11 @@ fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
     val localizedMessagesFactory by inject<LocalizedMessagesFactory>()
 
     post("/signup") {
-        val params = call.receiveParameters()
-        val fullName = params["fullName"]?.trim()
-        val username = params["username"]?.trim()
-        val password = params["password"]?.trim()
-        val email = params["email"]?.trim()
-
+        val newUser = call.receive<UserRegistrationDto>()
         val language = extractLocalizationHeader()
 
-        val result = identityService.createUser(
-            fullName = fullName.toString(),
-            username = username.toString(),
-            password = password.toString(),
-            email = email.toString(),
-            languageCode = language
-        )
+        val result = identityService.createUser(newUser = newUser, languageCode = language)
         val successMessage = localizedMessagesFactory.createLocalizedMessages(language).userCreatedSuccessfully
-
         respondWithResult(HttpStatusCode.Created, result, successMessage)
     }
 

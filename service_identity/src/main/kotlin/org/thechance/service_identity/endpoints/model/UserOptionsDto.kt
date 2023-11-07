@@ -5,9 +5,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserOptionsDto(
-    val page: Int?,
-    val limit: Int?,
-    val query: String?,
-    val permissions: List<Int>?,
-    val country: List<String>?
+    val page: Int? = null,
+    val limit: Int? = null,
+    val query: String? = null,
+    val permissions: List<Int>? = null,
+    val country: List<String>? = null
 )

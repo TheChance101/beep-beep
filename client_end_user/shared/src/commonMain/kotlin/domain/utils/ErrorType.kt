@@ -19,6 +19,7 @@ sealed class AuthorizationException(val errorMessage: String = "") : Exception()
     class UserNotFoundException(message: String) : AuthorizationException(message)
     class InvalidCredentialsException(message: String) : AuthorizationException(message)
     class UserAlreadyExistException(message: String) : AuthorizationException(message)
+    class LocationAccessDeniedException(message: String) : AuthorizationException(message)
 }
 
 sealed class GeneralException : Exception() {

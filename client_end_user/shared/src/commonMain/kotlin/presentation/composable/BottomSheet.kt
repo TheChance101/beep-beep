@@ -38,11 +38,8 @@ fun BottomSheet(
     ),
     content: @Composable () -> Unit
 ) {
-
     Box(modifier = Modifier.fillMaxSize()) {
-
         content()
-
         AnimatedVisibility(
             visible = sheetState.isVisible,
             enter = fadeIn(),

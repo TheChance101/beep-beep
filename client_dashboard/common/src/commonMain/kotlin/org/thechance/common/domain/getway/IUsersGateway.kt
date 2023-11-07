@@ -8,7 +8,7 @@ import org.thechance.common.domain.entity.User
 interface IUsersGateway {
 
     suspend fun getUsers(
-        query: String?,
+        query: String?=null,
         byPermissions: List<Permission>,
         byCountries: List<Country>,
         page: Int,

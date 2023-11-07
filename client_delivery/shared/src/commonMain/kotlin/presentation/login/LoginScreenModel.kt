@@ -17,17 +17,15 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
         get() = coroutineScope
 
     init {
-        loginIfKeepMeLoggedInFlagSet()
+        showSnackBar()
     }
-
-    private fun loginIfKeepMeLoggedInFlagSet(){
+    private fun showSnackBar() {
         viewModelScope.launch {
-            if (manageLoginUser.getKeepMeLoggedInFlag()) {
-                sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
-            }
+            updateState { it.copy(showSnackBar = true) }
+            delay(3000)
+            updateState { it.copy(showSnackBar = false) }
         }
     }
-
     override fun onUserNameChanged(userName: String) {
         updateState { it.copy(userName = userName) }
     }
@@ -41,55 +39,47 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
     }
 
     override fun onClickLogin(
-        username: String,
+        userName: String,
         password: String,
-        isKeepMeLoggedInChecked: Boolean
+        isKeepMeLoggedInChecked: Boolean,
     ) {
-        updateState { it.copy(isLoading = true) }
+
+        updateState { it.copy(isLoading = true, isEnable = false) }
         clearErrors()
         tryToExecute(
-            { manageLoginUser.loginUser(username, password, isKeepMeLoggedInChecked) },
-            {onLoginSuccess()},
+            {
+                manageLoginUser.loginUser(userName, password, isKeepMeLoggedInChecked)
+            },
+            { onLoginSuccess(userName) },
             ::onLoginError
         )
     }
 
-    private fun onLoginSuccess() {
+    private fun onLoginSuccess(username: String) {
         clearErrors()
+        viewModelScope.launch {
+            manageLoginUser.saveUsername(username)
+        }
         sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
+
     }
 
     private fun onLoginError(errorState: ErrorState) {
+        updateState { it.copy(isLoading = false, isEnable = true) }
         clearErrors()
         when (errorState) {
-            ErrorState.InvalidPassword -> updateState {
-                it.copy(
-                    passwordErrorMsg = "Invalid password",
-                    isPasswordError = true
-                )
+            ErrorState.InvalidPassword -> updateState { it.copy(isPasswordError = true) }
+
+            ErrorState.InvalidUsername,ErrorState.UserNotFound -> updateState {
+                it.copy(isUsernameError = true)
             }
 
-            ErrorState.InvalidUsername -> updateState {
-                it.copy(
-                    usernameErrorMsg = "Invalid username",
-                    isUsernameError = true
-                )
-            }
-
-            is ErrorState.UserNotFound -> showSnackBar("Sign up with Beep Beep account")
-
-            is ErrorState.UnAuthorized -> state.value.sheetState.show()
+            is ErrorState.UnAuthorized -> state.value.permissionUiState.sheetState.show()
             else -> {}
         }
     }
 
-    private fun showSnackBar(message: String) {
-        viewModelScope.launch {
-            updateState { it.copy(snackBarMessage = message, showSnackBar = true) }
-            delay(4000) // wait for snack-bar to show
-            updateState { it.copy(showSnackBar = false) }
-        }
-    }
+
 
 
     private fun clearErrors() {
@@ -98,23 +88,23 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
                 usernameErrorMsg = "",
                 isUsernameError = false,
                 passwordErrorMsg = "",
-                isPasswordError = false,
-                isLoading = false
+                isPasswordError = false
             )
         }
     }
 
     //region permission
     override fun onOwnerEmailChanged(ownerEmail: String) {
-        updateState { it.copy(ownerEmail = ownerEmail) }
+
+        updateState { it.copy(permissionUiState = it.permissionUiState.copy(ownerEmail = ownerEmail)) }
     }
 
     override fun onRestaurantNameChanged(restaurantName: String) {
-        updateState { it.copy(deliveryUsername = restaurantName) }
+        updateState { it.copy(permissionUiState = it.permissionUiState.copy(deliveryUsername = restaurantName)) }
     }
 
     override fun onDescriptionChanged(description: String) {
-        updateState { it.copy(description = description) }
+        updateState { it.copy(permissionUiState = it.permissionUiState.copy(description = description)) }
     }
 
     override fun onRequestPermissionClicked() {
@@ -125,8 +115,8 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
     private fun showPermissionSheetWithDelay() {
         coroutineScope.launch {
             delay(300)
-            updateState { it.copy(showPermissionSheet = true) }
-            state.value.sheetState.show()
+            updateState { it.copy(permissionUiState = it.permissionUiState.copy(showPermissionSheet = true)) }
+            state.value.permissionUiState.sheetState.show()
         }
     }
 
@@ -145,7 +135,7 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
     }
 
     private fun onAskForPermissionSuccess() {
-        state.value.sheetState.dismiss()
+        state.value.permissionUiState.sheetState.dismiss()
         coroutineScope.launch {
             delayAndChangePermissionSheetState(false)
         }
@@ -154,7 +144,7 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
 
 
     private fun onAskForPermissionFailed(error: ErrorState) {
-        state.value.sheetState.dismiss()
+        state.value.permissionUiState.sheetState.dismiss()
         coroutineScope.launch {
             delayAndChangePermissionSheetState(false)
         }
@@ -176,12 +166,12 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
     }
 
     private fun dismissBottomSheet() {
-        state.value.sheetState.dismiss()
+        state.value.permissionUiState.sheetState.dismiss()
     }
 
     private suspend fun delayAndChangePermissionSheetState(show: Boolean) {
         delay(300)
-        updateState { it.copy(showPermissionSheet = show) }
+        updateState { it.copy(permissionUiState = it.permissionUiState.copy(showPermissionSheet = show)) }
     }
     //end region
 }

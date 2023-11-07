@@ -7,6 +7,8 @@ data class Taxi(
     val type: String,
     val driverId: String,
     val driverUsername: String,
+    val driverImage: String,
+    val rate: Double,
     val isAvailable: Boolean = true,
     val seats: Int = 4,
     val tripsCount: Int,

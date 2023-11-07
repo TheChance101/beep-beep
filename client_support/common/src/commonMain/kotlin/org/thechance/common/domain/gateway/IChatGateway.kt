@@ -14,4 +14,5 @@ interface IChatGateway {
     fun getMessages(ticketId: String): Flow<List<Message>>
 
     suspend fun sendMessage(message: NewMessage)
+
 }

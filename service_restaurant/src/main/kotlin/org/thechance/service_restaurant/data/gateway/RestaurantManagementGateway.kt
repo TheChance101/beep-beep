@@ -2,6 +2,7 @@ package org.thechance.service_restaurant.data.gateway
 
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.FindOneAndUpdateOptions
+import com.mongodb.client.model.Projections.computed
 import com.mongodb.client.model.ReturnDocument
 import com.mongodb.client.model.Updates
 import org.bson.Document
@@ -15,7 +16,6 @@ import org.thechance.service_restaurant.data.collection.OrderCollection
 import org.thechance.service_restaurant.data.collection.mapper.*
 import org.thechance.service_restaurant.data.collection.relationModels.OrderWithRestaurant
 import org.thechance.service_restaurant.domain.entity.Cart
-import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.gateway.IRestaurantManagementGateway
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
@@ -24,10 +24,33 @@ import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 class RestaurantManagementGateway(private val container: DataBaseContainer) : IRestaurantManagementGateway {
 
     //region Order
-    override suspend fun addOrder(order: Order): Order {
+    override suspend fun addOrder(order: Order): Order? {
         val insertedOrder = order.toCollection()
         container.orderCollection.insertOne(insertedOrder).wasAcknowledged()
-        return insertedOrder.toEntity()
+
+        val pipeline = listOf(
+            match(OrderCollection::id eq insertedOrder.id),
+            lookup(
+                from = "restaurant",
+                localField = OrderCollection::restaurantId.name,
+                foreignField = "_id",
+                newAs = "restaurant"
+            ),
+            unwind("\$restaurant"),
+            project(
+                OrderWithRestaurant::id from "\$_id",
+                OrderWithRestaurant::userId from "\$userId",
+                OrderWithRestaurant::restaurant from "\$restaurant",
+                OrderWithRestaurant::meals from "\$meals",
+                OrderWithRestaurant::totalPrice from "\$totalPrice",
+                OrderWithRestaurant::createdAt from "\$createdAt",
+                OrderWithRestaurant::orderStatus from "\$orderStatus"
+            )
+        )
+
+        val createdOrder = container.orderCollection.aggregate<OrderWithRestaurant>(pipeline).first()
+        return createdOrder?.toOrderEntity()
+
     }
 
     override suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order> {
@@ -38,22 +61,163 @@ class RestaurantManagementGateway(private val container: DataBaseContainer) : IR
 
     override suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order> {
         return container.orderCollection.find(
-            OrderCollection::restaurantId eq ObjectId(restaurantId),
-            OrderCollection::orderStatus nin listOf(Order.Status.DONE.statusCode, Order.Status.CANCELED.statusCode)
+            and(
+                OrderCollection::restaurantId eq ObjectId(restaurantId),
+                OrderCollection::orderStatus nin listOf(Order.Status.DONE.statusCode, Order.Status.CANCELED.statusCode)
+            )
         ).toList().toEntity()
+    }
+
+    override suspend fun getActiveOrdersForUser(userId: String): List<Order> {
+        val pipeline = listOf(
+            match(
+                and(
+                    OrderCollection::userId eq ObjectId(userId),
+                    OrderCollection::orderStatus `in` listOf(
+                        Order.Status.APPROVED.statusCode,
+                        Order.Status.IN_COOKING.statusCode
+                    )
+                )
+            ),
+            lookup(
+                from = "restaurant",
+                localField = OrderCollection::restaurantId.name,
+                foreignField = "_id",
+                newAs = "restaurant"
+            ),
+            unwind("\$restaurant"),
+            project(
+                OrderWithRestaurant::id from "\$_id",
+                OrderWithRestaurant::userId from "\$userId",
+                OrderWithRestaurant::restaurant from "\$restaurant",
+                OrderWithRestaurant::meals from "\$meals",
+                OrderWithRestaurant::totalPrice from "\$totalPrice",
+                OrderWithRestaurant::createdAt from "\$createdAt",
+                OrderWithRestaurant::orderStatus from "\$orderStatus",
+                computed(
+                    "restaurantName",
+                    "\$restaurant.name"
+                ),
+                computed(
+                    "restaurantImage",
+                    "\$restaurant.restaurantImage"
+                ),
+                computed(
+                    "currency",
+                    "\$restaurant.currency"
+                )
+            )
+        )
+
+        return container.orderCollection.aggregate<OrderWithRestaurant>(pipeline).toList().map { it.toOrderEntity() }
     }
 
     override suspend fun getOrderById(orderId: String): Order? =
         container.orderCollection.findOneById(ObjectId(orderId))?.toEntity()
 
-    override suspend fun updateOrderStatus(orderId: String, status: Order.Status): Order? {
-        val updateOperation = setValue(OrderCollection::orderStatus, status.statusCode)
-        val updatedOrder = container.orderCollection.findOneAndUpdate(
+    override suspend fun getOrderStatus(orderId: String): Int {
+        return container.orderCollection.findOne(OrderCollection::id eq ObjectId(orderId))?.orderStatus
+            ?: throw MultiErrorException(listOf(NOT_FOUND))
+    }
+
+    override suspend fun isOrderExisted(orderId: String): Boolean {
+        val order = container.orderCollection.findOne(
+            and(
+                OrderCollection::id eq ObjectId(orderId),
+                OrderCollection::orderStatus eq Order.Status.CANCELED.statusCode
+            )
+        )
+        return order != null
+    }
+
+    override suspend fun updateOrderStatus(orderId: String, status: Int): Order? {
+        val updateOperation = setValue(OrderCollection::orderStatus, status)
+
+        container.orderCollection.updateOne(
             filter = OrderCollection::id eq ObjectId(orderId),
             update = updateOperation
         )
-        return updatedOrder?.toEntity()
+
+        val pipeline = listOf(
+            match(OrderCollection::id eq ObjectId(orderId)),
+            lookup(
+                from = "restaurant",
+                localField = OrderCollection::restaurantId.name,
+                foreignField = "_id",
+                newAs = "restaurant"
+            ),
+            unwind("\$restaurant"),
+            project(
+                OrderWithRestaurant::id from "\$_id",
+                OrderWithRestaurant::userId from "\$userId",
+                OrderWithRestaurant::restaurant from "\$restaurant",
+                OrderWithRestaurant::meals from "\$meals",
+                OrderWithRestaurant::totalPrice from "\$totalPrice",
+                OrderWithRestaurant::createdAt from "\$createdAt",
+                OrderWithRestaurant::orderStatus from "\$orderStatus",
+                computed(
+                    "restaurantName",
+                    "\$restaurant.name"
+                ),
+                computed(
+                    "restaurantImage",
+                    "\$restaurant.restaurantImage"
+                ),
+                computed(
+                    "currency",
+                    "\$restaurant.currency"
+                )
+            )
+        )
+
+        val updatedOrderWithRestaurant = container.orderCollection.aggregate<OrderWithRestaurant>(pipeline).first()
+        return updatedOrderWithRestaurant?.toOrderEntity()
     }
+
+    override suspend fun cancelOrder(orderId: String): Order? {
+        val updateOperation = setValue(OrderCollection::orderStatus, Order.Status.CANCELED.statusCode)
+
+        container.orderCollection.updateOne(
+            filter = OrderCollection::id eq ObjectId(orderId),
+            update = updateOperation
+        )
+
+        val pipeline = listOf(
+            match(OrderCollection::id eq ObjectId(orderId)),
+            lookup(
+                from = "restaurant",
+                localField = OrderCollection::restaurantId.name,
+                foreignField = "_id",
+                newAs = "restaurant"
+            ),
+            unwind("\$restaurant"),
+            project(
+                OrderWithRestaurant::id from "\$_id",
+                OrderWithRestaurant::userId from "\$userId",
+                OrderWithRestaurant::restaurant from "\$restaurant",
+                OrderWithRestaurant::meals from "\$meals",
+                OrderWithRestaurant::totalPrice from "\$totalPrice",
+                OrderWithRestaurant::createdAt from "\$createdAt",
+                OrderWithRestaurant::orderStatus from "\$orderStatus",
+                computed(
+                    "restaurantName",
+                    "\$restaurant.name"
+                ),
+                computed(
+                    "restaurantImage",
+                    "\$restaurant.restaurantImage"
+                ),
+                computed(
+                    "currency",
+                    "\$restaurant.currency"
+                )
+            )
+        )
+
+        val updatedOrderWithRestaurant = container.orderCollection.aggregate<OrderWithRestaurant>(pipeline).first()
+        return updatedOrderWithRestaurant?.toOrderEntity()
+    }
+
 
     override suspend fun getNumberOfOrdersHistoryInRestaurant(restaurantId: String): Long {
         return container.orderCollection.countDocuments(
@@ -91,7 +255,6 @@ class RestaurantManagementGateway(private val container: DataBaseContainer) : IR
                 newAs = "restaurant"
             ),
             unwind("\$restaurant"),
-
             project(
                 OrderWithRestaurant::id from "\$_id",
                 OrderWithRestaurant::userId from "\$userId",
@@ -149,6 +312,21 @@ class RestaurantManagementGateway(private val container: DataBaseContainer) : IR
             val restaurant = cart.restaurantId?.let { container.restaurantCollection.findOneById(it) }
             cart.toCartDetails(restaurant).toEntity()
         }
+    }
+
+    override suspend fun updateCart(cart: Cart): Cart {
+        val restaurant = cart.restaurantId?.let { container.restaurantCollection.findOneById(it) }
+        val mealIds = cart.meals?.map { ObjectId(it.meadId) } ?: emptyList()
+        val meals = container.mealCollection.find(filter = MealCollection::id `in` mealIds).toList()
+        val updatedCart = container.cartCollection.findOneAndUpdate(
+            CartCollection::id eq ObjectId(cart.id),
+            update = Updates.combine(
+                Updates.set("restaurantId", ObjectId(cart.restaurantId)),
+                Updates.set("meals", meals)
+            ),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+        ) ?: throw MultiErrorException(listOf(NOT_FOUND))
+        return updatedCart.toCartDetails(restaurant).toEntity()
     }
 
     override suspend fun updateCart(cartId: String, restaurantId: String, mealId: String, quantity: Int): Cart {

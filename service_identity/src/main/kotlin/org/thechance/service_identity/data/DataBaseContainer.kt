@@ -13,9 +13,6 @@ class DataBaseContainer(client: MongoClient) {
 
     val addressCollection: CoroutineCollection<AddressCollection> = database.getCollection(ADDRESS_COLLECTION_NAME)
 
-    val userDetailsCollection: CoroutineCollection<UserDetailsCollection> =
-        database.getCollection(USER_DETAILS_COLLECTION)
-
     val userCollection: CoroutineCollection<UserCollection> =
         database.getCollection(USER_COLLECTION)
 
@@ -27,7 +24,6 @@ class DataBaseContainer(client: MongoClient) {
         const val WALLET_COLLECTION = "wallet"
         const val ADDRESS_COLLECTION_NAME = "address"
         const val USER_COLLECTION = "user"
-        const val USER_DETAILS_COLLECTION = "user_details"
         const val USER_NAME = "username"
         const val INDEX_NAME = "username_1"
     }

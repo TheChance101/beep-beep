@@ -1,11 +1,11 @@
 package org.thechance.service_taxi.domain.exceptions
 
 open class TaxiException : Throwable()
-object InvalidIdException : TaxiException()
-object ResourceNotFoundException : TaxiException()
-object MissingParameterException : TaxiException()
-object AlreadyExistException : TaxiException()
-object CantBeNullException : TaxiException()
+class InvalidIdException : TaxiException()
+class ResourceNotFoundException : TaxiException()
+class MissingParameterException : TaxiException()
+class AlreadyExistException : TaxiException()
+class CantBeNullException : TaxiException()
 class MultiErrorException(val errorCodes: List<Int>) : TaxiException()
 
 

@@ -27,9 +27,8 @@ fun Route.locationRoute() {
             val locations = locationService.receiveLocation(tripId)
             webSocketServerHandler.sessions[tripId] = this
             webSocketServerHandler.sessions[tripId]?.let {
-                webSocketServerHandler.tryToCollectFormWebSocket(locations, it)
+                webSocketServerHandler.tryToCollect(locations, it)
             }
         }
-
     }
 }

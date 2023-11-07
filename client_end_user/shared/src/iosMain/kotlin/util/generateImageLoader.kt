@@ -6,11 +6,11 @@ import androidx.compose.ui.interop.LocalUIViewController
 import com.seiko.imageloader.ImageLoader
 import com.seiko.imageloader.component.setupDefaultComponents
 import okio.Path.Companion.toPath
+import org.koin.dsl.module
 import platform.Foundation.NSCachesDirectory
 import platform.Foundation.NSSearchPathForDirectoriesInDomains
 import platform.Foundation.NSUserDomainMask
 import platform.UIKit.UIViewController
-
 
 actual class PlatformContext(val iosController: ProvidableCompositionLocal<UIViewController>)
 

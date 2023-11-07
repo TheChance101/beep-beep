@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import com.beepbeep.designSystem.ui.theme.BpTheme
 import com.seiko.imageloader.LocalImageLoader
+import util.SetInsetsController
 import util.generateImageLoader
 import util.getPlatformContext
 import util.statusbar.rememberWindowInsetsController
@@ -39,6 +40,7 @@ fun BpRestaurantTheme(
         LocalImageLoader provides remember { generateImageLoader(context) }
     ) {
         BpTheme {
+            SetInsetsController(useDarkTheme)
             content()
         }
     }

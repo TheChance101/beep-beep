@@ -43,6 +43,7 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
     private fun onLoginSuccess() {
         updateState { it.copy(isLoading = false, error = null) }
         sendNewEffect(LoginUIEffect.LoginSuccess)
+        clearLoginState()
     }
 
     private fun onError(error: ErrorState) {
@@ -68,6 +69,10 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
 
             }
         }
+    }
+
+    private fun clearLoginState() {
+        updateState { it.copy(username = "", password = "") }
     }
 
 }

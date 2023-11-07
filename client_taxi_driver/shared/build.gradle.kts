@@ -51,6 +51,7 @@ kotlin {
                 implementation(libs.realm.library.base)
                 // koin
                 api(libs.koin.core)
+                api(libs.calf)
                 implementation(libs.koin.annotations)
                 implementation(libs.koin.compose)
                 // navigation voyager

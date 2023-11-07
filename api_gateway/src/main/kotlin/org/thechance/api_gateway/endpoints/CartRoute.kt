@@ -8,6 +8,7 @@ import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.model.MealRequestDto
+import org.thechance.api_gateway.data.model.restaurant.CartDto
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
@@ -28,7 +29,6 @@ fun Route.cartRoutes() {
                 val userId = tokenClaim?.get(Claim.USER_ID).toString()
                 val result = restaurantService.getUserCart(userId, language)
                 respondWithResult(HttpStatusCode.OK, result)
-
             }
 
             put {
@@ -40,14 +40,22 @@ fun Route.cartRoutes() {
                 respondWithResult(HttpStatusCode.OK, result)
             }
 
-            delete("/orderNow") {
+            put("/replace"){
                 val language = extractLocalizationHeader()
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val userId = tokenClaim?.get(Claim.USER_ID).toString()
-                val result = restaurantService.orderCart(userId,language)
+                val cart = call.receive<CartDto>()
+                val result = restaurantService.updateCart(userId, cart, language)
                 respondWithResult(HttpStatusCode.OK, result)
             }
 
+            post("/orderNow") {
+                val language = extractLocalizationHeader()
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val userId = tokenClaim?.get(Claim.USER_ID).toString()
+                val result = restaurantService.orderCart(userId, language)
+                respondWithResult(HttpStatusCode.OK, result)
+            }
         }
     }
 }

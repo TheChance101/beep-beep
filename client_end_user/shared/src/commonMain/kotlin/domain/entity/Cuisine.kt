@@ -1,7 +1,8 @@
 package domain.entity
 
 data class Cuisine(
-    val cuisineId: String,
-    val cuisineName: String,
-    val cuisineImageUrl: String,
+    val id: String,
+    val name: String,
+    val imageUrl: String,
+    val meals: List<Meal>? = null,
 )

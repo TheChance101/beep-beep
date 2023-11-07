@@ -1,9 +1,9 @@
 package presentation.auth.signup.registrationSubmit
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.entity.UserCreation
+import domain.entity.Account
 import domain.usecase.IManageAuthenticationUseCase
-import domain.usecase.IManageUserUseCase
+import domain.usecase.IManageSettingUseCase
 import domain.usecase.validation.IValidationUseCase
 import domain.utils.AuthorizationException
 import kotlinx.coroutines.CoroutineScope
@@ -30,7 +30,7 @@ class RegistrationSubmitScreenModel(
     private val password: String,
     private val validation: IValidationUseCase,
     private val manageAuthentication: IManageAuthenticationUseCase,
-    private val manageUser: IManageUserUseCase,
+    private val manageUser: IManageSettingUseCase,
 ) : BaseScreenModel<RegistrationSubmitUIState, RegistrationSubmitScreenEffect>(
     RegistrationSubmitUIState()
 ), RegistrationSubmitInteractionListener {
@@ -74,7 +74,7 @@ class RegistrationSubmitScreenModel(
             tryToExecute(
                 function = {
                     manageAuthentication.createUser(
-                        UserCreation(
+                        Account(
                             fullName,
                             username,
                             password,

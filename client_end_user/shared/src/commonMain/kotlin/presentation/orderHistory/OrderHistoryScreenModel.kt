@@ -1,26 +1,30 @@
 package presentation.orderHistory
 
+import androidx.paging.PagingData
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.usecase.GetOrderHistoryUseCase
+import domain.entity.FoodOrder
+import domain.entity.Meal
+import domain.entity.Trip
+import domain.usecase.GetTransactionHistoryUseCase
 import domain.usecase.IManageAuthenticationUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
+import presentation.resturantDetails.toUIState
 
 class OrderHistoryScreenModel(
-    private val orderHistoryUseCase: GetOrderHistoryUseCase,
-    private val manageAuthentication: IManageAuthenticationUseCase
+    private val orderHistoryUseCase: GetTransactionHistoryUseCase,
+    private val manageAuthentication: IManageAuthenticationUseCase,
 ) : BaseScreenModel<OrderScreenUiState, OrderHistoryScreenUiEffect>(OrderScreenUiState()),
     OrderHistoryScreenInteractionListener {
 
     override val viewModelScope: CoroutineScope = coroutineScope
 
     init {
+        updateState { it.copy(isLoading = true) }
         checkIfLoggedIn()
-        getOrdersHistory()
-        getTripsHistory()
     }
 
     private fun checkIfLoggedIn() {
@@ -36,6 +40,8 @@ class OrderHistoryScreenModel(
             accessToken.collect { token ->
                 if (token.isNotEmpty()) {
                     updateState { it.copy(isLoggedIn = true) }
+                    getOrdersHistory()
+                    getTripsHistory()
                 } else {
                     updateState { it.copy(isLoggedIn = false) }
                 }
@@ -44,12 +50,12 @@ class OrderHistoryScreenModel(
     }
 
     private fun onCheckIfLoggedInError(errorState: ErrorState) {
-        updateState { it.copy(isLoggedIn = false) }
+        updateState { it.copy(isLoggedIn = false, isLoading = false) }
     }
 
     private fun getOrdersHistory() {
         tryToExecute(
-            { orderHistoryUseCase.getOrdersHistory().map { it.toOrderHistoryUiState() } },
+            { orderHistoryUseCase.getOrdersHistory() },
             ::onGetOrdersHistorySuccess,
             ::onError
         )
@@ -57,22 +63,26 @@ class OrderHistoryScreenModel(
 
     private fun getTripsHistory() {
         tryToExecute(
-            { orderHistoryUseCase.getTripsHistory().map { it.toTripHistoryUiState() } },
+            { orderHistoryUseCase.getTripsHistory() },
             ::onGetTripsHistorySuccess,
             ::onError
         )
     }
 
-    private fun onGetTripsHistorySuccess(tripsHistory: List<TripHistoryUiState>) {
-        updateState { it.copy(tripsHistory = tripsHistory) }
+    private fun onGetTripsHistorySuccess(tripsHistory: Flow<PagingData<Trip>>) {
+        updateState {
+            it.copy(tripsHistory = tripsHistory.toTripHistoryUiState(), isLoading = false)
+        }
     }
 
-    private fun onGetOrdersHistorySuccess(ordersHistory: List<OrderHistoryUiState>) {
-        updateState { it.copy(ordersHistory = ordersHistory) }
+    private fun onGetOrdersHistorySuccess(ordersHistory: Flow<PagingData<FoodOrder>>) {
+        updateState {
+            it.copy(ordersHistory = ordersHistory.toOrderHistoryUiState(), isLoading = false)
+        }
     }
 
     private fun onError(errorState: ErrorState) {
-        // catch errors here
+        updateState { it.copy(isLoading = false, error = errorState) }
     }
 
     override fun onClickTab(type: OrderScreenUiState.OrderSelectType) {

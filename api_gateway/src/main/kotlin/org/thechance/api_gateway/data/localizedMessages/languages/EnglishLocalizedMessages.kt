@@ -3,7 +3,7 @@ package org.thechance.api_gateway.data.localizedMessages.languages
 import org.koin.core.annotation.Single
 
 @Single
-class EnglishLocalizedMessages() : LocalizedMessages {
+class EnglishLocalizedMessages : LocalizedMessages {
 
     // region identity
     override val invalidRequestParameter: String = "Invalid request parameter"
@@ -16,6 +16,7 @@ class EnglishLocalizedMessages() : LocalizedMessages {
     override val usernameCannotBeBlank: String = "Username cannot be blank"
     override val passwordCannotBeBlank: String = "Password cannot be blank"
     override val invalidEmail: String = "Invalid email"
+    override val invalidPhone: String = "Invalid phone"
     override val notFound: String = "Not found"
     override val invalidCredentials: String = "Invalid credentials"
     override val userCreatedSuccessfully: String = "User created successfully 🎉"
@@ -28,9 +29,13 @@ class EnglishLocalizedMessages() : LocalizedMessages {
     // region taxi
     override val taxiCreatedSuccessfully: String = "Taxi created successfully 🎉"
     override val tripCreatedSuccessfully: String = "Trip Created Successfully"
-    override val tripApproved: String = "Trip Approved"
+    override val tripUpdated: String = "Trip updated Successfully"
     override val tripCanceled: String = "Trip Canceled"
     override val tripFinished: String = "Trip Finished Successfully"
+    override val tripArrived: String = "Trip Arrived Successfully"
+    override val receivedNewTrip: String = "New trip recieved"
+    override val newOrderComing: String = "New Order Coming"
+    override val receivedNewDeliveryOrder: String = "New Order is coming"
     override val taxiUpdateSuccessfully: String = "Taxi updated successfully 🎉"
     override val taxiDeleteSuccessfully: String = "Taxi deleted successfully 🎉"
     override val invalidId: String = "Invalid id"
@@ -80,11 +85,17 @@ class EnglishLocalizedMessages() : LocalizedMessages {
     override val missingParameter: String = "Missing parameter"
     override val tokensNotFound: String = "Tokens not found"
     override val tokenNotRegister: String = "Token not register"
+    override val alreadyUpdated: String = "This order already finished before"
+    override val cancelOrderError: String = "may be canceled before or it's not on pending status"
     override val cartIsAlreadyEmpty: String = "cart is already empty"
     override val invalidQuantity: String = "Invalid Quantity"
     //endregion
 
     // region notification
     override val notificationNotSent: String = "Notification not sent"
+    //endregion
+
+    // region chat
+    override val supportAgentNotFound: String = "There is no one to help you"
     //endregion
 }

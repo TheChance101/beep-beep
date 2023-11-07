@@ -34,12 +34,8 @@ import resources.Resources
 import util.getStatusBarPadding
 import util.root
 
-class ProfileScreen : BaseScreen<
-        ProfileScreenModel,
-        ProfileUIState,
-        ProfileUIEffect,
-        ProfileInteractionListener
-        >() {
+class ProfileScreen :
+    BaseScreen<ProfileScreenModel, ProfileUIState, ProfileUIEffect, ProfileInteractionListener>() {
 
     @Composable
     override fun Content() {
@@ -55,13 +51,11 @@ class ProfileScreen : BaseScreen<
     @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
     @Composable
     override fun onRender(state: ProfileUIState, listener: ProfileInteractionListener) {
-
         LoginRequiredPlaceholder(
             placeHolder = painterResource(Resources.images.requireLoginToShowProfilePlaceholder),
             message = Resources.strings.profileLoginMessage,
             onClickLogin = listener::onClickLogin
         )
-
         ContentVisibility(state.isLoggedIn) {
             Column(
                 modifier = Modifier
@@ -73,15 +67,15 @@ class ProfileScreen : BaseScreen<
                 WhiteCard {
                     Title(Resources.strings.wallet)
                     SubTitle(
-                        "${state.user?.currency} ${state.user?.walletBalance}",
+                        "${state.user.currency} ${state.user.walletBalance}",
                         Theme.colors.primary
                     )
                     Title(Resources.strings.username)
-                    SubTitle("@${state.user?.username}")
+                    SubTitle("@${state.user.username}")
                     Title(Resources.strings.address)
-                    SubTitle(state.user?.addresses?.firstOrNull()?.address ?: "")
+                    SubTitle(state.user.address)
                     Title(Resources.strings.email)
-                    SubTitle(state.user?.email ?: "")
+                    SubTitle(state.user.email)
                 }
                 WhiteCard {
                     BpTextField(
@@ -106,9 +100,8 @@ class ProfileScreen : BaseScreen<
                         modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
                         title = Resources.strings.save,
                         enabled = state.isButtonEnabled,
-                        onClick = {
-                            listener.onSaveProfileInfo()
-                        },
+                        isLoading = state.isLoading,
+                        onClick = listener::onSaveProfileInfo,
                     )
                 }
                 WhiteCard {

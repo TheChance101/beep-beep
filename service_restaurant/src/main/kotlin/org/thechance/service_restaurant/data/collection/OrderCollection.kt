@@ -24,4 +24,3 @@ data class OrderCollection(
     val createdAt: LocalDateTime,
     val orderStatus: Int
 )
-
