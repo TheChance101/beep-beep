@@ -7,11 +7,13 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import org.koin.ktor.ext.inject
+import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
+import org.thechance.api_gateway.data.model.notification.NotificationDto
+import org.thechance.api_gateway.data.model.notification.NotificationSender
+import org.thechance.api_gateway.data.model.restaurant.OrderStatus
+import org.thechance.api_gateway.data.service.NotificationService
 import org.thechance.api_gateway.data.service.RestaurantService
-import org.thechance.api_gateway.endpoints.utils.WebSocketServerHandler
-import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
-import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
-import org.thechance.api_gateway.endpoints.utils.respondWithResult
+import org.thechance.api_gateway.endpoints.utils.*
 import org.thechance.api_gateway.util.Claim
 import org.thechance.api_gateway.util.Role
 
@@ -19,15 +21,33 @@ fun Route.orderRoutes() {
 
     val webSocketServerHandler: WebSocketServerHandler by inject()
     val restaurantService: RestaurantService by inject()
+    val notificationService: NotificationService by inject()
+    val localizedMessagesFactory by inject<LocalizedMessagesFactory>()
 
     authenticateWithRole(Role.RESTAURANT_OWNER) {
 
         webSocket("orders/{restaurantId}") {
             val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
+            val tokenClaim = call.principal<JWTPrincipal>()
+            val ownerId = tokenClaim?.get(Claim.USER_ID).toString()
+            val language = extractLocalizationHeaderFromWebSocket()
+            val notificationTitle = localizedMessagesFactory.createLocalizedMessages(language).newOrderTitle
+            val notificationBody = localizedMessagesFactory.createLocalizedMessages(language).newOrderBody
+            val orderNotification = NotificationDto(
+                userId = ownerId,
+                title = notificationTitle,
+                body = notificationBody,
+                sender = NotificationSender.UNDEFINED.code
+            )
             val orders = restaurantService.getIncomingOrders(restaurantId)
             webSocketServerHandler.sessions[restaurantId] = this
-            webSocketServerHandler.sessions[restaurantId]?.let {
-                webSocketServerHandler.tryToCollect(orders, it)
+            webSocketServerHandler.sessions[restaurantId]?.let { session ->
+                webSocketServerHandler.tryToCollectOrders(
+                    values = orders,
+                    session = session,
+                    language = language,
+                    orderNotification = orderNotification,
+                )
             }
         }
 
@@ -81,6 +101,26 @@ fun Route.orderRoutes() {
             val language = extractLocalizationHeader()
             val result = restaurantService.updateOrderStatus(orderId, language)
             respondWithResult(HttpStatusCode.OK, result)
+
+            if (result.orderStatus != OrderStatus.PENDING.statusCode ||
+                result.orderStatus != OrderStatus.CANCELED.statusCode
+            ) {
+                val orderStatus = OrderStatus.getOrderStatus(result.orderStatus)
+                val notificationMessage = when (orderStatus) {
+                    OrderStatus.APPROVED -> localizedMessagesFactory.createLocalizedMessages(language).orderApproved
+                    OrderStatus.IN_COOKING -> localizedMessagesFactory.createLocalizedMessages(language).orderInCooking
+                    OrderStatus.DONE -> localizedMessagesFactory.createLocalizedMessages(language).orderFinished
+                    else -> ""
+                }
+                val orderNotification = NotificationDto(
+                    title = result.restaurantName!!,
+                    body = notificationMessage,
+                    userId = result.userId,
+                    topicId = result.id,
+                    sender = NotificationSender.RESTAURANT.code
+                )
+                notificationService.sendNotificationToUser(orderNotification, language)
+            }
         }
 
         put("order/cancel/{orderId}") {
@@ -88,8 +128,16 @@ fun Route.orderRoutes() {
             val language = extractLocalizationHeader()
             val result = restaurantService.cancelOrder(orderId, language)
             respondWithResult(HttpStatusCode.OK, result)
+            val notificationMessage = localizedMessagesFactory.createLocalizedMessages(language).orderCanceled
+            val orderNotification = NotificationDto(
+                title = result.restaurantName!!,
+                body = notificationMessage,
+                userId = result.userId,
+                topicId = result.id,
+                sender = NotificationSender.RESTAURANT.code
+            )
+            notificationService.sendNotificationToUser(orderNotification, language)
         }
-
     }
 
     authenticateWithRole(Role.END_USER) {

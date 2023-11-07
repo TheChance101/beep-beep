@@ -72,5 +72,8 @@ dependencies {
     implementation("io.ktor:ktor-server-status-pages-jvm:$status_pages")
     implementation("io.ktor:ktor-server-request-validation:$ktor_version")
 
+    // localDateTime
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
+
 }
 

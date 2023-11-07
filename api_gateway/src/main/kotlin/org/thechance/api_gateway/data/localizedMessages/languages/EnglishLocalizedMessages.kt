@@ -49,6 +49,9 @@ class EnglishLocalizedMessages : LocalizedMessages {
     override val invalidPrice: String = "Invalid price"
     override val alreadyExist: String = "Already exist"
     override val requiredQuery: String = "Required query"
+    override val rideApproved: String = "Your ride has been approved and taxi on the way to you 🚕"
+    override val taxiArrivedToUserLocation: String = "Taxi arrived , enjoy your ride 😊"
+    override val taxiArrivedToDestination: String = "Your ride has been arrived 🎉"
     // endregion
 
     //region restaurant
@@ -87,6 +90,15 @@ class EnglishLocalizedMessages : LocalizedMessages {
     override val tokenNotRegister: String = "Token not register"
     override val alreadyUpdated: String = "This order already finished before"
     override val cancelOrderError: String = "may be canceled before or it's not on pending status"
+    override val orderApproved: String = "Your order has been approved"
+    override val orderCanceled: String = "unfortunately your order is canceled"
+    override val orderInCooking: String = "Your order is being cooking now"
+    override val orderFinished: String = "Your order has been finished and awaits delivery"
+    override val newOrderTitle: String = "New Order"
+    override val newOrderBody: String = "You have a new order 🚨"
+    override val orderApprovedFromDelivery: String = "Delivery is on the way 🛵"
+    override val orderArrivedToRestaurant: String = "Your order is on the way be ready 🛵"
+    override val orderArrivedToClient: String = "Your order is arrived Yam-mi 🍕"
     override val cartIsAlreadyEmpty: String = "cart is already empty"
     override val invalidQuantity: String = "Invalid Quantity"
     //endregion

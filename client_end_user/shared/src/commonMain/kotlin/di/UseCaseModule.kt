@@ -2,13 +2,11 @@ package di
 
 import domain.usecase.ChatUseCase
 import domain.usecase.ExploreRestaurantUseCase
-import domain.usecase.GetNotificationsUseCase
 import domain.usecase.GetOffersUseCase
 import domain.usecase.GetTransactionHistoryUseCase
 import domain.usecase.GetUserLocationUseCase
 import domain.usecase.IChatUseCase
 import domain.usecase.IExploreRestaurantUseCase
-import domain.usecase.IGetNotificationsUseCase
 import domain.usecase.IGetOffersUseCase
 import domain.usecase.IGetTransactionHistoryUseCase
 import domain.usecase.IGetUserLocationUseCase
@@ -38,7 +36,6 @@ val useCaseModule = module {
     singleOf(::ManageSettingUseCase) { bind<IManageSettingUseCase>() }
     singleOf(::TrackOrdersUseCase) { bind<ITrackOrdersUseCase>() }
     singleOf(::ValidationUseCaseUseCase) { bind<IValidationUseCase>() }
-    singleOf(::GetNotificationsUseCase) { bind<IGetNotificationsUseCase>() }
     singleOf(::GetTransactionHistoryUseCase) { bind<IGetTransactionHistoryUseCase>() }
     singleOf(::ExploreRestaurantUseCase) { bind<IExploreRestaurantUseCase>() }
     singleOf(::ManageCartUseCase) { bind<IManageCartUseCase>() }
