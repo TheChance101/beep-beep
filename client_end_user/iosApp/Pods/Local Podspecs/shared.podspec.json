@@ -13,6 +13,14 @@
   "platforms": {
     "ios": "14.1"
   },
+  "dependencies": {
+    "FirebaseFirestore": [
+
+    ],
+    "FirebaseMessaging": [
+
+    ]
+  },
   "pod_target_xcconfig": {
     "KOTLIN_PROJECT_PATH": ":client_end_user:shared",
     "PRODUCT_MODULE_NAME": "shared"

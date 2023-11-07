@@ -29,8 +29,7 @@ import io.ktor.util.InternalAPI
 import kotlinx.serialization.json.Json
 
 class UserGateway(
-    client: HttpClient,
-    private val firebaseService: IFireBaseMessageService
+    client: HttpClient, private val firebaseService: IFireBaseMessageService
 ) : BaseGateway(client), IUserGateway {
 
     @OptIn(InternalAPI::class)
