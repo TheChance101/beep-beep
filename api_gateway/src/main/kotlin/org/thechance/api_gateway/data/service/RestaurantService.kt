@@ -148,7 +148,7 @@ class RestaurantService(
 
     suspend fun getMealsByRestaurantId(
         restaurantId: String, page: Int, limit: Int, languageCode: String
-    ): List<MealDto> {
+    ): PaginationResponse<MealDto> {
         return client.tryToExecute(
             api = APIs.RESTAURANT_API,
             attributes = attributes,

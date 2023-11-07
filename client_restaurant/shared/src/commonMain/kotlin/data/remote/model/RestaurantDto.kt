@@ -9,7 +9,7 @@ data class RestaurantDto(
     val id: String,
     @SerialName("ownerId")
     val ownerId: String? = null ,
-    @SerialName("ownerUsername")
+    @SerialName("ownerUserName")
     val ownerUsername: String? = null,
     @SerialName("name")
     val name: String? = null,

@@ -9,6 +9,7 @@ fun getCurrencyForLocation(location: Location): String {
         Country.SYRIA to Pair(32.0..37.5, 35.5..42.0),
         Country.PALESTINE to Pair(31.0..33.5, 34.0..36.5)
     )
+    println("location: $location")
     countryMappings.forEach { item ->
         val latRange = item.value.first
         val lonRange = item.value.second
