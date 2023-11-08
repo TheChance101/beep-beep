@@ -28,13 +28,11 @@ data class OrderUiState(
 data class LocationUiState(
     val lat: Double = 0.0,
     val lng: Double = 0.0,
-    val addressName: String = "",
 )
 
 fun Location.toUiState() = LocationUiState(
     lat = latitude,
     lng = longitude,
-    addressName = "",
 )
 
 fun Order.toUiState() = OrderUiState(

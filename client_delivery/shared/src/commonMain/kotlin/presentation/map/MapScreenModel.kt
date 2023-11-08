@@ -16,7 +16,8 @@ class MapScreenModel(
     private val currentLocation: IManageUserLocationUseCase,
     private val manageLoginUser: IManageLoginUserUseCase,
     private val manageOrderUseCase: IManageOrderUseCase,
-):BaseScreenModel<MapScreenUiState,MapScreenUiEffect>(MapScreenUiState()),MapScreenInteractionsListener {
+) : BaseScreenModel<MapScreenUiState, MapScreenUiEffect>(MapScreenUiState()),
+    MapScreenInteractionsListener {
 
     override val viewModelScope: CoroutineScope = coroutineScope
 
@@ -25,7 +26,8 @@ class MapScreenModel(
         getCurrentLocation()
         getOrder()
     }
-     private fun getUserName() {
+
+    private fun getUserName() {
         viewModelScope.launch {
             val username = manageLoginUser.getUsername()
             updateState {
@@ -34,7 +36,7 @@ class MapScreenModel(
                 )
             }
         }
-     }
+    }
 
     private fun getOrder() {
         updateState { it.copy(orderState = OrderState.LOADING) }
@@ -46,7 +48,7 @@ class MapScreenModel(
     }
 
     private fun onGetOrderSuccess(order: Order) {
-        val newOrder=order.toUiState()
+        val newOrder = order.toUiState()
         updateState { mapScreenUiState ->
             mapScreenUiState.copy(
                 orderUiState = newOrder,
@@ -74,7 +76,6 @@ class MapScreenModel(
                         destinationLocation = LocationUiState(
                             31.2001,
                             29.9187,
-                            ""
                         )
                     )//fake
                 )
@@ -88,7 +89,7 @@ class MapScreenModel(
             updateState {
                 it.copy(
                     errorState = null,
-                    orderUiState = OrderUiState(restaurantLocation = location.toUiState())
+                    orderUiState = it.orderUiState.copy(restaurantLocation = location.toUiState())
                 )
             }
         }
@@ -105,7 +106,12 @@ class MapScreenModel(
 
     override fun onAcceptClicked() {
         tryToExecute(
-            function = { manageOrderUseCase.updateTrip("653cf6ef5a253b12181fa2d0",state.value.tripId) },
+            function = {
+                manageOrderUseCase.updateTrip(
+                    "653cf6ef5a253b12181fa2d0",
+                    state.value.tripId
+                )
+            },
             onSuccess = ::onAcceptOrderSuccess,
             onError = ::onError
         )
@@ -118,12 +124,11 @@ class MapScreenModel(
                 orderState = OrderState.ACCEPTED,
                 //todo replace this with the restaurant actual location
                 orderUiState = OrderUiState(
-                        destinationLocation = LocationUiState(
-                            31.2001,
-                            29.9187,
-                            ""
-                        )
-                    )//fake
+                    destinationLocation = LocationUiState(
+                        31.2001,
+                        29.9187,
+                    )
+                )//fake
             )
         }
     }
@@ -136,7 +141,12 @@ class MapScreenModel(
 
     override fun onReceivedClicked() {
         tryToExecute(
-            function = { manageOrderUseCase.updateTrip("653cf6ef5a253b12181fa2d0", state.value.tripId) },
+            function = {
+                manageOrderUseCase.updateTrip(
+                    "653cf6ef5a253b12181fa2d0",
+                    state.value.tripId
+                )
+            },
             onSuccess = ::onUpdateOrderAsReceivedSuccess,
             onError = ::onError
         )
@@ -153,7 +163,12 @@ class MapScreenModel(
 
     override fun onDeliveredClicked() {
         tryToExecute(
-            function = { manageOrderUseCase.updateTrip("653cf6ef5a253b12181fa2d0", state.value.tripId) },
+            function = {
+                manageOrderUseCase.updateTrip(
+                    "653cf6ef5a253b12181fa2d0",
+                    state.value.tripId
+                )
+            },
             onSuccess = ::onUpdateOrderAsDeliveredSuccess,
             onError = ::onError
         )

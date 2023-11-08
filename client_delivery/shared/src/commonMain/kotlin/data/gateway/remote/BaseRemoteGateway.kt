@@ -3,7 +3,6 @@ package data.gateway.remote
 import data.remote.model.BaseResponse
 import domain.utils.InvalidPasswordException
 import domain.utils.NoInternetException
-import domain.utils.ServerSideException
 import domain.utils.SocketException
 import domain.utils.UnAuthorizedException
 import domain.utils.UnknownErrorException
@@ -45,16 +44,7 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
                 while (true) {
                     try {
                         emit(receiveDeserialized<T>())
-                    } catch (e: ClientRequestException) {
-                        val errorMessages =
-                            e.response.body<BaseResponse<String>>().status.errorMessages
-                        errorMessages?.let(::throwMatchingException)
-                        throw UnknownErrorException()
-                    } catch (e: ServerSideException) {
-                        println("${e.message}")
-                        throw NoInternetException()
                     } catch (e: Exception) {
-                        println("Socket${e.message}")
                         throw SocketException()
                     }
                 }
@@ -72,15 +62,6 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
 
             errorMessages.containsErrors(INVALID_PERMISSION) ->
                 throw UnAuthorizedException(errorMessages.getOrEmpty(INVALID_PERMISSION))
-        }
-    }
-
-    fun checkErrorCode(errorCode: Int): Throwable {
-        return when (errorCode) {
-            1013 -> InvalidPasswordException("")
-            1043 -> UserNotFoundException("")
-            1014 -> UnAuthorizedException("")
-            else -> UnknownErrorException()
         }
     }
 

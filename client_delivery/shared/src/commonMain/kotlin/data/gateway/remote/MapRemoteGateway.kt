@@ -17,9 +17,8 @@ import kotlinx.coroutines.flow.map
 class MapRemoteGateway(client: HttpClient) : IMapRemoteGateway,
     BaseRemoteGateway(client = client) {
     override suspend fun getOrders(): Flow<Order> {
-        val result=client.tryToExecuteWebSocket<OrderDto>("trip/incoming-delivery-orders")
+        val result = client.tryToExecuteWebSocket<OrderDto>("trip/incoming-delivery-orders")
         return result.map { it.toTripEntity() }
-
     }
 
     override suspend fun sendLocation(location: LocationDto, tripId: String) {
@@ -29,7 +28,7 @@ class MapRemoteGateway(client: HttpClient) : IMapRemoteGateway,
     @OptIn(InternalAPI::class)
     override suspend fun updateTrip(
         taxiId: String,
-        tripId: String
+        tripId: String,
     ): Order {
         val result = tryToExecute<BaseResponse<OrderDto>> {
             val formData = FormDataContent(Parameters.build {
@@ -43,5 +42,4 @@ class MapRemoteGateway(client: HttpClient) : IMapRemoteGateway,
 
         return result.toTripEntity()
     }
-
 }

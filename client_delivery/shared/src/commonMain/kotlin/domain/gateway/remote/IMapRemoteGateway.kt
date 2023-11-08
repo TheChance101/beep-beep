@@ -9,5 +9,4 @@ interface IMapRemoteGateway {
     suspend fun getOrders(): Flow<Order>
     suspend fun sendLocation(location: LocationDto, tripId: String)
     suspend fun updateTrip(taxiId: String, tripId: String): Order
-
 }
