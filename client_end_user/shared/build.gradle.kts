@@ -32,7 +32,7 @@ kotlin {
             isStatic = true
         }
         pod("FirebaseFirestore", linkOnly = true)
-        pod("FirebaseMessaging")
+        pod("FirebaseMessaging", linkOnly = true)
     }
 
     sourceSets {
