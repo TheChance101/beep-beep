@@ -17,11 +17,7 @@ class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway,
     BaseRemoteGateway(client = client) {
 
     override suspend fun getCurrentOrders(restaurantId: String): Flow<Order> {
-        val result = client.tryToExecuteWebSocket<OrderDto>("/orders/$restaurantId")
-        result.collect { order ->
-            println("result: $order")
-        }
-        return result.map { it.toEntity() }
+        return  client.tryToExecuteWebSocket<OrderDto>("/orders/$restaurantId").map { it.toEntity() }
     }
 
     override suspend fun getActiveOrders(restaurantId: String): List<Order> {

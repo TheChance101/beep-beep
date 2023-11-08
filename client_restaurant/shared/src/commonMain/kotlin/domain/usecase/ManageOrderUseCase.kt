@@ -1,14 +1,11 @@
 package domain.usecase
 
+import data.remote.mapper.Constant
 import domain.entity.Order
 import domain.entity.OrderState
 import domain.gateway.remote.IOrderRemoteGateway
-import domain.utils.Constant
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
 import presentation.base.RequestException
-import presentation.order.toOrderUiState
 
 interface IManageOrderUseCase {
     suspend fun getCurrentOrders(restaurantId: String): Flow<Order>
