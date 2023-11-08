@@ -12,13 +12,11 @@ import presentation.base.ErrorState
 
 class MealsScreenModel(
     private val restaurantId: String,
-    private val mangeCousin: IManageCuisineUseCase,
-    private val mangeMeal: IManageMealUseCase
-) :
-    BaseScreenModel<MealsScreenUIState, MealsScreenUIEffect>(MealsScreenUIState()),
+    private val manageCousin: IManageCuisineUseCase,
+    private val manageMeal: IManageMealUseCase
+) : BaseScreenModel<MealsScreenUIState, MealsScreenUIEffect>(MealsScreenUIState()),
     MealScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
-
 
     init {
         getCuisine()
@@ -28,7 +26,7 @@ class MealsScreenModel(
     private fun getCuisine() {
         tryToExecute(
             function = {
-                mangeCousin.getCuisines()
+                manageCousin.getCuisines()
             },
             ::onGetCuisineSuccessfully,
             ::onError
@@ -39,7 +37,7 @@ class MealsScreenModel(
         updateState { it.copy(isLoading = true) }
         tryToExecute(
             function = {
-                  mangeMeal.getAllMeals(restaurantId,1,10)
+                  manageMeal.getAllMeals(restaurantId,1,10)
             },
             ::onGetMealSuccessfully,
             ::onError
@@ -48,14 +46,13 @@ class MealsScreenModel(
 
     private fun onGetCuisineSuccessfully(cuisines: List<Cuisine>) {
         updateState {
-            it.copy(cuisines = cuisines.toCuisineUIState(), selectedCuisine = cuisines.toCuisineUIState()
-                .first())
+            it.copy(cuisines = cuisines.toCuisineUIState(),
+                selectedCuisine = cuisines.toCuisineUIState().first())
         }
         getMeals(state.value.selectedCuisine.id)
     }
 
     private fun onGetMealSuccessfully(meals: List<Meal>) {
-        println("meals : $meals")
         updateState { it.copy(meals = meals.toMealUIState(), isLoading = false) }
     }
 

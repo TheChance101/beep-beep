@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -45,9 +46,10 @@ class MealsScreen(private val restaurantId: String) :
         when (effect) {
             is MealsScreenUIEffect.Back -> navigator.pop()
             is MealsScreenUIEffect.NavigateToMealDetails ->
-                navigator.push(MealScreen(ScreenMode.EDIT, effect.mealId,restaurantId = restaurantId))
-
-            is MealsScreenUIEffect.NavigateToAddMeal -> navigator.push(MealScreen(ScreenMode.CREATION,restaurantId =effect.restaurantId))
+                navigator.push(MealScreen(ScreenMode.EDIT, effect.mealId, restaurantId = restaurantId))
+            is MealsScreenUIEffect.NavigateToAddMeal -> navigator.push(
+                MealScreen(ScreenMode.CREATION, restaurantId = effect.restaurantId)
+            )
         }
     }
 
@@ -82,7 +84,6 @@ class MealsScreen(private val restaurantId: String) :
                 modifier = Modifier.padding(it).fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-
                 LazyRow(
                     contentPadding = PaddingValues(
                         start = 16.dp,
@@ -104,19 +105,16 @@ class MealsScreen(private val restaurantId: String) :
                     columns = GridCells.Adaptive(150.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
-
-                    ) {
-                    items(state.meals.size) { index ->
-                       ShimmerItemList(
-                           isLoading = state.isLoading,
-                           cardHeight = 100.dp,
-                           cardWidth = 150.dp,
-                           contentAfterLoading = {
-                               MealCard(onClick = {
-                                   listener.onClickMeal(state.meals[index].id)
-                               }, meal = state.meals[index])
-                           }
-                       )
+                ) {
+                    items(state.meals) { meal ->
+                        ShimmerItemList(
+                            isLoading = state.isLoading,
+                            cardHeight = 100.dp,
+                            cardWidth = 150.dp,
+                            contentAfterLoading = {
+                                MealCard(onClick = { listener.onClickMeal(meal.id) }, meal = meal)
+                            }
+                        )
                     }
                 }
             }

@@ -40,7 +40,6 @@ class ManageMealUseCase(
         page: Int,
         limit: Int
     ): List<Meal> {
-        //TODO fetch restaurant id from local.
         return mealRemoteGateway.getAllMealsByRestaurantId(restaurantId, page, limit)
     }
 

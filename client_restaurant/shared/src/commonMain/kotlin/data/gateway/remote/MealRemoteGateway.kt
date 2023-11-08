@@ -3,9 +3,10 @@ package data.gateway.remote
 import data.remote.mapper.toDto
 import data.remote.mapper.toDtoUpdate
 import data.remote.mapper.toEntity
-import data.remote.model.MealModificationDto
 import data.remote.model.BaseResponse
 import data.remote.model.MealDto
+import data.remote.model.MealModificationDto
+import data.remote.model.PaginationResponse
 import domain.entity.Meal
 import domain.entity.MealModification
 import domain.gateway.remote.IMealRemoteGateway
@@ -30,17 +31,18 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
         page: Int,
         limit: Int,
     ): List<Meal>{
-        return tryToExecute<BaseResponse<List<MealDto>>> {
+        val meals = tryToExecute<BaseResponse<PaginationResponse<MealDto>>> {
             get("restaurant/$restaurantId/meals") {
                 parameter("page", page)
                 parameter("limit", limit)
             }
-        }.value?.toEntity() ?: emptyList()
+        }.value?.items?.map { it.toEntity() } ?: emptyList()
+        return meals
     }
 
-    override suspend fun getMealsByCuisineId(cuisineId: String): List<Meal> {
+    override suspend fun getMealsByCuisineId(mealId: String): List<Meal> {
         return tryToExecute<BaseResponse<List<MealDto>>> {
-            get("/cuisine/$cuisineId/meals")
+            get("/cuisine/$mealId/meals")
         }.value?.toEntity() ?: emptyList()
     }
 
