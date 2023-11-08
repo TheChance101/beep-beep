@@ -30,7 +30,7 @@ val networkModule = module {
                 header("Content-Type", "application/json")
                 header("Accept-Language", "en")
                 url("https://beep-beep-api-gateway-nap2u.ondigitalocean.app/")
-
+//                url("http://10.0.0.47:8095/")
             }
 
             install(ContentNegotiation) {

@@ -18,3 +18,6 @@ expect fun getNavigationBarPadding(): PaddingValues
 
 
 expect fun getEngine(): HttpClientEngine
+
+
+expect fun getMapUrl(): String

@@ -7,6 +7,7 @@ import androidx.compose.ui.interop.LocalUIViewController
 import androidx.compose.ui.unit.dp
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.darwin.Darwin
+import platform.Foundation.NSBundle
 import platform.UIKit.UIViewController
 
 actual class PlatformContext(val iosController: ProvidableCompositionLocal<UIViewController>)
@@ -24,3 +25,11 @@ actual fun getNavigationBarPadding(): PaddingValues {
 }
 
 actual fun getEngine(): HttpClientEngine = Darwin.create()
+
+actual fun getMapUrl(): String {
+    val mainBundle = NSBundle.mainBundle
+    val x =mainBundle.bundleURL
+    println(x)
+    val filePath = mainBundle.pathForResource("index", "html", "bing_map")
+    return filePath?.let { "file://$it" } ?: ""
+}

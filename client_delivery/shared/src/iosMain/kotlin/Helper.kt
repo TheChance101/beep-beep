@@ -30,3 +30,7 @@ fun initKoin() {
         )
     }
 }
+
+
+private const val MAP_URL = "bing_map/map/index.html"
+

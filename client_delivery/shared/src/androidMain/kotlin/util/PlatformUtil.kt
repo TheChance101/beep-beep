@@ -22,9 +22,15 @@ actual fun SetInsetsController(isDark: Boolean) {
     WindowCompat.getInsetsController(window, window.decorView)
         .isAppearanceLightStatusBars = !isDark
 }
+
 @Composable
 actual fun getNavigationBarPadding(): PaddingValues {
     return WindowInsets.navigationBars.asPaddingValues()
 }
 
 actual fun getEngine() = CIO.create()
+
+
+actual fun getMapUrl(): String {
+    return "File:///android_asset/bing_map/map/index.html"
+}
