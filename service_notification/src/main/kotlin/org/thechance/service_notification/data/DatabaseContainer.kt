@@ -8,7 +8,7 @@ import org.thechance.service_notification.data.collection.TopicCollection
 import org.thechance.service_notification.data.collection.UserCollection
 
 @Single
-class DatabaseContainer(val database: CoroutineDatabase) {
+class DatabaseContainer(private val database: CoroutineDatabase) {
 
     val userCollection: CoroutineCollection<UserCollection> =
         database.getCollection<UserCollection>(USERS)
@@ -19,9 +19,14 @@ class DatabaseContainer(val database: CoroutineDatabase) {
     val historyCollection: CoroutineCollection<NotificationHistoryCollection> =
         database.getCollection<NotificationHistoryCollection>(HISTORY)
 
-    companion object {
-        const val USERS = "users"
-        const val HISTORY = "history"
-        const val TOPICS = "topics"
-    }
+//    companion object {
+//        const val USERS = "users"
+//        const val HISTORY = "history"
+//        const val TOPICS = "topics"
+//    }
+companion object {
+    const val USERS = "device-tokens"
+    const val HISTORY = "notification-history"
+    const val TOPICS = "notification-topics"
+}
 }
