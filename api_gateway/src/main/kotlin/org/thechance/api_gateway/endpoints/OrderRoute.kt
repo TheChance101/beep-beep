@@ -13,7 +13,10 @@ import org.thechance.api_gateway.data.model.notification.NotificationSender
 import org.thechance.api_gateway.data.model.restaurant.OrderStatus
 import org.thechance.api_gateway.data.service.NotificationService
 import org.thechance.api_gateway.data.service.RestaurantService
-import org.thechance.api_gateway.endpoints.utils.*
+import org.thechance.api_gateway.endpoints.utils.WebSocketServerHandler
+import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
+import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
+import org.thechance.api_gateway.endpoints.utils.respondWithResult
 import org.thechance.api_gateway.util.Claim
 import org.thechance.api_gateway.util.Role
 
@@ -28,26 +31,10 @@ fun Route.orderRoutes() {
 
         webSocket("orders/{restaurantId}") {
             val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
-            val tokenClaim = call.principal<JWTPrincipal>()
-            val ownerId = tokenClaim?.get(Claim.USER_ID).toString()
-            val language = extractLocalizationHeaderFromWebSocket()
-            val notificationTitle = localizedMessagesFactory.createLocalizedMessages(language).newOrderTitle
-            val notificationBody = localizedMessagesFactory.createLocalizedMessages(language).newOrderBody
-            val orderNotification = NotificationDto(
-                userId = ownerId,
-                title = notificationTitle,
-                body = notificationBody,
-                sender = NotificationSender.UNDEFINED.code
-            )
             val orders = restaurantService.getIncomingOrders(restaurantId)
             webSocketServerHandler.sessions[restaurantId] = this
             webSocketServerHandler.sessions[restaurantId]?.let { session ->
-                webSocketServerHandler.tryToCollectOrders(
-                    values = orders,
-                    session = session,
-                    language = language,
-                    orderNotification = orderNotification,
-                )
+                webSocketServerHandler.tryToCollectOrders(values = orders, session = session)
             }
         }
 
