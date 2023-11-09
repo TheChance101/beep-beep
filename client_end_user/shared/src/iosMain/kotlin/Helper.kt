@@ -1,5 +1,4 @@
 import data.gateway.local.LocationGateway
-import data.gateway.service.IFireBaseMessageService
 import data.gateway.service.ILocationService
 import dev.icerock.moko.geo.LocationTracker
 import dev.icerock.moko.permissions.ios.PermissionsController
@@ -9,9 +8,6 @@ import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
 
-val notificationModule = module {
-    single<IFireBaseMessageService> { FireBaseMessageService() }
-}
 
 val locationDataSourceModule = module {
     single<ILocationGateway> { LocationGateway(get(), get()) }
@@ -31,8 +27,7 @@ fun initKoin() {
             appModule(),
             locationDataSourceModule,
             locationServiceModule,
-            locationTrackerModule,
-            notificationModule
+            locationTrackerModule
         )
     }
 }
