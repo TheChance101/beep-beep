@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.flowOn
 abstract class BaseRemoteGateway(val client: HttpClient) {
 
     protected suspend inline fun <reified T> tryToExecute(
-        method: HttpClient.() -> HttpResponse
+        method: HttpClient.() -> HttpResponse,
     ): T {
         try {
             return client.method().body()

@@ -23,21 +23,18 @@ class MapScreenModel(
     override val viewModelScope: CoroutineScope = coroutineScope
 
     init {
-        getUserName()
+        getDriverName()
         getCurrentLocation()
         getOrder()
     }
 
-    private fun getUserName() {
+    private fun getDriverName() {
         viewModelScope.launch {
             val username = manageLoginUser.getUsername()
-            updateState {
-                it.copy(
-                    username = username,
-                )
-            }
+            updateState { it.copy(username = username) }
         }
     }
+
     private fun getOrder() {
         updateState { it.copy(orderState = OrderState.LOADING) }
         tryToCollect(
@@ -46,6 +43,7 @@ class MapScreenModel(
             onError = ::onError
         )
     }
+
     private fun onGetOrderSuccess(order: Order) {
         val newOrder = order.toUiState()
         updateState { mapScreenUiState ->
@@ -56,6 +54,7 @@ class MapScreenModel(
             )
         }
     }
+
     private fun getCurrentLocation() {
         tryToCollect(
             function = currentLocation::trackCurrentLocation,
@@ -66,7 +65,7 @@ class MapScreenModel(
 
     private fun onGetLiveLocationSuccess(location: Location) {
         viewModelScope.launch {
-            delay(2000)
+            delay(5000)
             updateState {
                 it.copy(
                     errorState = null,
@@ -75,6 +74,7 @@ class MapScreenModel(
             }
         }
     }
+
     private fun onError(errorState: ErrorState) {
         updateState {
             it.copy(
@@ -85,40 +85,32 @@ class MapScreenModel(
             )
         }
     }
-    //todo static taxi id just for now till end point is ready from backend
+
     override fun onAcceptClicked() {
         updateState { it.copy(isLoading = true, isButtonEnabled = false) }
         viewModelScope.launch {
             currentLocation.trackCurrentLocation()
         }
         tryToExecute(
-            function = {
-                manageOrderUseCase.updateTrip("654c0c7d066fac5a2fb26ea8", state.value.tripId)
-            },
+            function = { manageOrderUseCase.updateTrip(state.value.tripId) },
             onSuccess = ::onUpdateOrderSuccess,
             onError = ::onError
         )
     }
 
-    //todo static taxi id just for now till end point is ready from backend
     override fun onReceivedClicked() {
-       updateState { it.copy(isLoading = true, isButtonEnabled = false) }
+        updateState { it.copy(isLoading = true, isButtonEnabled = false) }
         tryToExecute(
-            function = {
-                manageOrderUseCase.updateTrip("654c0c7d066fac5a2fb26ea8", state.value.tripId)
-            },
+            function = { manageOrderUseCase.updateTrip(state.value.tripId) },
             onSuccess = ::onUpdateOrderSuccess,
             onError = ::onError
         )
     }
 
-    //todo static taxi id just for now till end point is ready from backend
     override fun onDeliveredClicked() {
         updateState { it.copy(isLoading = true, isButtonEnabled = false) }
         tryToExecute(
-            function = {
-                manageOrderUseCase.updateTrip("654c0c7d066fac5a2fb26ea8", state.value.tripId)
-            },
+            function = { manageOrderUseCase.updateTrip(state.value.tripId) },
             onSuccess = ::onUpdateOrderSuccess,
             onError = ::onError
         )
@@ -135,9 +127,11 @@ class MapScreenModel(
             }
         }
         updateState { mapScreenUiState ->
-            mapScreenUiState.copy(orderState = currentStatus,
+            mapScreenUiState.copy(
+                orderState = currentStatus,
                 isLoading = false,
-                isButtonEnabled = true)
+                isButtonEnabled = true
+            )
         }
     }
 
@@ -148,9 +142,7 @@ class MapScreenModel(
     }
 
     override fun onCloseClicked() {
-        viewModelScope.launch {
-            currentLocation.stopTracking()
-        }
+        viewModelScope.launch { currentLocation.stopTracking() }
         sendNewEffect(MapScreenUiEffect.CloseMap)
     }
 }

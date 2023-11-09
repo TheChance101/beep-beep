@@ -2,6 +2,7 @@ package data.gateway.local
 
 import data.local.model.UserConfigurationCollection
 import domain.gateway.local.ILocalConfigurationGateway
+import domain.utils.NotFoundException
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
 
@@ -75,6 +76,18 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
     override suspend fun getUsername(): String {
         return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
             .find()?.username ?: ""
+    }
+
+    override suspend fun saveTaxiId(taxiId: String) {
+        realm.write {
+            query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+                .find()?.taxiId = taxiId
+        }
+    }
+
+    override suspend fun getTaxiId(): String {
+        return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+            .find()?.taxiId ?: throw NotFoundException()
     }
 
     companion object {
