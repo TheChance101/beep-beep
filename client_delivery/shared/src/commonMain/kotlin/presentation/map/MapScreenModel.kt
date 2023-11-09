@@ -3,6 +3,7 @@ package presentation.map
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Location
 import domain.entity.Order
+import domain.entity.TripStatus
 import domain.usecase.IManageLoginUserUseCase
 import domain.usecase.IManageOrderUseCase
 import domain.usecase.IManageUserLocationUseCase
@@ -66,23 +67,6 @@ class MapScreenModel(
         )
     }
 
-    private fun updateOrderState() {
-        viewModelScope.launch {
-            delay(5000)
-            updateState {
-                it.copy(
-                    orderState = OrderState.NEW_ORDER,
-                    orderUiState = OrderUiState(
-                        destinationLocation = LocationUiState(
-                            31.2001,
-                            29.9187,
-                        )
-                    )//fake
-                )
-            }
-        }
-    }
-
     private fun onGetLiveLocationSuccess(location: Location) {
         viewModelScope.launch {
             delay(2000)
@@ -104,32 +88,54 @@ class MapScreenModel(
         }
     }
 
+    //todo static taxi id just for now till end point is ready from backend
     override fun onAcceptClicked() {
+        viewModelScope.launch {
+            currentLocation.trackCurrentLocation()
+        }
         tryToExecute(
             function = {
-                manageOrderUseCase.updateTrip(
-                    "653cf6ef5a253b12181fa2d0",
-                    state.value.tripId
-                )
+                manageOrderUseCase.updateTrip("654c0c7d066fac5a2fb26ea8", state.value.tripId)
             },
-            onSuccess = ::onAcceptOrderSuccess,
+            onSuccess = ::onUpdateOrderSuccess,
             onError = ::onError
         )
     }
 
-    private fun onAcceptOrderSuccess(order: Order) {
+    //todo static taxi id just for now till end point is ready from backend
+    override fun onReceivedClicked() {
+        tryToExecute(
+            function = {
+                manageOrderUseCase.updateTrip("654c0c7d066fac5a2fb26ea8", state.value.tripId)
+            },
+            onSuccess = ::onUpdateOrderSuccess,
+            onError = ::onError
+        )
+    }
+
+    //todo static taxi id just for now till end point is ready from backend
+    override fun onDeliveredClicked() {
+        tryToExecute(
+            function = {
+                manageOrderUseCase.updateTrip("654c0c7d066fac5a2fb26ea8", state.value.tripId)
+            },
+            onSuccess = ::onUpdateOrderSuccess,
+            onError = ::onError
+        )
+    }
+
+    private fun onUpdateOrderSuccess(order: Order) {
+        val currentStatus = when (order.tripStatus) {
+            TripStatus.PENDING -> OrderState.LOADING
+            TripStatus.APPROVED -> OrderState.ACCEPTED
+            TripStatus.RECEIVED -> OrderState.RECEIVED
+            TripStatus.FINISHED -> {
+                sendNewEffect(MapScreenUiEffect.CloseMap)
+                OrderState.LOADING
+            }
+        }
         updateState { mapScreenUiState ->
-            mapScreenUiState.copy(
-                //orderUiState = order.toUiState(),
-                orderState = OrderState.ACCEPTED,
-                //todo replace this with the restaurant actual location
-                orderUiState = OrderUiState(
-                    destinationLocation = LocationUiState(
-                        31.2001,
-                        29.9187,
-                    )
-                )//fake
-            )
+            mapScreenUiState.copy(orderState = currentStatus)
         }
     }
 
@@ -139,49 +145,6 @@ class MapScreenModel(
         }
     }
 
-    override fun onReceivedClicked() {
-        tryToExecute(
-            function = {
-                manageOrderUseCase.updateTrip(
-                    "653cf6ef5a253b12181fa2d0",
-                    state.value.tripId
-                )
-            },
-            onSuccess = ::onUpdateOrderAsReceivedSuccess,
-            onError = ::onError
-        )
-    }
-
-    private fun onUpdateOrderAsReceivedSuccess(order: Order) {
-        updateState { mapScreenUiState ->
-            mapScreenUiState.copy(
-                orderUiState = order.toUiState(),
-                orderState = OrderState.RECEIVED
-            )
-        }
-    }
-
-    override fun onDeliveredClicked() {
-        tryToExecute(
-            function = {
-                manageOrderUseCase.updateTrip(
-                    "653cf6ef5a253b12181fa2d0",
-                    state.value.tripId
-                )
-            },
-            onSuccess = ::onUpdateOrderAsDeliveredSuccess,
-            onError = ::onError
-        )
-    }
-
-    private fun onUpdateOrderAsDeliveredSuccess(order: Order) {
-        updateState { mapScreenUiState ->
-            mapScreenUiState.copy(
-                orderUiState = order.toUiState(),
-                orderState = OrderState.DELIVERED
-            )
-        }
-    }
 
     override fun onCloseClicked() {
         viewModelScope.launch {

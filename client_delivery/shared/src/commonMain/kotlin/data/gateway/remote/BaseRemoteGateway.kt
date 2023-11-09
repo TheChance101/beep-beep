@@ -34,6 +34,7 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
         } catch (e: UnresolvedAddressException) {
             throw NoInternetException()
         } catch (e: Exception) {
+            println("exception: $e")
             throw UnknownErrorException()
         }
     }
