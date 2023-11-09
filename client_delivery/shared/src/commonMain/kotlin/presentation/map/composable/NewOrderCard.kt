@@ -11,13 +11,11 @@ import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
 import presentation.map.MapScreenInteractionsListener
 import presentation.map.MapScreenUiState
 import resources.Resources
 
-@OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewOrderCard(state: MapScreenUiState, listener: MapScreenInteractionsListener) {
     MapCard {
@@ -28,7 +26,7 @@ fun NewOrderCard(state: MapScreenUiState, listener: MapScreenInteractionsListene
             modifier = Modifier.padding(top = 8.dp, bottom = 24.dp)
         )
         OrderInfo(
-            restaurantImage = painterResource(Resources.images.test),//just for now,then will be from state,
+            restaurantImageUrl = state.orderUiState.restaurantImageUrl,
             restaurantName = state.orderUiState.restaurantName,
             restaurantLocation = state.orderUiState.restaurantAddress,
             orderLocation = state.orderUiState.destinationAddress

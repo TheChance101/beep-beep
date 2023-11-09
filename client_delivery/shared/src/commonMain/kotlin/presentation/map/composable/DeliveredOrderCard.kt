@@ -7,18 +7,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpButton
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
 import presentation.map.DeliveredOrderInteractionsListener
 import presentation.map.MapScreenUiState
 import resources.Resources
 
-@OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
+@OptIn( ExperimentalMaterial3Api::class)
 @Composable
 fun DeliveredOrderCard(state: MapScreenUiState, listener: DeliveredOrderInteractionsListener) {
     MapCard {
         OrderInfo(
-            restaurantImage = painterResource(Resources.images.test),//just for now,then will be from state,
+            restaurantImageUrl = state.orderUiState.restaurantImageUrl,
             restaurantName = state.orderUiState.restaurantName,
             restaurantLocation = state.orderUiState.restaurantAddress,
             orderLocation = state.orderUiState.destinationAddress
