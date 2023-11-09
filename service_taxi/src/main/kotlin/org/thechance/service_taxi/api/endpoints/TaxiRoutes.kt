@@ -58,6 +58,13 @@ fun Route.taxiRoutes() {
     }
 
     route("/taxis") {
+
+        get("/{driverId}") {
+            val driverId = call.parameters["driverId"] ?: throw MissingParameterException()
+            val taxis = manageTaxiUseCase.getTaxisForDriver(driverId).toDto()
+            call.respond(HttpStatusCode.OK, taxis)
+        }
+
         get("/search") {
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 20

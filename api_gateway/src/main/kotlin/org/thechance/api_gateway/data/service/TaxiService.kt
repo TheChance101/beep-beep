@@ -46,6 +46,15 @@ class TaxiService(
         )
     }
 
+    suspend fun getTaxisByDriverId(driverId: String, languageCode: String): List<TaxiDto> {
+        return client.tryToExecute(
+            api = APIs.TAXI_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { get("/taxis/$driverId") }
+        )
+    }
+
     @OptIn(InternalAPI::class)
     suspend fun createTaxi(taxiDto: TaxiDto, languageCode: String): TaxiDto {
         return client.tryToExecute(
