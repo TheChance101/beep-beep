@@ -1,7 +1,8 @@
 package presentation.notification
 
 sealed class NotificationUiEffect {
-    data object NavigateToTraceOrderScreen : NotificationUiEffect()
-    data object MakeOrderAgain : NotificationUiEffect()
+    data class NavigateToTrackFoodOrder(val orderId: String) : NotificationUiEffect()
+    data class NavigateToTrackDelivery(val tripId: String) : NotificationUiEffect()
+    data class NavigateToTaxiRide(val tripId: String) : NotificationUiEffect()
     data object NavigateToLoginScreen : NotificationUiEffect()
 }

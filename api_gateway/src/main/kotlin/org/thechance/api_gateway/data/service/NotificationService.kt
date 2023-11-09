@@ -1,10 +1,5 @@
 package org.thechance.api_gateway.data.service
 
-import io.ktor.client.HttpClient
-import io.ktor.client.request.get
-import io.ktor.client.request.post
-import io.ktor.util.Attributes
-import io.ktor.util.InternalAPI
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.util.*
@@ -14,6 +9,7 @@ import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.PaginationResponse
 import org.thechance.api_gateway.data.model.notification.NotificationDto
+import org.thechance.api_gateway.data.model.notification.NotificationHistoryDto
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
 import org.thechance.api_gateway.util.APIs
@@ -58,17 +54,13 @@ class NotificationService(
     }
 
     @OptIn(InternalAPI::class)
-    suspend fun sendNotificationToUser(
-        userId: String,
-        notificationDto: NotificationDto,
-        languageCode: String
-    ): Boolean {
+    suspend fun sendNotificationToUser(notificationDto: NotificationDto, languageCode: String): Boolean {
         return client.tryToExecute<Boolean>(
             api = APIs.NOTIFICATION_API,
             attributes = attributes,
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
         ) {
-            post("notifications/send/user/$userId") {
+            post("notifications/send/user") {
                 body = Json.encodeToString(NotificationDto.serializer(), notificationDto)
             }
         }
@@ -79,8 +71,8 @@ class NotificationService(
         page: String,
         limit: String,
         languageCode: String
-    ): PaginationResponse<NotificationDto> {
-        return client.tryToExecute<PaginationResponse<NotificationDto>>(
+    ): PaginationResponse<NotificationHistoryDto> {
+        return client.tryToExecute<PaginationResponse<NotificationHistoryDto>>(
             APIs.NOTIFICATION_API,
             attributes = attributes,
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
@@ -90,5 +82,18 @@ class NotificationService(
                 parameter("limit", limit)
             }
         }
+    }
+
+    suspend fun getNotificationHistoryForUserInLast24Hours(
+        userId: String,
+        languageCode: String
+    ): List<NotificationHistoryDto> {
+        return client.tryToExecute<List<NotificationHistoryDto>>(
+            APIs.NOTIFICATION_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { get("notifications/history-24hours/$userId") }
+        )
+
     }
 }

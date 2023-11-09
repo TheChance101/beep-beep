@@ -7,6 +7,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_notification.data.mappers.toDto
+import org.thechance.service_notification.data.mappers.toEntity
 import org.thechance.service_notification.domain.entity.InternalServerErrorException
 import org.thechance.service_notification.domain.usecases.INotificationManagementUseCase
 import org.thechance.service_notification.domain.usecases.IRegisterTokenUseCase
@@ -42,25 +43,15 @@ fun Route.notificationRoutes() {
     }
 
     route("notifications") {
-        post("/send/user/{userId}") {
-            val userId = call.parameters.requireNotEmpty("userId")
+        post("/send/user") {
             val receivedData = call.receive<NotificationDto>()
-            val result = notificationManagement.sendNotificationToUser(
-                userId,
-                receivedData.title,
-                receivedData.body
-            )
+            val result = notificationManagement.sendNotificationToUser(receivedData.toEntity())
             call.respond(HttpStatusCode.OK, result)
         }
 
-        post("/send/topic/{topicName}") {
-            val topicName = call.parameters.requireNotEmpty("topicName")
+        post("/send/topic") {
             val receivedData = call.receive<NotificationDto>()
-            val result = notificationManagement.sendNotificationToTopic(
-                topicName,
-                receivedData.title,
-                receivedData.body
-            )
+            val result = notificationManagement.sendNotificationToTopic(receivedData.toEntity())
             if (!result) throw InternalServerErrorException(NOTIFICATION_NOT_SENT)
             call.respond(HttpStatusCode.OK, "Notification sent successfully")
         }
@@ -76,9 +67,15 @@ fun Route.notificationRoutes() {
             val limit = call.parameters["limit"]?.toInt() ?: 10
             val page = call.parameters["page"]?.toInt() ?: 1
             val userId = call.parameters.requireNotEmpty("userId")
-            val result = notificationManagement.getNotificationHistoryForUser(page, limit, userId)
+            val result = notificationManagement.getNotificationHistoryForUser(page, limit, userId).toDto()
             val total = notificationManagement.getTotalCountsOfNotificationHistoryForUser(userId)
             call.respond(HttpStatusCode.OK, BasePaginationResponseDto(items = result, page = page, total = total))
+        }
+
+        get("/history-24hours/{userId}") {
+            val userId = call.parameters.requireNotEmpty("userId")
+            val result = notificationManagement.getNotificationHistoryInTheLast24Hours(userId).toDto()
+            call.respond(HttpStatusCode.OK, result)
         }
     }
 
