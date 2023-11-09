@@ -81,4 +81,5 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
         private const val CONFIGURATION_ID = 0
         private const val ID = "id"
     }
+
 }
