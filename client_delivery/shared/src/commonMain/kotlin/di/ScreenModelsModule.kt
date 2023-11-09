@@ -11,5 +11,5 @@ val screenModelsModule = module {
     factoryOf(::MainScreenModel)
     factoryOf(::LoginScreenModel)
     factoryOf(::AppScreenModel)
-    factory { MapScreenModel(get(),get()) }
+    factory { MapScreenModel(get(),get(),get()) }
 }
