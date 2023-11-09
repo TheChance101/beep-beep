@@ -10,6 +10,7 @@ interface IManageTaxiUseCase {
     suspend fun createTaxi(taxi: Taxi): Taxi
     suspend fun deleteTaxi(taxiId: String): Taxi
     suspend fun getAllTaxi(page: Int, limit: Int): List<Taxi>
+    suspend fun getTaxisForDriver(driverId: String): List<Taxi>
     suspend fun getTaxiByTaxiId(taxiId: String): Taxi
     suspend fun getTaxiByDriverId(driverId: String): Taxi
     suspend fun editTaxi(taxiId: String, taxi: Taxi): Taxi
@@ -44,6 +45,10 @@ class ManageTaxiUseCase(
 
     override suspend fun getAllTaxi(page: Int, limit: Int): List<Taxi> {
         return taxiGateway.getAllTaxes(page, limit)
+    }
+
+    override suspend fun getTaxisForDriver(driverId: String): List<Taxi> {
+        return taxiGateway.getTaxisForDriver(driverId)
     }
 
     override suspend fun getTaxiByTaxiId(taxiId: String): Taxi {
