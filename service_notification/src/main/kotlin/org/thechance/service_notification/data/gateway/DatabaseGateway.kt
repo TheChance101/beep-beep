@@ -3,17 +3,17 @@ package org.thechance.service_notification.data.gateway
 import com.mongodb.client.model.UpdateOptions
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
-import org.litote.kmongo.addToSet
-import org.litote.kmongo.eq
-import org.litote.kmongo.`in`
+import org.litote.kmongo.*
 import org.thechance.service_notification.data.DatabaseContainer
+import org.thechance.service_notification.data.collection.NotificationHistoryCollection
 import org.thechance.service_notification.data.collection.TopicCollection
 import org.thechance.service_notification.data.collection.UserCollection
 import org.thechance.service_notification.data.mappers.toCollection
 import org.thechance.service_notification.data.mappers.toNotificationEntity
 import org.thechance.service_notification.data.utils.paginate
+import org.thechance.service_notification.data.utils.toDate
 import org.thechance.service_notification.domain.entity.NotFoundException
-import org.thechance.service_notification.domain.entity.Notification
+import org.thechance.service_notification.domain.entity.NotificationHistory
 import org.thechance.service_notification.domain.gateway.IDatabaseGateway
 import org.thechance.service_notification.endpoints.TOKENS_NOT_FOUND
 
@@ -25,8 +25,9 @@ class DatabaseGateway(
     private val userCollection by lazy { databaseContainer.userCollection }
     private val historyCollection by lazy { databaseContainer.historyCollection }
 
-    override suspend fun getUserTokens(id: String): List<String> {
-        return userCollection.findOneById(ObjectId(id))?.deviceTokens ?: throw NotFoundException(TOKENS_NOT_FOUND)
+    override suspend fun getUserTokens(userId: String): List<String> {
+        val userTokens = userCollection.findOneById(ObjectId(userId))?.deviceTokens
+        return userTokens ?: throw NotFoundException(TOKENS_NOT_FOUND)
     }
 
     override suspend fun registerToken(userId: String, token: String): Boolean {
@@ -54,12 +55,46 @@ class DatabaseGateway(
         return databaseContainer.topicCollection.findOne(TopicCollection::name eq name) != null
     }
 
-    override suspend fun addNotificationToHistory(notification: Notification) {
-        historyCollection.insertOne(notification.toCollection())
+    override suspend fun addNotificationToHistory(notificationHistory: NotificationHistory) {
+        historyCollection.insertOne(notificationHistory.toCollection())
     }
 
-    override suspend fun getNotificationHistory(page: Int, limit: Int): List<Notification> {
+    override suspend fun getNotificationHistoryForUser(page: Int, limit: Int): List<NotificationHistory> {
         return historyCollection.find().paginate(page, limit).toList().toNotificationEntity()
     }
 
+    override suspend fun getNotificationHistoryForUser(
+        page: Int,
+        limit: Int,
+        userId: String
+    ): List<NotificationHistory> {
+        val twentyFourHoursAgo = System.currentTimeMillis() - (24 * 60 * 60 * 1000)
+        return historyCollection.find(
+            and(
+                NotificationHistoryCollection::userId eq userId,
+                NotificationHistoryCollection::isDeleted eq false,
+                NotificationHistoryCollection::date lt twentyFourHoursAgo
+            )
+        ).sort(ascending(NotificationHistoryCollection::date)).paginate(page, limit).toList().toNotificationEntity()
+    }
+
+    override suspend fun getNotificationHistoryInTheLast24Hours(userId: String): List<NotificationHistory> {
+        val twentyFourHoursAgo = System.currentTimeMillis() - (24 * 60 * 60 * 1000)
+        return historyCollection.find(
+            and(
+                NotificationHistoryCollection::userId eq userId,
+                NotificationHistoryCollection::isDeleted eq false,
+                NotificationHistoryCollection::date gte twentyFourHoursAgo
+            )
+        ).sort(descending(NotificationHistoryCollection::date)).toList().toNotificationEntity()
+    }
+
+    override suspend fun getTotalCountsOfNotificationHistoryForUser(userId: String): Long {
+        return historyCollection.countDocuments(
+            and(
+                NotificationHistoryCollection::userId eq userId,
+                NotificationHistoryCollection::isDeleted eq false
+            )
+        )
+    }
 }

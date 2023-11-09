@@ -3,15 +3,22 @@ package data.gateway.remote
 import data.remote.model.BaseResponse
 import domain.utils.InvalidPasswordException
 import domain.utils.NoInternetException
+import domain.utils.SocketException
 import domain.utils.UnAuthorizedException
 import domain.utils.UnknownErrorException
 import domain.utils.UserNotFoundException
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.websocket.receiveDeserialized
+import io.ktor.client.plugins.websocket.wss
 import io.ktor.client.statement.HttpResponse
 import io.ktor.util.network.UnresolvedAddressException
-
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 abstract class BaseRemoteGateway(val client: HttpClient) {
 
@@ -27,8 +34,23 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
         } catch (e: UnresolvedAddressException) {
             throw NoInternetException()
         } catch (e: Exception) {
+            println("exception: $e")
             throw UnknownErrorException()
         }
+    }
+
+    suspend inline fun <reified T> HttpClient.tryToExecuteWebSocket(path: String): Flow<T> {
+        return flow {
+            wss(path = path) {
+                while (true) {
+                    try {
+                        emit(receiveDeserialized<T>())
+                    } catch (e: Exception) {
+                        throw SocketException()
+                    }
+                }
+            }
+        }.flowOn(Dispatchers.IO)
     }
 
     fun throwMatchingException(errorMessages: Map<String, String>) {

@@ -1,17 +1,19 @@
 package presentation.notification
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.cash.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BpPagingList
 import com.beepbeep.designSystem.ui.theme.Theme
+import domain.entity.NotificationHistory
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.auth.login.LoginScreen
@@ -19,6 +21,8 @@ import presentation.base.BaseScreen
 import presentation.composable.ContentVisibility
 import presentation.composable.LoginRequiredPlaceholder
 import presentation.notification.combosable.NotificationCard
+import presentation.orderFoodTracking.OrderFoodTrackingScreen
+import presentation.taxi.TaxiOrderScreen
 import resources.Resources
 import util.getStatusBarPadding
 import util.root
@@ -37,15 +41,24 @@ class NotificationScreen : BaseScreen<
 
     override fun onEffect(effect: NotificationUiEffect, navigator: Navigator) {
         when (effect) {
-            is NotificationUiEffect.MakeOrderAgain -> println("order again")
-            is NotificationUiEffect.NavigateToTraceOrderScreen -> println("navigate to trace order screen")
-            NotificationUiEffect.NavigateToLoginScreen -> navigator.root?.push(LoginScreen())
+            is NotificationUiEffect.NavigateToLoginScreen -> navigator.root?.push(LoginScreen())
+            is NotificationUiEffect.NavigateToTrackFoodOrder -> navigator.root?.push(
+                OrderFoodTrackingScreen(orderId = effect.orderId, tripId = "")
+            )
+
+            is NotificationUiEffect.NavigateToTrackDelivery -> navigator.root?.push(
+                OrderFoodTrackingScreen(tripId = effect.tripId, orderId = "")
+            )
+
+            is NotificationUiEffect.NavigateToTaxiRide -> navigator.root?.push(TaxiOrderScreen())
         }
     }
 
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun onRender(state: NotificationsUiState, listener: NotificationInteractionListener) {
+
+        val notifications = state.notifications.collectAsLazyPagingItems()
 
         LoginRequiredPlaceholder(
             placeHolder = painterResource(Resources.images.requireLoginToShowNotificationPlaceholder),
@@ -54,44 +67,53 @@ class NotificationScreen : BaseScreen<
         )
 
         ContentVisibility(state.isLoggedIn) {
-            LazyColumn(
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Theme.colors.background)
                     .padding(getStatusBarPadding()),
-                contentPadding = PaddingValues(vertical = 24.dp)
             ) {
-                itemsIndexed(state.todayNotifications) { index, item ->
-                    val showDate = index == 0
-                    NotificationCard(
-                        title = item.title,
-                        showDate = showDate,
-                        date = Resources.strings.today,
-                        time = item.time,
-                        content = item.body,
-                        isClickable = true,
-                        clickableText = Resources.strings.tryAgain
-                    )
-                }
 
-                itemsIndexed(state.thisWeekNotifications) { index, item ->
-                    if (index == 0) {
+                BpPagingList(
+                    data = notifications,
+                    verticalArrangement = Arrangement.spacedBy(0.dp),
+                    optionalHeaderTitle = Resources.strings.today,
+                    optionalTopLList = state.todayNotifications,
+                    hasOptionalList = state.todayNotifications.isNotEmpty(),
+                    optionalContent = { notification ->
                         NotificationCard(
-                            title = item.title,
-                            showDate = true,
-                            date = Resources.strings.thisWeek,
-                            time = item.time,
-                            content = item.body,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
-                            isClickable = true,
-                            clickableText = Resources.strings.trackYourOrder
+                            title = notification.title,
+                            content = notification.body,
+                            time = notification.time,
+                            isClickable =
+                            NotificationHistory.getNotificationSender(notification.sender)
+                                    != NotificationHistory.NotificationSender.UNDEFINED,
+                            clickableText = notification.notificationClickableText,
+                            onClickNotification = {
+                                listener.onClickNotification(
+                                    notification.topicId,
+                                    notification.sender
+                                )
+                            },
+                            cardShape = if (state.todayNotifications.indexOf(notification) == 0) {
+                                RoundedCornerShape(bottomEnd = 8.dp, bottomStart = 8.dp)
+                            } else {
+                                RoundedCornerShape(8.dp)
+                            }
                         )
-                    } else {
-                        NotificationCard(title = item.title, time = item.time, content = item.body)
+                    },
+                    content = { notificationUiState ->
+                        notificationUiState?.let { notification ->
+                            NotificationCard(
+                                title = notification.title,
+                                content = notification.body,
+                                time = notification.time,
+                                date = notification.date,
+                                showDate = true
+                            )
+                        }
                     }
-                }
+                )
             }
         }
     }
