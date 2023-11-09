@@ -25,6 +25,8 @@ fun DeliveredOrderCard(state: MapScreenUiState, listener: DeliveredOrderInteract
             onClick = listener::onDeliveredClicked,
             title = Resources.strings.delivered,
             modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
+            isLoading = state.isLoading,
+            enabled = state.isButtonEnabled
         )
     }
 }

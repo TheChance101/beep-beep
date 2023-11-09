@@ -5,6 +5,8 @@ import domain.entity.Order
 import presentation.base.ErrorState
 
 data class MapScreenUiState(
+    val isLoading: Boolean = false,
+    val isButtonEnabled: Boolean = true,
     val username: String = "",
     val orderState: OrderState = OrderState.LOADING,
     val errorState: ErrorState? = null,

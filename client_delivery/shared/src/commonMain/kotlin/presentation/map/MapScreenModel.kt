@@ -38,7 +38,6 @@ class MapScreenModel(
             }
         }
     }
-
     private fun getOrder() {
         updateState { it.copy(orderState = OrderState.LOADING) }
         tryToCollect(
@@ -47,7 +46,6 @@ class MapScreenModel(
             onError = ::onError
         )
     }
-
     private fun onGetOrderSuccess(order: Order) {
         val newOrder = order.toUiState()
         updateState { mapScreenUiState ->
@@ -58,7 +56,6 @@ class MapScreenModel(
             )
         }
     }
-
     private fun getCurrentLocation() {
         tryToCollect(
             function = currentLocation::trackCurrentLocation,
@@ -78,18 +75,19 @@ class MapScreenModel(
             }
         }
     }
-
     private fun onError(errorState: ErrorState) {
         updateState {
             it.copy(
                 orderState = OrderState.LOADING,
                 errorState = errorState,
+                isLoading = false,
+                isButtonEnabled = true
             )
         }
     }
-
     //todo static taxi id just for now till end point is ready from backend
     override fun onAcceptClicked() {
+        updateState { it.copy(isLoading = true, isButtonEnabled = false) }
         viewModelScope.launch {
             currentLocation.trackCurrentLocation()
         }
@@ -104,6 +102,7 @@ class MapScreenModel(
 
     //todo static taxi id just for now till end point is ready from backend
     override fun onReceivedClicked() {
+       updateState { it.copy(isLoading = true, isButtonEnabled = false) }
         tryToExecute(
             function = {
                 manageOrderUseCase.updateTrip("654c0c7d066fac5a2fb26ea8", state.value.tripId)
@@ -115,6 +114,7 @@ class MapScreenModel(
 
     //todo static taxi id just for now till end point is ready from backend
     override fun onDeliveredClicked() {
+        updateState { it.copy(isLoading = true, isButtonEnabled = false) }
         tryToExecute(
             function = {
                 manageOrderUseCase.updateTrip("654c0c7d066fac5a2fb26ea8", state.value.tripId)
@@ -135,7 +135,9 @@ class MapScreenModel(
             }
         }
         updateState { mapScreenUiState ->
-            mapScreenUiState.copy(orderState = currentStatus)
+            mapScreenUiState.copy(orderState = currentStatus,
+                isLoading = false,
+                isButtonEnabled = true)
         }
     }
 
@@ -145,12 +147,10 @@ class MapScreenModel(
         }
     }
 
-
     override fun onCloseClicked() {
         viewModelScope.launch {
             currentLocation.stopTracking()
         }
         sendNewEffect(MapScreenUiEffect.CloseMap)
     }
-
 }

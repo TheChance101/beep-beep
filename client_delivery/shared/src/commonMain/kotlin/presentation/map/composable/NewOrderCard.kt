@@ -35,6 +35,8 @@ fun NewOrderCard(state: MapScreenUiState, listener: MapScreenInteractionsListene
             onClick = listener::onAcceptClicked,
             title = Resources.strings.accept,
             modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
+            isLoading = state.isLoading,
+            enabled = state.isButtonEnabled
         )
         BpTransparentButton(
             onClick = listener::onRejectClicked,

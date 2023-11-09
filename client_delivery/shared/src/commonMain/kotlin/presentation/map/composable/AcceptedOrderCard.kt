@@ -28,6 +28,8 @@ fun AcceptedOrderCard(state: MapScreenUiState, listener: AcceptedOrderInteractio
             onClick = listener::onReceivedClicked,
             title = Resources.strings.received,
             modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
+            isLoading = state.isLoading,
+            enabled = state.isButtonEnabled
         )
     }
 }
