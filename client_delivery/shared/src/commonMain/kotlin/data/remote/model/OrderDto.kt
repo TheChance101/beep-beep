@@ -8,9 +8,9 @@ data class OrderDto(
     @SerialName("id")
     val id: String,
     @SerialName("restaurantName")
-    val restaurantName: String,
+    val restaurantName: String?=null,
     @SerialName("restaurantImage")
-    val restaurantImage: String,
+    val restaurantImage: String?=null,
     @SerialName("startPoint")
     val startPoint: LocationDto,
     @SerialName("destination")
