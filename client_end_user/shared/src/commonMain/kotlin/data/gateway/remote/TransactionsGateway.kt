@@ -102,9 +102,6 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
             return response.value?.toTripEntity()
                 ?: throw GeneralException.NotFoundException
         } else {
-            // here we can handle different errors by checking response.status.code
-            // and also we can use the message sent from the server to pass it throw the exception
-            // and show it to user if we want
             if (response.status.code == 404) {
                 throw GeneralException.NotFoundException
             } else {
@@ -122,9 +119,6 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
             return response.value?.map { it.toDeliveryRideEntity() }
                 ?: throw GeneralException.NotFoundException
         } else {
-            // here we can handle different errors by checking response.status.code
-            // and also we can use the message sent from the server to pass it throw the exception
-            // and show it to user if we want
             if (response.status.code == 404) {
                 throw GeneralException.NotFoundException
             } else {
@@ -140,9 +134,6 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
         if (response.isSuccess) {
             return response.value?.toEntity() ?: throw GeneralException.NotFoundException
         } else {
-            // here we can handle different errors by checking response.status.code
-            // and also we can use the message sent from the server to pass it throw the exception
-            // and show it to user if we want
             if (response.status.code == 404) {
                 throw GeneralException.NotFoundException
             } else {
@@ -159,9 +150,6 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
             return response.value?.toTripEntity()
                 ?: throw GeneralException.NotFoundException
         } else {
-            // here we can handle different errors by checking response.status.code
-            // and also we can use the message sent from the server to pass it throw the exception
-            // and show it to user if we want
             if (response.status.code == 404) {
                 throw GeneralException.NotFoundException
             } else {
@@ -178,9 +166,6 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
             return response.value?.toTripEntity()
                 ?: throw GeneralException.NotFoundException
         } else {
-            // here we can handle different errors by checking response.status.code
-            // and also we can use the message sent from the server to pass it throw the exception
-            // and show it to user if we want
             if (response.status.code == 404) {
                 throw GeneralException.NotFoundException
             } else {
@@ -197,9 +182,6 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
             return response.value?.toEntity()
                 ?: throw GeneralException.NotFoundException
         } else {
-            // here we can handle different errors by checking response.status.code
-            // and also we can use the message sent from the server to pass it throw the exception
-            // and show it to user if we want
             if (response.status.code == 404) {
                 throw GeneralException.NotFoundException
             } else {
