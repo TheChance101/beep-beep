@@ -8,4 +8,5 @@ class UserConfigurationCollection : RealmObject {
     var refreshToken: String = ""
     var username: String = ""
     var isKeepMeLoggedInMeChecked: Boolean = false
+    var taxiId: String = ""
 }

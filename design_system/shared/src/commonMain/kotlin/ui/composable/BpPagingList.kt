@@ -1,5 +1,6 @@
 package com.beepbeep.designSystem.ui.composable
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,12 +12,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.text.style.TextAlign
@@ -31,16 +35,49 @@ import com.beepbeep.designSystem.ui.theme.Theme
 fun <T : Any> BpPagingList(
     modifier: Modifier = Modifier,
     data: LazyPagingItems<T>,
-    content: @Composable (T?) -> Unit
+    hasOptionalList: Boolean = false,
+    optionalTopLList: List<T> = emptyList(),
+    optionalHeaderTitle: String = "",
+    paddingValues: PaddingValues = PaddingValues(16.dp),
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(8.dp),
+    optionalContent: @Composable (T) -> Unit = {},
+    content: @Composable (T?) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
             .background(Theme.colors.background),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = verticalArrangement,
         horizontalAlignment = Alignment.CenterHorizontally,
-        contentPadding = PaddingValues(16.dp)
+        contentPadding = paddingValues
     ) {
+
+        item {
+            AnimatedVisibility(hasOptionalList) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(
+                            RoundedCornerShape(
+                                topEnd = Theme.radius.medium,
+                                topStart = Theme.radius.medium
+                            )
+                        )
+                        .background(Theme.colors.primary)
+                ) {
+                    Text(
+                        modifier = Modifier.padding(16.dp),
+                        text = optionalHeaderTitle,
+                        style = Theme.typography.title,
+                        color = Theme.colors.onPrimary
+                    )
+                }
+            }
+        }
+
+        items(optionalTopLList) { item ->
+            optionalContent(item)
+        }
 
         items(data.itemCount) { index ->
             val item = data[index]
@@ -116,7 +153,7 @@ fun <T : Any> BpPagingList(
 private fun ErrorItem(
     message: String,
     modifier: Modifier = Modifier,
-    onClickRetry: () -> Unit
+    onClickRetry: () -> Unit,
 ) {
     Row(
         modifier = modifier.padding(16.dp),
@@ -140,10 +177,10 @@ private fun ErrorItem(
 private fun ErrorView(
     message: String,
     modifier: Modifier = Modifier,
-    onClickRetry: () -> Unit
+    onClickRetry: () -> Unit,
 ) {
     Column(
-        modifier = modifier.padding(16.dp).onPlaced { cor->
+        modifier = modifier.padding(16.dp).onPlaced { cor ->
 
         },
         verticalArrangement = Arrangement.Center,

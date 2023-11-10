@@ -9,9 +9,14 @@ import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
+import org.thechance.api_gateway.data.model.notification.NotificationDto
+import org.thechance.api_gateway.data.model.notification.NotificationSender
 import org.thechance.api_gateway.data.model.taxi.TaxiDto
 import org.thechance.api_gateway.data.model.taxi.TripDto
+import org.thechance.api_gateway.data.model.taxi.TripStatus
+import org.thechance.api_gateway.data.model.taxi.TripStatus.*
 import org.thechance.api_gateway.data.service.IdentityService
+import org.thechance.api_gateway.data.service.NotificationService
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.data.service.TaxiService
 import org.thechance.api_gateway.endpoints.utils.*
@@ -24,6 +29,7 @@ fun Route.taxiRoutes() {
     val restaurantService: RestaurantService by inject()
     val localizedMessagesFactory by inject<LocalizedMessagesFactory>()
     val webSocketServerHandler: WebSocketServerHandler by inject()
+    val notificationService: NotificationService by inject()
 
     route("/taxi") {
 
@@ -71,8 +77,9 @@ fun Route.taxiRoutes() {
         }
     }
 
-    authenticateWithRole(Role.DASHBOARD_ADMIN) {
-        route("/taxis") {
+    route("/taxis") {
+
+        authenticateWithRole(Role.DASHBOARD_ADMIN) {
             get("/search") {
                 val language = extractLocalizationHeader()
                 val page = call.parameters["page"]?.toInt() ?: 1
@@ -85,7 +92,28 @@ fun Route.taxiRoutes() {
                 respondWithResult(HttpStatusCode.OK, result)
             }
         }
+
+        authenticateWithRole(Role.TAXI_DRIVER) {
+            get("/belongs-to-taxi-driver") {
+                val language = extractLocalizationHeader()
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val driverId = tokenClaim?.get(Claim.USER_ID).toString()
+                val taxis = taxiService.getTaxisByDriverId(driverId = driverId, language)
+                respondWithResult(HttpStatusCode.OK, taxis)
+            }
+        }
+
+        authenticateWithRole(Role.DELIVERY) {
+            get("/belongs-to-delivery-driver") {
+                val language = extractLocalizationHeader()
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val driverId = tokenClaim?.get(Claim.USER_ID).toString()
+                val taxis = taxiService.getTaxisByDriverId(driverId = driverId, language)
+                respondWithResult(HttpStatusCode.OK, taxis)
+            }
+        }
     }
+
 
     route("/trip") {
 
@@ -223,7 +251,7 @@ fun Route.taxiRoutes() {
         }
 
         authenticateWithRole(Role.TAXI_DRIVER) {
-            put("/update") {
+            put("/update/taxi-ride") {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val language = extractLocalizationHeader()
                 val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripUpdated
@@ -234,11 +262,29 @@ fun Route.taxiRoutes() {
                 val approvedTrip =
                     taxiService.updateTrip(taxiId = taxiId, tripId = tripId, driverId = driverId, language)
                 respondWithResult(HttpStatusCode.OK, approvedTrip, successMessage)
+
+                val tripStatus = TripStatus.getOrderStatus(approvedTrip.tripStatus)
+                val notificationBody = when (tripStatus) {
+                    APPROVED -> localizedMessagesFactory.createLocalizedMessages(language).rideApproved
+                    RECEIVED -> localizedMessagesFactory.createLocalizedMessages(language).taxiArrivedToUserLocation
+                    FINISHED -> localizedMessagesFactory.createLocalizedMessages(language).taxiArrivedToDestination
+                    else -> ""
+                }
+                if (tripStatus != TripStatus.PENDING) {
+                    val orderNotification = NotificationDto(
+                        userId = approvedTrip.clientId,
+                        topicId = approvedTrip.id,
+                        title = approvedTrip.destinationAddress!!,
+                        body = notificationBody,
+                        sender = NotificationSender.TAXI.code
+                    )
+                    notificationService.sendNotificationToUser(orderNotification, language)
+                }
             }
         }
 
         authenticateWithRole(Role.DELIVERY) {
-            put("/update") {
+            put("/update/delivery-order") {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val language = extractLocalizationHeader()
                 val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripUpdated
@@ -249,6 +295,25 @@ fun Route.taxiRoutes() {
                 val approvedTrip =
                     taxiService.updateTrip(taxiId = taxiId, tripId = tripId, driverId = deliveryId, language)
                 respondWithResult(HttpStatusCode.OK, approvedTrip, successMessage)
+
+                val tripStatus = TripStatus.getOrderStatus(approvedTrip.tripStatus)
+                val notificationBody = when (tripStatus) {
+                    APPROVED -> localizedMessagesFactory.createLocalizedMessages(language).orderApprovedFromDelivery
+                    RECEIVED -> localizedMessagesFactory.createLocalizedMessages(language).orderArrivedToRestaurant
+                    FINISHED -> localizedMessagesFactory.createLocalizedMessages(language).orderArrivedToClient
+                    else -> ""
+                }
+                if (tripStatus != TripStatus.PENDING) {
+                    val restaurant = restaurantService.getRestaurantInfo(language, approvedTrip.restaurantId!!)
+                    val orderNotification = NotificationDto(
+                        userId = approvedTrip.clientId,
+                        topicId = approvedTrip.id,
+                        title = restaurant.name!!,
+                        body = notificationBody,
+                        sender = NotificationSender.DELIVERY.code
+                    )
+                    notificationService.sendNotificationToUser(orderNotification, language)
+                }
             }
         }
     }

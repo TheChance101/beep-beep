@@ -49,6 +49,9 @@ class EgyptianArabicLocalizedMessages : LocalizedMessages {
     override val invalidPrice: String = "مش مظبوط السعر اللي دخلته يعم"
     override val alreadyExist: String = "التاكسي ده موجود قبل كده ياعم"
     override val requiredQuery: String = " في حاجات ناقصة يا معلم"
+    override val rideApproved: String = "تم قبول رحلتك والتاكسى فى طريقه اليك"
+    override val taxiArrivedToUserLocation: String = "تم وصول التاكسى الى موقعك"
+    override val taxiArrivedToDestination: String = "حمد لله على سلامتك تم الوصول الى الوجهة"
 
     // endregion
 
@@ -88,6 +91,15 @@ class EgyptianArabicLocalizedMessages : LocalizedMessages {
     override val tokenNotRegister: String = "التوكن ده مش مسجل ياعم"
     override val alreadyUpdated: String = "اتحدثت مرة يا عم مش مربة هيه"
     override val cancelOrderError: String = "هذا الطلب تم الغائه من قبل او تم قبوله من قبل"
+    override val orderApproved: String = "تم وصول الطلب إلى المطعم وفى انتظار التحضير"
+    override val orderCanceled: String = "يؤسفنا إبلاغك بإلغاء طلبك"
+    override val orderInCooking: String = "جارى تحضير طلبك فى المطبخ الان"
+    override val orderFinished: String = "تم الانتحاء من تحضير طلبك وفى اتظار الديليفرى"
+    override val newOrderTitle: String = "طلب جديد"
+    override val newOrderBody: String = "لديك طلب جديد فى القائمة"
+    override val orderApprovedFromDelivery: String = "تم قبول الطلب من الديليفرى"
+    override val orderArrivedToRestaurant: String = "الديليفرى فى طريقه اليك"
+    override val orderArrivedToClient: String = "تم وصول طلبك بالهناء والشفاء"
     override val cartIsAlreadyEmpty: String = "هتشتري ازاي والسله فاضيه اصلا!!"
     override val invalidQuantity: String = "مدخل كميه مش صح"
 

@@ -1,5 +1,7 @@
 package org.thechance.api_gateway.endpoints
 
+import com.auth0.jwt.JWT
+import com.auth0.jwt.interfaces.DecodedJWT
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -10,8 +12,8 @@ import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
 import org.thechance.api_gateway.data.model.authenticate.TokenConfiguration
 import org.thechance.api_gateway.data.model.identity.UserRegistrationDto
-import org.thechance.api_gateway.data.model.restaurant.RestaurantDto
 import org.thechance.api_gateway.data.service.IdentityService
+import org.thechance.api_gateway.data.service.NotificationService
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractApplicationIdHeader
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
@@ -19,9 +21,9 @@ import org.thechance.api_gateway.endpoints.utils.respondWithResult
 import org.thechance.api_gateway.util.Claim
 import org.thechance.api_gateway.util.Role
 
-
 fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
     val identityService: IdentityService by inject()
+    val notificationService: NotificationService by inject()
 
     val localizedMessagesFactory by inject<LocalizedMessagesFactory>()
 
@@ -38,12 +40,16 @@ fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
         val params = call.receiveParameters()
         val userName = params["username"]?.trim().toString()
         val password = params["password"]?.trim().toString()
+        val deviceToken = params["token"]?.trim().orEmpty()
 
         val language = extractLocalizationHeader()
         val appId = extractApplicationIdHeader()
-        val token = identityService.loginUser(
-            userName, password, tokenConfiguration, language, appId
-        )
+        val token = identityService.loginUser(userName, password, tokenConfiguration, language, appId)
+        if (deviceToken.isNotEmpty()){
+            val jwt: DecodedJWT = JWT.decode(token.accessToken)
+            val userId = jwt.getClaim(Claim.USER_ID).asString()
+            notificationService.saveToken(userId, deviceToken, language)
+        }
         respondWithResult(HttpStatusCode.OK, token)
     }
 

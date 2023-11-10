@@ -16,10 +16,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
+import com.seiko.imageloader.rememberAsyncImagePainter
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import resources.Resources
@@ -27,7 +27,7 @@ import resources.Resources
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun OrderInfo(
-    restaurantImage: Painter,
+    restaurantImageUrl: String,
     restaurantName: String,
     restaurantLocation: String,
     orderLocation: String
@@ -42,7 +42,8 @@ fun OrderInfo(
                     border = BorderStroke(width = 1.dp, color = Theme.colors.divider),
                     shape = RoundedCornerShape(4.dp)
                 ),
-            painter = restaurantImage,
+            painter =
+            rememberAsyncImagePainter(url = restaurantImageUrl),
             contentDescription = null,
             contentScale = ContentScale.Crop
         )
