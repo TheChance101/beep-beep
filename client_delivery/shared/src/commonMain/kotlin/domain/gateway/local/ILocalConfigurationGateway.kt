@@ -10,4 +10,6 @@ interface ILocalConfigurationGateway {
     suspend fun clearTokens()
     suspend fun saveUserName(username: String)
     suspend fun getUsername(): String
+    suspend fun saveTaxiId(taxiId: String)
+    suspend fun getTaxiId(): String
 }

@@ -7,32 +7,29 @@ import domain.utils.InvalidPasswordException
 import domain.utils.InvalidUsernameException
 
 interface IManageLoginUserUseCase {
-
     suspend fun loginUser(userName: String, password: String, isKeepMeLoggedInChecked: Boolean)
-
     suspend fun getKeepMeLoggedInFlag(): Boolean
-
     suspend fun requestPermission(deliveryRequestPermission: DeliveryRequestPermission): Boolean
-
     suspend fun saveUsername(username: String)
     suspend fun getUsername(): String
 }
 
 class ManageLoginUserUseCase(
     private val remoteGateway: IIdentityRemoteGateway,
-    private val localGateWay: ILocalConfigurationGateway
+    private val localGateWay: ILocalConfigurationGateway,
 ) : IManageLoginUserUseCase {
 
     override suspend fun loginUser(
         userName: String,
         password: String,
-        isKeepMeLoggedInChecked: Boolean
+        isKeepMeLoggedInChecked: Boolean,
     ) {
         if (validateLoginFields(userName, password)) {
             val userTokens = remoteGateway.loginUser(userName, password)
             localGateWay.saveAccessToken(userTokens.accessToken)
             localGateWay.saveRefreshToken(userTokens.refreshToken)
             localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
+            localGateWay.saveTaxiId(getTaxiId())
         }
     }
 
@@ -61,6 +58,10 @@ class ManageLoginUserUseCase(
 
     override suspend fun getUsername(): String {
         return localGateWay.getUsername()
+    }
+
+    private suspend fun getTaxiId(): String {
+        return remoteGateway.getAllVehicles().first().id
     }
 
 }

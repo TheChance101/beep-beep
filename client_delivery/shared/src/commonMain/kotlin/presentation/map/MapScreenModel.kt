@@ -2,7 +2,10 @@ package presentation.map
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Location
+import domain.entity.Order
+import domain.entity.TripStatus
 import domain.usecase.IManageLoginUserUseCase
+import domain.usecase.IManageOrderUseCase
 import domain.usecase.IManageUserLocationUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -13,25 +16,45 @@ import presentation.base.ErrorState
 class MapScreenModel(
     private val currentLocation: IManageUserLocationUseCase,
     private val manageLoginUser: IManageLoginUserUseCase,
-):BaseScreenModel<MapScreenUiState,MapScreenUiEffect>(MapScreenUiState()),MapScreenInteractionsListener {
+    private val manageOrderUseCase: IManageOrderUseCase,
+) : BaseScreenModel<MapScreenUiState, MapScreenUiEffect>(MapScreenUiState()),
+    MapScreenInteractionsListener {
 
     override val viewModelScope: CoroutineScope = coroutineScope
 
     init {
-        getUserName()
+        getDriverName()
         getCurrentLocation()
-        updateOrderState()
+        getOrder()
     }
-    private fun getUserName() {
+
+    private fun getDriverName() {
         viewModelScope.launch {
             val username = manageLoginUser.getUsername()
-            updateState {
-                it.copy(
-                    username = username,
-                )
-            }
+            updateState { it.copy(username = username) }
         }
     }
+
+    private fun getOrder() {
+        updateState { it.copy(orderState = OrderState.LOADING) }
+        tryToCollect(
+            function = manageOrderUseCase::getOrders,
+            onNewValue = ::onGetOrderSuccess,
+            onError = ::onError
+        )
+    }
+
+    private fun onGetOrderSuccess(order: Order) {
+        val newOrder = order.toUiState()
+        updateState { mapScreenUiState ->
+            mapScreenUiState.copy(
+                orderUiState = newOrder,
+                orderState = OrderState.NEW_ORDER,
+                tripId = newOrder.orderId,
+            )
+        }
+    }
+
     private fun getCurrentLocation() {
         tryToCollect(
             function = currentLocation::trackCurrentLocation,
@@ -39,24 +62,14 @@ class MapScreenModel(
             onError = ::onError
         )
     }
-    private fun updateOrderState() {
+
+    private fun onGetLiveLocationSuccess(location: Location) {
         viewModelScope.launch {
             delay(5000)
             updateState {
                 it.copy(
-                    orderState = OrderState.NEW_ORDER,
-                    destinationLocation = LocationUiState(31.2001, 29.9187, "")
-                )
-            }
-        }
-    }
-    private fun onGetLiveLocationSuccess(location: Location) {
-        viewModelScope.launch {
-            delay(2000)
-            updateState {
-                it.copy(
                     errorState = null,
-                    currentLocation = location.toUiState()
+                    orderUiState = it.orderUiState.copy(restaurantLocation = location.toUiState())
                 )
             }
         }
@@ -67,47 +80,69 @@ class MapScreenModel(
             it.copy(
                 orderState = OrderState.LOADING,
                 errorState = errorState,
+                isLoading = false,
+                isButtonEnabled = true
             )
         }
     }
 
     override fun onAcceptClicked() {
-        updateState { it.copy(
-            orderState = OrderState.ACCEPTED,
-            // todo replace this with the restaurant actual location
-            destinationLocation = LocationUiState(31.2001, 29.9187, "")
-        ) }
+        updateState { it.copy(isLoading = true, isButtonEnabled = false) }
+        viewModelScope.launch {
+            currentLocation.trackCurrentLocation()
+        }
+        tryToExecute(
+            function = { manageOrderUseCase.updateTrip(state.value.tripId) },
+            onSuccess = ::onUpdateOrderSuccess,
+            onError = ::onError
+        )
+    }
+
+    override fun onReceivedClicked() {
+        updateState { it.copy(isLoading = true, isButtonEnabled = false) }
+        tryToExecute(
+            function = { manageOrderUseCase.updateTrip(state.value.tripId) },
+            onSuccess = ::onUpdateOrderSuccess,
+            onError = ::onError
+        )
+    }
+
+    override fun onDeliveredClicked() {
+        updateState { it.copy(isLoading = true, isButtonEnabled = false) }
+        tryToExecute(
+            function = { manageOrderUseCase.updateTrip(state.value.tripId) },
+            onSuccess = ::onUpdateOrderSuccess,
+            onError = ::onError
+        )
+    }
+
+    private fun onUpdateOrderSuccess(order: Order) {
+        val currentStatus = when (order.tripStatus) {
+            TripStatus.PENDING -> OrderState.LOADING
+            TripStatus.APPROVED -> OrderState.ACCEPTED
+            TripStatus.RECEIVED -> OrderState.RECEIVED
+            TripStatus.FINISHED -> {
+                sendNewEffect(MapScreenUiEffect.CloseMap)
+                OrderState.LOADING
+            }
+        }
+        updateState { mapScreenUiState ->
+            mapScreenUiState.copy(
+                orderState = currentStatus,
+                isLoading = false,
+                isButtonEnabled = true
+            )
+        }
     }
 
     override fun onRejectClicked() {
         viewModelScope.launch {
             updateState { it.copy(orderState = OrderState.LOADING) }
-            delay(2000) // just for simulation
-            updateState { it.copy(orderState = OrderState.NEW_ORDER) }
-        }
-    }
-
-    override fun onReceivedClicked() {
-      updateState { it.copy(orderState = OrderState.RECEIVED) }
-    }
-
-    override fun onDeliveredClicked() {
-        viewModelScope.launch {
-            currentLocation.startTracking()
-        }
-        viewModelScope.launch {
-            updateState { it.copy(orderState = OrderState.DELIVERED) }
-            updateState { it.copy(orderState = OrderState.LOADING) }
-            delay(2000)
-            updateState { it.copy(orderState = OrderState.NEW_ORDER) }
         }
     }
 
     override fun onCloseClicked() {
-        viewModelScope.launch {
-            currentLocation.stopTracking()
-        }
+        viewModelScope.launch { currentLocation.stopTracking() }
         sendNewEffect(MapScreenUiEffect.CloseMap)
     }
-
 }
