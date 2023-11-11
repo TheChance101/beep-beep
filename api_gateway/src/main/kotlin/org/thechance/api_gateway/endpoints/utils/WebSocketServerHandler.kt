@@ -40,12 +40,9 @@ class WebSocketServerHandler(
     suspend inline fun <reified T> tryToCollectOrders(
         values: Flow<T>,
         session: DefaultWebSocketServerSession,
-        language: String,
-        orderNotification: NotificationDto,
     ) {
         try {
-            values.flowOn(Dispatchers.IO).collect { value ->
-                notificationService.sendNotificationToUser(orderNotification, language)
+            values.collectLatest { value ->
                 session.sendSerialized(value)
             }
         } catch (e: Exception) {

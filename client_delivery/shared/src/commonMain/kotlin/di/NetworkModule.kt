@@ -10,6 +10,8 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.client.request.header
+import io.ktor.http.URLBuilder
+import io.ktor.http.URLProtocol
 import io.ktor.http.Url
 import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
 import io.ktor.serialization.kotlinx.json.json
@@ -36,8 +38,14 @@ val networkModule = module {
             }
             install(WebSockets) {
                 contentConverter = KotlinxWebsocketSerializationConverter(Json)
-                Url("ws://beep-beep-api-gateway-nap2u.ondigitalocean.app/")
-                //Url("ws://192.168.1.100:8080/")
+                val urlBuilder = URLBuilder(
+                    protocol = URLProtocol.WSS,
+                    host = "beep-beep-api-gateway-nap2u.ondigitalocean.app/",
+//    Local         host = "192.168.1.100",
+//    Local         port = 8080
+                )
+                Url(urlBuilder)
+                pingInterval = 10000
             }
             install(ContentNegotiation) {
                 json(

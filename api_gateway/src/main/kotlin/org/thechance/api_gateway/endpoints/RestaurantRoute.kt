@@ -9,10 +9,10 @@ import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.model.restaurant.RestaurantDto
-import org.thechance.api_gateway.data.service.IdentityService
-import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.data.model.restaurant.getRestaurantOptions
+import org.thechance.api_gateway.data.service.IdentityService
 import org.thechance.api_gateway.data.service.ImageService
+import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.endpoints.utils.*
 import org.thechance.api_gateway.util.Claim.USER_ID
 import org.thechance.api_gateway.util.Role
@@ -61,15 +61,8 @@ fun Route.restaurantRoutes() {
 
         get("/{restaurantId}/meals") {
             val language = extractLocalizationHeader()
-            val page = call.parameters["page"]?.toInt() ?: 1
-            val limit = call.parameters["limit"]?.toInt() ?: 20
             val restaurantId = call.parameters["restaurantId"]?.trim().toString()
-            val meals = restaurantService.getMealsByRestaurantId(
-                restaurantId = restaurantId,
-                page = page,
-                limit = limit,
-                languageCode = language
-            )
+            val meals = restaurantService.getMealsByRestaurantId(restaurantId = restaurantId, languageCode = language)
             respondWithResult(HttpStatusCode.OK, meals)
         }
 
@@ -123,11 +116,11 @@ fun Route.restaurantRoutes() {
                 val language = extractLocalizationHeader()
                 val multipartDto = receiveMultipart<RestaurantDto>(imageValidator)
                 val imageUrl = multipartDto.image?.let { image ->
-                        imageService.uploadImage(image, multipartDto.data.name ?: "null")
-                    }
+                    imageService.uploadImage(image, multipartDto.data.name ?: "null")
+                }
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val ownerId = tokenClaim?.get(USER_ID).toString()
-                val newRestaurantDto=    multipartDto.data.copy(ownerId = ownerId, restaurantImage = imageUrl)
+                val newRestaurantDto = multipartDto.data.copy(ownerId = ownerId, restaurantImage = imageUrl)
                 val updatedRestaurant = restaurantService.updateRestaurant(
                     languageCode = language, isAdmin = false, restaurantDto = newRestaurantDto
                 )

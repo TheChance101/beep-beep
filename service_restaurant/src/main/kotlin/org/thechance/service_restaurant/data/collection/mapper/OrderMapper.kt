@@ -13,7 +13,7 @@ fun Order.toCollection() = OrderCollection(
     meals = meals.map { it.toCollection() },
     totalPrice = totalPrice,
     createdAt = createdAt,
-    orderStatus = status.statusCode
+    orderStatus = status?.statusCode ?: Order.Status.PENDING.statusCode
 )
 
 fun OrderCollection.toEntity() = Order(

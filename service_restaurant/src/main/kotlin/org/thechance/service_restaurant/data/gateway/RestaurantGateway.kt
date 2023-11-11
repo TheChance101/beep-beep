@@ -103,15 +103,13 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
         ).toList().first().cuisines.filterNot { it.isDeleted }.toEntity()
     }
 
-    override suspend fun getMealsByRestaurantId(
-        restaurantId: String,
-        page: Int,
-        limit: Int
-    ): List<Meal> {
+    override suspend fun getMealsByRestaurantId(restaurantId: String): List<Meal> {
         return container.mealCollection.find(
-            MealCollection::restaurantId eq ObjectId(restaurantId),
-            MealCollection::isDeleted eq false
-        ).paginate(page, limit).toList().toMealEntity()
+            and(
+                MealCollection::restaurantId eq ObjectId(restaurantId),
+                MealCollection::isDeleted eq false
+            )
+        ).toList().toMealEntity()
 
     }
 
