@@ -17,7 +17,7 @@ class OrderScreenModel(
     override val viewModelScope: CoroutineScope = coroutineScope
 
     init {
-        getInCookingOrders()
+        getOrders()
         getPendingOrders()
     }
 
@@ -59,24 +59,31 @@ class OrderScreenModel(
         if (pendingOrders) {
             val totalOrders = state.value.totalOrders
             val newTotalOrders = totalOrders.plus(1)
-            updateState { it.copy(pendingOrders = state.value.pendingOrders + orders.toOrderUiState(), totalOrders = newTotalOrders) }
+            updateState {
+                it.copy(
+                    pendingOrders = state.value.pendingOrders + orders.toOrderUiState(),
+                    totalOrders = newTotalOrders
+                )
+            }
         }
     }
 
-    private fun getInCookingOrders() {
-        tryToCollect(
-            {manageOrders.getCurrentOrders(restaurantId)},
-            ::onGetCookingSuccess,
+    private fun getOrders() {
+        tryToExecute(
+            { manageOrders.getActiveOrders(restaurantId) },
+            ::onGetOrdersSuccess,
             ::onGetOrdersError
         )
     }
 
-    private fun onGetCookingSuccess(orders: Order) {
-        val inCookingOrders = orders.orderState == OrderStatus.IN_COOKING
-        if (inCookingOrders) {
-            val totalOrders = state.value.totalOrders
-            val newTotalOrders = totalOrders.plus(1)
-            updateState { it.copy(inCookingOrders = state.value.inCookingOrders + orders.toOrderUiState(), totalOrders = newTotalOrders) }
+    private fun onGetOrdersSuccess(orders: List<Order>) {
+        val ordersUiState = orders.map { it.toOrderUiState() }
+        updateState { currentState ->
+            currentState.copy(
+                inCookingOrders = ordersUiState.filter { it.orderState == OrderStatus.IN_COOKING },
+                pendingOrders = ordersUiState.filter { it.orderState == OrderStatus.PENDING },
+                totalOrders = state.value.inCookingOrders.size + state.value.pendingOrders.size
+            )
         }
     }
 

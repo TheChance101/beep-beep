@@ -124,7 +124,7 @@ class OrderScreen(private val restaurantId: String) :
                             OrderTextButton(
                                 text = Resources.strings.approve,
                                 onClick = {
-                                    listener.onClickCancelOrder(order.id)
+                                    listener.onClickApproveOrder(order.id)
                                 },
                             )
                         }
