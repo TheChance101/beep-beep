@@ -1,6 +1,7 @@
 package org.thechance.service_restaurant.api.models
 
 import kotlinx.serialization.Serializable
+import org.thechance.service_restaurant.domain.entity.Order
 
 @Serializable
 data class OrderDto(
@@ -13,5 +14,5 @@ data class OrderDto(
     val totalPrice: Double? = null,
     val currency: String? = null,
     val createdAt: Long? = null,
-    val orderStatus: Int = 0
+    val orderStatus: Int? = null
 )
