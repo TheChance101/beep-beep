@@ -1,21 +1,21 @@
 package presentation.map.composable
 
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import domain.entity.Location
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 import com.mohamedrejeb.calf.ui.web.WebView
 import com.mohamedrejeb.calf.ui.web.rememberWebViewState
+import presentation.map.LocationUiState
 
 @Composable
 fun MapView(
-    modifier: Modifier,
-    currentLocation: Location,
-    destination: Location?,
-) {
+    deliveryLocation: LocationUiState,
+    destination: LocationUiState,
+    modifier: Modifier = Modifier,
+    ) {
     val state = rememberWebViewState(url = MAP_URL)
     state.settings.javaScriptEnabled = true
 
@@ -23,7 +23,7 @@ fun MapView(
         // Get the current loading state
     }
 
-    AnimatedVisibility(destination == null) {
+    AnimatedVisibility(false) {
         LaunchedEffect(true) {
             val jsCode = """
                 GetMap();
@@ -34,20 +34,19 @@ fun MapView(
         }
     }
 
-    LaunchedEffect(key1 = currentLocation) {
-        destination?.let { location ->
+    LaunchedEffect(key1 = deliveryLocation) {
+        destination.let { location ->
             state.evaluateJavascript("clearDirections()", null)
             state.evaluateJavascript(
-                "getDirections(${currentLocation.latitude},${currentLocation.longitude},${location.latitude},${location.longitude})",
+                "getDirections(${deliveryLocation.lat},${deliveryLocation.lng},${location.lat},${location.lng})",
                 null
             )
         }
     }
 
-
     WebView(
         state = state,
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     )
 }
 

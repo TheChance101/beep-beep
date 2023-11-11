@@ -66,6 +66,15 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
             .paginate(page, limit).toList().toEntity()
     }
 
+    override suspend fun getTaxisForDriver(driverId: String): List<Taxi> {
+        return container.taxiCollection.find(
+            and(
+                TaxiCollection::isDeleted eq false,
+                TaxiCollection::driverId eq ObjectId(driverId)
+            )
+        ).toList().toEntity()
+    }
+
     override suspend fun deleteTaxi(taxiId: String): Taxi? {
         return container.taxiCollection.findOneAndUpdate(
             filter = TaxiCollection::id eq ObjectId(taxiId),

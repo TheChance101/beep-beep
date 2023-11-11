@@ -1,5 +1,7 @@
 package org.thechance.api_gateway.endpoints
 
+import com.auth0.jwt.JWT
+import com.auth0.jwt.interfaces.DecodedJWT
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -44,7 +46,9 @@ fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
         val appId = extractApplicationIdHeader()
         val token = identityService.loginUser(userName, password, tokenConfiguration, language, appId)
         if (deviceToken.isNotEmpty()){
-            notificationService.saveToken(token.userId, deviceToken, language)
+            val jwt: DecodedJWT = JWT.decode(token.accessToken)
+            val userId = jwt.getClaim(Claim.USER_ID).asString()
+            notificationService.saveToken(userId, deviceToken, language)
         }
         respondWithResult(HttpStatusCode.OK, token)
     }

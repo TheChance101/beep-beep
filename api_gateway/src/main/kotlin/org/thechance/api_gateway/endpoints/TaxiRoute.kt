@@ -77,8 +77,9 @@ fun Route.taxiRoutes() {
         }
     }
 
-    authenticateWithRole(Role.DASHBOARD_ADMIN) {
-        route("/taxis") {
+    route("/taxis") {
+
+        authenticateWithRole(Role.DASHBOARD_ADMIN) {
             get("/search") {
                 val language = extractLocalizationHeader()
                 val page = call.parameters["page"]?.toInt() ?: 1
@@ -91,7 +92,28 @@ fun Route.taxiRoutes() {
                 respondWithResult(HttpStatusCode.OK, result)
             }
         }
+
+        authenticateWithRole(Role.TAXI_DRIVER) {
+            get("/belongs-to-taxi-driver") {
+                val language = extractLocalizationHeader()
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val driverId = tokenClaim?.get(Claim.USER_ID).toString()
+                val taxis = taxiService.getTaxisByDriverId(driverId = driverId, language)
+                respondWithResult(HttpStatusCode.OK, taxis)
+            }
+        }
+
+        authenticateWithRole(Role.DELIVERY) {
+            get("/belongs-to-delivery-driver") {
+                val language = extractLocalizationHeader()
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val driverId = tokenClaim?.get(Claim.USER_ID).toString()
+                val taxis = taxiService.getTaxisByDriverId(driverId = driverId, language)
+                respondWithResult(HttpStatusCode.OK, taxis)
+            }
+        }
     }
+
 
     route("/trip") {
 

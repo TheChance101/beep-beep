@@ -5,11 +5,14 @@ import data.remote.mapper.toEntity
 import data.remote.model.BaseResponse
 import domain.entity.DeliveryRequestPermission
 import data.remote.model.SessionDto
+import data.remote.model.TaxiDto
 import domain.entity.Session
+import domain.entity.Taxi
 import domain.gateway.remote.IIdentityRemoteGateway
 import domain.utils.InvalidCredentialsException
 import io.ktor.client.HttpClient
 import io.ktor.client.request.forms.submitForm
+import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
@@ -59,6 +62,12 @@ class IdentityRemoteGateway(client: HttpClient) : IIdentityRemoteGateway,
         }.value ?: throw Exception()
 
         return result
+    }
+
+    override suspend fun getAllVehicles(): List<Taxi> {
+        return tryToExecute<BaseResponse<List<TaxiDto>>> {
+            get("taxis/belongs-to-delivery-driver")
+        }.value?.map { it.toEntity() } ?: throw Exception()
     }
 
 }
