@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,50 +26,59 @@ import resources.Resources
 fun ChartItem(
     imagePainter: Painter,
     title: String,
+    totalPrice: String,
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(Theme.radius.medium),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Column(
-        modifier.widthIn(max = 328.dp).clip(shape).background(Theme.colors.surface)
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .background(Theme.colors.surface)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
 
-        Column(
-            Modifier.fillMaxWidth(),
-
-            ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
-
-                ) {
-                Column() {
-                    Image(painter = imagePainter, contentDescription = null, Modifier.size(24.dp))
-                    Text(
-                        text = title,
-                        style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary)
-                    )
-                }
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                    horizontalAlignment = Alignment.End
-                ) {
-                    Text(
-                        text = "$4700",
-                        style = Theme.typography.title.copy(color = Theme.colors.contentPrimary)
-                    )
-                    Text(
-                        text = Resources.strings.thisWeek,
-                        style = Theme.typography.caption.copy(color = Theme.colors.contentTertiary)
-                    )
-                }
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Image(
+                    painter = imagePainter,
+                    contentDescription = "",
+                    Modifier.size(24.dp)
+                )
+                Text(
+                    text = title,
+                    style = Theme.typography.titleMedium,
+                    color = Theme.colors.contentPrimary
+                )
             }
-            Box(Modifier.fillMaxWidth().aspectRatio(1f)) {
-                content()
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalAlignment = Alignment.End
+            ) {
+                Text(
+                    text = totalPrice,
+                    style = Theme.typography.title,
+                    color = Theme.colors.contentPrimary
+                )
+                Text(
+                    text = Resources.strings.thisWeek,
+                    style = Theme.typography.caption,
+                    color = Theme.colors.contentTertiary
+                )
             }
         }
+        Box(Modifier.fillMaxWidth()) {
+            content()
+        }
     }
+
 }

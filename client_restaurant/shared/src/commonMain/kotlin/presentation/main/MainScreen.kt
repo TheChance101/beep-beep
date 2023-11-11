@@ -133,6 +133,7 @@ class MainScreen(private val restaurantId: String) :
                     ChartItem(
                         imagePainter = painterResource(Resources.images.revenue),
                         title = state.orderUiState.label,
+                        totalPrice = "700$"
                     ) {
                         BarChart(
                             chartParameters = listOf(
@@ -153,6 +154,7 @@ class MainScreen(private val restaurantId: String) :
                     ChartItem(
                         imagePainter = painterResource(Resources.images.orders),
                         title = state.revenueUiState.label,
+                        totalPrice = "1700$"
                     ) {
                         LineChart(
                             linesParameters = listOf(
