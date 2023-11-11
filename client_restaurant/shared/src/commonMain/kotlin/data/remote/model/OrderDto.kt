@@ -11,12 +11,18 @@ data class OrderDto(
     val userId: String,
     @SerialName("restaurantId")
     val restaurantId: String,
+    @SerialName("restaurantName")
+    val restaurantName: String,
+    @SerialName("restaurantImage")
+    val restaurantImage: String,
     @SerialName("meals")
     val meals: List<MealDto>,
     @SerialName("totalPrice")
     val totalPrice: Double? = null,
     @SerialName("createdAt")
-    val createdAt: String? = null,
+    val createdAt: Long? = null,
+    @SerialName("currency")
+    val currency: String? = null,
     @SerialName("orderStatus")
     val orderStatus: Int?=null
 ) {
@@ -30,8 +36,8 @@ data class OrderDto(
         val mealName: String,
         @SerialName("quantity")
         val quantity: Int,
-//        @SerialName("price")
-//        val price: Int,
+        @SerialName("price")
+        val price: Double,
     )
 }
 

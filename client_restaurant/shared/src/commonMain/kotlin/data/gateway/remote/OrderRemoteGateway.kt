@@ -12,29 +12,15 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import presentation.base.UnknownErrorException
 
 
 class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway,
     BaseRemoteGateway(client = client) {
 
-    override suspend fun getCurrentOrders(restaurantId: String): Flow<Order>? {
-        return null
-        /*return tryToExecute<BaseResponse<List<OrderDto>>> {
-
-            try {
-                ws("/order/restaurant/$restaurantId") {
-                    //connect
-                    //getCurrentOrders + get active orders
-                }
-            } catch (e: Exception) {
-                //disconnect
-                //get active orders
-            }
-
-            get("/orders/$restaurantId")
-            //todo add pagination
-        }.value.toOrderEntity()*/
+    override suspend fun getCurrentOrders(restaurantId: String): Flow<Order> {
+        return  client.tryToExecuteWebSocket<OrderDto>("/orders/$restaurantId").map { it.toEntity() }
     }
 
     override suspend fun getActiveOrders(restaurantId: String): List<Order> {

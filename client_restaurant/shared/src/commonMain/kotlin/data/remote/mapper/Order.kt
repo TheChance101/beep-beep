@@ -3,9 +3,8 @@ package data.remote.mapper
 import data.remote.model.OrderDto
 import domain.entity.Order
 import domain.entity.OrderStatus
-import domain.utils.Constant
+import domain.utils.toLocalDateTime
 import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -27,8 +26,9 @@ fun OrderDto.toEntity(): Order {
         restaurantId = restaurantId,
         meals = meals.toOrderMeaEntity(),
         totalPrice = totalPrice ?: 0.0,
-        createdAt = createdAt?.let { LocalDateTime.parse(it) } ?: Clock.System.now()
-            .toLocalDateTime(TimeZone.currentSystemDefault()),
+        createdAt = createdAt?.let { createdAt ->
+            createdAt.toLocalDateTime()
+        } ?: Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
         orderState = OrderStatus.getOrderStatus(orderStatus ?: Constant.PENDING_ORDER)
 
     )

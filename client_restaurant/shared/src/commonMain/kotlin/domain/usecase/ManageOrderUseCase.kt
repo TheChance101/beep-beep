@@ -2,9 +2,10 @@ package domain.usecase
 
 import domain.entity.Order
 import domain.gateway.remote.IOrderRemoteGateway
+import kotlinx.coroutines.flow.Flow
 
 interface IManageOrderUseCase {
-    suspend fun getCurrentOrders(restaurantId: String): List<Order>
+    suspend fun getCurrentOrders(restaurantId: String): Flow<Order>
     suspend fun updateOrderState(orderId: String): Order
     suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
     suspend fun getOrdersRevenueByDaysBefore(
@@ -20,9 +21,8 @@ interface IManageOrderUseCase {
 
 class ManageOrderUseCase(private val orderRemoteGateway: IOrderRemoteGateway) :
     IManageOrderUseCase {
-    override suspend fun getCurrentOrders(restaurantId: String): List<Order> {
-        return emptyList()
-        // return orderRemoteGateway.getCurrentOrders(restaurantId)
+    override suspend fun getCurrentOrders(restaurantId: String): Flow<Order>{
+         return orderRemoteGateway.getCurrentOrders(restaurantId)
     }
 
     override suspend fun updateOrderState(orderId: String): Order {

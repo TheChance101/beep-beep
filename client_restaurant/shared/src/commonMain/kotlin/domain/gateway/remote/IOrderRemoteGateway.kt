@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface IOrderRemoteGateway {
 
-    suspend fun getCurrentOrders(restaurantId: String): Flow<Order>?//todo nullable just for now
+    suspend fun getCurrentOrders(restaurantId: String): Flow<Order>
     suspend fun getActiveOrders(restaurantId: String): List<Order>
     suspend fun updateOrderState(orderId: String): Order
     suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): PaginationItems<Order>

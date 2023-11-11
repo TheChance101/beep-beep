@@ -1,7 +1,6 @@
 package domain.entity
 
 import kotlinx.datetime.LocalDateTime
-import presentation.base.RequestException
 
 data class Order(
     val id: String,

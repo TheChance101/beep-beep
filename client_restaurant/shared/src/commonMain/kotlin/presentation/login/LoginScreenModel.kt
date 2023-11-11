@@ -15,6 +15,13 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 
+//    init {
+//        viewModelScope.launch {
+//            if (loginUserUseCase.getKeepMeLoggedInFlag()) {
+//                sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
+//            }
+//        }
+//    }
     override fun onUserNameChanged(userName: String) {
         updateState { it.copy(userName = userName, isUsernameError = false) }
     }
@@ -32,7 +39,7 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
         password: String,
         isKeepMeLoggedInChecked: Boolean
     ) {
-        updateState { it.copy(isLoading = true, isEnable = false) }
+        updateState { it.copy(isLoading = true, noInternetConnection = false, isEnable = false) }
         tryToExecute(
             { loginUserUseCase.loginUser(userName, password, isKeepMeLoggedInChecked) },
             { onLoginSuccess() },
@@ -45,6 +52,7 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
             it.copy(
                 isLoading = false,
                 isSuccess = true,
+                noInternetConnection = false,
                 isCredentialsError = false,
                 usernameErrorMsg = "",
                 passwordErrorMsg = ""
@@ -61,7 +69,9 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
 
     private fun handleErrorState(error: ErrorState) {
         when (error) {
-            ErrorState.NoInternet -> {}
+            ErrorState.NoInternet -> {
+                updateState { it.copy(noInternetConnection = true) }
+            }
             ErrorState.RequestFailed -> {}
             ErrorState.UnAuthorized -> {}
             ErrorState.HasNoPermission -> {
