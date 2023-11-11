@@ -14,5 +14,5 @@ data class FoodOrderDto(
     @SerialName("meals") val meals: List<CartMealDto>? = null,
     @SerialName("totalPrice") val totalPrice: Double? = null,
     @SerialName("createdAt") val createdAt: Long? = null,
-    @SerialName("orderStatus") val orderStatus: Int = 0,
+    @SerialName("orderStatus") val orderStatus: Int? = null,
 )
