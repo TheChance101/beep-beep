@@ -40,7 +40,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 22.74,
             createdAt = "2022-05-16T08:23",
-            orderState = 0
+            orderStatus = 0
         ),
         OrderDto(
             id = "4d7bdc9b-6233-44ef-80a0-6a09ef856862",
@@ -56,7 +56,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 28.48,
             createdAt = "2022-05-16T08:23",
-            orderState = 2
+            orderStatus = 2
         ),
         OrderDto(
             id = "891ecf91-62bf-4d91-96bf-8d4cc8271a81",
@@ -84,7 +84,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 100.49,
             createdAt = "2022-05-16T08:23",
-            orderState = 3
+            orderStatus = 3
         ),
         OrderDto(
             id = "f5c8b31e-5c4d-4c8a-babc-0e9463daad20",
@@ -100,7 +100,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 22.74,
             createdAt = "2022-05-16T08:23",
-            orderState = 1
+            orderStatus = 1
         ),
         OrderDto(
             id = "4d7bdc9b-6233-44ef-80a0-6a09ef856862",
@@ -134,7 +134,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 300.5,
             createdAt = "2022-05-16T08:23",
-            orderState = 1
+            orderStatus = 1
         ),
         OrderDto(
             id = "891ecf91-62bf-4d91-96bf-8d4cc8271a81",
@@ -156,7 +156,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 26.49,
             createdAt = "2022-05-16T08:23",
-            orderState = 1
+            orderStatus = 1
         ),
         OrderDto(
             id = "d59b00c3-923c-4cf4-bd0e-3a4c997a3156",
@@ -178,7 +178,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 20.73,
             createdAt = "2022-05-16T08:23",
-            orderState = 2
+            orderStatus = 2
         ),
         OrderDto(
             id = "9e94fdd9-9cbf-4b7e-a97e-8ea31c4876b2",
@@ -200,7 +200,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 41.96,
             createdAt = "2022-05-16T08:23",
-            orderState = 1
+            orderStatus = 1
         ),
         OrderDto(
             id = "c07d45e5-4c5d-4847-a518-8f21c66620f9",
@@ -216,7 +216,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 35.98,
             createdAt = "2022-05-16T08:23",
-            orderState = 0
+            orderStatus = 0
         ),
         OrderDto(
             id = "d59b00c3-923c-4cf4-bd0e-3a4c997a3156",
@@ -238,7 +238,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 20.73,
             createdAt = "2022-05-16T08:23",
-            orderState = 0
+            orderStatus = 0
         ),
         OrderDto(
             id = "9e94fdd9-9cbf-4b7e-a97e-8ea31c4876b2",
@@ -266,7 +266,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 41.96,
             createdAt = "2022-05-16T08:23",
-            orderState = 1
+            orderStatus = 1
         ),
         OrderDto(
             id = "c07d45e5-4c5d-4847-a518-8f21c66620f9",
@@ -288,7 +288,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 35.98,
             createdAt = "2022-05-16T08:23",
-            orderState = 1
+            orderStatus = 1
         ),
         OrderDto(
             id = "1a2b3c4d-5e6f-7a8b-9c0d-e1f2g3h4i5j6",
@@ -310,7 +310,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 28.45,
             createdAt = "2022-05-16T08:23",
-            orderState = 0
+            orderStatus = 0
         ),
         OrderDto(
             id = "2b3c4d5e-6f7a-8b9c-0d1e-2f3g4h5i6j7",
@@ -332,7 +332,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 23.99,
             createdAt = "2022-05-16T08:23",
-            orderState = 4
+            orderStatus = 4
         ),
     )
 
@@ -659,11 +659,11 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
 
     //region order
     override suspend fun getCurrentOrders(): List<Order> {
-        return orders.filter { it.orderState == 0 || it.orderState == 1 }.toOrderEntity()
+        return orders.filter { it.orderStatus == 0 || it.orderStatus == 1 }.toOrderEntity()
     }
 
     override suspend fun getOrdersHistory(restaurantId: String): List<Order> {
-        return orders.filter { it.orderState == 2 || it.orderState == 3 }.toOrderEntity()
+        return orders.filter { it.orderStatus == 2 || it.orderStatus == 3 }.toOrderEntity()
     }
 
     override suspend fun updateOrderState(orderId: String, orderState: Int): Order {

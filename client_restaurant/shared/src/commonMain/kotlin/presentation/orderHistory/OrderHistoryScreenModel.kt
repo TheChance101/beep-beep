@@ -29,17 +29,21 @@ class OrderHistoryScreenModel(
 
     private suspend fun getSelectedOrders(): List<Order> {
         return when (state.value.selectedType) {
+
             OrderHistoryScreenUiState.OrderSelectType.FINISHED -> {
+                println("bbbb")
                 ordersManagement.getFinishedOrdersHistory(restaurantId,1,10)
             }
 
             OrderHistoryScreenUiState.OrderSelectType.CANCELLED -> {
+                println("jjjjj")
                 ordersManagement.getCanceledOrdersHistory(restaurantId,1,10)
             }
         }
     }
 
     private fun onOrdersSuccess(orders: List<Order>) {
+        println("aaaaa<${orders}>")
         updateState {
             it.copy(
                 errorState = null,
@@ -49,6 +53,7 @@ class OrderHistoryScreenModel(
     }
 
     private fun onError(errorState: ErrorState) {
+        println("cccc")
         updateState { it.copy(errorState = errorState) }
     }
 

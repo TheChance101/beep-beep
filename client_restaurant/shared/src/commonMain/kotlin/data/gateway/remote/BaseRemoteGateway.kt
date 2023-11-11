@@ -26,7 +26,7 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
             println("${e.message}")
             throw NoInternetException()
         } catch (e: Exception) {
-            println("${e.message}")
+            println("eeeeeeeeeeeeeeeeeee${e.message}")
             throw NoInternetException()
         }
     }

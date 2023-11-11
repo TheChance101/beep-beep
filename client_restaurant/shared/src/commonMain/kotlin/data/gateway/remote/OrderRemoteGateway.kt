@@ -4,6 +4,7 @@ import data.remote.mapper.toEntity
 import data.remote.mapper.toOrderEntity
 import data.remote.model.BaseResponse
 import data.remote.model.OrderDto
+import data.remote.model.PaginationResponse
 import domain.entity.Order
 import domain.gateway.remote.IOrderRemoteGateway
 import io.ktor.client.HttpClient
@@ -52,9 +53,11 @@ class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway,
         page: Int,
         limit: Int
     ): List<Order> {
-        return tryToExecute<BaseResponse<List<OrderDto>>> {
-            get("/order/history/$restaurantId?page=$page&limit=$limit")
-        }.value?.toOrderEntity() ?: emptyList()
+        val result= tryToExecute<BaseResponse<PaginationResponse<OrderDto>>> {
+            get("/orders/history/$restaurantId")
+        }
+        println("getOrdersHistory: ${result.value}")
+        return result.value?.items?.toOrderEntity()?: emptyList()
     }
 
     //for charts

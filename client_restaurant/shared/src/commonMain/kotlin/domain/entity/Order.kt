@@ -7,7 +7,7 @@ data class Order(
     val id: String,
     val userId: String,
     val restaurantId: String,
-    val meals: List<Order.Meal>,
+    val meals: List<Meal>,
     val totalPrice: Double,
     val createdAt: LocalDateTime,
     val orderState: OrderState

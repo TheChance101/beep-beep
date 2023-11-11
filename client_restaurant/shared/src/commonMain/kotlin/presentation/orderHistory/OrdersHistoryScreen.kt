@@ -42,7 +42,7 @@ class OrdersHistoryScreen(private val restaurantId: String) :
         initScreen(getScreenModel { parametersOf(restaurantId) })
     }
 
-    @OptIn(ExperimentalFoundationApi::class, ExperimentalResourceApi::class)
+    @OptIn( ExperimentalResourceApi::class)
     @Composable
     override fun onRender(
         state: OrderHistoryScreenUiState,
@@ -107,11 +107,11 @@ class OrdersHistoryScreen(private val restaurantId: String) :
                 }
             }
         }
-        BpEmptyScreen(
-            painter = painterResource(Resources.images.emptyScreen),
-            text = Resources.strings.noOrderHistory,
-            isVisible = (state.orders.isEmpty()),
-        )
+//        BpEmptyScreen(
+//            painter = painterResource(Resources.images.emptyScreen),
+//            text = Resources.strings.noOrderHistory,
+//            isVisible = (state.orders.isEmpty()),
+//        )
     }
 
     override fun onEffect(effect: OrderHistoryScreenUiEffect, navigator: Navigator) {

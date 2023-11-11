@@ -43,8 +43,11 @@ class ManageOrderUseCase(private val orderRemoteGateway: IOrderRemoteGateway) : 
         page: Int,
         limit: Int
     ): List<Order> {
-        return orderRemoteGateway.getOrdersHistory(restaurantId, page, limit)
+        println("uuuuuuuuuuu")
+       val result=orderRemoteGateway.getOrdersHistory(restaurantId, page, limit)
             .filter { it.orderState == OrderState.FINISHED }
+        println("getFinishedOrdersHistory: ${result}")
+        return result
     }
 
     override suspend fun getCanceledOrdersHistory(
@@ -52,6 +55,7 @@ class ManageOrderUseCase(private val orderRemoteGateway: IOrderRemoteGateway) : 
         page: Int,
         limit: Int
     ): List<Order> {
+        println("pppppppppppp")
         return orderRemoteGateway.getOrdersHistory(restaurantId, page, limit)
             .filter { it.orderState == OrderState.CANCELED }
     }

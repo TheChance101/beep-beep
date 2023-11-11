@@ -18,7 +18,7 @@ data class OrderDto(
     @SerialName("createdAt")
     val createdAt: String? = null,
     @SerialName("orderStatus")
-    val orderStatus: Int
+    val orderStatus: Int?=null
 ) {
     @Serializable
     data class MealDto(
@@ -30,8 +30,8 @@ data class OrderDto(
         val mealName: String,
         @SerialName("quantity")
         val quantity: Int,
-        @SerialName("price")
-        val price: Int,
+//        @SerialName("price")
+//        val price: Int,
     )
 }
 
