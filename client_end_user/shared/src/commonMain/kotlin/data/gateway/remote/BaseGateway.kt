@@ -10,6 +10,7 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.websocket.receiveDeserialized
 import io.ktor.client.plugins.websocket.webSocket
+import io.ktor.client.plugins.websocket.wss
 import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -21,7 +22,7 @@ abstract class BaseGateway(val client: HttpClient) {
 
     suspend inline fun <reified T> tryToExecuteWebSocket(path: String): Flow<T> {
         return flow {
-            client.webSocket(path = path) {
+            client.wss(path = path) {
                 while (true) {
                     try {
                         emit(receiveDeserialized<T>())

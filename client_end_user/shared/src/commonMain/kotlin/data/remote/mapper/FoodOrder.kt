@@ -18,7 +18,7 @@ fun FoodOrderDto.toEntity() = FoodOrder(
     meals = meals?.toEntity(restaurantName, currency = currency) ?: emptyList(),
     totalPrice = totalPrice ?: 0.0,
     createdAt = createdAt.toString(),
-    orderStatus = FoodOrder.OrderStatusInRestaurant.getOrderStatus(orderStatus),
+    orderStatus = FoodOrder.OrderStatusInRestaurant.getOrderStatus(orderStatus ?: 0),
     orderEstimatedTime = LocalTime(0, 30).minute,
 )
 

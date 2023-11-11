@@ -98,9 +98,6 @@ class UserGateway(
             return response.value?.map { it.toEntity() }
                 ?: throw GeneralException.NotFoundException
         } else {
-            // here we can handle different errors by checking response.status.code
-            // and also we can use the message sent from the server to pass it throw the exception
-            // and show it to user if we want
             if (response.status.code == 404) {
                 throw GeneralException.NotFoundException
             } else {
@@ -167,10 +164,6 @@ class UserGateway(
                 parameter("limit", limit)
             }
         }.value
-
-        println("History before mapping = ${result?.items}")
-        println("History After mapping = ${result?.items?.map { it.toEntity() }}")
-
         return paginateData(
             result = result?.items?.map { it.toEntity() } ?: emptyList(),
             page = page,

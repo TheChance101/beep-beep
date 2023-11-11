@@ -12,7 +12,7 @@ data class Order(
     val totalPrice: Double,
     val currency: String,
     val createdAt: LocalDateTime,
-    val status: Status
+    val status: Status? = null
 ) {
     enum class Status(val statusCode: Int) {
         PENDING(0),

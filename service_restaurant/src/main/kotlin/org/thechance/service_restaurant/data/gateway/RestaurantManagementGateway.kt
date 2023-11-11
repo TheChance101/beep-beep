@@ -245,8 +245,13 @@ class RestaurantManagementGateway(private val container: DataBaseContainer) : IR
     ): List<Order> {
         return container.orderCollection.aggregate<OrderWithRestaurant>(
             match(
-                OrderCollection::restaurantId eq ObjectId(restaurantId),
-                OrderCollection::orderStatus eq Order.Status.DONE.statusCode
+                and(
+                    OrderCollection::restaurantId eq ObjectId(restaurantId),
+                    OrderCollection::orderStatus `in` listOf(
+                        Order.Status.DONE.statusCode,
+                        Order.Status.CANCELED.statusCode
+                    )
+                )
             ),
             lookup(
                 from = DataBaseContainer.RESTAURANT_COLLECTION,
