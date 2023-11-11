@@ -1,7 +1,7 @@
 package presentation.order
 
 import domain.entity.Order
-import domain.entity.OrderState
+import domain.entity.OrderStatus
 
 data class OrderScreenUiState(
     val inCookingOrders: List<OrderUiState> = emptyList(),
@@ -13,7 +13,7 @@ data class OrderUiState(
     val id: String = "",
     val orderMealUiStates: List<OrderMealUiState> = emptyList(),
     val totalPrice: Double = 0.0,
-    val orderState: OrderState = OrderState.PENDING,
+    val orderState: Int = OrderStatus.PENDING.key,
     val createdAt: String = "",
 )
 
@@ -36,7 +36,7 @@ fun Order.toOrderUiState(): OrderUiState {
         id = id,
         orderMealUiStates = meals.map { it.toOrderMealUiState() },
         totalPrice = totalPrice,
-        orderState = orderState,
+        orderState = orderState.key,
     )
 }
 

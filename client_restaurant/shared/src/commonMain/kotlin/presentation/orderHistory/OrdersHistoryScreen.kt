@@ -1,7 +1,6 @@
 package presentation.orderHistory
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -22,12 +21,9 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAnimatedTabLayout
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
-import presentation.composable.BpEmptyScreen
 import presentation.order.composable.OrderCard
 import presentation.order.composable.header
 import resources.Resources
@@ -42,7 +38,6 @@ class OrdersHistoryScreen(private val restaurantId: String) :
         initScreen(getScreenModel { parametersOf(restaurantId) })
     }
 
-    @OptIn( ExperimentalResourceApi::class)
     @Composable
     override fun onRender(
         state: OrderHistoryScreenUiState,
@@ -83,7 +78,7 @@ class OrdersHistoryScreen(private val restaurantId: String) :
                         )
                     }
                 }
-                items(state.orders, key = { it.id }) { order ->
+                items(state.finishedOrders, key = { it.id }) { order ->
                     OrderCard(
                         order = order,
                         modifier = Modifier
@@ -95,7 +90,7 @@ class OrdersHistoryScreen(private val restaurantId: String) :
                     }
                 }
             }
-            state.orders.forEach {
+            state.finishedOrders.forEach {
                 OrderCard(
                     order = it,
                     modifier = Modifier

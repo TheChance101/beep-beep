@@ -1,7 +1,7 @@
 package presentation.order
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.entity.OrderState
+import domain.entity.OrderStatus
 import domain.usecase.IManageOrderUseCase
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
@@ -17,16 +17,16 @@ class OrderScreenModel(private val manageOrders: IManageOrderUseCase) :
         sendNewEffect(OrderScreenUiEffect.Back)
     }
 
-    override fun onClickFinishOrder(orderId: String, orderState: OrderState) {
-        updateOrderState(orderId, orderState)
+    override fun onClickFinishOrder(orderId: String) {
+        updateOrderState(orderId)
     }
 
-    override fun onClickCancelOrder(orderId: String, orderState: OrderState) {
-        updateOrderState(orderId, orderState)
+    override fun onClickCancelOrder(orderId: String) {
+        updateOrderState(orderId)
     }
 
-    override fun onClickApproveOrder(orderId: String, orderState: OrderState) {
-        updateOrderState(orderId, orderState)
+    override fun onClickApproveOrder(orderId: String) {
+        updateOrderState(orderId)
     }
 
     init {
@@ -34,9 +34,9 @@ class OrderScreenModel(private val manageOrders: IManageOrderUseCase) :
         getPendingOrders()
     }
 
-    private fun updateOrderState(orderId: String, orderState: OrderState) {
+    private fun updateOrderState(orderId: String) {
         tryToExecute(
-            { manageOrders.updateOrderState(orderId, orderState).toOrderUiState() },
+            { manageOrders.updateOrderState(orderId).toOrderUiState() },
             ::onUpdateOrderStateSuccess,
             ::onUpdateOrderStateError
         )
@@ -46,7 +46,7 @@ class OrderScreenModel(private val manageOrders: IManageOrderUseCase) :
         tryToExecute(
             {
                 manageOrders.getCurrentOrders("")
-                    .filter { it.orderState == OrderState.PENDING }
+                    .filter { it.orderState == OrderStatus.PENDING }
                     .map { it.toOrderUiState() }
             },
             ::onGetPendingOrdersSuccess,
@@ -58,7 +58,7 @@ class OrderScreenModel(private val manageOrders: IManageOrderUseCase) :
         tryToExecute(
             {
                 manageOrders.getCurrentOrders("")
-                    .filter { it.orderState == OrderState.IN_COOKING }
+                    .filter { it.orderState == OrderStatus.IN_COOKING }
                     .map { it.toOrderUiState() }
             },
             ::onGetCookingSuccess,

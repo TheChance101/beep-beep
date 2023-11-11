@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
-import domain.entity.OrderState
+import domain.entity.OrderStatus
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
@@ -95,7 +95,7 @@ class OrderScreen :
                         OrderTextButton(
                             text = Resources.strings.finish,
                             onClick = {
-                                listener.onClickFinishOrder(order.id, order.orderState)
+                                listener.onClickFinishOrder(order.id)
                             }
                         )
                     }
@@ -115,7 +115,7 @@ class OrderScreen :
                             OrderTextButton(
                                 text = Resources.strings.cancel,
                                 onClick = {
-                                    listener.onClickCancelOrder(order.id, OrderState.CANCELED)
+                                    listener.onClickCancelOrder(order.id)
                                 },
                                 textColor = Theme.colors.contentTertiary,
                                 border = BorderStroke(0.dp, color = Theme.colors.surface)
@@ -123,7 +123,7 @@ class OrderScreen :
                             OrderTextButton(
                                 text = Resources.strings.approve,
                                 onClick = {
-                                    listener.onClickCancelOrder(order.id, order.orderState)
+                                    listener.onClickCancelOrder(order.id)
                                 },
                             )
                         }
