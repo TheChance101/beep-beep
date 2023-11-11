@@ -92,7 +92,7 @@ fun Route.orderRoutes() {
             if (result.orderStatus != OrderStatus.PENDING.statusCode ||
                 result.orderStatus != OrderStatus.CANCELED.statusCode
             ) {
-                val orderStatus = OrderStatus.getOrderStatus(result.orderStatus)
+                val orderStatus = OrderStatus.getOrderStatus(result.orderStatus!!)
                 val notificationMessage = when (orderStatus) {
                     OrderStatus.APPROVED -> localizedMessagesFactory.createLocalizedMessages(language).orderApproved
                     OrderStatus.IN_COOKING -> localizedMessagesFactory.createLocalizedMessages(language).orderInCooking
