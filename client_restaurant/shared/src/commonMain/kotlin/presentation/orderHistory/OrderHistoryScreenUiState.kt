@@ -4,10 +4,10 @@ import presentation.base.ErrorState
 import presentation.order.OrderUiState
 
 data class OrderHistoryScreenUiState(
+    val orders: List<OrderUiState> = emptyList(),
+    val currentOrders: List<OrderUiState> = emptyList(),
     val selectedType: OrderSelectType = OrderSelectType.FINISHED,
-    val finishedOrders: List<OrderUiState> = emptyList(),
-    val canceledOrders: List<OrderUiState> = emptyList(),
-    val errorState: ErrorState? = null,
+    val errorState: ErrorState? = null
 ) {
 
     enum class OrderSelectType {

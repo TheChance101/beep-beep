@@ -21,9 +21,12 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAnimatedTabLayout
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
+import presentation.composable.BpEmptyScreen
 import presentation.order.composable.OrderCard
 import presentation.order.composable.header
 import resources.Resources
@@ -38,6 +41,7 @@ class OrdersHistoryScreen(private val restaurantId: String) :
         initScreen(getScreenModel { parametersOf(restaurantId) })
     }
 
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun onRender(
         state: OrderHistoryScreenUiState,
@@ -78,7 +82,7 @@ class OrdersHistoryScreen(private val restaurantId: String) :
                         )
                     }
                 }
-                items(state.finishedOrders, key = { it.id }) { order ->
+                items(state.currentOrders, key = { it.id }) { order ->
                     OrderCard(
                         order = order,
                         modifier = Modifier
@@ -90,23 +94,13 @@ class OrdersHistoryScreen(private val restaurantId: String) :
                     }
                 }
             }
-            state.finishedOrders.forEach {
-                OrderCard(
-                    order = it,
-                    modifier = Modifier
-                ) {
-                    Text(
-                        it.createdAt,
-                        style = Theme.typography.caption.copy(color = Theme.colors.contentTertiary)
-                    )
-                }
-            }
+
+            BpEmptyScreen(
+                painter = painterResource(Resources.images.emptyScreen),
+                text = Resources.strings.noOrderHistory,
+                isVisible = (state.orders.isEmpty()),
+            )
         }
-//        BpEmptyScreen(
-//            painter = painterResource(Resources.images.emptyScreen),
-//            text = Resources.strings.noOrderHistory,
-//            isVisible = (state.orders.isEmpty()),
-//        )
     }
 
     override fun onEffect(effect: OrderHistoryScreenUiEffect, navigator: Navigator) {

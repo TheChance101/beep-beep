@@ -28,16 +28,18 @@ class OrderHistoryScreenModel(
             ::onError
         )
     }
+
     private fun onOrdersSuccess(orders: List<Order>) {
-        val ordersUiState=orders .map { it.toOrderHistoryUiState() }
+        val ordersUiState = orders.map { it.toOrderHistoryUiState() }
         updateState { currentState ->
-            val finishedOrders = ordersUiState.filter { it.orderState == OrderStatus.DONE }
-            val canceledOrders = ordersUiState.filter { it.orderState == OrderStatus.CANCELED }
-            println("finishedOrders: $finishedOrders")
-            println("canceledOrders: $canceledOrders")
             currentState.copy(
-                finishedOrders = finishedOrders.takeIf { it.isNotEmpty() } ?: emptyList(),
-                canceledOrders = canceledOrders.takeIf { it.isNotEmpty() } ?: emptyList()
+                orders = ordersUiState,
+                currentOrders = ordersUiState.filter {
+                    currentState.selectedType == OrderHistoryScreenUiState.OrderSelectType.FINISHED &&
+                            it.orderState == OrderStatus.DONE ||
+                            currentState.selectedType == OrderHistoryScreenUiState.OrderSelectType.CANCELLED &&
+                            it.orderState == OrderStatus.CANCELED
+                }
             )
         }
     }
@@ -51,8 +53,17 @@ class OrderHistoryScreenModel(
     }
 
     override fun onClickTab(type: OrderHistoryScreenUiState.OrderSelectType) {
-        updateState { it.copy(selectedType = type) }
-        getData()
+        updateState { currentState ->
+            currentState.copy(
+                selectedType = type,
+                currentOrders = currentState.orders.filter {
+                    type == OrderHistoryScreenUiState.OrderSelectType.FINISHED &&
+                            it.orderState == OrderStatus.DONE ||
+                            type == OrderHistoryScreenUiState.OrderSelectType.CANCELLED
+                            && it.orderState == OrderStatus.CANCELED
+                }
+            )
+        }
     }
 }
 
