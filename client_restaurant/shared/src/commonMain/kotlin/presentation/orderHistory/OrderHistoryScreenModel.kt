@@ -1,16 +1,16 @@
 package presentation.orderHistory
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.entity.Order
+import domain.entity.OrderStatus
 import domain.usecase.IManageOrderUseCase
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
+import presentation.order.OrderUiState
 
 
 class OrderHistoryScreenModel(
-    private val restaurantId: String,
-    private val ordersManagement: IManageOrderUseCase
+    private val restaurantId: String, private val ordersManagement: IManageOrderUseCase
 ) : BaseScreenModel<OrderHistoryScreenUiState, OrderHistoryScreenUiEffect>(OrderHistoryScreenUiState()),
     OrderHistoryScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
@@ -20,40 +20,46 @@ class OrderHistoryScreenModel(
     }
 
     private fun getData() {
+        println("getData")
         tryToExecute(
-            ::getSelectedOrders,
+            {
+                ordersManagement.getOrdersHistory(restaurantId, 1, 10)
+                    .map { it.toOrderHistoryUiState() }
+            },
             ::onOrdersSuccess,
             ::onError
         )
     }
 
-    private suspend fun getSelectedOrders(): List<Order> {
-        return when (state.value.selectedType) {
-
-            OrderHistoryScreenUiState.OrderSelectType.FINISHED -> {
-                println("bbbb")
-                ordersManagement.getFinishedOrdersHistory(restaurantId,1,10)
-            }
-
-            OrderHistoryScreenUiState.OrderSelectType.CANCELLED -> {
-                println("jjjjj")
-                ordersManagement.getCanceledOrdersHistory(restaurantId,1,10)
-            }
-        }
-    }
-
-    private fun onOrdersSuccess(orders: List<Order>) {
-        println("aaaaa<${orders}>")
-        updateState {
-            it.copy(
-                errorState = null,
-                orders = orders.map { order -> order.toOrderHistoryUiState() }
+    //    private suspend fun getSelectedOrders(): List<Order> {
+//
+//      return  ordersManagement.getOrdersHistory(restaurantId, 1, 10)
+//
+////        return when (state.value.selectedType) {
+////
+////            OrderHistoryScreenUiState.OrderSelectType.FINISHED -> {
+////                ordersManagement.getOrdersHistory(restaurantId,1,10)
+////            }
+////
+////            OrderHistoryScreenUiState.OrderSelectType.CANCELLED -> {
+////            }
+////        }
+//    }
+    private fun onOrdersSuccess(orders: List<OrderUiState>) {
+        updateState { currentState ->
+            val finishedOrders = orders.filter { it.orderState == OrderStatus.DONE.key }
+            val canceledOrders = orders.filter { it.orderState == OrderStatus.CANCELED.key }
+            println("finishedOrders: $finishedOrders")
+            println("canceledOrders: $canceledOrders")
+            currentState.copy(
+                finishedOrders = finishedOrders.takeIf { it.isNotEmpty() } ?: emptyList(),
+                canceledOrders = canceledOrders.takeIf { it.isNotEmpty() } ?: emptyList()
             )
         }
     }
 
     private fun onError(errorState: ErrorState) {
-        println("cccc")
+        println("errorState: $errorState")
         updateState { it.copy(errorState = errorState) }
     }
 
