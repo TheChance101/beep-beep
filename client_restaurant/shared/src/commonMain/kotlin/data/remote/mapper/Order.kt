@@ -30,7 +30,7 @@ fun OrderDto.toEntity(): Order {
         totalPrice = totalPrice ?: 0.0,
         createdAt = createdAt?.let { LocalDateTime.parse(it) } ?: Clock.System.now()
             .toLocalDateTime(TimeZone.currentSystemDefault()),
-        orderState = when (orderState) {
+        orderState = when (orderStatus) {
             Constant.PENDING_ORDER -> OrderState.PENDING
             Constant.IN_COOKING_ORDER -> OrderState.IN_COOKING
             Constant.FINISHED_ORDER -> OrderState.FINISHED

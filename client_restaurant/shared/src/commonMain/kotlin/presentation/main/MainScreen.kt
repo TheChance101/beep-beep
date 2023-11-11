@@ -40,7 +40,7 @@ import presentation.main.composables.ChartItem
 import presentation.main.composables.OptionCardItem
 import presentation.meals.MealsScreen
 import presentation.order.OrderScreen
-import presentation.order.orderHistory.OrdersHistoryScreen
+import presentation.orderHistory.OrdersHistoryScreen
 import presentation.restaurantSelection.RestaurantUIState
 import resources.Resources
 import util.toWeekDay

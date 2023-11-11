@@ -1,4 +1,4 @@
-package presentation.order.orderHistory
+package presentation.orderHistory
 
 import domain.entity.Order
 import presentation.order.OrderUiState

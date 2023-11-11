@@ -1,4 +1,4 @@
-package presentation.order.orderHistory
+package presentation.orderHistory
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.ExperimentalFoundationApi

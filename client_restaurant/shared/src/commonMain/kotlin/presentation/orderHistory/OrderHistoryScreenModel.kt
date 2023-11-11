@@ -1,4 +1,4 @@
-package presentation.order.orderHistory
+package presentation.orderHistory
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Order

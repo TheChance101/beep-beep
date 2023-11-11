@@ -9,7 +9,7 @@ import presentation.mealManagement.MealScreenModelFactory
 import presentation.mealManagement.model.IMealCreationScreenModel
 import presentation.meals.MealsScreenModel
 import presentation.order.OrderScreenModel
-import presentation.order.orderHistory.OrderHistoryScreenModel
+import presentation.orderHistory.OrderHistoryScreenModel
 import presentation.restaurantSelection.RestaurantSelectionScreenModel
 import presentation.app.AppScreenModel
 

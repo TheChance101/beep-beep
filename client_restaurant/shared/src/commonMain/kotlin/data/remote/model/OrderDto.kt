@@ -17,19 +17,21 @@ data class OrderDto(
     val totalPrice: Double? = null,
     @SerialName("createdAt")
     val createdAt: String? = null,
-    @SerialName("orderState")
-    val orderState: Int
+    @SerialName("orderStatus")
+    val orderStatus: Int
 ) {
     @Serializable
     data class MealDto(
-        @SerialName("id")
+        @SerialName("mealId")
         val id: String,
-        @SerialName("mealImageUrl")
+        @SerialName("image")
         val mealImageUrl: String,
-        @SerialName("mealName")
+        @SerialName("name")
         val mealName: String,
         @SerialName("quantity")
         val quantity: Int,
+        @SerialName("price")
+        val price: Int,
     )
 }
 
