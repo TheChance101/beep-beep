@@ -13,7 +13,7 @@ data class OrderUiState(
     val id: String = "",
     val orderMealUiStates: List<OrderMealUiState> = emptyList(),
     val totalPrice: Double = 0.0,
-    val orderState: Int = OrderStatus.PENDING.key,
+    val orderState: OrderStatus = OrderStatus.PENDING,
     val createdAt: String = "",
 )
 
@@ -36,7 +36,7 @@ fun Order.toOrderUiState(): OrderUiState {
         id = id,
         orderMealUiStates = meals.map { it.toOrderMealUiState() },
         totalPrice = totalPrice,
-        orderState = orderState.key,
+        orderState = orderState,
     )
 }
 

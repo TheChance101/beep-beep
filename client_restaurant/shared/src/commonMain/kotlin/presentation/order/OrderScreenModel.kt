@@ -2,7 +2,7 @@ package presentation.order
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Order
-import domain.entity.OrderState
+import domain.entity.OrderStatus
 import domain.usecase.IManageOrderUseCase
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
@@ -25,21 +25,21 @@ class OrderScreenModel(
         sendNewEffect(OrderScreenUiEffect.Back)
     }
 
-    override fun onClickFinishOrder(orderId: String, orderState: OrderState) {
-        updateOrderState(orderId, orderState)
+    override fun onClickFinishOrder(orderId: String) {
+        updateOrderState(orderId)
     }
 
-    override fun onClickCancelOrder(orderId: String, orderState: OrderState) {
-        updateOrderState(orderId, orderState)
+    override fun onClickCancelOrder(orderId: String) {
+        updateOrderState(orderId)
     }
 
-    override fun onClickApproveOrder(orderId: String, orderState: OrderState) {
-        updateOrderState(orderId, orderState)
+    override fun onClickApproveOrder(orderId: String) {
+        updateOrderState(orderId)
     }
 
-    private fun updateOrderState(orderId: String, orderState: OrderState) {
+    private fun updateOrderState(orderId: String) {
         tryToExecute(
-            { manageOrders.updateOrderState(orderId, orderState).toOrderUiState() },
+            { manageOrders.updateOrderState(orderId).toOrderUiState() },
             ::onUpdateOrderStateSuccess,
             ::onUpdateOrderStateError
         )
@@ -55,7 +55,7 @@ class OrderScreenModel(
     }
 
     private fun onGetPendingOrdersSuccess(orders: Order) {
-        val pendingOrders = orders.orderState == OrderState.PENDING
+        val pendingOrders = orders.orderState == OrderStatus.PENDING
         if (pendingOrders) {
             val totalOrders = state.value.totalOrders
             val newTotalOrders = totalOrders.plus(1)
@@ -72,7 +72,7 @@ class OrderScreenModel(
     }
 
     private fun onGetCookingSuccess(orders: Order) {
-        val inCookingOrders = orders.orderState == OrderState.IN_COOKING
+        val inCookingOrders = orders.orderState == OrderStatus.IN_COOKING
         if (inCookingOrders) {
             val totalOrders = state.value.totalOrders
             val newTotalOrders = totalOrders.plus(1)
