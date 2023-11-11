@@ -7,7 +7,7 @@ interface MealScreenInteractionListener : BaseInteractionListener {
 
     fun onClickMeal(mealId: String)
 
-    fun onClickCuisineType(type: CuisineUIState)
+    fun onClickCuisineType(cuisine: CuisineUIState, index: Int)
 
     fun onAddMeaClick()
 }

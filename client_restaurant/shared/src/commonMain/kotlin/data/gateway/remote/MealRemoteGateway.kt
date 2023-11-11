@@ -30,20 +30,26 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
         restaurantId: String,
         page: Int,
         limit: Int,
-    ): List<Meal>{
-        val meals = tryToExecute<BaseResponse<PaginationResponse<MealDto>>> {
+    ): List<Meal> {
+        return tryToExecute<BaseResponse<PaginationResponse<MealDto>>> {
             get("restaurant/$restaurantId/meals") {
                 parameter("page", page)
                 parameter("limit", limit)
             }
         }.value?.items?.map { it.toEntity() } ?: emptyList()
-        return meals
     }
 
-    override suspend fun getMealsByCuisineId(mealId: String): List<Meal> {
-        return tryToExecute<BaseResponse<List<MealDto>>> {
-            get("/cuisine/$mealId/meals")
-        }.value?.toEntity() ?: emptyList()
+    override suspend fun getMealsByCuisineId(
+        cuisineId: String,
+        page: Int,
+        limit: Int,
+    ): List<Meal> {
+        return tryToExecute<BaseResponse<PaginationResponse<MealDto>>> {
+            get("/cuisine/$cuisineId/meals") {
+                parameter("page", page)
+                parameter("limit", limit)
+            }
+        }.value?.items?.map { it.toEntity() } ?: emptyList()
     }
 
     override suspend fun getMealById(mealId: String): Meal {
@@ -60,7 +66,10 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
                     MultiPartFormDataContent(
                         formData {
                             header("Content-Type", ContentType.MultiPart.FormData.toString())
-                            append("data", Json.encodeToString(MealModificationDto.serializer(), meal.toDto()))
+                            append(
+                                "data",
+                                Json.encodeToString(MealModificationDto.serializer(), meal.toDto())
+                            )
                         }
                     )
                 )
@@ -76,7 +85,13 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
                     MultiPartFormDataContent(
                         formData {
                             header("Content-Type", ContentType.MultiPart.FormData.toString())
-                            append("data", Json.encodeToString(MealModificationDto.serializer(), meal.toDtoUpdate()))
+                            append(
+                                "data",
+                                Json.encodeToString(
+                                    MealModificationDto.serializer(),
+                                    meal.toDtoUpdate()
+                                )
+                            )
                         }
                     )
                 )

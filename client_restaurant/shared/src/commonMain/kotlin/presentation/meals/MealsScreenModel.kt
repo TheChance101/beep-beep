@@ -33,26 +33,39 @@ class MealsScreenModel(
         )
     }
 
+    private fun onGetCuisineSuccessfully(cuisines: List<Cuisine>) {
+        updateState {
+            it.copy(
+                cuisines = cuisines.toCuisineUIState(),
+                selectedCuisine = cuisines.toCuisineUIState().first()
+            )
+        }
+        getMeals(state.value.selectedCuisine.id)
+    }
+
     private fun getMeals(restaurantId: String) {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            function = {
-                  manageMeal.getAllMeals(restaurantId,1,10)
-            },
+            function = { manageMeal.getAllMeals(restaurantId, 1, 10) },
             ::onGetMealSuccessfully,
             ::onError
         )
     }
 
-    private fun onGetCuisineSuccessfully(cuisines: List<Cuisine>) {
-        updateState {
-            it.copy(cuisines = cuisines.toCuisineUIState(),
-                selectedCuisine = cuisines.toCuisineUIState().first())
-        }
-        getMeals(state.value.selectedCuisine.id)
+    private fun onGetMealSuccessfully(meals: List<Meal>) {
+        updateState { it.copy(meals = meals.toMealUIState(), isLoading = false) }
     }
 
-    private fun onGetMealSuccessfully(meals: List<Meal>) {
+    private fun getMealsByCuisineId(cuisineId: String) {
+        updateState { it.copy(isLoading = true) }
+        tryToExecute(
+            { manageMeal.getMealsByCuisineId(cuisineId, 1, 10) },
+            ::onGetMealsByCuisineIdSuccessfully,
+            ::onError
+        )
+    }
+
+    private fun onGetMealsByCuisineIdSuccessfully(meals: List<Meal>) {
         updateState { it.copy(meals = meals.toMealUIState(), isLoading = false) }
     }
 
@@ -73,8 +86,12 @@ class MealsScreenModel(
         sendNewEffect(MealsScreenUIEffect.NavigateToAddMeal(restaurantId))
     }
 
-    override fun onClickCuisineType(type: CuisineUIState) {
-        updateState { it.copy(selectedCuisine = type) }
-        getMeals(type.id)
+    override fun onClickCuisineType(cuisine: CuisineUIState, index: Int) {
+        updateState { it.copy(selectedCuisine = cuisine) }
+        if (index == 0) {
+            getMeals(restaurantId)
+        } else {
+            getMealsByCuisineId(cuisine.id)
+        }
     }
 }

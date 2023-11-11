@@ -85,18 +85,14 @@ class MealsScreen(private val restaurantId: String) :
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 LazyRow(
-                    contentPadding = PaddingValues(
-                        start = 16.dp,
-                        end = 16.dp,
-                        top = 16.dp
-                    ),
+                    contentPadding = PaddingValues(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     items(state.cuisines.size) { index ->
                         BpChip(
                             label = state.cuisines[index].name,
                             isSelected = state.cuisines[index] == state.selectedCuisine,
-                            onClick = { listener.onClickCuisineType(state.cuisines[index]) },
+                            onClick = { listener.onClickCuisineType(state.cuisines[index], index) }
                         )
                     }
                 }
