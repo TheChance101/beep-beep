@@ -14,7 +14,7 @@ data class MainScreenUIState(
 ) {
     val totalOrders: Int = ordersCountStatistics.yAxisData.sum().toInt()
     val totalOrderReturns: String =
-        "${selectedRestaurant.priceLevel}${revenueStatistics.yAxisData.sum()}"
+        "$${revenueStatistics.yAxisData.sum()}"
     val selectedRestaurant: RestaurantUIState
         get() = restaurants.firstOrNull { it.restaurantId == selectedRestaurantId }
             ?: RestaurantUIState()

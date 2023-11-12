@@ -36,7 +36,7 @@ import presentation.composable.RestaurantInformation
 import presentation.composable.modifier.noRippleEffect
 import presentation.information.RestaurantInformationScreen
 import presentation.main.composables.ChartItem
-import presentation.main.composables.MainScreenLoadingEffect
+import presentation.main.composables.ChartsLoadingEffect
 import presentation.main.composables.OptionCardItem
 import presentation.meals.MealsScreen
 import presentation.order.OrderScreen
@@ -53,10 +53,12 @@ class MainScreen(private val restaurantId: String) :
         initScreen(getScreenModel { parametersOf(restaurantId) })
     }
 
+    @OptIn(ExperimentalLayoutApi::class, ExperimentalResourceApi::class)
     @Composable
     override fun onRender(state: MainScreenUIState, listener: MainScreenInteractionListener) {
         var screenSize by remember { mutableStateOf(IntSize.Zero) }
         val isPortrait = screenSize.height > screenSize.width
+        var rowSize by remember { mutableStateOf(IntSize.Zero) }
 
         Column(
             modifier = Modifier
@@ -78,11 +80,64 @@ class MainScreen(private val restaurantId: String) :
                     .background(Theme.colors.surface)
                     .padding(top = 16.dp)
             )
-            AnimatedContent((state.isLoading)) {
-                if (state.isLoading) {
-                    MainScreenLoadingEffect(isPortrait)
-                } else {
-                    ScreenContent(state, listener, isPortrait)
+
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(300.dp),
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(
+                    top = 8.dp,
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 24.dp
+                ),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    FlowRow(
+                        Modifier.fillMaxWidth().onSizeChanged { rowSize = it },
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        val rowWidth = with(LocalDensity.current) { rowSize.width.toDp() }
+                        val cardSize = if (isPortrait) ((rowWidth / 2) - 4.dp) else 170.dp
+                        OptionCardItem(
+                            onClick = listener::onAllMealsCardClicked,
+                            title = Resources.strings.allMeals,
+                            imagePath = Resources.images.meals,
+                            color = Theme.colors.orange,
+                            modifier = Modifier.width(cardSize).padding(top = 8.dp),
+                        )
+                        OptionCardItem(
+                            onClick = listener::onOrdersCardClicked,
+                            title = Resources.strings.orders,
+                            imagePath = Resources.images.ordersBig,
+                            color = Theme.colors.pink,
+                            modifier = Modifier.width(cardSize).padding(top = 8.dp),
+                        )
+                        OptionCardItem(
+                            onClick = listener::onRestaurantInfoCardClicked,
+                            title = Resources.strings.restaurantInfo,
+                            imagePath = Resources.images.info,
+                            color = Theme.colors.blue,
+                            modifier = Modifier.width(cardSize).padding(top = 8.dp),
+                        )
+                        OptionCardItem(
+                            onClick = listener::onOrdersHistoryCardClicked,
+                            title = Resources.strings.ordersHistory,
+                            imagePath = Resources.images.ordersHistory,
+                            color = Theme.colors.green,
+                            modifier = Modifier.width(cardSize).padding(top = 8.dp),
+                        )
+                    }
+                }
+
+                item(span = { GridItemSpan(maxCurrentLineSpan) }) {
+                    AnimatedContent(state.isLoading) {
+                        if (state.isLoading) {
+                            ChartsLoadingEffect()
+                        } else {
+                            ChartsContent(state)
+                        }
+                    }
                 }
             }
         }
@@ -90,116 +145,66 @@ class MainScreen(private val restaurantId: String) :
 
     @OptIn(ExperimentalLayoutApi::class, ExperimentalResourceApi::class)
     @Composable
-    private fun ScreenContent(
-        state: MainScreenUIState,
-        listener: MainScreenInteractionListener,
-        isPortrait: Boolean,
-    ) {
-        var rowSize by remember { mutableStateOf(IntSize.Zero) }
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(300.dp),
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(top = 8.dp, start = 16.dp, end = 16.dp, bottom = 24.dp),
+    private fun ChartsContent(state: MainScreenUIState) {
+
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
+            maxItemsInEachRow = 2
         ) {
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                FlowRow(
-                    Modifier.fillMaxWidth().onSizeChanged { rowSize = it },
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    val rowWidth = with(LocalDensity.current) { rowSize.width.toDp() }
-                    val cardSize = if (isPortrait) ((rowWidth / 2) - 4.dp) else 170.dp
-                    OptionCardItem(
-                        onClick = listener::onAllMealsCardClicked,
-                        title = Resources.strings.allMeals,
-                        imagePath = Resources.images.meals,
-                        color = Theme.colors.orange,
-                        modifier = Modifier.width(cardSize).padding(top = 8.dp),
-                    )
-                    OptionCardItem(
-                        onClick = listener::onOrdersCardClicked,
-                        title = Resources.strings.orders,
-                        imagePath = Resources.images.ordersBig,
-                        color = Theme.colors.pink,
-                        modifier = Modifier.width(cardSize).padding(top = 8.dp),
-                    )
-                    OptionCardItem(
-                        onClick = listener::onRestaurantInfoCardClicked,
-                        title = Resources.strings.restaurantInfo,
-                        imagePath = Resources.images.info,
-                        color = Theme.colors.blue,
-                        modifier = Modifier.width(cardSize).padding(top = 8.dp),
-                    )
-                    OptionCardItem(
-                        onClick = listener::onOrdersHistoryCardClicked,
-                        title = Resources.strings.ordersHistory,
-                        imagePath = Resources.images.ordersHistory,
-                        color = Theme.colors.green,
-                        modifier = Modifier.width(cardSize).padding(top = 8.dp),
-                    )
-                }
+            ChartItem(
+                modifier = Modifier.fillMaxWidth().height(328.dp),
+                imagePainter = painterResource(Resources.images.revenue),
+                title = Resources.strings.revenue,
+                total = state.totalOrderReturns
+            ) {
+                BarChart(
+                    chartParameters = listOf(
+                        BarParameters(
+                            dataName = Resources.strings.revenue,
+                            data = state.revenueStatistics.yAxisData,
+                            barColor = Theme.colors.primary
+                        )
+                    ),
+                    xAxisData = state.revenueStatistics.xAxisData.toWeekDay(),
+                    legendPosition = LegendPosition.DISAPPEAR,
+                    yAxisRange = 7,
+                    barCornerRadius = 4.dp,
+                    spaceBetweenBars = 4.dp,
+                    barWidth = 16.dp,
+                    yAxisStyle = Theme.typography.caption.copy(Theme.colors.contentTertiary),
+                    xAxisStyle = Theme.typography.caption.copy(Theme.colors.contentTertiary),
+                    gridColor = Theme.colors.divider,
+                    spaceBetweenGroups = 20.dp
+                )
             }
 
-            item(span = { GridItemSpan(maxCurrentLineSpan) }) {
-                FlowRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    maxItemsInEachRow = 2
-                ) {
-                    ChartItem(
-                        modifier = Modifier.fillMaxWidth().height(328.dp),
-                        imagePainter = painterResource(Resources.images.revenue),
-                        title = Resources.strings.revenue,
-                        total = state.totalOrderReturns
-                    ) {
-                        BarChart(
-                            chartParameters = listOf(
-                                BarParameters(
-                                    dataName = Resources.strings.revenue,
-                                    data = state.revenueStatistics.yAxisData,
-                                    barColor = Theme.colors.primary
-                                )
-                            ),
-                            xAxisData = state.revenueStatistics.xAxisData.toWeekDay(),
-                            legendPosition = LegendPosition.DISAPPEAR,
-                            yAxisRange = 7,
-                            barCornerRadius = 4.dp,
-                            spaceBetweenBars = 4.dp,
-                            barWidth = 16.dp,
-                            yAxisStyle = Theme.typography.caption.copy(Theme.colors.contentTertiary),
-                            xAxisStyle = Theme.typography.caption.copy(Theme.colors.contentTertiary),
-                            gridColor = Theme.colors.divider,
-                            spaceBetweenGroups = 20.dp
+            ChartItem(
+                modifier = Modifier.fillMaxWidth().height(328.dp),
+                imagePainter = painterResource(Resources.images.orders),
+                title = Resources.strings.orders,
+                total = state.totalOrders.toString()
+            ) {
+                LineChart(
+                    linesParameters = listOf(
+                        LineParameters(
+                            label = Resources.strings.orders,
+                            data = state.ordersCountStatistics.yAxisData,
+                            lineColor = Theme.colors.primary,
+                            lineType = LineType.CURVED_LINE,
+                            lineShadow = true,
                         )
-                    }
-
-                    ChartItem(
-                        modifier = Modifier.fillMaxWidth().height(328.dp),
-                        imagePainter = painterResource(Resources.images.orders),
-                        title = Resources.strings.orders,
-                        total = state.totalOrders.toString()
-                    ) {
-                        LineChart(
-                            linesParameters = listOf(
-                                LineParameters(
-                                    label = Resources.strings.orders,
-                                    data = state.ordersCountStatistics.yAxisData,
-                                    lineColor = Theme.colors.primary,
-                                    lineType = LineType.CURVED_LINE,
-                                    lineShadow = true,
-                                )
-                            ),
-                            xAxisData = state.ordersCountStatistics.xAxisData.toWeekDay(),
-                            legendPosition = LegendPosition.DISAPPEAR,
-                            yAxisRange = 7,
-                            yAxisStyle = Theme.typography.caption.copy(Theme.colors.contentTertiary),
-                            xAxisStyle = Theme.typography.caption.copy(Theme.colors.contentTertiary),
-                            gridColor = Theme.colors.divider,
-                        )
-                    }
-                }
+                    ),
+                    xAxisData = state.ordersCountStatistics.xAxisData.toWeekDay(),
+                    legendPosition = LegendPosition.DISAPPEAR,
+                    yAxisRange = 7,
+                    yAxisStyle = Theme.typography.caption.copy(Theme.colors.contentTertiary),
+                    xAxisStyle = Theme.typography.caption.copy(Theme.colors.contentTertiary),
+                    gridColor = Theme.colors.divider,
+                )
             }
         }
+
     }
 
     @Composable

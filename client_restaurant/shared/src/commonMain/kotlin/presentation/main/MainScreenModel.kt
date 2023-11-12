@@ -33,11 +33,10 @@ class MainScreenModel(
         return getOwnerRestaurants.getOwnerRestaurants()
     }
 
-
     private fun getOrdersCountByDays() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            { mangeOrders.getOrdersCountByDaysBefore(restaurantId, 7) },
+            { mangeOrders.getOrdersCountByDaysBefore(state.value.selectedRestaurantId, 7) },
             ::onGetOrdersCountByDaysSuccessfully,
             ::onError
         )
@@ -52,11 +51,10 @@ class MainScreenModel(
         }
     }
 
-
     private fun getOrdersRevenueByDaysBefore() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            { mangeOrders.getOrdersRevenueByDaysBefore(restaurantId, 7) },
+            { mangeOrders.getOrdersRevenueByDaysBefore(state.value.selectedRestaurantId, 7) },
             ::onGetOrdersRevenueByDaysBeforeSuccessfully,
             ::onError
         )
@@ -96,7 +94,9 @@ class MainScreenModel(
     }
 
     override fun onRestaurantClicked(restaurantId: String) {
-        updateState { it.copy(selectedRestaurantId = restaurantId , expanded = false) }
+        updateState { it.copy(selectedRestaurantId = restaurantId, expanded = false) }
+        getOrdersCountByDays()
+        getOrdersRevenueByDaysBefore()
     }
 
     override fun onAllMealsCardClicked() {
