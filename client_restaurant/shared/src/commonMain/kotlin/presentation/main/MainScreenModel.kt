@@ -37,7 +37,7 @@ class MainScreenModel(
     private fun getOrdersCountByDays() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            { mangeOrders.getOrdersCountByDaysBefore(restaurantId, 6) },
+            { mangeOrders.getOrdersCountByDaysBefore(restaurantId, 7) },
             ::onGetOrdersCountByDaysSuccessfully,
             ::onError
         )
@@ -46,7 +46,7 @@ class MainScreenModel(
     private fun onGetOrdersCountByDaysSuccessfully(data: List<Pair<String, Double>>) {
         updateState {
             it.copy(
-                orderUiState = data.toChartsItemUiState(),
+                ordersCountStatistics = data.toChartsItemUiState(),
                 isLoading = false
             )
         }
@@ -56,7 +56,7 @@ class MainScreenModel(
     private fun getOrdersRevenueByDaysBefore() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            { mangeOrders.getOrdersRevenueByDaysBefore(restaurantId, 6) },
+            { mangeOrders.getOrdersRevenueByDaysBefore(restaurantId, 7) },
             ::onGetOrdersRevenueByDaysBeforeSuccessfully,
             ::onError
         )
@@ -65,7 +65,7 @@ class MainScreenModel(
     private fun onGetOrdersRevenueByDaysBeforeSuccessfully(data: List<Pair<String, Double>>) {
         updateState {
             it.copy(
-                revenueUiState = data.toChartsItemUiState(),
+                revenueStatistics = data.toChartsItemUiState(),
                 isLoading = false
             )
         }

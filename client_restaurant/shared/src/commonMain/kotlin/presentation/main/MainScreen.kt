@@ -6,7 +6,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -44,6 +43,7 @@ import presentation.order.OrderScreen
 import presentation.order.orderHistory.OrdersHistoryScreen
 import presentation.restaurantSelection.RestaurantUIState
 import resources.Resources
+import util.getStatusBarPadding
 import util.toWeekDay
 
 class MainScreen(private val restaurantId: String) :
@@ -62,8 +62,11 @@ class MainScreen(private val restaurantId: String) :
         val isPortrait = screenSize.height > screenSize.width
 
         Column(
-            Modifier.fillMaxSize().background(Theme.colors.background)
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Theme.colors.background)
                 .onSizeChanged { screenSize = it }
+                .padding(getStatusBarPadding())
         ) {
 
             AppBarDropDownLeading(
@@ -132,20 +135,20 @@ class MainScreen(private val restaurantId: String) :
                         maxItemsInEachRow = 2
                     ) {
                         ChartItem(
-                            modifier = Modifier.fillMaxWidth().height(328.dp) ,
+                            modifier = Modifier.fillMaxWidth().height(328.dp),
                             imagePainter = painterResource(Resources.images.revenue),
-                            title = "Revenue",
-                            total = "$700"
+                            title = Resources.strings.revenue,
+                            total = state.totalOrderReturns
                         ) {
                             BarChart(
                                 chartParameters = listOf(
                                     BarParameters(
-                                        dataName = "Revenue",
-                                        data = state.revenueUiState.yAxisData,
+                                        dataName = Resources.strings.revenue,
+                                        data = state.revenueStatistics.yAxisData,
                                         barColor = Theme.colors.primary
                                     )
                                 ),
-                                xAxisData = state.revenueUiState.xAxisData.toWeekDay(),
+                                xAxisData = state.revenueStatistics.xAxisData.toWeekDay(),
                                 legendPosition = LegendPosition.DISAPPEAR,
                                 yAxisRange = 7,
                                 barCornerRadius = 4.dp,
@@ -159,22 +162,22 @@ class MainScreen(private val restaurantId: String) :
                         }
 
                         ChartItem(
-                            modifier = Modifier.fillMaxWidth().height(328.dp) ,
+                            modifier = Modifier.fillMaxWidth().height(328.dp),
                             imagePainter = painterResource(Resources.images.orders),
-                            title = "Orders",
-                            total = "100"
+                            title = Resources.strings.orders,
+                            total = state.totalOrders.toString()
                         ) {
                             LineChart(
                                 linesParameters = listOf(
                                     LineParameters(
-                                        label = "Orders",
-                                        data = state.orderUiState.yAxisData,
+                                        label = Resources.strings.orders,
+                                        data = state.ordersCountStatistics.yAxisData,
                                         lineColor = Theme.colors.primary,
                                         lineType = LineType.CURVED_LINE,
                                         lineShadow = true,
                                     )
                                 ),
-                                xAxisData = state.orderUiState.xAxisData.toWeekDay(),
+                                xAxisData = state.ordersCountStatistics.xAxisData.toWeekDay(),
                                 legendPosition = LegendPosition.DISAPPEAR,
                                 yAxisRange = 7,
                                 yAxisStyle = Theme.typography.caption.copy(Theme.colors.contentTertiary),
@@ -233,9 +236,9 @@ class MainScreen(private val restaurantId: String) :
             ) {
                 restaurants.forEach { restaurant ->
                     RestaurantInformation(
-                        onRestaurantClick = { onRestaurantSelect(restaurant.id) },
+                        onRestaurantClick = { onRestaurantSelect(restaurant.restaurantId) },
                         restaurantName = restaurant.restaurantName,
-                        restaurantNumber = restaurant.restaurantNumber,
+                        restaurantNumber = restaurant.restaurantPhoneNumber,
                         isOpen = restaurant.isOpen
                     )
                 }

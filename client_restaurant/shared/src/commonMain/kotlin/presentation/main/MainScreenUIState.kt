@@ -9,11 +9,15 @@ data class MainScreenUIState(
     val error: ErrorState? = null,
     val restaurants: List<RestaurantUIState> = emptyList(),
     val selectedRestaurantId: String = "",
-    val orderUiState: ChartsItemUiState = ChartsItemUiState(),
-    val revenueUiState: ChartsItemUiState = ChartsItemUiState(),
+    val ordersCountStatistics: ChartsItemUiState = ChartsItemUiState(),
+    val revenueStatistics: ChartsItemUiState = ChartsItemUiState(),
 ) {
+    val totalOrders: Int = ordersCountStatistics.yAxisData.sum().toInt()
+    val totalOrderReturns: String =
+        "${selectedRestaurant.priceLevel}${revenueStatistics.yAxisData.sum()}"
     val selectedRestaurant: RestaurantUIState
-        get() = restaurants.firstOrNull { it.id == selectedRestaurantId } ?: RestaurantUIState()
+        get() = restaurants.firstOrNull { it.restaurantId == selectedRestaurantId }
+            ?: RestaurantUIState()
 }
 
 data class ChartsItemUiState(
