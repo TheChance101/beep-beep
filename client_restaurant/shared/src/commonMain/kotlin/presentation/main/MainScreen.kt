@@ -1,5 +1,6 @@
 package presentation.main
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -14,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
@@ -30,7 +30,6 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
-import presentation.composable.BpDropdownMenu
 import presentation.composable.RestaurantInformation
 import presentation.composable.modifier.noRippleEffect
 import presentation.information.RestaurantInformationScreen
@@ -67,11 +66,11 @@ class MainScreen(private val restaurantId: String) :
 
             AppBarDropDownLeading(
                 onRestaurantSelect = listener::onRestaurantClicked,
-                onShowMenu = listener::onShowMenu,
+                onClickMenu = listener::onShowMenu,
                 onDismissMenu = listener::onDismissMenu,
                 restaurantName = state.selectedRestaurant.restaurantName,
                 isRestaurantOpened = state.selectedRestaurant.isOpen,
-                expanded = state.expanded,
+                isMenuExpanded = state.expanded,
                 restaurants = state.restaurants,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -191,14 +190,14 @@ class MainScreen(private val restaurantId: String) :
     @Composable
     fun AppBarDropDownLeading(
         onRestaurantSelect: (String) -> Unit,
-        onShowMenu: () -> Unit,
-        onDismissMenu: () -> Unit,
+        onClickMenu: () -> Unit,
+        isMenuExpanded: Boolean,
         isRestaurantOpened: Boolean,
         restaurantName: String,
-        expanded: Boolean,
         restaurants: List<RestaurantUIState>,
         modifier: Modifier = Modifier,
     ) {
+
         val buttonBackgroundColor by animateColorAsState(
             if (isRestaurantOpened) Theme.colors.hover else Color.Transparent
         )
@@ -214,7 +213,7 @@ class MainScreen(private val restaurantId: String) :
             ) {
 
                 MultipleRestaurants(
-                    onClick = onShowMenu,
+                    onClick = onClickMenu,
                     restaurantName = restaurantName,
                     isMultipleRestaurants = restaurants.isNotEmpty()
                 )
@@ -228,22 +227,17 @@ class MainScreen(private val restaurantId: String) :
                 )
             }
 
-            BpDropdownMenu(
-                expanded = expanded,
-                modifier = Modifier.heightIn(max = 350.dp)
-                    .widthIn(min = 260.dp),
-                offset = DpOffset(Theme.dimens.space16, 0.dp),
-                onDismissRequest = onDismissMenu
-            ) {
-                restaurants.forEach { restaurant ->
-                    RestaurantInformation(
-                        onRestaurantClick = { onRestaurantSelect(restaurant.restaurantId) },
-                        restaurantName = restaurant.restaurantName,
-                        restaurantNumber = restaurant.restaurantPhoneNumber,
-                        isOpen = restaurant.isOpen
-                    )
-                }
-            }
+//            AnimatedVisibility(isMenuExpanded) {
+//                restaurants.forEach { restaurant ->
+//                    RestaurantInformation(
+//                        onRestaurantClick = { onRestaurantSelect(restaurant.restaurantId) },
+//                        restaurantName = restaurant.restaurantName,
+//                        restaurantNumber = restaurant.restaurantPhoneNumber,
+//                        isOpen = restaurant.isOpen
+//                    )
+//                }
+//            }
+
         }
     }
 
@@ -267,7 +261,7 @@ class MainScreen(private val restaurantId: String) :
                 color = Theme.colors.contentPrimary
             )
 
-            if (isMultipleRestaurants) {
+            AnimatedVisibility(isMultipleRestaurants) {
                 Icon(
                     painter = painterResource(Resources.images.arrowDown),
                     contentDescription = null,
