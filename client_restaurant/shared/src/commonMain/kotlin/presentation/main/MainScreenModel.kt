@@ -96,7 +96,7 @@ class MainScreenModel(
     }
 
     override fun onRestaurantClicked(restaurantId: String) {
-        updateState { it.copy(selectedRestaurantId = restaurantId) }
+        updateState { it.copy(selectedRestaurantId = restaurantId , expanded = false) }
     }
 
     override fun onAllMealsCardClicked() {
