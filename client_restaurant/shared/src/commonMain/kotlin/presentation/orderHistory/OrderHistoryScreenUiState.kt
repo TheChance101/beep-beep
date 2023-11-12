@@ -4,6 +4,7 @@ import presentation.base.ErrorState
 import presentation.order.OrderUiState
 
 data class OrderHistoryScreenUiState(
+    val isLoading: Boolean = false,
     val orders: List<OrderUiState> = emptyList(),
     val currentOrders: List<OrderUiState> = emptyList(),
     val selectedType: OrderSelectType = OrderSelectType.FINISHED,
