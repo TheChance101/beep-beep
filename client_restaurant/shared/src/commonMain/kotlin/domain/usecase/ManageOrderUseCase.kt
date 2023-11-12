@@ -60,20 +60,22 @@ class ManageOrderUseCase(private val orderRemoteGateway: IOrderRemoteGateway) : 
         restaurantId: String,
         daysBack: Int
     ): List<Pair<String, Double>> {
-        return orderRemoteGateway.getOrdersRevenueByDaysBefore(restaurantId, daysBack)
+        val result = orderRemoteGateway.getOrdersRevenueByDaysBefore(restaurantId, daysBack)
             .flatMap { map ->
                 map.entries.map { it.key to it.value }
             }
+        return result
     }
 
     override suspend fun getOrdersCountByDaysBefore(
         restaurantId: String,
         daysBack: Int
     ): List<Pair<String, Double>> {
-        return orderRemoteGateway.getOrdersCountByDaysBefore(restaurantId, daysBack)
+        val result = orderRemoteGateway.getOrdersCountByDaysBefore(restaurantId, daysBack)
             .flatMap { map ->
                 map.entries.map { it.key to it.value.toDouble() }
             }
+        return result
     }
 
 }

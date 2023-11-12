@@ -21,8 +21,8 @@ class MainScreenModel(
     init {
         updateState { it.copy(selectedRestaurantId = restaurantId) }
         getData()
-        getOrdersCountByDays()
-        getOrdersRevenueByDaysBefore()
+//        getOrdersCountByDays()
+//        getOrdersRevenueByDaysBefore()
     }
 
     private fun getData() {
@@ -37,30 +37,38 @@ class MainScreenModel(
     private fun getOrdersCountByDays() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            function = {
-                mangeOrders.getOrdersCountByDaysBefore(restaurantId,7)
-            },
+            { mangeOrders.getOrdersCountByDaysBefore(restaurantId, 7) },
             ::onGetOrdersCountByDaysSuccessfully,
             ::onError
         )
     }
-    private  fun onGetOrdersCountByDaysSuccessfully(data: List<Pair<String,Double>>){
-        updateState { it.copy( orderUiState = data.toChartsItemUiState("Orders"), isLoading = false) }
+
+    private fun onGetOrdersCountByDaysSuccessfully(data: List<Pair<String, Double>>) {
+        updateState {
+            it.copy(
+                orderUiState = data.toChartsItemUiState(),
+                isLoading = false
+            )
+        }
     }
 
 
     private fun getOrdersRevenueByDaysBefore() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            function = {
-                mangeOrders.getOrdersRevenueByDaysBefore(restaurantId,7)
-            },
+            { mangeOrders.getOrdersRevenueByDaysBefore(restaurantId, 7) },
             ::onGetOrdersRevenueByDaysBeforeSuccessfully,
             ::onError
         )
     }
-    private  fun onGetOrdersRevenueByDaysBeforeSuccessfully(data: List<Pair<String,Double>>){
-        updateState { it.copy( revenueUiState = data.toChartsItemUiState("Revenue"), isLoading = false) }
+
+    private fun onGetOrdersRevenueByDaysBeforeSuccessfully(data: List<Pair<String, Double>>) {
+        updateState {
+            it.copy(
+                revenueUiState = data.toChartsItemUiState(),
+                isLoading = false
+            )
+        }
     }
 
 
