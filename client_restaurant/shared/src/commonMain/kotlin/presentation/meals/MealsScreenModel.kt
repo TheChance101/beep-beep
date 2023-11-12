@@ -45,7 +45,7 @@ class MealsScreenModel(
     private fun getMeals(restaurantId: String) {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            function = { manageMeal.getAllMeals(restaurantId, 1, 10) },
+            function = { manageMeal.getAllMeals(restaurantId) },
             ::onGetMealSuccessfully,
             ::onError
         )

@@ -28,8 +28,6 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
 
     override suspend fun getAllMealsByRestaurantId(
         restaurantId: String,
-        page: Int,
-        limit: Int,
     ): List<Meal> {
         return tryToExecute<BaseResponse<List<MealDto>>> {
             get("restaurant/$restaurantId/meals")

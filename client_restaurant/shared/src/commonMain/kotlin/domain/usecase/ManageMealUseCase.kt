@@ -12,8 +12,6 @@ interface IManageMealUseCase {
     suspend fun isValidMeal(meal: Meal): Boolean
     suspend fun getAllMeals(
         restaurantId: String,
-        page: Int,
-        limit: Int
     ): List<Meal>
     suspend fun getMealsByCuisineId(
         cuisineId: String, page: Int,
@@ -41,10 +39,8 @@ class ManageMealUseCase(
 
     override suspend fun getAllMeals(
         restaurantId: String,
-        page: Int,
-        limit: Int
     ): List<Meal> {
-        return mealRemoteGateway.getAllMealsByRestaurantId(restaurantId, page, limit)
+        return mealRemoteGateway.getAllMealsByRestaurantId(restaurantId)
     }
 
     override suspend fun getMealsByCuisineId(

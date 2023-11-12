@@ -7,8 +7,6 @@ import domain.entity.MealModification
 interface IMealRemoteGateway {
     suspend fun getAllMealsByRestaurantId(
         restaurantId: String,
-        page: Int,
-        limit: Int,
     ): List<Meal>
 
     suspend fun getMealsByCuisineId(
