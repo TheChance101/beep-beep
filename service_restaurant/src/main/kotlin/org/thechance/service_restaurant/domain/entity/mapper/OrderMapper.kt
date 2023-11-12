@@ -13,7 +13,7 @@ fun Cart.toOrder() = Order(
     restaurantImage = restaurantImage ?: "",
     meals = meals ?: emptyList(),
     createdAt = currentDateTime(),
-    status = Order.Status.PENDING,
+    status =  Order.Status.PENDING,
     totalPrice = totalPrice,
     currency = currency ?: ""
 )

@@ -15,7 +15,7 @@ fun Order.toDto() = OrderDto(
     totalPrice = totalPrice,
     currency = currency,
     createdAt = createdAt.toMillis(),
-    orderStatus = status.statusCode
+    orderStatus = status?.statusCode ?: Order.Status.PENDING.statusCode
 )
 
 
