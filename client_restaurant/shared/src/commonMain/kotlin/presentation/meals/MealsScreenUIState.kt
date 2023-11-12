@@ -43,7 +43,9 @@ fun Meal.toMealUIState(): MealUIState {
         id = id,
         name = name,
         price = "\$ $price",
-        imageUrl = "https://static.toiimg.com/thumb/84784534.cms?imgsize=468021&width=800&height=800",
+        imageUrl = imageUrl.ifEmpty {
+            "https://static.toiimg.com/thumb/84784534.cms?imgsize=468021&width=800&height=800"
+        },
     )
 }
 

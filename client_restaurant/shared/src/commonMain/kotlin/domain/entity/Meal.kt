@@ -18,4 +18,5 @@ data class MealModification(
     val cuisines: List<String>,
     val restaurantId: String,
     val id: String? = "",
+    val image: ByteArray
 )
