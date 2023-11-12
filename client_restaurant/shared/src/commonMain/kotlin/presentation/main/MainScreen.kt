@@ -2,7 +2,6 @@ package presentation.main
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -13,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.DpOffset
@@ -43,7 +41,6 @@ import presentation.order.OrderScreen
 import presentation.order.orderHistory.OrdersHistoryScreen
 import presentation.restaurantSelection.RestaurantUIState
 import resources.Resources
-import util.getStatusBarPadding
 import util.toWeekDay
 
 class MainScreen(private val restaurantId: String) :
@@ -66,7 +63,6 @@ class MainScreen(private val restaurantId: String) :
                 .fillMaxSize()
                 .background(Theme.colors.background)
                 .onSizeChanged { screenSize = it }
-                .padding(getStatusBarPadding())
         ) {
 
             AppBarDropDownLeading(
@@ -74,13 +70,14 @@ class MainScreen(private val restaurantId: String) :
                 onShowMenu = listener::onShowMenu,
                 onDismissMenu = listener::onDismissMenu,
                 restaurantName = state.selectedRestaurant.restaurantName,
-                state = state.selectedRestaurant.isOpen,
+                isRestaurantOpened = state.selectedRestaurant.isOpen,
                 expanded = state.expanded,
                 restaurants = state.restaurants,
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Theme.colors.surface)
-                    .border(width = 1.dp, color = Theme.colors.divider, shape = RectangleShape),
+                    .padding(top = 16.dp)
+//                    .border(width = 1.dp, color = Theme.colors.divider, shape = RectangleShape),
             )
 
             LazyVerticalGrid(
@@ -196,14 +193,18 @@ class MainScreen(private val restaurantId: String) :
         onRestaurantSelect: (String) -> Unit,
         onShowMenu: () -> Unit,
         onDismissMenu: () -> Unit,
-        state: Boolean,
+        isRestaurantOpened: Boolean,
         restaurantName: String,
         expanded: Boolean,
         restaurants: List<RestaurantUIState>,
         modifier: Modifier = Modifier,
     ) {
-        val buttonBackgroundColor by animateColorAsState(if (state) Theme.colors.hover else Color.Transparent)
-        val buttonContentColor by animateColorAsState(if (state) Theme.colors.primary else Theme.colors.disable)
+        val buttonBackgroundColor by animateColorAsState(
+            if (isRestaurantOpened) Theme.colors.hover else Color.Transparent
+        )
+        val buttonContentColor by animateColorAsState(
+            if (isRestaurantOpened) Theme.colors.primary else Theme.colors.disable
+        )
 
         Column(modifier = modifier.fillMaxWidth()) {
             Row(
@@ -220,7 +221,7 @@ class MainScreen(private val restaurantId: String) :
 
                 BpTransparentButton(
                     modifier = Modifier.background(buttonBackgroundColor),
-                    title = if (state) Resources.strings.open else Resources.strings.closed,
+                    title = if (isRestaurantOpened) Resources.strings.open else Resources.strings.closed,
                     enabled = false,
                     contentColor = buttonContentColor,
                     onClick = {}
