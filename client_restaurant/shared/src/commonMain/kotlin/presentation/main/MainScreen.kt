@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
@@ -239,8 +241,11 @@ class MainScreen(private val restaurantId: String) :
                 )
 
                 BpTransparentButton(
-                    modifier = Modifier.background(buttonBackgroundColor),
-                    title = if (isRestaurantOpened) Resources.strings.open else Resources.strings.closed,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(Theme.radius.medium))
+                        .background(buttonBackgroundColor),
+                    title =
+                    if (isRestaurantOpened) Resources.strings.open else Resources.strings.closed,
                     enabled = false,
                     contentColor = buttonContentColor,
                     onClick = {}
@@ -263,6 +268,7 @@ class MainScreen(private val restaurantId: String) :
                 }
             }
         }
+        Box(Modifier.fillMaxWidth().height(1.dp).background(Theme.colors.divider))
     }
 
 

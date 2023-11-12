@@ -8,11 +8,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpTransparentButton
@@ -26,7 +28,7 @@ fun RestaurantInformation(
     restaurantName: String,
     restaurantNumber: String,
     isOpen: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val buttonBackgroundColor by animateColorAsState(if (isOpen) Theme.colors.hover else Color.Transparent)
     val buttonContentColor by animateColorAsState(if (isOpen) Theme.colors.primary else Theme.colors.disable)
@@ -53,7 +55,9 @@ fun RestaurantInformation(
         }
 
         BpTransparentButton(
-            modifier = Modifier.background(buttonBackgroundColor),
+            modifier = Modifier
+                .clip(RoundedCornerShape(Theme.radius.medium))
+                .background(buttonBackgroundColor),
             title = if (isOpen) Resources.strings.open else Resources.strings.closed,
             enabled = false,
             contentColor = buttonContentColor,
