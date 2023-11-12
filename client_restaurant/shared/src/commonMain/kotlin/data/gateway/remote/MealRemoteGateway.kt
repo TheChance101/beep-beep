@@ -19,6 +19,8 @@ import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
 import kotlinx.serialization.json.Json
 
 
@@ -29,7 +31,7 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
         restaurantId: String,
         page: Int,
         limit: Int,
-    ): List<Meal>{
+    ): List<Meal> {
         return tryToExecute<BaseResponse<List<MealDto>>> {
             get("restaurant/$restaurantId/meals") {
                 parameter("page", page)
@@ -58,7 +60,18 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
                     MultiPartFormDataContent(
                         formData {
                             header("Content-Type", ContentType.MultiPart.FormData.toString())
-                            append("data", Json.encodeToString(MealModificationDto.serializer(), meal.toDto()))
+                            append(
+                                "data",
+                                Json.encodeToString(MealModificationDto.serializer(), meal.toDto())
+                            )
+                            append("image", meal.image, Headers.build {
+                                append(HttpHeaders.ContentType, "image/png/jpg/jpeg")
+                                append(
+                                    HttpHeaders.ContentDisposition,
+                                    "form-data; name=image; filename=image.png"
+                                )
+                            }
+                            )
                         }
                     )
                 )
@@ -74,7 +87,21 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
                     MultiPartFormDataContent(
                         formData {
                             header("Content-Type", ContentType.MultiPart.FormData.toString())
-                            append("data", Json.encodeToString(MealModificationDto.serializer(), meal.toDtoUpdate()))
+                            append(
+                                "data",
+                                Json.encodeToString(
+                                    MealModificationDto.serializer(),
+                                    meal.toDtoUpdate()
+                                )
+                            )
+                            append("image", meal.image, Headers.build {
+                                append(HttpHeaders.ContentType, "image/png/jpg/jpeg")
+                                append(
+                                    HttpHeaders.ContentDisposition,
+                                    "form-data; name=image; filename=image.png"
+                                )
+                            }
+                            )
                         }
                     )
                 )

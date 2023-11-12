@@ -17,5 +17,7 @@ data class MealModificationDto(
     @SerialName("restaurantId")
     val restaurantId: String? = null,
     @SerialName("id")
-    val id : String? = null
+    val id : String? = null,
+    @SerialName("image")
+    val image: ByteArray? = null
 )
