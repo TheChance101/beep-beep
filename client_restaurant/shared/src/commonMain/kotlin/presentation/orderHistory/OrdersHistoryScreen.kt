@@ -40,6 +40,7 @@ import presentation.order.composable.OrderCard
 import presentation.order.composable.header
 import resources.Resources
 import util.capitalizeFirstLetter
+import util.getNavigationBarPadding
 
 class OrdersHistoryScreen(private val restaurantId: String) :
     BaseScreen<OrderHistoryScreenModel, OrderHistoryScreenUiState,
@@ -92,6 +93,7 @@ class OrdersHistoryScreen(private val restaurantId: String) :
             verticalItemSpacing = 8.dp,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxSize()
+                .padding(bottom = getNavigationBarPadding().calculateBottomPadding())
         ) {
             header {
                 BpAnimatedTabLayout(
@@ -140,6 +142,7 @@ class OrdersHistoryScreen(private val restaurantId: String) :
             verticalItemSpacing = 16.dp,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxSize()
+                .padding(bottom = getNavigationBarPadding().calculateBottomPadding())
         ) {
             items(13) {
                 Row(

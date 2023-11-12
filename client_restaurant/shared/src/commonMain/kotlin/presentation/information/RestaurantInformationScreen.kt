@@ -48,7 +48,8 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
 
         val scrollState = rememberScrollState()
         Box(
-            modifier = Modifier.fillMaxSize().background(Theme.colors.background),
+            modifier = Modifier.fillMaxSize().background(Theme.colors.background)
+                .padding(bottom = getNavigationBarPadding().calculateBottomPadding()),
             contentAlignment = Alignment.Center
         ) {
             Column {
