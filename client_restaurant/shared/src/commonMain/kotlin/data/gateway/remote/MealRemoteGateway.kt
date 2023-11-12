@@ -31,12 +31,9 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
         page: Int,
         limit: Int,
     ): List<Meal> {
-        return tryToExecute<BaseResponse<PaginationResponse<MealDto>>> {
-            get("restaurant/$restaurantId/meals") {
-                parameter("page", page)
-                parameter("limit", limit)
-            }
-        }.value?.items?.map { it.toEntity() } ?: emptyList()
+        return tryToExecute<BaseResponse<List<MealDto>>> {
+            get("restaurant/$restaurantId/meals")
+        }.value?.toEntity() ?: emptyList()
     }
 
     override suspend fun getMealsByCuisineId(

@@ -20,7 +20,6 @@ class MealsScreenModel(
 
     init {
         getCuisine()
-        getMeals(restaurantId)
     }
 
     private fun getCuisine() {
@@ -40,7 +39,7 @@ class MealsScreenModel(
                 selectedCuisine = cuisines.toCuisineUIState().first()
             )
         }
-        getMeals(state.value.selectedCuisine.id)
+        getMeals(restaurantId)
     }
 
     private fun getMeals(restaurantId: String) {
@@ -73,7 +72,6 @@ class MealsScreenModel(
         updateState { it.copy(error = error, isLoading = false) }
     }
 
-
     override fun onClickBack() {
         sendNewEffect(MealsScreenUIEffect.Back)
     }
@@ -94,4 +92,5 @@ class MealsScreenModel(
             getMealsByCuisineId(cuisine.id)
         }
     }
+
 }
