@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -16,11 +17,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.navigator.Navigator
 import com.aay.compose.barChart.BarChart
 import com.aay.compose.barChart.model.BarParameters
@@ -83,12 +82,7 @@ class MainScreen(private val restaurantId: String) :
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(300.dp),
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(
-                    top = 8.dp,
-                    start = 16.dp,
-                    end = 16.dp,
-                    bottom = 16.dp,
-                ),
+                contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 item(span = { GridItemSpan(maxLineSpan) }) {
@@ -130,64 +124,95 @@ class MainScreen(private val restaurantId: String) :
                     }
                 }
 
-                item {
-                    ChartItem(
-                        imagePainter = painterResource(Resources.images.revenue),
-                        title = "Revenue",
-                        total = "$700"
+                item(span = { GridItemSpan(maxCurrentLineSpan) }) {
+                    FlowRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        maxItemsInEachRow = 2
                     ) {
-                        BarChart(
-                            chartParameters = listOf(
-                                BarParameters(
-                                    dataName = "Revenue",
-                                    data = listOf(1000.0, 4000.0, 2000.0, 7000.0, 5000.0, 6000.0, 1000.0),
-                                    barColor = Theme.colors.primary
-                                )
-                            ),
-                            xAxisData = listOf("sun", "mon", "thus", "wens", "thurs", "Fri", "Sat"),
-                            legendPosition = LegendPosition.DISAPPEAR,
-                            yAxisRange = 7,
-                            barCornerRadius = 4.dp,
-                            spaceBetweenBars = 4.dp,
-                            barWidth = 16.dp,
-                            yAxisStyle = Theme.typography.caption.copy(Theme.colors.contentTertiary),
-                            xAxisStyle = Theme.typography.caption.copy(Theme.colors.contentTertiary),
-                            gridColor = Theme.colors.divider
-                        )
-                    }
-                }
-                item {
-                    ChartItem(
-                        imagePainter = painterResource(Resources.images.orders),
-                        title = "Orders",
-                        total = "100"
-                    ) {
-                        LineChart(
-                            modifier = Modifier.fillMaxWidth(),
-                            linesParameters = listOf(
-                                LineParameters(
-                                    label = "Orders",
-                                    data = listOf(
-                                        10.0,
-                                        20.0,
-                                        50.0,
-                                        30.0,
-                                        10.0,
-                                        70.0,
-                                        40.0
-                                    ),
-                                    lineColor = Theme.colors.primary,
-                                    lineType = LineType.CURVED_LINE,
-                                    lineShadow = true,
-                                )
-                            ),
-                            xAxisData = listOf("sun", "mon", "thus", "wens", "thurs", "Fri", "Sat"),
-                            legendPosition = LegendPosition.DISAPPEAR,
-                            yAxisRange = 7,
-                            yAxisStyle = Theme.typography.caption.copy(Theme.colors.contentTertiary),
-                            xAxisStyle = Theme.typography.caption.copy(Theme.colors.contentTertiary),
-                            gridColor = Theme.colors.divider,
-                        )
+                        ChartItem(
+                            modifier = Modifier.fillMaxWidth().height(328.dp) ,
+                            imagePainter = painterResource(Resources.images.revenue),
+                            title = "Revenue",
+                            total = "$700"
+                        ) {
+                            BarChart(
+                                chartParameters = listOf(
+                                    BarParameters(
+                                        dataName = "Revenue",
+                                        data = listOf(
+                                            1000.0,
+                                            4000.0,
+                                            7000.0,
+                                            5000.0,
+                                            2000.0,
+                                            8000.0,
+                                            6000.0,
+                                        ),
+                                        barColor = Theme.colors.primary
+                                    )
+                                ),
+                                xAxisData = listOf(
+                                    "sun",
+                                    "mon",
+                                    "thus",
+                                    "wens",
+                                    "thurs",
+                                    "Fri",
+                                    "Sat"
+                                ),
+                                legendPosition = LegendPosition.DISAPPEAR,
+                                yAxisRange = 7,
+                                barCornerRadius = 4.dp,
+                                spaceBetweenBars = 4.dp,
+                                barWidth = 16.dp,
+                                yAxisStyle = Theme.typography.caption.copy(Theme.colors.contentTertiary),
+                                xAxisStyle = Theme.typography.caption.copy(Theme.colors.contentTertiary),
+                                gridColor = Theme.colors.divider,
+                                spaceBetweenGroups = 20.dp
+                            )
+                        }
+
+                        ChartItem(
+                            modifier = Modifier.fillMaxWidth().height(328.dp) ,
+                            imagePainter = painterResource(Resources.images.orders),
+                            title = "Orders",
+                            total = "100"
+                        ) {
+                            LineChart(
+                                linesParameters = listOf(
+                                    LineParameters(
+                                        label = "Orders",
+                                        data = listOf(
+                                            10.0,
+                                            20.0,
+                                            50.0,
+                                            30.0,
+                                            70.0,
+                                            80.0,
+                                            40.0,
+                                        ),
+                                        lineColor = Theme.colors.primary,
+                                        lineType = LineType.CURVED_LINE,
+                                        lineShadow = true,
+                                    )
+                                ),
+                                xAxisData = listOf(
+                                    "sun",
+                                    "mon",
+                                    "thus",
+                                    "wens",
+                                    "thurs",
+                                    "Fri",
+                                    "Sat"
+                                ),
+                                legendPosition = LegendPosition.DISAPPEAR,
+                                yAxisRange = 7,
+                                yAxisStyle = Theme.typography.caption.copy(Theme.colors.contentTertiary),
+                                xAxisStyle = Theme.typography.caption.copy(Theme.colors.contentTertiary),
+                                gridColor = Theme.colors.divider,
+                            )
+                        }
                     }
                 }
             }

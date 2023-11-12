@@ -80,7 +80,7 @@ fun ChartItem(
                 )
             }
         }
-        Column(Modifier.fillMaxWidth().height(328.dp)) {
+        Column(Modifier.height(328.dp)) {
             content()
         }
     }
