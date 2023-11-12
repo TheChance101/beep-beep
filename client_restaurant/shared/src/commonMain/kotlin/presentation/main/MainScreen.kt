@@ -1,6 +1,7 @@
 package presentation.main
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -226,6 +227,7 @@ class MainScreen(private val restaurantId: String) :
         val buttonContentColor by animateColorAsState(
             if (isRestaurantOpened) Theme.colors.primary else Theme.colors.disable
         )
+        val hasMultipleRestaurants = restaurants.size != 1
 
         Column(modifier = modifier.fillMaxWidth()) {
             Row(
@@ -237,7 +239,7 @@ class MainScreen(private val restaurantId: String) :
                 MultipleRestaurants(
                     onClick = onShowMenu,
                     restaurantName = restaurantName,
-                    isMultipleRestaurants = restaurants.isNotEmpty()
+                    hasMultipleRestaurants = hasMultipleRestaurants
                 )
 
                 BpTransparentButton(
@@ -252,19 +254,21 @@ class MainScreen(private val restaurantId: String) :
                 )
             }
 
-            BpDropdownMenu(
-                expanded = expanded,
-                modifier = Modifier.heightIn(max = 350.dp).widthIn(min = 260.dp),
-                offset = DpOffset(Theme.dimens.space16, 0.dp),
-                onDismissRequest = onDismissMenu
-            ) {
-                restaurants.forEach { restaurant ->
-                    RestaurantInformation(
-                        onRestaurantClick = { onSelectRestaurant(restaurant.restaurantId) },
-                        restaurantName = restaurant.restaurantName,
-                        restaurantNumber = restaurant.restaurantPhoneNumber,
-                        isOpen = restaurant.isOpen
-                    )
+            AnimatedVisibility (hasMultipleRestaurants) {
+                BpDropdownMenu(
+                    expanded = expanded,
+                    modifier = Modifier.heightIn(max = 350.dp).widthIn(min = 260.dp),
+                    offset = DpOffset(Theme.dimens.space16, 0.dp),
+                    onDismissRequest = onDismissMenu
+                ) {
+                    restaurants.forEach { restaurant ->
+                        RestaurantInformation(
+                            onRestaurantClick = { onSelectRestaurant(restaurant.restaurantId) },
+                            restaurantName = restaurant.restaurantName,
+                            restaurantNumber = restaurant.restaurantPhoneNumber,
+                            isOpen = restaurant.isOpen
+                        )
+                    }
                 }
             }
         }
@@ -278,7 +282,7 @@ class MainScreen(private val restaurantId: String) :
         onClick: () -> Unit,
         restaurantName: String,
         modifier: Modifier = Modifier,
-        isMultipleRestaurants: Boolean,
+        hasMultipleRestaurants: Boolean,
     ) {
         Row(
             modifier = modifier.noRippleEffect(onClick),
@@ -291,7 +295,7 @@ class MainScreen(private val restaurantId: String) :
                 color = Theme.colors.contentPrimary
             )
 
-            if (isMultipleRestaurants) {
+            AnimatedVisibility(hasMultipleRestaurants) {
                 Icon(
                     painter = painterResource(Resources.images.arrowDown),
                     contentDescription = null,
