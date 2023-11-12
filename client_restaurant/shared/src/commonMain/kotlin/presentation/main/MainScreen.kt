@@ -44,6 +44,7 @@ import presentation.order.OrderScreen
 import presentation.order.orderHistory.OrdersHistoryScreen
 import presentation.restaurantSelection.RestaurantUIState
 import resources.Resources
+import util.toWeekDay
 
 class MainScreen(private val restaurantId: String) :
     BaseScreen<MainScreenModel, MainScreenUIState, MainScreenUIEffect, MainScreenInteractionListener>() {
@@ -140,27 +141,11 @@ class MainScreen(private val restaurantId: String) :
                                 chartParameters = listOf(
                                     BarParameters(
                                         dataName = "Revenue",
-                                        data = listOf(
-                                            1000.0,
-                                            4000.0,
-                                            7000.0,
-                                            5000.0,
-                                            2000.0,
-                                            8000.0,
-                                            6000.0,
-                                        ),
+                                        data = state.revenueUiState.yAxisData,
                                         barColor = Theme.colors.primary
                                     )
                                 ),
-                                xAxisData = listOf(
-                                    "sun",
-                                    "mon",
-                                    "thus",
-                                    "wens",
-                                    "thurs",
-                                    "Fri",
-                                    "Sat"
-                                ),
+                                xAxisData = state.revenueUiState.xAxisData.toWeekDay(),
                                 legendPosition = LegendPosition.DISAPPEAR,
                                 yAxisRange = 7,
                                 barCornerRadius = 4.dp,
@@ -183,29 +168,13 @@ class MainScreen(private val restaurantId: String) :
                                 linesParameters = listOf(
                                     LineParameters(
                                         label = "Orders",
-                                        data = listOf(
-                                            10.0,
-                                            20.0,
-                                            50.0,
-                                            30.0,
-                                            70.0,
-                                            80.0,
-                                            40.0,
-                                        ),
+                                        data = state.orderUiState.yAxisData,
                                         lineColor = Theme.colors.primary,
                                         lineType = LineType.CURVED_LINE,
                                         lineShadow = true,
                                     )
                                 ),
-                                xAxisData = listOf(
-                                    "sun",
-                                    "mon",
-                                    "thus",
-                                    "wens",
-                                    "thurs",
-                                    "Fri",
-                                    "Sat"
-                                ),
+                                xAxisData = state.orderUiState.xAxisData.toWeekDay(),
                                 legendPosition = LegendPosition.DISAPPEAR,
                                 yAxisRange = 7,
                                 yAxisStyle = Theme.typography.caption.copy(Theme.colors.contentTertiary),

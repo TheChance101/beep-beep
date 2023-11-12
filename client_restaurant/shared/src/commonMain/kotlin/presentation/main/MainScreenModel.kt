@@ -21,8 +21,8 @@ class MainScreenModel(
     init {
         updateState { it.copy(selectedRestaurantId = restaurantId) }
         getData()
-//        getOrdersCountByDays()
-//        getOrdersRevenueByDaysBefore()
+        getOrdersCountByDays()
+        getOrdersRevenueByDaysBefore()
     }
 
     private fun getData() {
@@ -37,7 +37,7 @@ class MainScreenModel(
     private fun getOrdersCountByDays() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            { mangeOrders.getOrdersCountByDaysBefore(restaurantId, 7) },
+            { mangeOrders.getOrdersCountByDaysBefore(restaurantId, 6) },
             ::onGetOrdersCountByDaysSuccessfully,
             ::onError
         )
@@ -56,7 +56,7 @@ class MainScreenModel(
     private fun getOrdersRevenueByDaysBefore() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            { mangeOrders.getOrdersRevenueByDaysBefore(restaurantId, 7) },
+            { mangeOrders.getOrdersRevenueByDaysBefore(restaurantId, 6) },
             ::onGetOrdersRevenueByDaysBeforeSuccessfully,
             ::onError
         )

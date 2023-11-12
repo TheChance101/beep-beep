@@ -9,28 +9,21 @@ data class MainScreenUIState(
     val error: ErrorState? = null,
     val restaurants: List<RestaurantUIState> = emptyList(),
     val selectedRestaurantId: String = "",
-
-    val orderUiState: ChartsItemUiState = ChartsItemUiState(
-        yAxisData = emptyList(),
-        xAxisData = emptyList(),
-    ),
-    val revenueUiState: ChartsItemUiState = ChartsItemUiState(
-        yAxisData = emptyList(),
-        xAxisData = emptyList(),
-    ),
+    val orderUiState: ChartsItemUiState = ChartsItemUiState(),
+    val revenueUiState: ChartsItemUiState = ChartsItemUiState(),
 ) {
     val selectedRestaurant: RestaurantUIState
         get() = restaurants.firstOrNull { it.id == selectedRestaurantId } ?: RestaurantUIState()
 }
 
 data class ChartsItemUiState(
-    val yAxisData: List<Double> = listOf(0.5 , 0.8 , 0.4 , 0.2 , 0.1 , 0.18 , 0.25),
-    val xAxisData: List<String> = listOf("sun" , "mon" , "thus" , "wens" , "thurs" , "Fri" ,"Sat"),
+    val yAxisData: List<Double> = listOf(0.0),
+    val xAxisData: List<String> = listOf(""),
 )
 
 fun List<Pair<String, Double>>.toChartsItemUiState(): ChartsItemUiState {
-    val yAxisData = this.map { it.second }
-    val xAxisData = this.map { it.first }
+    val xAxisData = this.map { it.first } // weeks
+    val yAxisData = this.map { it.second } // values
     return ChartsItemUiState(
         yAxisData = yAxisData,
         xAxisData = xAxisData,
