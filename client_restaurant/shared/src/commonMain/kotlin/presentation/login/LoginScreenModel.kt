@@ -60,7 +60,7 @@ class LoginScreenModel(
         password: String,
         isKeepMeLoggedInChecked: Boolean,
     ) {
-        updateState { it.copy(isLoading = true, isEnable = false) }
+        updateState { it.copy(isLoading = true, noInternetConnection = false, isEnable = false) }
         tryToExecute(
             { loginUserUseCase.loginUser(userName, password, isKeepMeLoggedInChecked) },
             { onLoginSuccess() },
@@ -73,6 +73,7 @@ class LoginScreenModel(
             it.copy(
                 isLoading = false,
                 isSuccess = true,
+                noInternetConnection = false,
                 isCredentialsError = false,
                 usernameErrorMsg = "",
                 passwordErrorMsg = ""
@@ -89,7 +90,9 @@ class LoginScreenModel(
 
     private fun handleErrorState(error: ErrorState) {
         when (error) {
-            ErrorState.NoInternet -> {}
+            ErrorState.NoInternet -> {
+                updateState { it.copy(noInternetConnection = true) }
+            }
             ErrorState.RequestFailed -> {}
             ErrorState.UnAuthorized -> {}
             ErrorState.HasNoPermission -> {

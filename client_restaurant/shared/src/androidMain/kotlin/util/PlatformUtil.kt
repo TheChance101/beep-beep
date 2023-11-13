@@ -14,16 +14,20 @@ import io.ktor.client.engine.cio.CIO
 actual fun getNavigationBarPadding(): PaddingValues {
     return WindowInsets.navigationBars.asPaddingValues()
 }
-
-@Composable
-actual fun SetInsetsController(isDark: Boolean) {
-    val window = (getPlatformContext().androidContext as Activity).window
-    WindowCompat.getInsetsController(window, window.decorView)
-        .isAppearanceLightStatusBars = !isDark
-}
 @Composable
 actual fun getStatusBarPadding(): PaddingValues {
     return WindowInsets.statusBars.asPaddingValues()
 }
+@Composable
+actual fun setInsetsController(isDark: Boolean) {
+    val window = (getPlatformContext().androidContext as Activity).window
+
+    WindowCompat.getInsetsController(window, window.decorView)
+        .isAppearanceLightStatusBars = !isDark
+
+    WindowCompat.getInsetsController(window, window.decorView)
+        .isAppearanceLightNavigationBars = !isDark
+}
+
 
 actual fun getEngine() = CIO.create()

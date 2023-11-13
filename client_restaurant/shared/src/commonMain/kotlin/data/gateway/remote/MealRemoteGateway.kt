@@ -3,9 +3,10 @@ package data.gateway.remote
 import data.remote.mapper.toDto
 import data.remote.mapper.toDtoUpdate
 import data.remote.mapper.toEntity
-import data.remote.model.MealModificationDto
 import data.remote.model.BaseResponse
 import data.remote.model.MealDto
+import data.remote.model.MealModificationDto
+import data.remote.model.PaginationResponse
 import domain.entity.Meal
 import domain.entity.MealModification
 import domain.gateway.remote.IMealRemoteGateway
@@ -26,22 +27,27 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
     BaseRemoteGateway(client = client) {
 
     override suspend fun getAllMealsByRestaurantId(
-        restaurantId: String,
-        page: Int,
-        limit: Int,
-    ): List<Meal>{
-        return tryToExecute<BaseResponse<List<MealDto>>> {
+        restaurantId: String,page: Int, limit: Int
+    ): List<Meal> {
+        return tryToExecute<BaseResponse<PaginationResponse<MealDto>>> {
             get("restaurant/$restaurantId/meals") {
                 parameter("page", page)
                 parameter("limit", limit)
             }
-        }.value?.toEntity() ?: emptyList()
+        }.value?.items?.map { it.toEntity() } ?: emptyList()
     }
 
-    override suspend fun getMealsByCuisineId(cuisineId: String): List<Meal> {
-        return tryToExecute<BaseResponse<List<MealDto>>> {
-            get("/cuisine/$cuisineId/meals")
-        }.value?.toEntity() ?: emptyList()
+    override suspend fun getMealsByCuisineId(
+        cuisineId: String,
+        page: Int,
+        limit: Int,
+    ): List<Meal> {
+        return tryToExecute<BaseResponse<PaginationResponse<MealDto>>> {
+            get("/cuisine/$cuisineId/meals") {
+                parameter("page", page)
+                parameter("limit", limit)
+            }
+        }.value?.items?.map { it.toEntity() } ?: emptyList()
     }
 
     override suspend fun getMealById(mealId: String): Meal {
@@ -58,7 +64,10 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
                     MultiPartFormDataContent(
                         formData {
                             header("Content-Type", ContentType.MultiPart.FormData.toString())
-                            append("data", Json.encodeToString(MealModificationDto.serializer(), meal.toDto()))
+                            append(
+                                "data",
+                                Json.encodeToString(MealModificationDto.serializer(), meal.toDto())
+                            )
                         }
                     )
                 )
@@ -74,7 +83,13 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
                     MultiPartFormDataContent(
                         formData {
                             header("Content-Type", ContentType.MultiPart.FormData.toString())
-                            append("data", Json.encodeToString(MealModificationDto.serializer(), meal.toDtoUpdate()))
+                            append(
+                                "data",
+                                Json.encodeToString(
+                                    MealModificationDto.serializer(),
+                                    meal.toDtoUpdate()
+                                )
+                            )
                         }
                     )
                 )

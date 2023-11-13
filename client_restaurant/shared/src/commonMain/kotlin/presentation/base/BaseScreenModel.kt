@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
@@ -46,9 +48,11 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
         inScope: CoroutineScope = viewModelScope
     ): Job {
         return runWithErrorCheck(onError, inScope) {
-            function().collect {
-                onNewValue(it)
-            }
+            function()
+                .distinctUntilChanged()
+                .collectLatest {
+                    onNewValue(it)
+                }
         }
     }
 
@@ -72,7 +76,6 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
             try {
                 function()
             } catch (exception: Exception) {
-                println("darkennes ${exception.message.toString()}")
                 when (exception) {
                     is NoInternetException -> onError(ErrorState.NoInternet)
                     is PermissionDenied -> onError(ErrorState.HasNoPermission)

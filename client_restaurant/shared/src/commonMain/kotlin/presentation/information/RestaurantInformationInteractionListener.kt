@@ -11,4 +11,5 @@ interface RestaurantInformationInteractionListener: BaseInteractionListener {
     fun onClickSave()
     fun onClickLogout()
     fun onClickBackArrow()
+    fun onImagePicked(image: ByteArray)
 }

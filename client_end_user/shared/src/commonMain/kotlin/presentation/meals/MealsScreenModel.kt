@@ -1,5 +1,6 @@
 package presentation.meals
 
+import androidx.paging.map
 import app.cash.paging.PagingData
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Meal
@@ -9,6 +10,7 @@ import domain.usecase.IManageCartUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
@@ -39,6 +41,10 @@ class MealsScreenModel(
             ::onGetMealsSuccess,
             ::onError
         )
+    }
+
+    private fun onGetMealsSuccess(meals: Flow<PagingData<Meal>>) {
+        updateState { it.copy(meals = meals.toUIState(), isLoading = false) }
     }
 
     private fun checkLoginStatus() {
@@ -72,10 +78,6 @@ class MealsScreenModel(
                 updateState { it.copy(error = errorState) }
             }
         }
-    }
-
-    private fun onGetMealsSuccess(meals: Flow<PagingData<Meal>>) {
-        updateState { it.copy(meals = meals.toUIState(), isLoading = false) }
     }
 
     override fun onIncreaseMealQuantity() {

@@ -29,63 +29,25 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
-                    mealName = "Pasta"
+                    mealName = "Pasta",
+                    price = 10.0,
                 ),
                 OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
                     quantity = 2,
-                    mealName = "Breakfast burrito"
+                    mealName = "Breakfast burrito",
+                    price = 10.0,
                 )
             ),
             totalPrice = 22.74,
-            createdAt = "2022-05-16T08:23",
-            orderState = 0
-        ),
-        OrderDto(
-            id = "4d7bdc9b-6233-44ef-80a0-6a09ef856862",
-            userId = "8a430be2-15b7-47f5-9e06-3f236f8c25ec",
-            restaurantId = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
-            meals = listOf(
-                OrderDto.MealDto(
-                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
-                    quantity = 4,
-                    mealName = "Pancake stack"
-                ),
+            createdAt = 123541235,
+            orderStatus = 0,
+            currency = "USD",
+            restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
+            restaurantName = "Restaurant 1",
+
             ),
-            totalPrice = 28.48,
-            createdAt = "2022-05-16T08:23",
-            orderState = 2
-        ),
-        OrderDto(
-            id = "891ecf91-62bf-4d91-96bf-8d4cc8271a81",
-            userId = "f26dab15-7193-4e8d-bf6e-f4d2ae8799af",
-            restaurantId = "91c2ae1f-8495-4c0c-bc47-7bf7ef77d907",
-            meals = listOf(
-                OrderDto.MealDto(
-                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
-                    quantity = 1,
-                    mealName = "Lunch salad"
-                ),
-                OrderDto.MealDto(
-                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
-                    quantity = 1,
-                    mealName = "Afternoon tea sandwich"
-                ),
-                OrderDto.MealDto(
-                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
-                    quantity = 3,
-                    mealName = "Dinner party"
-                )
-            ),
-            totalPrice = 100.49,
-            createdAt = "2022-05-16T08:23",
-            orderState = 3
-        ),
         OrderDto(
             id = "f5c8b31e-5c4d-4c8a-babc-0e9463daad20",
             userId = "550e8400-e29b-41d4-a716-446655440989",
@@ -94,72 +56,56 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
                 OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
-                    quantity = 3,
-                    mealName = "Supper club"
+                    quantity = 2,
+                    mealName = "Pasta",
+                    price = 10.0,
                 ),
+                OrderDto.MealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
+                    quantity = 2,
+                    mealName = "Breakfast burrito",
+                    price = 10.0,
+                )
             ),
             totalPrice = 22.74,
-            createdAt = "2022-05-16T08:23",
-            orderState = 1
-        ),
-        OrderDto(
-            id = "4d7bdc9b-6233-44ef-80a0-6a09ef856862",
-            userId = "8a430be2-15b7-47f5-9e06-3f236f8c25ec",
-            restaurantId = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
-            meals = listOf(
-                OrderDto.MealDto(
-                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
-                    quantity = 3,
-                    mealName = "Light snack"
-                ),
-                OrderDto.MealDto(
-                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
-                    quantity = 1,
-                    mealName = "Hors d'oeuvre platter"
-                ),
-                OrderDto.MealDto(
-                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://images.immediate.co.uk/production/volatile/sites/2/2017/09/OLI1017-Healthy_ChimmiChurriChicken_014545.jpg?quality=90&resize=700,466",
-                    quantity = 3,
-                    mealName = "Appetizer sampler"
-                ),
-                OrderDto.MealDto(
-                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://ichef.bbci.co.uk/food/ic/food_16x9_832/recipes/sausage_and_lentil_stew_90967_16x9.jpg",
-                    quantity = 4,
-                    mealName = "Pasta"
-                )
+            createdAt = 123541235,
+            orderStatus = 0,
+            currency = "USD",
+            restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
+            restaurantName = "Restaurant 1",
+
             ),
-            totalPrice = 300.5,
-            createdAt = "2022-05-16T08:23",
-            orderState = 1
-        ),
         OrderDto(
-            id = "891ecf91-62bf-4d91-96bf-8d4cc8271a81",
-            userId = "f26dab15-7193-4e8d-bf6e-f4d2ae8799af",
-            restaurantId = "91c2ae1f-8495-4c0c-bc47-7bf7ef77d907",
+            id = "f5c8b31e-5c4d-4c8a-babc-0e9463daad20",
+            userId = "550e8400-e29b-41d4-a716-446655440989",
+            restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
             meals = listOf(
                 OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
-                    mealName = "Pasta"
+                    mealName = "Pasta",
+                    price = 10.0,
                 ),
                 OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
                     quantity = 2,
-                    mealName = "Main course dish"
+                    mealName = "Breakfast burrito",
+                    price = 10.0,
                 )
             ),
-            totalPrice = 26.49,
-            createdAt = "2022-05-16T08:23",
-            orderState = 1
-        ),
+            totalPrice = 22.74,
+            createdAt = 123541235,
+            orderStatus = 0,
+            currency = "USD",
+            restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
+            restaurantName = "Restaurant 1",
+
+            ),
         OrderDto(
-            id = "d59b00c3-923c-4cf4-bd0e-3a4c997a3156",
+            id = "f5c8b31e-5c4d-4c8a-babc-0e9463daad20",
             userId = "550e8400-e29b-41d4-a716-446655440989",
             restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
             meals = listOf(
@@ -167,131 +113,27 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
-                    mealName = "Dessert pizza"
+                    mealName = "Pasta",
+                    price = 10.0,
                 ),
                 OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
                     quantity = 2,
-                    mealName = "Pasta"
+                    mealName = "Breakfast burrito",
+                    price = 10.0,
                 )
             ),
-            totalPrice = 20.73,
-            createdAt = "2022-05-16T08:23",
-            orderState = 2
-        ),
-        OrderDto(
-            id = "9e94fdd9-9cbf-4b7e-a97e-8ea31c4876b2",
-            userId = "8a430be2-15b7-47f5-9e06-3f236f8c25ec",
-            restaurantId = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
-            meals = listOf(
-                OrderDto.MealDto(
-                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://thecarefreekitchen.com/wp-content/uploads/2021/10/Buffalo-Chicken-Taquitos-1024x1024.jpg",
-                    quantity = 2,
-                    mealName = "Digestif cocktail"
-                ),
-                OrderDto.MealDto(
-                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://www.freshnlean.com/wp-content/uploads/2021/03/Meal-Plan-plate-protein.png",
-                    quantity = 1,
-                    mealName = "Pasta"
-                )
+            totalPrice = 22.74,
+            createdAt = 123541235,
+            orderStatus = 0,
+            currency = "USD",
+            restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
+            restaurantName = "Restaurant 1",
+
             ),
-            totalPrice = 41.96,
-            createdAt = "2022-05-16T08:23",
-            orderState = 1
-        ),
         OrderDto(
-            id = "c07d45e5-4c5d-4847-a518-8f21c66620f9",
-            userId = "f26dab15-7193-4e8d-bf6e-f4d2ae8799af",
-            restaurantId = "91c2ae1f-8495-4c0c-bc47-7bf7ef77d907",
-            meals = listOf(
-                OrderDto.MealDto(
-                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
-                    quantity = 2,
-                    mealName = "Dinner party"
-                )
-            ),
-            totalPrice = 35.98,
-            createdAt = "2022-05-16T08:23",
-            orderState = 0
-        ),
-        OrderDto(
-            id = "d59b00c3-923c-4cf4-bd0e-3a4c997a3156",
-            userId = "550e8400-e29b-41d4-a716-446655440989",
-            restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
-            meals = listOf(
-                OrderDto.MealDto(
-                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://www.foodandwine.com/thmb/bRz199ONebY-5h5gcvpOcHRxAkA=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Web_4000-Trifecta-Chicken-Breast-Sweet-Potato-Mixed-Vegetable_04-72a24aaee5584c06a26451603daec5c9.jpg",
-                    quantity = 2,
-                    mealName = "Pasta"
-                ),
-                OrderDto.MealDto(
-                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
-                    quantity = 2,
-                    mealName = "Dinner party"
-                )
-            ),
-            totalPrice = 20.73,
-            createdAt = "2022-05-16T08:23",
-            orderState = 0
-        ),
-        OrderDto(
-            id = "9e94fdd9-9cbf-4b7e-a97e-8ea31c4876b2",
-            userId = "8a430be2-15b7-47f5-9e06-3f236f8c25ec",
-            restaurantId = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
-            meals = listOf(
-                OrderDto.MealDto(
-                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://cdn.apartmenttherapy.info/image/upload/v1558635037/k/archive/388e39a6ca67e257cb7bef6bde6a98aef1bcd434.jpg",
-                    quantity = 1,
-                    mealName = "Supper club"
-                ),
-                OrderDto.MealDto(
-                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://images.immediate.co.uk/production/volatile/sites/30/2022/07/Fajita-style-pasta-f792c52.jpg?quality=90&resize=440,400",
-                    quantity = 2,
-                    mealName = "Pasta"
-                ),
-                OrderDto.MealDto(
-                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://www.thelazydish.com/wp-content/uploads/2022/05/cheap-easy-dinner-recipes-for-family-with-kids-from-the-lazy-dish.jpg",
-                    quantity = 3,
-                    mealName = "Appetizer sampler"
-                )
-            ),
-            totalPrice = 41.96,
-            createdAt = "2022-05-16T08:23",
-            orderState = 1
-        ),
-        OrderDto(
-            id = "c07d45e5-4c5d-4847-a518-8f21c66620f9",
-            userId = "f26dab15-7193-4e8d-bf6e-f4d2ae8799af",
-            restaurantId = "91c2ae1f-8495-4c0c-bc47-7bf7ef77d907",
-            meals = listOf(
-                OrderDto.MealDto(
-                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://ichef.bbci.co.uk/food/ic/food_16x9_832/recipes/roast_chicken_for_one_41998_16x9.jpg",
-                    quantity = 2,
-                    mealName = "Pasta"
-                ),
-                OrderDto.MealDto(
-                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
-                    quantity = 2,
-                    mealName = "Pasta"
-                )
-            ),
-            totalPrice = 35.98,
-            createdAt = "2022-05-16T08:23",
-            orderState = 1
-        ),
-        OrderDto(
-            id = "1a2b3c4d-5e6f-7a8b-9c0d-e1f2g3h4i5j6",
+            id = "f5c8b31e-5c4d-4c8a-babc-0e9463daad20",
             userId = "550e8400-e29b-41d4-a716-446655440989",
             restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
             meals = listOf(
@@ -299,41 +141,277 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
-                    mealName = "Pasta"
+                    mealName = "Pasta",
+                    price = 10.0,
                 ),
                 OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://ichef.bbci.co.uk/food/ic/food_16x9_832/recipes/roast_chicken_for_one_41998_16x9.jpg",
+                    mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
                     quantity = 2,
-                    mealName = "Digestif cocktail"
+                    mealName = "Breakfast burrito",
+                    price = 10.0,
                 )
             ),
-            totalPrice = 28.45,
-            createdAt = "2022-05-16T08:23",
-            orderState = 0
-        ),
+            totalPrice = 22.74,
+            createdAt = 123541235,
+            orderStatus = 0,
+            currency = "USD",
+            restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
+            restaurantName = "Restaurant 1",
+
+            ),
         OrderDto(
-            id = "2b3c4d5e-6f7a-8b9c-0d1e-2f3g4h5i6j7",
-            userId = "8a430be2-15b7-47f5-9e06-3f236f8c25ec",
-            restaurantId = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
+            id = "f5c8b31e-5c4d-4c8a-babc-0e9463daad20",
+            userId = "550e8400-e29b-41d4-a716-446655440989",
+            restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
             meals = listOf(
                 OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
-                    mealName = "Pasta"
+                    mealName = "Pasta",
+                    price = 10.0,
                 ),
                 OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://www.deliciouslycleaneats.com.au/wp-content/uploads/2018/08/Meal-Plan-Spread1.jpg",
+                    mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
                     quantity = 2,
-                    mealName = "Pasta"
+                    mealName = "Breakfast burrito",
+                    price = 10.0,
                 )
             ),
-            totalPrice = 23.99,
-            createdAt = "2022-05-16T08:23",
-            orderState = 4
-        ),
+            totalPrice = 22.74,
+            createdAt = 123541235,
+            orderStatus = 0,
+            currency = "USD",
+            restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
+            restaurantName = "Restaurant 1",
+
+            ),
+        OrderDto(
+            id = "f5c8b31e-5c4d-4c8a-babc-0e9463daad20",
+            userId = "550e8400-e29b-41d4-a716-446655440989",
+            restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            meals = listOf(
+                OrderDto.MealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 2,
+                    mealName = "Pasta",
+                    price = 10.0,
+                ),
+                OrderDto.MealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
+                    quantity = 2,
+                    mealName = "Breakfast burrito",
+                    price = 10.0,
+                )
+            ),
+            totalPrice = 22.74,
+            createdAt = 123541235,
+            orderStatus = 0,
+            currency = "USD",
+            restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
+            restaurantName = "Restaurant 1",
+
+            ),
+        OrderDto(
+            id = "f5c8b31e-5c4d-4c8a-babc-0e9463daad20",
+            userId = "550e8400-e29b-41d4-a716-446655440989",
+            restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            meals = listOf(
+                OrderDto.MealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 2,
+                    mealName = "Pasta",
+                    price = 10.0,
+                ),
+                OrderDto.MealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
+                    quantity = 2,
+                    mealName = "Breakfast burrito",
+                    price = 10.0,
+                )
+            ),
+            totalPrice = 22.74,
+            createdAt = 123541235,
+            orderStatus = 0,
+            currency = "USD",
+            restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
+            restaurantName = "Restaurant 1",
+
+            ),
+        OrderDto(
+            id = "f5c8b31e-5c4d-4c8a-babc-0e9463daad20",
+            userId = "550e8400-e29b-41d4-a716-446655440989",
+            restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            meals = listOf(
+                OrderDto.MealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 2,
+                    mealName = "Pasta",
+                    price = 10.0,
+                ),
+                OrderDto.MealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
+                    quantity = 2,
+                    mealName = "Breakfast burrito",
+                    price = 10.0,
+                )
+            ),
+            totalPrice = 22.74,
+            createdAt = 123541235,
+            orderStatus = 0,
+            currency = "USD",
+            restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
+            restaurantName = "Restaurant 1",
+
+            ),
+        OrderDto(
+            id = "f5c8b31e-5c4d-4c8a-babc-0e9463daad20",
+            userId = "550e8400-e29b-41d4-a716-446655440989",
+            restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            meals = listOf(
+                OrderDto.MealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 2,
+                    mealName = "Pasta",
+                    price = 10.0,
+                ),
+                OrderDto.MealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
+                    quantity = 2,
+                    mealName = "Breakfast burrito",
+                    price = 10.0,
+                )
+            ),
+            totalPrice = 22.74,
+            createdAt = 123541235,
+            orderStatus = 0,
+            currency = "USD",
+            restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
+            restaurantName = "Restaurant 1",
+
+            ),
+        OrderDto(
+            id = "f5c8b31e-5c4d-4c8a-babc-0e9463daad20",
+            userId = "550e8400-e29b-41d4-a716-446655440989",
+            restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            meals = listOf(
+                OrderDto.MealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 2,
+                    mealName = "Pasta",
+                    price = 10.0,
+                ),
+                OrderDto.MealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
+                    quantity = 2,
+                    mealName = "Breakfast burrito",
+                    price = 10.0,
+                )
+            ),
+            totalPrice = 22.74,
+            createdAt = 123541235,
+            orderStatus = 0,
+            currency = "USD",
+            restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
+            restaurantName = "Restaurant 1",
+
+            ),
+        OrderDto(
+            id = "f5c8b31e-5c4d-4c8a-babc-0e9463daad20",
+            userId = "550e8400-e29b-41d4-a716-446655440989",
+            restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            meals = listOf(
+                OrderDto.MealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 2,
+                    mealName = "Pasta",
+                    price = 10.0,
+                ),
+                OrderDto.MealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
+                    quantity = 2,
+                    mealName = "Breakfast burrito",
+                    price = 10.0,
+                )
+            ),
+            totalPrice = 22.74,
+            createdAt = 123541235,
+            orderStatus = 0,
+            currency = "USD",
+            restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
+            restaurantName = "Restaurant 1",
+
+            ),
+        OrderDto(
+            id = "f5c8b31e-5c4d-4c8a-babc-0e9463daad20",
+            userId = "550e8400-e29b-41d4-a716-446655440989",
+            restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            meals = listOf(
+                OrderDto.MealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 2,
+                    mealName = "Pasta",
+                    price = 10.0,
+                ),
+                OrderDto.MealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
+                    quantity = 2,
+                    mealName = "Breakfast burrito",
+                    price = 10.0,
+                )
+            ),
+            totalPrice = 22.74,
+            createdAt = 123541235,
+            orderStatus = 0,
+            currency = "USD",
+            restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
+            restaurantName = "Restaurant 1",
+
+            ),
+        OrderDto(
+            id = "f5c8b31e-5c4d-4c8a-babc-0e9463daad20",
+            userId = "550e8400-e29b-41d4-a716-446655440989",
+            restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            meals = listOf(
+                OrderDto.MealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 2,
+                    mealName = "Pasta",
+                    price = 10.0,
+                ),
+                OrderDto.MealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
+                    quantity = 2,
+                    mealName = "Breakfast burrito",
+                    price = 10.0,
+                )
+            ),
+            totalPrice = 22.74,
+            createdAt = 123541235,
+            orderStatus = 0,
+            currency = "USD",
+            restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
+            restaurantName = "Restaurant 1",
+
+            ),
     )
 
     private val cuisines = listOf(
@@ -573,7 +651,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
         )
     )
 
-    private val ordersCount : List<Map<String, Int>> = listOf(
+    private val ordersCount: List<Map<String, Int>> = listOf(
         mapOf(
             "1" to 500,
             "2" to 800,
@@ -585,7 +663,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
         )
     )
 
-    private val revenue : List<Map<String, Double>> = listOf(
+    private val revenue: List<Map<String, Double>> = listOf(
         mapOf(
             "1" to 500.0,
             "2" to 800.0,
@@ -633,7 +711,9 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
                 priceLevel = "",
                 description = "",
                 ownerUsername = "",
-                name = ""
+                name = "",
+                imageUrl = "",
+                image = byteArrayOf()
             )
     }
     //endregion restaurant
@@ -659,11 +739,11 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
 
     //region order
     override suspend fun getCurrentOrders(): List<Order> {
-        return orders.filter { it.orderState == 0 || it.orderState == 1 }.toOrderEntity()
+        return orders.filter { it.orderStatus == 0 || it.orderStatus == 1 }.toOrderEntity()
     }
 
     override suspend fun getOrdersHistory(restaurantId: String): List<Order> {
-        return orders.filter { it.orderState == 2 || it.orderState == 3 }.toOrderEntity()
+        return orders.filter { it.orderStatus == 2 || it.orderStatus == 3 }.toOrderEntity()
     }
 
     override suspend fun updateOrderState(orderId: String, orderState: Int): Order {

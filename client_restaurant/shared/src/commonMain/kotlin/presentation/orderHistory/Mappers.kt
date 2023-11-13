@@ -1,4 +1,4 @@
-package presentation.order.orderHistory
+package presentation.orderHistory
 
 import domain.entity.Order
 import presentation.order.OrderUiState
@@ -9,6 +9,7 @@ import util.formatDateTime
 fun Order.toOrderHistoryUiState(): OrderUiState {
     return OrderUiState(
         id = id,
+        orderState = orderState,
         orderMealUiStates = meals.map { it.toOrderMealUiState() },
         totalPrice = totalPrice,
         createdAt = createdAt.formatDateTime(),

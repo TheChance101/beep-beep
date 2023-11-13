@@ -10,7 +10,7 @@ import kotlin.properties.Delegates
 
 class MealsPagingSource(
     private val remoteGateway: IRestaurantGateway,
-) : BasePagingSource<Meal>(), KoinComponent {
+) : BasePagingSource<Meal>() {
     private var cuisineId by Delegates.notNull<String>()
 
     fun initCuisine(id: String) {
