@@ -10,13 +10,8 @@ interface IManageMealUseCase {
     suspend fun updateMeal(meal: MealModification): Boolean
     suspend fun getMealById(mealId: String): Meal
     suspend fun isValidMeal(meal: Meal): Boolean
-    suspend fun getAllMeals(
-        restaurantId: String,
-    ): List<Meal>
-    suspend fun getMealsByCuisineId(
-        cuisineId: String, page: Int,
-        limit: Int
-    ): List<Meal>
+    suspend fun getAllMeals(restaurantId: String, page: Int, limit: Int): List<Meal>
+    suspend fun getMealsByCuisineId(cuisineId: String, page: Int, limit: Int): List<Meal>
 }
 
 class ManageMealUseCase(
@@ -37,16 +32,11 @@ class ManageMealUseCase(
         return meal.copy(cuisines = cuisine)
     }
 
-    override suspend fun getAllMeals(
-        restaurantId: String,
-    ): List<Meal> {
-        return mealRemoteGateway.getAllMealsByRestaurantId(restaurantId)
+    override suspend fun getAllMeals(restaurantId: String, page: Int, limit: Int): List<Meal> {
+        return mealRemoteGateway.getAllMealsByRestaurantId(restaurantId,page,limit)
     }
 
-    override suspend fun getMealsByCuisineId(
-        cuisineId: String, page: Int,
-        limit: Int
-    ): List<Meal> {
+    override suspend fun getMealsByCuisineId(cuisineId: String, page: Int, limit: Int): List<Meal> {
         return mealRemoteGateway.getMealsByCuisineId(cuisineId, page, limit)
     }
 

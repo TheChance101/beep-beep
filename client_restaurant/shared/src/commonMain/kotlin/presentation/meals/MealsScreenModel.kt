@@ -24,9 +24,7 @@ class MealsScreenModel(
 
     private fun getCuisine() {
         tryToExecute(
-            function = {
-                manageCousin.getCuisines()
-            },
+            function = { manageCousin.getCuisines() },
             ::onGetCuisineSuccessfully,
             ::onError
         )
@@ -45,7 +43,7 @@ class MealsScreenModel(
     private fun getMeals(restaurantId: String) {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            function = { manageMeal.getAllMeals(restaurantId) },
+            function = { manageMeal.getAllMeals(restaurantId,1,20) },
             ::onGetMealSuccessfully,
             ::onError
         )
@@ -58,7 +56,7 @@ class MealsScreenModel(
     private fun getMealsByCuisineId(cuisineId: String) {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            { manageMeal.getMealsByCuisineId(cuisineId, 1, 10) },
+            { manageMeal.getMealsByCuisineId(cuisineId, 1, 20) },
             ::onGetMealsByCuisineIdSuccessfully,
             ::onError
         )

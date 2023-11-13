@@ -27,11 +27,14 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
     BaseRemoteGateway(client = client) {
 
     override suspend fun getAllMealsByRestaurantId(
-        restaurantId: String,
+        restaurantId: String,page: Int, limit: Int
     ): List<Meal> {
-        return tryToExecute<BaseResponse<List<MealDto>>> {
-            get("restaurant/$restaurantId/meals")
-        }.value?.toEntity() ?: emptyList()
+        return tryToExecute<BaseResponse<PaginationResponse<MealDto>>> {
+            get("restaurant/$restaurantId/meals") {
+                parameter("page", page)
+                parameter("limit", limit)
+            }
+        }.value?.items?.map { it.toEntity() } ?: emptyList()
     }
 
     override suspend fun getMealsByCuisineId(
