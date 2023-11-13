@@ -31,6 +31,8 @@ data class RestaurantUiState(
     val isOpeningTimeError: Boolean = false,
     val isClosingTimeError: Boolean = false,
     val isSaveButtonEnabled: Boolean = true,
+    val image: ByteArray? = null,
+    val imageUrl: String = "",
 )
 
 fun Restaurant.toUiState(): RestaurantUiState = RestaurantUiState(
@@ -44,7 +46,8 @@ fun Restaurant.toUiState(): RestaurantUiState = RestaurantUiState(
     phoneNumber = phone,
     openingTime = openingTime,
     closingTime = closingTime,
-    description = description
+    description = description,
+    imageUrl = imageUrl,
 )
 
 fun RestaurantUiState.toRestaurant() = Restaurant(
@@ -59,5 +62,7 @@ fun RestaurantUiState.toRestaurant() = Restaurant(
     openingTime = openingTime,
     closingTime = closingTime,
     description = description,
-    address = address
+    address = address,
+    imageUrl = imageUrl,
+    image = image ?: byteArrayOf()
 )
