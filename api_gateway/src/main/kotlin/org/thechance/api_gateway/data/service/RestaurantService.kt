@@ -146,13 +146,19 @@ class RestaurantService(
         )
     }
 
-    suspend fun getMealsByRestaurantId(restaurantId: String, languageCode: String): List<MealDto> {
+    suspend fun getMealsByRestaurantId(
+        restaurantId: String, page: Int, limit: Int, languageCode: String
+    ): PaginationResponse<MealDto> {
         return client.tryToExecute(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
-            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
-            method = { get("restaurant/$restaurantId/meals") }
-        )
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
+        ) {
+            get("restaurant/$restaurantId/meals") {
+                parameter("page", page)
+                parameter("limit", limit)
+            }
+        }
     }
 
     suspend fun getCuisinesMealsInRestaurant(restaurantId: String, languageCode: String) =

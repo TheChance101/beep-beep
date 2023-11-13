@@ -69,8 +69,15 @@ fun Route.restaurantRoutes() {
 
         get("/{id}/meals") {
             val restaurantId = call.parameters["id"] ?: throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
-            val meals = discoverRestaurant.getMealsByRestaurantId(restaurantId = restaurantId).toMealDto()
-            call.respond(HttpStatusCode.OK, meals)
+            val page = call.parameters.extractInt("page") ?: 1
+            val limit = call.parameters.extractInt("limit") ?: 10
+            val meals = discoverRestaurant.getMealsByRestaurantId(
+                restaurantId = restaurantId,
+                page = page,
+                limit = limit
+            ).toMealDto()
+            val total = controlRestaurant.getTotalNumberOfMealsByRestaurantId(restaurantId)
+            call.respond(HttpStatusCode.OK, BasePaginationResponseDto(meals, page, total))
         }
 
         get("/{id}/cuisineMeals") {

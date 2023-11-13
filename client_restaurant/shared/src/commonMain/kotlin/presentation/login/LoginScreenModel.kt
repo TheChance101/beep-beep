@@ -1,27 +1,48 @@
 package presentation.login
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.Restaurant
 import domain.usecase.ILoginUserUseCase
+import domain.usecase.IManageRestaurantInformationUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
-class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
+class LoginScreenModel(
+    private val loginUserUseCase: ILoginUserUseCase,
+    private val manageRestaurant: IManageRestaurantInformationUseCase,
+) :
     BaseScreenModel<LoginScreenUIState, LoginScreenUIEffect>(LoginScreenUIState()),
     LoginScreenInteractionListener {
 
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 
-//    init {
-//        viewModelScope.launch {
-//            if (loginUserUseCase.getKeepMeLoggedInFlag()) {
-//                sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
-//            }
-//        }
-//    }
+
+    private fun getRestaurants() {
+        updateState { it.copy(isLoading = true) }
+        tryToExecute(
+            { manageRestaurant.getOwnerRestaurants() },
+            ::onGetRestaurantsSuccess,
+            ::onError
+        )
+    }
+
+    private fun onGetRestaurantsSuccess(restaurants: List<Restaurant>) {
+        val hasMultipleRestaurants = restaurants.size > 1
+        if (hasMultipleRestaurants) {
+            sendNewEffect(LoginScreenUIEffect.OnNavigateToRestaurantScreenSelection)
+        } else {
+            sendNewEffect(LoginScreenUIEffect.OnNavigateToMainScreen)
+        }
+    }
+
+    private fun onError(errorState: ErrorState) {
+        updateState { it.copy(isLoading = false, error = errorState) }
+    }
+
     override fun onUserNameChanged(userName: String) {
         updateState { it.copy(userName = userName, isUsernameError = false) }
     }
@@ -37,7 +58,7 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
     override fun onClickLogin(
         userName: String,
         password: String,
-        isKeepMeLoggedInChecked: Boolean
+        isKeepMeLoggedInChecked: Boolean,
     ) {
         updateState { it.copy(isLoading = true, noInternetConnection = false, isEnable = false) }
         tryToExecute(
@@ -59,7 +80,7 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
             )
         }
 
-        sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
+        getRestaurants()
     }
 
     private fun onLoginFailed(error: ErrorState) {
@@ -141,7 +162,7 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
     override fun onSubmitClicked(
         restaurantName: String,
         ownerEmail: String,
-        description: String
+        description: String,
     ) {
         tryToExecute(
             {

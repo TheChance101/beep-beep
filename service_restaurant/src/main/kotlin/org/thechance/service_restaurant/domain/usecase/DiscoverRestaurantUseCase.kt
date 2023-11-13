@@ -17,7 +17,7 @@ interface IDiscoverRestaurantUseCase {
     suspend fun getCuisinesMealsInRestaurant(restaurantId: String): List<Cuisine>
     suspend fun getMealsByCuisine(cuisineId: String,page: Int, limit: Int): List<Meal>
     suspend fun getTotalNumberOfMealsInCuisine(cuisineId: String): Long
-    suspend fun getMealsByRestaurantId(restaurantId: String): List<Meal>
+    suspend fun getMealsByRestaurantId(restaurantId: String, page: Int, limit: Int): List<Meal>
     suspend fun getMealDetails(mealId: String): MealDetails
     suspend fun isRestaurantExisted(restaurantId: String): Boolean
 }
@@ -67,9 +67,9 @@ class DiscoverRestaurantUseCase(
       return optionsGateway.getTotalNumberOfMealsByCuisine(cuisineId = cuisineId)
     }
 
-    override suspend fun getMealsByRestaurantId(restaurantId: String): List<Meal> {
+    override suspend fun getMealsByRestaurantId(restaurantId: String, page: Int, limit: Int): List<Meal> {
         checkIfRestaurantIsExist(restaurantId)
-        return restaurantGateway.getMealsByRestaurantId(restaurantId)
+        return restaurantGateway.getMealsByRestaurantId(restaurantId, page, limit)
     }
 
     override suspend fun getMealDetails(mealId: String): MealDetails {
