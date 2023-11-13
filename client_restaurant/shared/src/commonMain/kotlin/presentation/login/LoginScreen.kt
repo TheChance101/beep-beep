@@ -26,6 +26,7 @@ import presentation.composables.CustomBottomSheet
 import presentation.login.composable.HeadFirstCard
 import presentation.login.composable.PermissionBottomSheetContent
 import presentation.login.composable.WrongPermissionBottomSheet
+import presentation.main.MainScreen
 import presentation.restaurantSelection.RestaurantSelectionScreen
 import resources.Resources
 
@@ -42,8 +43,10 @@ class LoginScreen :
         navigator: Navigator,
     ) {
         when (effect) {
-            is LoginScreenUIEffect.LoginEffect -> navigator.replaceAll(RestaurantSelectionScreen())
-            LoginScreenUIEffect.LoginUIFailed -> {}
+            LoginScreenUIEffect.OnNavigateToMainScreen -> navigator.replaceAll(MainScreen())
+            LoginScreenUIEffect.OnNavigateToRestaurantScreenSelection -> navigator.replaceAll(
+                RestaurantSelectionScreen()
+            )
         }
     }
 
@@ -78,7 +81,7 @@ class LoginScreen :
 @Composable
 private fun LoginScreenContent(
     state: LoginScreenUIState,
-    listener: LoginScreenInteractionListener
+    listener: LoginScreenInteractionListener,
 ) {
 
     Box(
@@ -110,7 +113,7 @@ private fun LoginScreenContent(
                 onValueChange = listener::onPasswordChanged,
                 label = Resources.strings.password,
                 keyboardType = KeyboardType.Password,
-                errorMessage =  if (state.isCredentialsError) Resources.strings.passwordIsRequired else state.passwordErrorMsg,
+                errorMessage = if (state.isCredentialsError) Resources.strings.passwordIsRequired else state.passwordErrorMsg,
                 isError = state.isPasswordError
 
             )

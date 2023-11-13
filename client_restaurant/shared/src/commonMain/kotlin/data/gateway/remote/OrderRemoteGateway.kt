@@ -7,9 +7,12 @@ import data.remote.model.OrderDto
 import domain.entity.Order
 import domain.gateway.remote.IOrderRemoteGateway
 import io.ktor.client.HttpClient
+import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.http.HttpMethod
+import io.ktor.http.Parameters
 import kotlinx.coroutines.flow.Flow
 
 
@@ -43,14 +46,14 @@ class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway,
 
     override suspend fun updateOrderState(orderId: String, orderState: Int): Order {
         return tryToExecute<BaseResponse<OrderDto>>() {
-            post("/order/$orderId/status"){ setBody(orderState.toString()) }//todo check if correct
+            post("/order/$orderId/status") { setBody(orderState.toString()) }//todo check if correct
         }.value?.toEntity() ?: throw Exception("Error!")
     }
 
     override suspend fun getOrdersHistory(
         restaurantId: String,
         page: Int,
-        limit: Int
+        limit: Int,
     ): List<Order> {
         return tryToExecute<BaseResponse<List<OrderDto>>> {
             get("/order/history/$restaurantId?page=$page&limit=$limit")
@@ -60,19 +63,35 @@ class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway,
     //for charts
     override suspend fun getOrdersRevenueByDaysBefore(
         restaurantId: String,
-        daysBack: Int
+        daysBack: Int,
     ): List<Map<String, Double>> {
-        return tryToExecute<BaseResponse<List<Map<String, Double>>>> {
-            get("/orders/revenue-by-days-back?restaurantId=$restaurantId&&daysBack=$daysBack")
+        val result = tryToExecute<BaseResponse<List<Map<String, Double>>>> {
+            submitForm(
+                url = ("/orders/$restaurantId/revenue-by-days-back"),
+                formParameters = Parameters.build {
+                    append("daysBack", daysBack.toString())
+                },
+                block = { method = HttpMethod.Get }
+            )
         }.value ?: emptyList()
+        println("orders count = $result")
+        return result
     }
 
     override suspend fun getOrdersCountByDaysBefore(
         restaurantId: String,
-        daysBack: Int
+        daysBack: Int,
     ): List<Map<String, Int>> {
-        return tryToExecute<BaseResponse<List<Map<String, Int>>>> {
-            get("/orders/count-by-days-back?restaurantId=$restaurantId&&daysBack=$daysBack")
+        val result = tryToExecute<BaseResponse<List<Map<String, Int>>>> {
+            submitForm(
+                url = ("/orders/$restaurantId/count-by-days-back"),
+                formParameters = Parameters.build {
+                    append("daysBack", daysBack.toString())
+                },
+                block = { method = HttpMethod.Get }
+            )
         }.value ?: emptyList()
+        println("revenue = $result")
+        return result
     }
 }
