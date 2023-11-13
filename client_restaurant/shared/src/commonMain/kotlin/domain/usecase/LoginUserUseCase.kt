@@ -2,6 +2,7 @@ package domain.usecase
 
 import domain.gateway.local.ILocalConfigurationGateway
 import domain.gateway.remote.IIdentityRemoteGateway
+import domain.gateway.remote.IRestaurantRemoteGateway
 import presentation.base.InvalidPasswordException
 import presentation.base.InvalidUserNameException
 import presentation.base.PermissionDenied
@@ -15,7 +16,6 @@ interface ILoginUserUseCase {
     )
 
     suspend fun getKeepMeLoggedInFlag(): Boolean
-
     suspend fun requestPermission(
         restaurantName: String,
         ownerEmail: String,
@@ -23,8 +23,8 @@ interface ILoginUserUseCase {
     ): Boolean
 
     suspend fun getRestaurantId(): String
-
     suspend fun saveRestaurantId(restaurantId: String)
+    suspend fun getNumberOfRestaurants(): Int
 
 }
 
@@ -80,6 +80,10 @@ class LoginUserUseCase(
 
     override suspend fun saveRestaurantId(restaurantId: String) {
         localGateWay.saveRestaurantId(restaurantId)
+    }
+
+    override suspend fun getNumberOfRestaurants(): Int {
+        return localGateWay.getNumberOfRestaurants()
     }
 
     companion object {

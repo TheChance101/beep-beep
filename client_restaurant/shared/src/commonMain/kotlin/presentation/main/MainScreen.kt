@@ -156,7 +156,7 @@ class MainScreen() :
             maxItemsInEachRow = 2
         ) {
             ChartItem(
-                modifier = Modifier.fillMaxWidth().height(328.dp),
+                modifier = Modifier.fillMaxWidth().height(420.dp),
                 imagePainter = painterResource(Resources.images.revenue),
                 title = Resources.strings.revenue,
                 total = state.totalOrderReturns
@@ -183,7 +183,7 @@ class MainScreen() :
             }
 
             ChartItem(
-                modifier = Modifier.fillMaxWidth().height(328.dp),
+                modifier = Modifier.fillMaxWidth().height(420.dp),
                 imagePainter = painterResource(Resources.images.orders),
                 title = Resources.strings.orders,
                 total = state.totalOrders.toString()

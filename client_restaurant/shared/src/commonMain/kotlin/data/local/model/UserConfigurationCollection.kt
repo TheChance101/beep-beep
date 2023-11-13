@@ -8,4 +8,5 @@ class UserConfigurationCollection : RealmObject {
     var refreshToken: String = ""
     var isKeepMeLoggedInMeChecked: Boolean = false
     var restaurantId: String = ""
+    var numberOfRestaurants: Int = 0
 }

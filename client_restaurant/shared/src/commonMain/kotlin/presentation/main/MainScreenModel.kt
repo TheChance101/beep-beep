@@ -2,16 +2,18 @@ package presentation.main
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Restaurant
-import domain.usecase.IGetRestaurantsUseCase
 import domain.usecase.ILoginUserUseCase
 import domain.usecase.IManageOrderUseCase
+import domain.usecase.IManageRestaurantInformationUseCase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 import presentation.restaurantSelection.toUiState
 
 class MainScreenModel(
-    private val getOwnerRestaurants: IGetRestaurantsUseCase,
+    private val manageRestaurant: IManageRestaurantInformationUseCase,
     private val mangeOrders: IManageOrderUseCase,
     private val manageUser: ILoginUserUseCase,
 ) : BaseScreenModel<MainScreenUIState, MainScreenUIEffect>(MainScreenUIState()),
@@ -20,12 +22,17 @@ class MainScreenModel(
 
 
     init {
-        getRestaurantId()
         getData()
-        getOrdersCountByDays()
-        getOrdersRevenueByDaysBefore()
+        getRestaurantId()
+        fetchCharts()
     }
 
+    private fun fetchCharts() {
+        viewModelScope.launch {
+            async { getOrdersCountByDays() }.await()
+            async { getOrdersRevenueByDaysBefore() }.await()
+        }
+    }
 
     private fun saveRestaurantId(restaurantId: String) {
         updateState { it.copy(isLoading = true) }
@@ -64,7 +71,8 @@ class MainScreenModel(
     }
 
     private suspend fun callee(): List<Restaurant> {
-        return getOwnerRestaurants.getOwnerRestaurants()
+        updateState { it.copy(isLoading = true) }
+        return manageRestaurant.getOwnerRestaurants()
     }
 
     private fun getOrdersCountByDays() {
@@ -103,10 +111,12 @@ class MainScreenModel(
         }
     }
 
-
     private fun onSuccess(restaurants: List<Restaurant>) {
+        val hasMultipleRestaurants = restaurants.size > 1
         updateState { it.copy(restaurants = restaurants.toUiState()) }
-
+        if (!hasMultipleRestaurants) {
+            saveRestaurantId(restaurants.first().id)
+        }
     }
 
     private fun onError(errorState: ErrorState) {
@@ -129,8 +139,7 @@ class MainScreenModel(
 
     override fun onRestaurantClicked(restaurantId: String) {
         saveRestaurantId(restaurantId)
-        getOrdersCountByDays()
-        getOrdersRevenueByDaysBefore()
+        fetchCharts()
     }
 
     override fun onAllMealsCardClicked() {

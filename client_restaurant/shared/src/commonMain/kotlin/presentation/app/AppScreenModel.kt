@@ -27,12 +27,20 @@ class AppScreenModel(private val manageUser: ILoginUserUseCase) : ScreenModel {
                 manageUser.getKeepMeLoggedInFlag()
             }
 
+            val hasMultipleRestaurantsDeferred = async(Dispatchers.IO) {
+                manageUser.getNumberOfRestaurants() > 1
+            }
+
             _appState.update {
                 it.copy(
                     isFirstTimeOpenApp = isFirstTimeOpenAppDeferred.await(),
-                    isKeptLoggedIn = isKeptLoggedInDeferred.await()
+                    isKeptLoggedIn = isKeptLoggedInDeferred.await(),
+                    hasMultipleRestaurants = hasMultipleRestaurantsDeferred.await(),
                 )
             }
+            println("isFirstTimeOpenApp:${appState.value.isFirstTimeOpenApp}")
+            println("isKeptLoggedIn:${appState.value.isKeptLoggedIn}")
+            println("hasMultipleRestaurants:${appState.value.hasMultipleRestaurants}")
         }
     }
 }

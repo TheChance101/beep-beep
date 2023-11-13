@@ -6,6 +6,7 @@ import domain.gateway.remote.IRestaurantRemoteGateway
 
 interface IManageRestaurantInformationUseCase {
     suspend fun getRestaurantInfo(id: String): Restaurant
+    suspend fun getOwnerRestaurants(): List<Restaurant>
     suspend fun updateRestaurantInformation(restaurant: Restaurant): Boolean
     suspend fun saveRestaurantId(restaurantId: String)
 }
@@ -17,6 +18,11 @@ class ManageRestaurantInformationUseCase(
 
     override suspend fun getRestaurantInfo(id: String): Restaurant {
         return remoteRestaurantGateway.getRestaurantInfo(id)
+    }
+
+    override suspend fun getOwnerRestaurants(): List<Restaurant> {
+        return remoteRestaurantGateway.getRestaurantsByOwnerId()
+            .sortedByDescending { it.isRestaurantOpen() }
     }
 
     override suspend fun updateRestaurantInformation(restaurant: Restaurant): Boolean {

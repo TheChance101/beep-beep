@@ -33,7 +33,7 @@ fun ChartsLoadingEffect() {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(328.dp)
+                    .height(420.dp)
                     .clip(RoundedCornerShape(8.dp))
                     .shimmerEffect().padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),

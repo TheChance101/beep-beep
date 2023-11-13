@@ -11,4 +11,6 @@ interface ILocalConfigurationGateway {
     suspend fun clearTokens()
     suspend fun saveRestaurantId(restaurantId: String)
     suspend fun getRestaurantId(): String
+    suspend fun saveNumberOfRestaurants(numberOfRestaurants: Int)
+    suspend fun getNumberOfRestaurants(): Int
 }

@@ -25,8 +25,8 @@ object MainApp : Screen {
 
         BpRestaurantTheme {
             val screen = when {
-                appState.isKeptLoggedIn && appState.isFirstTimeOpenApp -> RestaurantSelectionScreen()
-                appState.isKeptLoggedIn && !appState.isFirstTimeOpenApp -> MainScreen()
+                appState.isKeptLoggedIn && appState.isFirstTimeOpenApp && appState.hasMultipleRestaurants -> RestaurantSelectionScreen()
+                appState.isKeptLoggedIn && (!appState.isFirstTimeOpenApp || !appState.hasMultipleRestaurants) -> MainScreen()
                 else -> LoginScreen()
             }
 
