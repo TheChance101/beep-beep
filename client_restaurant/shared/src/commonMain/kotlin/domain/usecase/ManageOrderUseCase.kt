@@ -1,16 +1,14 @@
 package domain.usecase
 
 import domain.entity.Order
-import domain.entity.OrderState
 import domain.gateway.remote.IOrderRemoteGateway
-import domain.utils.Constant
-import presentation.base.RequestException
+import kotlinx.coroutines.flow.Flow
 
 interface IManageOrderUseCase {
-    suspend fun getCurrentOrders(restaurantId: String): List<Order>
-    suspend fun updateOrderState(orderId: String, orderState: OrderState): Order
-    suspend fun getFinishedOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
-    suspend fun getCanceledOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
+    suspend fun getCurrentOrders(restaurantId: String): Flow<Order>
+    suspend fun getActiveOrders(restaurantId: String): List<Order>
+    suspend fun updateOrderState(orderId: String): Order
+    suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
     suspend fun getOrdersRevenueByDaysBefore(
         restaurantId: String,
         daysBack: Int
@@ -22,38 +20,27 @@ interface IManageOrderUseCase {
     ): List<Pair<String, Double>>
 }
 
-class ManageOrderUseCase(private val orderRemoteGateway: IOrderRemoteGateway) : IManageOrderUseCase {
-    override suspend fun getCurrentOrders(restaurantId: String): List<Order> {
-        return emptyList()
-       // return orderRemoteGateway.getCurrentOrders(restaurantId)
+class ManageOrderUseCase(private val orderRemoteGateway: IOrderRemoteGateway) :
+    IManageOrderUseCase {
+    override suspend fun getCurrentOrders(restaurantId: String): Flow<Order>{
+         return orderRemoteGateway.getCurrentOrders(restaurantId)
+    }
+    override suspend fun getActiveOrders(restaurantId: String): List<Order>{
+         return orderRemoteGateway.getActiveOrders(restaurantId)
     }
 
-    override suspend fun updateOrderState(orderId: String, orderState: OrderState): Order {
-        val newOrderState = when (orderState) {
-            OrderState.PENDING -> Constant.IN_COOKING_ORDER
-            OrderState.IN_COOKING -> Constant.FINISHED_ORDER
-            OrderState.CANCELED -> Constant.CANCELED_ORDER
-            else -> throw RequestException("")
-        }
-        return orderRemoteGateway.updateOrderState(orderId, newOrderState)
+    override suspend fun updateOrderState(orderId: String): Order {
+        return orderRemoteGateway.updateOrderState(orderId)
     }
 
-    override suspend fun getFinishedOrdersHistory(
+    override suspend fun getOrdersHistory(
         restaurantId: String,
         page: Int,
         limit: Int
     ): List<Order> {
-        return orderRemoteGateway.getOrdersHistory(restaurantId, page, limit)
-            .filter { it.orderState == OrderState.FINISHED }
-    }
-
-    override suspend fun getCanceledOrdersHistory(
-        restaurantId: String,
-        page: Int,
-        limit: Int
-    ): List<Order> {
-        return orderRemoteGateway.getOrdersHistory(restaurantId, page, limit)
-            .filter { it.orderState == OrderState.CANCELED }
+        val result = orderRemoteGateway.getOrdersHistory(restaurantId, page, limit)
+        println("getOrdersHistory from use case: ${result}")
+        return result.items
     }
 
     override suspend fun getOrdersRevenueByDaysBefore(

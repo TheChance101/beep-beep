@@ -71,6 +71,10 @@ class RestaurantInformationScreenModel(
         updateState { it.copy(restaurant = result, isLoading = false, error = null) }
     }
 
+    override fun onImagePicked(image: ByteArray) {
+        updateState { it.copy(restaurant = it.restaurant.copy(image = image)) }
+    }
+
     override fun onRestaurantNameChange(name: String) {
         val validationResult = restaurantInformationValidation.isRestaurantNameValid(name)
         updateState {

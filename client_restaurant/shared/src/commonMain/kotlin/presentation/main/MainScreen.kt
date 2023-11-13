@@ -40,9 +40,11 @@ import presentation.main.composables.ChartItem
 import presentation.main.composables.OptionCardItem
 import presentation.meals.MealsScreen
 import presentation.order.OrderScreen
-import presentation.order.orderHistory.OrdersHistoryScreen
+import presentation.orderHistory.OrdersHistoryScreen
 import presentation.restaurantSelection.RestaurantUIState
 import resources.Resources
+import util.getNavigationBarPadding
+import util.getStatusBarPadding
 import util.toWeekDay
 
 class MainScreen(private val restaurantId: String) :
@@ -62,6 +64,7 @@ class MainScreen(private val restaurantId: String) :
 
         Column(
             Modifier.fillMaxSize().background(Theme.colors.background)
+                .padding(getStatusBarPadding()).padding(top = 8.dp)
                 .onSizeChanged { screenSize = it }
         ) {
 
@@ -81,7 +84,8 @@ class MainScreen(private val restaurantId: String) :
 
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(300.dp),
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize()
+                    .padding(bottom = getNavigationBarPadding().calculateBottomPadding()),
                 contentPadding = PaddingValues(
                     top = 8.dp,
                     start = 16.dp,
@@ -264,7 +268,7 @@ class MainScreen(private val restaurantId: String) :
         when (effect) {
             is MainScreenUIEffect.Back -> navigator.pop()
             is MainScreenUIEffect.NavigateToAllMeals -> navigator.push(MealsScreen(effect.restaurantId))
-            is MainScreenUIEffect.NavigateToOrders -> navigator.push(OrderScreen())
+            is MainScreenUIEffect.NavigateToOrders -> navigator.push(OrderScreen(effect.restaurantId))
             is MainScreenUIEffect.NavigateToRestaurantInfo -> navigator.push(
                 RestaurantInformationScreen(effect.restaurantId)
             )

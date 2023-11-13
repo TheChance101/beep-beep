@@ -19,7 +19,9 @@ fun RestaurantDto.toEntity(): Restaurant {
         openingTime = openingTime ?: "",
         closingTime = closingTime ?: "",
         location = location.toEntity(),
-        address = address ?: ""
+        address = address ?: "",
+        imageUrl = imageUrl ?: "",
+        image = byteArrayOf()
     )
 }
 

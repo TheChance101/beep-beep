@@ -11,6 +11,7 @@ data class LoginScreenUIState(
     val isEnable: Boolean = true,
     val isSuccess: Boolean = false,
     val error: ErrorState? = null,
+    val noInternetConnection: Boolean = false,
     val isUsernameError: Boolean = false,
     val isPasswordError: Boolean = false,
     val isCredentialsError: Boolean = false,
