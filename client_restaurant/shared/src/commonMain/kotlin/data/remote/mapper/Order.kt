@@ -3,7 +3,6 @@ package data.remote.mapper
 import data.remote.model.OrderDto
 import domain.entity.Order
 import domain.entity.OrderStatus
-import domain.utils.Constant
 import domain.utils.toLocalDateTime
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -30,7 +29,7 @@ fun OrderDto.toEntity(): Order {
         createdAt = createdAt?.let { createdAt ->
             createdAt.toLocalDateTime()
         } ?: Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        orderState = OrderStatus.getOrderStatus(orderStatus ?: Constant.PENDING_ORDER)
+        orderState = OrderStatus.getOrderStatus(orderStatus ?: OrderStatus.PENDING.key)
 
     )
 }
