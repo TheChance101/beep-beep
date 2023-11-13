@@ -48,15 +48,15 @@ import presentation.restaurantSelection.RestaurantUIState
 import resources.Resources
 import util.toWeekDay
 
-class MainScreen(private val restaurantId: String) :
+class MainScreen() :
     BaseScreen<MainScreenModel, MainScreenUIState, MainScreenUIEffect, MainScreenInteractionListener>() {
 
     @Composable
     override fun Content() {
-        initScreen(getScreenModel { parametersOf(restaurantId) })
+        initScreen(getScreenModel())
     }
 
-    @OptIn(ExperimentalLayoutApi::class, ExperimentalResourceApi::class)
+    @OptIn(ExperimentalLayoutApi::class)
     @Composable
     override fun onRender(state: MainScreenUIState, listener: MainScreenInteractionListener) {
         var screenSize by remember { mutableStateOf(IntSize.Zero) }

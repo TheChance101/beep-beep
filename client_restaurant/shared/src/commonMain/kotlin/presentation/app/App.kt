@@ -8,6 +8,7 @@ import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import presentation.login.LoginScreen
+import presentation.main.MainScreen
 import presentation.restaurantSelection.RestaurantSelectionScreen
 import resources.BpRestaurantTheme
 
@@ -20,15 +21,17 @@ object MainApp : Screen {
     @Composable
     override fun Content() {
         val appScreenModel = getScreenModel<AppScreenModel>()
+        val appState by appScreenModel.appState.collectAsState()
 
-        val isKeptLoggedIn by appScreenModel.isKeptLoggedIn.collectAsState()
-
-        BpRestaurantTheme{
-            if (isKeptLoggedIn==true) {
-                Navigator(RestaurantSelectionScreen()) { SlideTransition(it) }
-            } else if(isKeptLoggedIn == false){
-                Navigator(LoginScreen()) { SlideTransition(it) }
+        BpRestaurantTheme {
+            val screen = when {
+                appState.isKeptLoggedIn && appState.isFirstTimeOpenApp -> RestaurantSelectionScreen()
+                appState.isKeptLoggedIn && !appState.isFirstTimeOpenApp -> MainScreen()
+                else -> LoginScreen()
             }
+
+            Navigator(screen) { SlideTransition(it) }
+
         }
     }
 }

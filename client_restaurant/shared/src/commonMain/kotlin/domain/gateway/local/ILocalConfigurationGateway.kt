@@ -1,9 +1,5 @@
 package domain.gateway.local
 
-/**
- * Created by Aziza Helmy on 8/24/2023.
- */
-
 interface ILocalConfigurationGateway {
 
     suspend fun saveAccessToken(token: String)
@@ -13,5 +9,6 @@ interface ILocalConfigurationGateway {
     suspend fun saveKeepMeLoggedInFlag(isChecked: Boolean)
     suspend fun getKeepMeLoggedInFlag(): Boolean
     suspend fun clearTokens()
-
+    suspend fun saveRestaurantId(restaurantId: String)
+    suspend fun getRestaurantId(): String
 }

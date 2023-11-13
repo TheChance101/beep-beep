@@ -3,6 +3,7 @@ package presentation.main
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Restaurant
 import domain.usecase.IGetRestaurantsUseCase
+import domain.usecase.ILoginUserUseCase
 import domain.usecase.IManageOrderUseCase
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
@@ -10,19 +11,52 @@ import presentation.base.ErrorState
 import presentation.restaurantSelection.toUiState
 
 class MainScreenModel(
-    private val restaurantId: String,
     private val getOwnerRestaurants: IGetRestaurantsUseCase,
     private val mangeOrders: IManageOrderUseCase,
+    private val manageUser: ILoginUserUseCase,
 ) : BaseScreenModel<MainScreenUIState, MainScreenUIEffect>(MainScreenUIState()),
     MainScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
 
 
     init {
-        updateState { it.copy(selectedRestaurantId = restaurantId) }
+        getRestaurantId()
         getData()
         getOrdersCountByDays()
         getOrdersRevenueByDaysBefore()
+    }
+
+
+    private fun saveRestaurantId(restaurantId: String) {
+        updateState { it.copy(isLoading = true) }
+        tryToExecute(
+            { manageUser.saveRestaurantId(restaurantId) },
+            { onSaveRestaurantIdSuccess(restaurantId) },
+            ::onError
+        )
+    }
+
+    private fun onSaveRestaurantIdSuccess(restaurantId: String) {
+        updateState {
+            it.copy(
+                isLoading = false,
+                selectedRestaurantId = restaurantId,
+                expanded = false
+            )
+        }
+    }
+
+    private fun getRestaurantId() {
+        updateState { it.copy(isLoading = true) }
+        tryToExecute(
+            { manageUser.getRestaurantId() },
+            ::onGetRestaurantIdSuccess,
+            ::onError
+        )
+    }
+
+    private fun onGetRestaurantIdSuccess(restaurantId: String) {
+        updateState { it.copy(selectedRestaurantId = restaurantId, isLoading = false) }
     }
 
     private fun getData() {
@@ -94,24 +128,24 @@ class MainScreenModel(
     }
 
     override fun onRestaurantClicked(restaurantId: String) {
-        updateState { it.copy(selectedRestaurantId = restaurantId, expanded = false) }
+        saveRestaurantId(restaurantId)
         getOrdersCountByDays()
         getOrdersRevenueByDaysBefore()
     }
 
     override fun onAllMealsCardClicked() {
-        sendNewEffect(MainScreenUIEffect.NavigateToAllMeals(restaurantId))
+        sendNewEffect(MainScreenUIEffect.NavigateToAllMeals(state.value.selectedRestaurantId))
     }
 
     override fun onRestaurantInfoCardClicked() {
-        sendNewEffect(MainScreenUIEffect.NavigateToRestaurantInfo(restaurantId))
+        sendNewEffect(MainScreenUIEffect.NavigateToRestaurantInfo(state.value.selectedRestaurantId))
     }
 
     override fun onOrdersCardClicked() {
-        sendNewEffect(MainScreenUIEffect.NavigateToOrders(restaurantId))
+        sendNewEffect(MainScreenUIEffect.NavigateToOrders(state.value.selectedRestaurantId))
     }
 
     override fun onOrdersHistoryCardClicked() {
-        sendNewEffect(MainScreenUIEffect.NavigateToOrdersHistory(restaurantId))
+        sendNewEffect(MainScreenUIEffect.NavigateToOrdersHistory(state.value.selectedRestaurantId))
     }
 }

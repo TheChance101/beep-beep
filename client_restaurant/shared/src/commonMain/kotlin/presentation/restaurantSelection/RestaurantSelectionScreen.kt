@@ -64,7 +64,7 @@ class RestaurantSelectionScreen : BaseScreen
     @Composable
     override fun onRender(
         state: RestaurantScreenUIState,
-        listener: RestaurantSelectionScreenInteractionListener
+        listener: RestaurantSelectionScreenInteractionListener,
     ) {
 
         val lazyListState = rememberLazyListState()
@@ -149,7 +149,7 @@ class RestaurantSelectionScreen : BaseScreen
     private fun BottomSheetContent(
         lazyListState: LazyListState,
         state: RestaurantScreenUIState,
-        listener: RestaurantSelectionScreenInteractionListener
+        listener: RestaurantSelectionScreenInteractionListener,
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxWidth()
@@ -176,8 +176,8 @@ class RestaurantSelectionScreen : BaseScreen
 
     override fun onEffect(effect: RestaurantSelectionScreenUIEffect, navigator: Navigator) {
         when (effect) {
-            is RestaurantSelectionScreenUIEffect.SelectRestaurant -> navigator.push(
-                MainScreen(effect.restaurantId)
+            is RestaurantSelectionScreenUIEffect.NavigateToMainScreen -> navigator.replaceAll(
+                MainScreen()
             )
         }
     }
@@ -185,7 +185,7 @@ class RestaurantSelectionScreen : BaseScreen
     @Composable
     private fun RestaurantSelectionItem(
         item: RestaurantUIState,
-        listener: RestaurantSelectionScreenInteractionListener
+        listener: RestaurantSelectionScreenInteractionListener,
     ) {
         RestaurantInformation(
             onRestaurantClick = { listener.onClickRestaurant(item.restaurantId) },
