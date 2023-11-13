@@ -13,8 +13,10 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.BpButton
+import com.beepbeep.designSystem.ui.composable.BpCircleImage
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
+import com.seiko.imageloader.rememberAsyncImagePainter
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
@@ -25,7 +27,11 @@ import presentation.composable.BpRating
 import presentation.composable.BpTitleWithContentSection
 import presentation.login.LoginScreen
 import resources.Resources
+import util.ImagePicker
+import util.ImagePickerFactory
 import util.getNavigationBarPadding
+import util.getPlatformContext
+import util.rememberBitmapFromBytes
 
 class RestaurantInformationScreen(private val id: String) : BaseScreen<
         RestaurantInformationScreenModel,
@@ -36,7 +42,6 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
     @Composable
     override fun Content() {
         initScreen(getScreenModel { parametersOf(id) })
-
     }
 
     @OptIn(ExperimentalResourceApi::class)
@@ -68,10 +73,14 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
                         .background(Theme.colors.background)
                 ) {
                     RestaurantInfoCard(
-                        state.restaurant.ownerUsername,
-                        state.restaurant.address,
-                        state.restaurant.rating,
-                        state.restaurant.priceLevel
+                        onImagePicked = listener::onImagePicked,
+                        ownerUsername = state.restaurant.ownerUsername,
+                        address = state.restaurant.address,
+                        rating = state.restaurant.rating,
+                        priceLevel = state.restaurant.priceLevel,
+                        image = state.restaurant.image,
+                        imageUrl = state.restaurant.imageUrl,
+                        imagePicker = ImagePickerFactory(context = getPlatformContext()).createPicker()
                     )
 
                     RestaurantUpdateInformationCard(state, listener)
@@ -110,11 +119,16 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     private fun RestaurantInfoCard(
+        onImagePicked: (ByteArray) -> Unit,
         ownerUsername: String,
         address: String,
         rating: Double,
-        priceLevel: String
+        priceLevel: String,
+        image: ByteArray?,
+        imageUrl: String,
+        imagePicker: ImagePicker
     ) {
+        imagePicker.registerPicker { onImagePicked(it) }
         BpCard(
             modifier = Modifier.fillMaxWidth().padding(
                 start = 16.dp,
@@ -122,7 +136,29 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
                 top = 16.dp
             )
         ) {
-
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(
+                    bottom = 16.dp
+                ),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                if (imageUrl.isEmpty() || image != null) {
+                    BpCircleImage(
+                        modifier = Modifier.sizeIn(minHeight = 104.dp, minWidth = 104.dp),
+                        bitmap = rememberBitmapFromBytes(image),
+                        placeholder = painterResource(Resources.images.galleryAdd),
+                        onClick = { imagePicker.pickImage() }
+                    )
+                } else {
+                    BpCircleImage(
+                        imageSize = 104.dp,
+                        modifier = Modifier.sizeIn(minHeight = 104.dp, minWidth = 104.dp),
+                        painter = rememberAsyncImagePainter(url = imageUrl),
+                        onClick = { imagePicker.pickImage() }
+                    )
+                }
+            }
             BpTitleWithContentSection(title = Resources.strings.ownerUsername) {
                 Text(
                     ownerUsername,

@@ -711,7 +711,9 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
                 priceLevel = "",
                 description = "",
                 ownerUsername = "",
-                name = ""
+                name = "",
+                imageUrl = "",
+                image = byteArrayOf()
             )
     }
     //endregion restaurant
