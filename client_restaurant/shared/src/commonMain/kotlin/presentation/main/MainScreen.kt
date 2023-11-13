@@ -69,8 +69,6 @@ class MainScreen() :
             modifier = Modifier
                 .fillMaxSize()
                 .background(Theme.colors.background)
-            Modifier.fillMaxSize().background(Theme.colors.background)
-                .padding(getStatusBarPadding()).padding(top = 8.dp)
                 .onSizeChanged { screenSize = it }
         ) {
 
@@ -259,7 +257,7 @@ class MainScreen() :
                 )
             }
 
-            AnimatedVisibility (hasMultipleRestaurants) {
+            AnimatedVisibility(hasMultipleRestaurants) {
                 BpDropdownMenu(
                     expanded = expanded,
                     modifier = Modifier.heightIn(max = 350.dp).widthIn(min = 260.dp),

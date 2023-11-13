@@ -22,12 +22,11 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import kotlinx.serialization.json.Json
 
-
 class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
     BaseRemoteGateway(client = client) {
 
     override suspend fun getAllMealsByRestaurantId(
-        restaurantId: String,page: Int, limit: Int
+        restaurantId: String, page: Int, limit: Int,
     ): List<Meal> {
         return tryToExecute<BaseResponse<PaginationResponse<MealDto>>> {
             get("restaurant/$restaurantId/meals") {
@@ -96,7 +95,4 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
             }
         }.value == true
     }
-
-
 }
-
