@@ -2,28 +2,29 @@ package data.remote.fakegateway
 
 import data.remote.mapper.toEntity
 import data.remote.model.LocationDto
-import data.remote.model.OrderDto
-import domain.entity.Order
+import data.remote.model.TripDto
+import domain.entity.Trip
 import domain.gateway.IOrderGateway
 import kotlinx.coroutines.delay
 
 class OrderFakeGateway : IOrderGateway {
-    override suspend fun findingNewOrder(): Order {
+    override suspend fun findingNewOrder(): Trip {
         delay(4000)
-        return OrderDto(
+        return TripDto(
             id = "djsahdjadhjadjas45dsadas",
-            passengerId = "sjdadjsadsa-dsa4d8sa4dsa",
-            passengerName = "Cristiano Ronaldo",
-            pickUpAddress = LocationDto(
-                lat = 40.6790229,
-                lng = -73.8740306,
-                addressName = "45, Faisal St., Riyadh, KSA",
+            clientName = "Cristiano Ronaldo",
+            startPoint = LocationDto(
+                latitude = 40.6790229,
+                longitude = -73.8740306,
             ),
-            dropOffAddress = LocationDto(
-                lat = 30.8859508,
-                lng = 31.4453136,
-                addressName = "Nirmala,girsls HSS",
+            destination = LocationDto(
+                latitude = 30.8859508,
+                longitude = 31.4453136,
             ),
+            startPointAddress = "ooveofe",
+            destinationAddress = "h9viife",
+            price = 100.0,
+            tripStatus = 1
         ).toEntity()
     }
 }

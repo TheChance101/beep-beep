@@ -13,9 +13,8 @@ class LocationFakeGateway : ILocationGateway {
             lattiude += 0.00004
             emit(
                 Location(
-                    lat = lattiude,
-                    lng = 31.235712,
-                    addressName = "Cairo, Egypt",
+                    latitude = lattiude,
+                    longitude = 31.235712,
                 )
             )
             delay(2000)
