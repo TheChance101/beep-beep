@@ -34,3 +34,4 @@ class InvalidDriverNameException(private val errorMessage: String) : BpException
 class InvalidDriverEmailException(private val errorMessage: String) : BpException(errorMessage)
 
 class InvalidDescriptionException(private val errorMessage: String) : BpException(errorMessage)
+class SocketException(private val errorMessage: String) : BpException(errorMessage)
