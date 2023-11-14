@@ -2,30 +2,32 @@ package presentation.map
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Location
-import domain.entity.Order
+import domain.entity.Trip
 import domain.usecase.IManageLocationUseCase
-import domain.usecase.IManageOrderUseCase
+import domain.usecase.IManageTripUseCase
 import domain.usecase.LoginUserUseCase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class MapScreenModel(
     private val loginUserUseCase: LoginUserUseCase,
-    private val order: IManageOrderUseCase,
+    private val manageTrip: IManageTripUseCase,
     private val location: IManageLocationUseCase,
 ) : BaseScreenModel<MapScreenUiState, MapUiEffect>(MapScreenUiState()),
     MapScreenInteractionListener {
 
     init {
-        getLiveLocation()
         findingNewOrder()
+        getLiveLocation()
         getUserName()
     }
 
     private fun findingNewOrder() {
         tryToExecute(
-            function = order::foundNewOrder,
+            function = manageTrip::findNewTrip,
             onSuccess = ::onFoundNewOrderSuccess,
             onError = ::onError
         )
@@ -36,19 +38,19 @@ class MapScreenModel(
             val username = loginUserUseCase.getUsername()
             updateState {
                 it.copy(
-                    userName = username,
+                    driverName = username,
                 )
             }
         }
     }
 
-    private fun onFoundNewOrderSuccess(order: Order) {
+    private fun onFoundNewOrderSuccess(order: Trip) {
         updateState {
             it.copy(
                 isLoading = false,
                 isNewOrderFound = true,
                 error = null,
-                orderInfoUiState = order.toUiState()
+                tripInfoUiState = order.toUiState()
             )
         }
     }
@@ -72,23 +74,42 @@ class MapScreenModel(
     }
 
     private fun onGetLiveLocationSuccess(location: Location) {
-        updateState {
-            it.copy(
+        updateState { mapScreenUiState ->
+            mapScreenUiState.copy(
                 isLoading = true,
                 error = null,
                 currentLocation = location.toUiState()
-            )
+            ).also {
+                if (it.isAcceptedOrder) {
+                    sendLocationIfTripAccepted(
+                        it.currentLocation.toEntity(),
+                        it.tripInfoUiState.id
+                    )
+                }
+            }
         }
     }
 
+    private fun sendLocationIfTripAccepted(location: Location, tripId: String) {
+        tryToExecute(
+            function = { manageTrip.updateTripLocation(location, tripId) },
+            onSuccess = {},
+            onError = ::onError,
+        )
+    }
+
     override fun onClickAccept() {
-        updateState {
-            it.copy(
+        updateState { mapScreenUiState ->
+            mapScreenUiState.copy(
                 isLoading = false,
                 error = null,
                 isNewOrderFound = false,
                 isAcceptedOrder = true,
-            )
+            ).also {
+                coroutineScope.launch(Dispatchers.IO) {
+                    manageTrip.updateTripStatus(it.tripInfoUiState.id)
+                }
+            }
         }
     }
 
@@ -99,7 +120,7 @@ class MapScreenModel(
                 isNewOrderFound = false,
                 isAcceptedOrder = false,
                 error = null,
-                orderInfoUiState = OrderInfoUiState()
+                tripInfoUiState = TripInfoUiState()
             )
         }
         findingNewOrder()
@@ -110,10 +131,14 @@ class MapScreenModel(
             it.copy(
                 isLoading = false,
                 error = null,
-                orderInfoUiState = it.orderInfoUiState.copy(
+                tripInfoUiState = it.tripInfoUiState.copy(
                     isArrived = true
                 )
-            )
+            ).also {
+                coroutineScope.launch(Dispatchers.IO) {
+                    manageTrip.updateTripStatus(it.tripInfoUiState.id)
+                }
+            }
         }
     }
 
@@ -123,10 +148,14 @@ class MapScreenModel(
                 isLoading = true,
                 isAcceptedOrder = false,
                 error = null,
-                orderInfoUiState = OrderInfoUiState()
-            )
+                tripInfoUiState = TripInfoUiState()
+            ).also {
+                coroutineScope.launch(Dispatchers.IO) {
+                    manageTrip.updateTripStatus(it.tripInfoUiState.id)
+                }
+                findingNewOrder()
+            }
         }
-        findingNewOrder()
     }
 
     override fun onClickCloseIcon() {
