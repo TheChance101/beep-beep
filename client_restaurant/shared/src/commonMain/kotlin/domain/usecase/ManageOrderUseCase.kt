@@ -8,6 +8,7 @@ interface IManageOrderUseCase {
     suspend fun getCurrentOrders(restaurantId: String): Flow<Order>
     suspend fun getActiveOrders(restaurantId: String): List<Order>
     suspend fun updateOrderState(orderId: String): Order
+    suspend fun cancelOrder(orderId: String): Order
     suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
     suspend fun getOrdersRevenueByDaysBefore(
         restaurantId: String,
@@ -31,6 +32,10 @@ class ManageOrderUseCase(private val orderRemoteGateway: IOrderRemoteGateway) :
 
     override suspend fun updateOrderState(orderId: String): Order {
         return orderRemoteGateway.updateOrderState(orderId)
+    }
+
+    override suspend fun cancelOrder(orderId: String): Order {
+        return orderRemoteGateway.cancelOrder(orderId)
     }
 
     override suspend fun getOrdersHistory(
