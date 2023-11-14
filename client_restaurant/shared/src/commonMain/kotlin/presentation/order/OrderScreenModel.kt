@@ -47,7 +47,8 @@ class OrderScreenModel(
         val order = state.value.pendingOrders.find { it.id == updatedOrder.id }
         updateState {
             it.copy(
-                pendingOrders = state.value.pendingOrders.toMutableList().apply { remove(order) }
+                pendingOrders = state.value.pendingOrders.toMutableList().apply { remove(order) },
+                totalOrders = state.value.totalOrders.minus(1)
             )
         }
     }

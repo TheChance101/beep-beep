@@ -58,6 +58,7 @@ class OrderScreen(private val restaurantId: String) :
             is OrderScreenUiEffect.Back -> navigator.pop()
             is OrderScreenUiEffect.UpdateOrder -> {}
             OrderScreenUiEffect.ShowUnknownError -> {}
+            else -> {}
         }
     }
 
