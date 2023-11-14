@@ -23,7 +23,6 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
-import domain.entity.OrderStatus
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
@@ -50,7 +49,7 @@ class OrderScreen(private val restaurantId: String) :
         }
     }
 
-    @OptIn(ExperimentalFoundationApi::class, ExperimentalResourceApi::class)
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun onRender(state: OrderScreenUiState, listener: OrderScreenInteractionListener) {
 
@@ -73,14 +72,14 @@ class OrderScreen(private val restaurantId: String) :
                 painter = painterResource(Resources.images.emptyScreen),
                 text = Resources.strings.noOrderYet,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                isVisible = (state.pendingOrders.isEmpty()&&state.inCookingOrders.isEmpty())
+                isVisible = (state.pendingOrders.isEmpty() && state.inCookingOrders.isEmpty())
             )
             LazyVerticalStaggeredGrid(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(16.dp),
                 columns = StaggeredGridCells.Adaptive(minSize = 360.dp),
                 verticalItemSpacing = 8.dp,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
 
                 header {
