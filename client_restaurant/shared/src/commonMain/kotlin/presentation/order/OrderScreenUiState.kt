@@ -4,7 +4,8 @@ import domain.entity.Order
 import domain.entity.OrderStatus
 
 data class OrderScreenUiState(
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
+    val noInternetConnection:Boolean = false,
     val inCookingOrders: List<OrderUiState> = emptyList(),
     val pendingOrders: List<OrderUiState> = emptyList(),
     val totalOrders: Int = 0,

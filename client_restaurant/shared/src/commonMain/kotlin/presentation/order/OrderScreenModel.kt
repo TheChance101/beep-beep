@@ -31,8 +31,7 @@ class OrderScreenModel(
     }
 
     override fun onClickCancelOrder(orderId: String) {
-        println("onClickCancelOrder is called in view model: $orderId")
-        updateState { it.copy(isLoading = true) }
+        updateState { it.copy(isLoading = true,noInternetConnection = false) }
         cancelOrderJob?.cancel()
         cancelOrderJob = launchDelayed(500L) {
             tryToExecute(
@@ -58,12 +57,16 @@ class OrderScreenModel(
         updateOrderState(orderId)
     }
 
+    override fun onSnackBarDismissed() {
+        updateState { it.copy(noInternetConnection = false) }
+    }
+
     override fun onClickFinishOrder(orderId: String) {
         updateOrderState(orderId)
     }
 
     private fun updateOrderState(orderId: String) {
-        updateState { it.copy(isLoading = true) }
+        updateState { it.copy(isLoading = true,noInternetConnection = false) }
         updateOrderJob?.cancel()
         updateOrderJob = launchDelayed(500L) {
         tryToExecute(
@@ -76,7 +79,6 @@ class OrderScreenModel(
 
     private fun onUpdateOrderStateSuccess(updatedOrder: OrderUiState) {
         updateState { it.copy(isLoading = false) }
-        println("onUpdateOrderStateSuccess is: $updatedOrder")
         val inCookingOrders = state.value.inCookingOrders.toMutableList()
         val pendingOrders = state.value.pendingOrders.toMutableList()
 
@@ -99,8 +101,7 @@ class OrderScreenModel(
     }
 
     private fun getPendingOrders() {
-        updateState { it.copy(isLoading = true) }
-        println("getPendingOrders")
+        updateState { it.copy(isLoading = true,noInternetConnection = false) }
         tryToCollect(
             { manageOrders.getCurrentOrders(restaurantId) },
             ::onGetPendingOrdersSuccess,
@@ -112,13 +113,13 @@ class OrderScreenModel(
         updateState { it.copy(
             pendingOrders = state.value.pendingOrders.toMutableList().apply {add(orders.toOrderUiState()) },
             totalOrders = state.value.totalOrders.plus(1),
-            isLoading = false
+            isLoading = false,
         )
         }
     }
 
     private fun getOrders() {
-        updateState { it.copy(isLoading = true) }
+        updateState { it.copy(isLoading = true,noInternetConnection = false) }
         tryToExecute(
             { manageOrders.getActiveOrders(restaurantId) },
             ::onGetOrdersSuccess,
@@ -136,11 +137,19 @@ class OrderScreenModel(
                 totalOrders = cookingOrders.size + pendingOrders.size
             )
         }
-        println("totalOrders is :${state.value.inCookingOrders.size + state.value.pendingOrders.size}")
     }
 
     private fun onError(errorState: ErrorState) {
+        updateState { it.copy(isLoading = false) }
         println("onError is: $errorState")
+        when (errorState) {
+            is ErrorState.NoInternet -> {
+                updateState { it.copy(noInternetConnection = true) }
+            }
+            else -> {
+                sendNewEffect(OrderScreenUiEffect.ShowUnknownError)
+            }
+        }
     }
 
 }

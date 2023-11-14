@@ -2,7 +2,6 @@ package presentation.order
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +21,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -29,8 +29,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.modifier.shimmerEffect
 import com.beepbeep.designSystem.ui.theme.Theme
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
@@ -55,42 +57,65 @@ class OrderScreen(private val restaurantId: String) :
         when (effect) {
             is OrderScreenUiEffect.Back -> navigator.pop()
             is OrderScreenUiEffect.UpdateOrder -> {}
+            OrderScreenUiEffect.ShowUnknownError -> {}
         }
     }
 
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun onRender(state: OrderScreenUiState, listener: OrderScreenInteractionListener) {
+        Box(
+            modifier = Modifier.fillMaxSize().background(Theme.colors.background)
+                .padding(bottom = getNavigationBarPadding().calculateBottomPadding()),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(modifier = Modifier.fillMaxSize().background(Theme.colors.background)) {
+                BpAppBar(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Theme.colors.surface)
+                        .border(width = 1.dp, color = Theme.colors.divider, shape = RectangleShape),
+                    onNavigateUp = listener::onClickBack,
+                    title = Resources.strings.orders
+                ) {
+                    TotalOrders(
+                        text = Resources.strings.totalOrders,
+                        totalOrders = state.totalOrders,
+                        modifier = Modifier.padding(end = 16.dp)
+                    )
+                }
+                BpEmptyScreen(
+                    painter = painterResource(Resources.images.emptyScreen),
+                    text = Resources.strings.noOrderYet,
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    isVisible = (state.pendingOrders.isEmpty() && state.inCookingOrders.isEmpty() && !state.isLoading)
+                )
+                AnimatedContent(state.isLoading) {
+                    if (state.isLoading) {
+                        LoadingOrder()
+                    } else {
+                        OrderContent(state, listener)
+                    }
+                }
 
-        Column(modifier = Modifier.fillMaxSize().background(Theme.colors.background)) {
-            BpAppBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Theme.colors.surface)
-                    .border(width = 1.dp, color = Theme.colors.divider, shape = RectangleShape),
-                onNavigateUp = listener::onClickBack,
-                title = Resources.strings.orders
+            }
+            BPSnackBar(
+                icon = painterResource(Resources.images.bpIcon),
+                iconBackgroundColor = Theme.colors.warningContainer,
+                iconTint = Theme.colors.warning,
+                isVisible = state.noInternetConnection,
+                modifier = Modifier.padding(bottom = getNavigationBarPadding().calculateBottomPadding())
+                    .align(Alignment.BottomCenter)
             ) {
-                TotalOrders(
-                    text = Resources.strings.totalOrders,
-                    totalOrders = state.totalOrders,
-                    modifier = Modifier.padding(end = 16.dp)
+                Text(
+                    text =  Resources.strings.noInternetConnection,
+                    style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
                 )
             }
-            BpEmptyScreen(
-                painter = painterResource(Resources.images.emptyScreen),
-                text = Resources.strings.noOrderYet,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                isVisible = (state.pendingOrders.isEmpty() && state.inCookingOrders.isEmpty() && !state.isLoading)
-            )
-            AnimatedContent(state.isLoading) {
-                if (state.isLoading) {
-                    LoadingOrder()
-                } else {
-                    OrderContent(state, listener)
-                }
+            LaunchedEffect(state.noInternetConnection) {
+                delay(1500)
+                listener.onSnackBarDismissed()
             }
-
         }
     }
 
@@ -98,7 +123,7 @@ class OrderScreen(private val restaurantId: String) :
     fun OrderContent(
         state: OrderScreenUiState,
         listener: OrderScreenInteractionListener
-    ){
+    ) {
         LazyVerticalStaggeredGrid(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(16.dp),
@@ -158,7 +183,7 @@ class OrderScreen(private val restaurantId: String) :
     }
 
     @Composable
-    fun LoadingOrder(){
+    fun LoadingOrder() {
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Adaptive(300.dp),
             contentPadding = PaddingValues(16.dp),
