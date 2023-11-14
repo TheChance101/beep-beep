@@ -1,69 +1,58 @@
 package domain.usecase
 
-import data.remote.mapper.Constant
 import domain.entity.Order
-import domain.entity.OrderState
 import domain.gateway.remote.IOrderRemoteGateway
 import kotlinx.coroutines.flow.Flow
-import presentation.base.RequestException
 
 interface IManageOrderUseCase {
     suspend fun getCurrentOrders(restaurantId: String): Flow<Order>
-    suspend fun updateOrderState(orderId: String, orderState: OrderState): Order
-    suspend fun getFinishedOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
-    suspend fun getCanceledOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
+    suspend fun getActiveOrders(restaurantId: String): List<Order>
+    suspend fun updateOrderState(orderId: String): Order
+    suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
     suspend fun getOrdersRevenueByDaysBefore(
         restaurantId: String,
-        daysBack: Int
+        daysBack: Int,
     ): List<Pair<String, Double>>
 
     suspend fun getOrdersCountByDaysBefore(
         restaurantId: String,
-        daysBack: Int
+        daysBack: Int,
     ): List<Pair<String, Double>>
 }
 
-class ManageOrderUseCase(private val orderRemoteGateway: IOrderRemoteGateway) : IManageOrderUseCase {
+class ManageOrderUseCase(private val orderRemoteGateway: IOrderRemoteGateway) :
+    IManageOrderUseCase {
     override suspend fun getCurrentOrders(restaurantId: String): Flow<Order>{
-        return orderRemoteGateway.getCurrentOrders(restaurantId)
+         return orderRemoteGateway.getCurrentOrders(restaurantId)
+    }
+    override suspend fun getActiveOrders(restaurantId: String): List<Order>{
+         return orderRemoteGateway.getActiveOrders(restaurantId)
     }
 
-    override suspend fun updateOrderState(orderId: String, orderState: OrderState): Order {
-        val newOrderState = when (orderState) {
-            OrderState.PENDING -> Constant.IN_COOKING_ORDER
-            OrderState.IN_COOKING -> Constant.FINISHED_ORDER
-            OrderState.CANCELED -> Constant.CANCELED_ORDER
-            else -> throw RequestException("")
-        }
-        return orderRemoteGateway.updateOrderState(orderId, newOrderState)
+    override suspend fun updateOrderState(orderId: String): Order {
+        return orderRemoteGateway.updateOrderState(orderId)
     }
 
-    override suspend fun getFinishedOrdersHistory(
+    override suspend fun getOrdersHistory(
         restaurantId: String,
         page: Int,
         limit: Int
     ): List<Order> {
-        return orderRemoteGateway.getOrdersHistory(restaurantId, page, limit)
-            .filter { it.orderState == OrderState.FINISHED }
-    }
-
-    override suspend fun getCanceledOrdersHistory(
-        restaurantId: String,
-        page: Int,
-        limit: Int
-    ): List<Order> {
-        return orderRemoteGateway.getOrdersHistory(restaurantId, page, limit)
-            .filter { it.orderState == OrderState.CANCELED }
+        val result = orderRemoteGateway.getOrdersHistory(restaurantId, page, limit)
+        println("getOrdersHistory from use case: ${result}")
+        return result.items
     }
 
     override suspend fun getOrdersRevenueByDaysBefore(
         restaurantId: String,
-        daysBack: Int
+        daysBack: Int,
     ): List<Pair<String, Double>> {
         return orderRemoteGateway.getOrdersRevenueByDaysBefore(restaurantId, daysBack)
             .flatMap { map ->
                 map.entries.map { it.key to it.value }
             }
+            .distinctBy { it.first }
+            .sortedWith(compareByDescending<Pair<String, Double>> { it.first }.thenByDescending { it.second })
     }
 
     override suspend fun getOrdersCountByDaysBefore(
@@ -74,6 +63,7 @@ class ManageOrderUseCase(private val orderRemoteGateway: IOrderRemoteGateway) : 
             .flatMap { map ->
                 map.entries.map { it.key to it.value.toDouble() }
             }
+            .distinctBy { it.first }
+            .sortedWith(compareByDescending<Pair<String, Double>> { it.first }.thenByDescending { it.second })
     }
-
 }

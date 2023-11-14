@@ -9,7 +9,7 @@ data class Order(
     val meals: List<Meal>,
     val totalPrice: Double,
     val createdAt: LocalDateTime,
-    val orderState: OrderState
+    val orderState: OrderStatus
 ) {
     data class Meal(
         val id: String,
@@ -25,9 +25,3 @@ data class Order(
     }
 }
 
-enum class OrderState {
-    PENDING,
-    IN_COOKING,
-    CANCELED,
-    FINISHED;
-}

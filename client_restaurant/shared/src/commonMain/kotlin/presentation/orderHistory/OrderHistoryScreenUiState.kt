@@ -1,13 +1,16 @@
-package presentation.order.orderHistory
+package presentation.orderHistory
 
 import presentation.base.ErrorState
 import presentation.order.OrderUiState
 
 data class OrderHistoryScreenUiState(
-    val selectedType: OrderSelectType = OrderSelectType.FINISHED,
+    val isLoading: Boolean = false,
     val orders: List<OrderUiState> = emptyList(),
-    val errorState: ErrorState? = null,
+    val currentOrders: List<OrderUiState> = emptyList(),
+    val selectedType: OrderSelectType = OrderSelectType.FINISHED,
+    val errorState: ErrorState? = null
 ) {
+
     enum class OrderSelectType {
         FINISHED,
         CANCELLED

@@ -1,6 +1,7 @@
 package data.gateway.remote
 
 import data.remote.model.BaseResponse
+import domain.entity.PaginationItems
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
@@ -33,7 +34,6 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
             println("${e.message}")
             throw NoInternetException()
         } catch (e: Exception) {
-            println("${e.message}")
             throw NoInternetException()
         }
     }
@@ -86,5 +86,8 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
     companion object {
         private const val WRONG_PASSWORD = "1013"
         private const val USER_NOT_EXIST = "1043"
+    }
+    fun <T> paginateData(result: List<T>, page: Int, total: Long): PaginationItems<T> {
+        return PaginationItems(total = total, page = page, items = result)
     }
 }

@@ -76,7 +76,6 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
             try {
                 function()
             } catch (exception: Exception) {
-                println("darkennes ${exception.message.toString()}")
                 when (exception) {
                     is NoInternetException -> onError(ErrorState.NoInternet)
                     is PermissionDenied -> onError(ErrorState.HasNoPermission)

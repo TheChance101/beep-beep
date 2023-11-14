@@ -8,7 +8,7 @@ data class RestaurantDto(
     @SerialName("id")
     val id: String,
     @SerialName("ownerId")
-    val ownerId: String? = null ,
+    val ownerId: String? = null,
     @SerialName("ownerUserName")
     val ownerUsername: String? = null,
     @SerialName("name")
@@ -28,6 +28,8 @@ data class RestaurantDto(
     @SerialName("location")
     val location: LocationDto,
     @SerialName("address")
-    val address: String? = null
+    val address: String? = null,
+    @SerialName("restaurantImage")
+    val imageUrl: String? = null,
 )
 

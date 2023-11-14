@@ -52,6 +52,31 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
         realm.write { delete(query<UserConfigurationCollection>()) }
     }
 
+    override suspend fun saveRestaurantId(restaurantId: String) {
+        realm.write {
+            query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+                .find()?.restaurantId = restaurantId
+        }
+    }
+
+    override suspend fun getRestaurantId(): String {
+        return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+            .find()?.restaurantId ?: ""
+    }
+
+    override suspend fun saveNumberOfRestaurants(numberOfRestaurants: Int) {
+        realm.write {
+            query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+                .find()?.numberOfRestaurants = numberOfRestaurants
+        }
+    }
+
+    override suspend fun getNumberOfRestaurants(): Int {
+        return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+            .find()?.numberOfRestaurants ?: 0
+    }
+
+
     override suspend fun saveKeepMeLoggedInFlag(isChecked: Boolean) {
         realm.write {
             query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()

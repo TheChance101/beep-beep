@@ -42,7 +42,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 22.74,
             createdAt = 123541235,
-            orderState = 0,
+            orderStatus = 0,
             currency = "USD",
             restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
             restaurantName = "Restaurant 1",
@@ -70,7 +70,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 22.74,
             createdAt = 123541235,
-            orderState = 0,
+            orderStatus = 0,
             currency = "USD",
             restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
             restaurantName = "Restaurant 1",
@@ -98,7 +98,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 22.74,
             createdAt = 123541235,
-            orderState = 0,
+            orderStatus = 0,
             currency = "USD",
             restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
             restaurantName = "Restaurant 1",
@@ -126,7 +126,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 22.74,
             createdAt = 123541235,
-            orderState = 0,
+            orderStatus = 0,
             currency = "USD",
             restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
             restaurantName = "Restaurant 1",
@@ -154,7 +154,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 22.74,
             createdAt = 123541235,
-            orderState = 0,
+            orderStatus = 0,
             currency = "USD",
             restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
             restaurantName = "Restaurant 1",
@@ -182,7 +182,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 22.74,
             createdAt = 123541235,
-            orderState = 0,
+            orderStatus = 0,
             currency = "USD",
             restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
             restaurantName = "Restaurant 1",
@@ -210,7 +210,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 22.74,
             createdAt = 123541235,
-            orderState = 0,
+            orderStatus = 0,
             currency = "USD",
             restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
             restaurantName = "Restaurant 1",
@@ -238,7 +238,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 22.74,
             createdAt = 123541235,
-            orderState = 0,
+            orderStatus = 0,
             currency = "USD",
             restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
             restaurantName = "Restaurant 1",
@@ -266,7 +266,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 22.74,
             createdAt = 123541235,
-            orderState = 0,
+            orderStatus = 0,
             currency = "USD",
             restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
             restaurantName = "Restaurant 1",
@@ -294,7 +294,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 22.74,
             createdAt = 123541235,
-            orderState = 0,
+            orderStatus = 0,
             currency = "USD",
             restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
             restaurantName = "Restaurant 1",
@@ -322,7 +322,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 22.74,
             createdAt = 123541235,
-            orderState = 0,
+            orderStatus = 0,
             currency = "USD",
             restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
             restaurantName = "Restaurant 1",
@@ -350,7 +350,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 22.74,
             createdAt = 123541235,
-            orderState = 0,
+            orderStatus = 0,
             currency = "USD",
             restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
             restaurantName = "Restaurant 1",
@@ -378,7 +378,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 22.74,
             createdAt = 123541235,
-            orderState = 0,
+            orderStatus = 0,
             currency = "USD",
             restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
             restaurantName = "Restaurant 1",
@@ -406,7 +406,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             ),
             totalPrice = 22.74,
             createdAt = 123541235,
-            orderState = 0,
+            orderStatus = 0,
             currency = "USD",
             restaurantImage = "https://takethemameal.com/files_images_v2/stam.jpg",
             restaurantName = "Restaurant 1",
@@ -711,7 +711,9 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
                 priceLevel = "",
                 description = "",
                 ownerUsername = "",
-                name = ""
+                name = "",
+                imageUrl = "",
+                image = byteArrayOf()
             )
     }
     //endregion restaurant
@@ -737,11 +739,11 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
 
     //region order
     override suspend fun getCurrentOrders(): List<Order> {
-        return orders.filter { it.orderState == 0 || it.orderState == 1 }.toOrderEntity()
+        return orders.filter { it.orderStatus == 0 || it.orderStatus == 1 }.toOrderEntity()
     }
 
     override suspend fun getOrdersHistory(restaurantId: String): List<Order> {
-        return orders.filter { it.orderState == 2 || it.orderState == 3 }.toOrderEntity()
+        return orders.filter { it.orderStatus == 2 || it.orderStatus == 3 }.toOrderEntity()
     }
 
     override suspend fun updateOrderState(orderId: String, orderState: Int): Order {

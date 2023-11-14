@@ -9,32 +9,29 @@ data class MainScreenUIState(
     val error: ErrorState? = null,
     val restaurants: List<RestaurantUIState> = emptyList(),
     val selectedRestaurantId: String = "",
-
-    val orderUiState: ChartsItemUiState = ChartsItemUiState(
-        yAxisData = listOf(0.0,0.0),
-        xAxisData = listOf("1","2"),
-        label = "Orders"
-    ),
-    val revenueUiState: ChartsItemUiState = ChartsItemUiState(
-        yAxisData = listOf(0.0,0.0),
-        xAxisData = listOf("1","2"),
-        label = "Revenue"
-    )
+    val ordersCountStatistics: ChartsItemUiState = ChartsItemUiState(),
+    val revenueStatistics: ChartsItemUiState = ChartsItemUiState(),
 ) {
+    val totalOrders: Int = ordersCountStatistics.yAxisData.sum().toInt()
+    val totalOrderReturns: String =
+        "$${revenueStatistics.yAxisData.sum()}"
     val selectedRestaurant: RestaurantUIState
-        get() = restaurants.firstOrNull { it.id == selectedRestaurantId } ?: RestaurantUIState()
+        get() = restaurants.firstOrNull { it.restaurantId == selectedRestaurantId }
+            ?: RestaurantUIState()
 }
 
 data class ChartsItemUiState(
-    val yAxisData: List<Double> = emptyList(),
-    val xAxisData: List<String> = emptyList(),
-    val label : String = "",
-    )
+    val yAxisData: List<Double> = listOf(0.0),
+    val xAxisData: List<String> = listOf(""),
+)
 
-fun List<Pair<String, Double>>.toChartsItemUiState(label:String): ChartsItemUiState {
-    val yAxisData = this.map { it.second }
-    val xAxisData = this.map { it.first }
-    return ChartsItemUiState(yAxisData, xAxisData,label)
+fun List<Pair<String, Double>>.toChartsItemUiState(): ChartsItemUiState {
+    val xAxisData = this.map { it.first } // weeks
+    val yAxisData = this.map { it.second } // values
+    return ChartsItemUiState(
+        yAxisData = yAxisData,
+        xAxisData = xAxisData,
+    )
 }
 
 

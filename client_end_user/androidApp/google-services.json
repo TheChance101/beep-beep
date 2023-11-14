@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:982548147513:android:31f49b2b93e22fa5928ce8",
+        "mobilesdk_app_id": "1:982548147513:android:afca2e92ebb6b8fc928ce8",
         "android_client_info": {
-          "package_name": "com.beepbeep.App"
+          "package_name": "org.thechance.beepbeep.enduser"
         }
       },
       "oauth_client": [],

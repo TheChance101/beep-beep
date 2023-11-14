@@ -3,20 +3,22 @@ package presentation.restaurantSelection
 data class RestaurantScreenUIState(
     val isLoading: Boolean = false,
     val error: String = "",
-    val restaurants: List<RestaurantUIState> = emptyList()
+    val restaurants: List<RestaurantUIState> = emptyList(),
 )
 
 data class RestaurantUIState(
-    val id: String = "",
+    val restaurantId: String = "",
     val restaurantName: String = "",
-    val restaurantNumber: String = "",
-    val isOpen: Boolean = false
+    val restaurantPhoneNumber: String = "",
+    val priceLevel: String = "",
+    val isOpen: Boolean = false,
 )
 
 fun domain.entity.Restaurant.toUiState() = RestaurantUIState(
-    id = id,
+    restaurantId = id,
     restaurantName = name,
-    restaurantNumber = phone,
+    restaurantPhoneNumber = phone,
+    priceLevel = priceLevel,
     isOpen = isRestaurantOpen()
 )
 

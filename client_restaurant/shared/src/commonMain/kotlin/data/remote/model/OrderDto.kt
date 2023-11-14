@@ -23,8 +23,8 @@ data class OrderDto(
     val createdAt: Long? = null,
     @SerialName("currency")
     val currency: String? = null,
-    @SerialName("orderState")
-    val orderState: Int? = null
+    @SerialName("orderStatus")
+    val orderStatus: Int?=null
 ) {
     @Serializable
     data class MealDto(
