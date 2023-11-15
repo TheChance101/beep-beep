@@ -50,9 +50,7 @@ class UserGateway(
     }
 
     override suspend fun loginUser(
-        username: String,
-        password: String,
-        deviceToken: String,
+        username: String, password: String, deviceToken: String,
     ): Session {
         return tryToExecute<ServerResponse<SessionDto>> {
             submitForm(
