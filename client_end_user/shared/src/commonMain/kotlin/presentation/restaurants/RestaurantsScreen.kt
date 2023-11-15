@@ -8,7 +8,7 @@ import presentation.base.BaseScreen
 
 
 data class RestaurantsScreen(val offerId: String? = null) :
-    BaseScreen<RestaurantScreenModel, RestaurantsUIState, RestaurantsUIEffect, RestaurantsListener>() {
+    BaseScreen<RestaurantsScreenModel, RestaurantsUIState, RestaurantsUIEffect, RestaurantsListener>() {
 
     override fun onEffect(effect: RestaurantsUIEffect, navigator: Navigator) {
 
