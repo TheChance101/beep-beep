@@ -20,8 +20,6 @@ class ImageService {
         val bucketName = "beepbeep-resource"
         val imageUrl = "https://beepbeep-resource.fra1.digitaloceanspaces.com"
 
-        val metadataVal = mutableMapOf<String, String>()
-
         val s3Client = S3Client.fromEnvironment {
             endpointUrl = Url.parse("https://fra1.digitaloceanspaces.com")
             region = "us-east-1"
@@ -41,7 +39,6 @@ class ImageService {
             bucket = bucketName
             key = fileName
             acl = ObjectCannedAcl.fromValue("public-read")
-            metadata = metadataVal
             body = ByteStream.fromBytes(image)
         }
 
