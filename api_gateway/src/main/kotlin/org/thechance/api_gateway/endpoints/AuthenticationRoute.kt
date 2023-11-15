@@ -45,13 +45,14 @@ fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
         val language = extractLocalizationHeader()
         val appId = extractApplicationIdHeader()
         val token = identityService.loginUser(userName, password, tokenConfiguration, language, appId)
-       try {
-           if (deviceToken.isNotEmpty()){
-               val jwt: DecodedJWT = JWT.decode(token.accessToken)
-               val userId = jwt.getClaim(Claim.USER_ID).asString()
-               notificationService.saveToken(userId, deviceToken, language)
-           }
-       }catch (e:Exception){}
+        try {
+            if (deviceToken.isNotEmpty()) {
+                val jwt: DecodedJWT = JWT.decode(token.accessToken)
+                val userId = jwt.getClaim(Claim.USER_ID).asString()
+                notificationService.saveToken(userId, deviceToken, language)
+            }
+        } catch (e: Exception) {
+        }
 
         respondWithResult(HttpStatusCode.OK, token)
     }

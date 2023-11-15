@@ -9,4 +9,5 @@ data class OfferRestaurantsDto(
     @SerialName("id") val id: String? = null,
     @SerialName("name") val name: String,
     @SerialName("restaurants") val restaurants: List<RestaurantDto>,
+    @SerialName("image") val image: String? = null
 )
