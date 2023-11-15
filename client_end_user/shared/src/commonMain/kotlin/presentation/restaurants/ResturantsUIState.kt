@@ -2,6 +2,7 @@ package presentation.restaurants
 
 import androidx.paging.PagingData
 import androidx.paging.map
+import domain.entity.PriceLevel
 import domain.entity.Restaurant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -19,14 +20,15 @@ data class RestaurantUIState(
     val id: String = "",
     val imageUrl: String = "",
     val name: String = "",
-    val priceLevel: String = "",
+    val priceLevel: PriceLevel = PriceLevel.LOW,
     val rate: Double? = null,
 )
 
 fun Restaurant.toUIState() = RestaurantUIState(
     id = id,
     name = name,
-    priceLevel = priceLevel.priceLevel,
+    imageUrl = image,
+    priceLevel = priceLevel,
     rate = rate
 )
 

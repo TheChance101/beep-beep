@@ -4,7 +4,7 @@ import presentation.base.BaseInteractionListener
 
 interface RestaurantsListener : BaseInteractionListener {
 
-    fun onRestaurantClicked()
+    fun onRestaurantClicked(id: String)
 
     fun onBackClicked()
 }

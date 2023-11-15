@@ -47,12 +47,13 @@ class RestaurantsScreenModel(
         }
     }
 
-    override fun onBack() {
-        sendNewEffect(RestaurantsUIEffect.onBack)
+
+    override fun onRestaurantClicked(id: String) {
+        sendNewEffect(RestaurantsUIEffect.NavigateToRestaurantDetails(id))
     }
 
-    override fun onRestaurantClicked() {
-        TODO("Not yet implemented")
+    override fun onBackClicked() {
+        sendNewEffect(RestaurantsUIEffect.NavigateBack)
     }
 
 
