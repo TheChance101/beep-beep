@@ -117,4 +117,5 @@ data class ArabicSY(
     override val setDestination: String = "ضع المكان ",
     override val searchDestination: String = "ابحث عن مكان",
     override val trackYourRide: String = "تتبع رحلتك",
-    ) : IStringResources
+    override val restaurants: String ="المطاعم"
+) : IStringResources
