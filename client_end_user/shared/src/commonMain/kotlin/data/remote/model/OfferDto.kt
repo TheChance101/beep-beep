@@ -3,7 +3,6 @@ package data.remote.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-//TODO Add image to offers
 @Serializable
 data class OfferDto(
     @SerialName("id") val id: String? = null,
