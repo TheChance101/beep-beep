@@ -29,7 +29,7 @@ class ImageService {
 
         }
 
-        if (oldImageUrl != null) {
+        if (!oldImageUrl.isNullOrEmpty()) {
             val deleteObjectRequest = DeleteObjectRequest {
                 bucket = bucketName
                 key = oldImageUrl.replace("$imageUrl/", "")
