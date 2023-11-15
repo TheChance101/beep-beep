@@ -40,9 +40,10 @@ class ExploreRestaurantUseCase(
     }
 
     override suspend fun getRestaurants(): Flow<PagingData<Restaurant>> {
-        return Pager(config = PagingConfig(pageSize = 10),
-            pagingSourceFactory = { restaurants }
-        ).flow
+        return Pager(
+            config = PagingConfig(pageSize = 10),
+            pagingSourceFactory = { restaurants },
+            ).flow
     }
 
     override suspend fun getMealsInCuisine(cuisineId: String): Flow<PagingData<Meal>> {

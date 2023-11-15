@@ -1,9 +1,7 @@
 package presentation.restaurants
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,7 +16,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -104,8 +101,13 @@ data class RestaurantsScreen(val offerId: String? = null) :
                 modifier = Modifier.height(156.dp).clip(RoundedCornerShape(8.dp))
             ) {
 
-                BpImageLoader(imageUrl = restaurant.imageUrl, contentScale = ContentScale.Crop)
+                Image(
+                    painter = painterResource(Resources.images.placeholder),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = null
+                )
 
+                BpImageLoader(imageUrl = restaurant.imageUrl, contentScale = ContentScale.Crop)
             }
             Row(
                 modifier = Modifier.fillMaxWidth().padding(top = 8.dp).width(232.dp),

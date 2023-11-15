@@ -8,8 +8,8 @@ class RestaurantsPagingSource(
     private val remoteGateway: IRestaurantGateway,
 ) : BasePagingSource<Restaurant>() {
 
-    override suspend fun fetchData(page: Int, limit: Int): PaginationItems<Restaurant> {
-        return remoteGateway.getRestaurants(page, limit)
+    override suspend fun fetchData(page: Int, limit: Int ): PaginationItems<Restaurant> {
+        return remoteGateway.getRestaurants(page, 10)
     }
 
 }

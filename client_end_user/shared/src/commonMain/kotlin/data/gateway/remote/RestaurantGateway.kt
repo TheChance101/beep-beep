@@ -28,6 +28,7 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRes
     override suspend fun getRestaurants(page: Int, limit: Int): PaginationItems<Restaurant> {
         val result = tryToExecute<ServerResponse<PaginationResponse<RestaurantDto>>> {
             get("/restaurants") {
+
                 parameter("page", page)
                 parameter("limit", limit)
             }

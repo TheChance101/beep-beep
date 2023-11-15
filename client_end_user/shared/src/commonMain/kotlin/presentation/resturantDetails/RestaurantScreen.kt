@@ -96,8 +96,14 @@ data class RestaurantScreen(val restaurantId: String) :
                 onBackGroundClicked = listener::onDismissSheet,
                 sheetState = state.sheetState,
             ) {
-
-                BpImageLoader(imageUrl = state.restaurantInfo.image, contentScale = ContentScale.Crop)
+                Box {
+                    Image(
+                        painter = painterResource(Resources.images.placeholder),
+                        contentScale = ContentScale.Crop,
+                        contentDescription = null
+                    )
+                    BpImageLoader(imageUrl = state.restaurantInfo.image, contentScale = ContentScale.Crop)
+                }
 
                 BackButton(
                     onClick = { listener.onBack() },
