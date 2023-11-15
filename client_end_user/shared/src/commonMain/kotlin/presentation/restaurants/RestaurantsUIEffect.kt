@@ -1,9 +1,9 @@
 package presentation.restaurants
 
 sealed class RestaurantsUIEffect {
-    object onBack : RestaurantsUIEffect()
+    object NavigateBack : RestaurantsUIEffect()
 
-    object onGoToRestaurantDetails : RestaurantsUIEffect()
+    data class NavigateToRestaurantDetails(val id: String) : RestaurantsUIEffect()
 
 
 }

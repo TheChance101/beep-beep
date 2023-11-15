@@ -6,5 +6,5 @@ interface RestaurantsListener : BaseInteractionListener {
 
     fun onRestaurantClicked()
 
-    fun onBack()
+    fun onBackClicked()
 }
