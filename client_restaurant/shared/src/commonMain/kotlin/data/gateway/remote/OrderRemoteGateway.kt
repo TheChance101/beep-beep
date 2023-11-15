@@ -11,12 +11,14 @@ import domain.gateway.remote.IOrderRemoteGateway
 import io.ktor.client.HttpClient
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
-import io.ktor.client.request.post
+import io.ktor.client.request.put
+import io.ktor.client.request.put
 import io.ktor.http.HttpMethod
 import io.ktor.http.Parameters
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import presentation.base.UnknownErrorException
+import kotlin.jvm.JvmInline
 
 class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway, BaseRemoteGateway(client) {
 
@@ -25,14 +27,23 @@ class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway, BaseRemoteGa
     }
 
     override suspend fun getActiveOrders(restaurantId: String): List<Order> {
-        return tryToExecute<BaseResponse<List<OrderDto>>> {
-            get("/order/$restaurantId/orders")
-        }.value?.toOrderEntity() ?: emptyList()
+        val result = tryToExecute<BaseResponse<List<OrderDto>>> {
+            get("/orders/active/$restaurantId")
+        }.value?.toOrderEntity()?: throw UnknownErrorException("")
+        println("getActiveOrdersFrom Gateway: ${result}")
+        return result
     }
 
     override suspend fun updateOrderState(orderId: String): Order {
+        val result = tryToExecute<BaseResponse<OrderDto>>() {
+            put("/order/$orderId")
+        }.value?.toEntity() ?: throw Exception("Error!")
+        println("updateOrderStateFrom Gateway: ${result}")
+        return result
+    }
+    override suspend fun cancelOrder(orderId: String): Order {
         return tryToExecute<BaseResponse<OrderDto>>() {
-            post("/order/$orderId")
+            put("order/cancel/$orderId")
         }.value?.toEntity() ?: throw Exception("Error!")
     }
 
