@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.map
 
 class TripRemoteGateway(client: HttpClient) : ITripRemoteGateway,
     BaseRemoteGateway(client = client) {
+
     override suspend fun getTrips(): Flow<Trip> {
         return client.tryToExecuteWebSocket<TripDto>("/trip/incoming-taxi-rides")
             .map { it.toEntity() }
@@ -30,17 +31,21 @@ class TripRemoteGateway(client: HttpClient) : ITripRemoteGateway,
         )
     }
 
-    override suspend fun updateTrip(taxiId: String, tripId: String) {
+    override suspend fun updateTrip(tripId: String) {
         val result = tryToExecute<BaseResponse<TripDto>> {
             submitForm(
                 url = ("/trip/update/taxi-ride"),
                 formParameters = Parameters.build {
                     append("tripId", tripId)
-                    append("taxiId", taxiId)
+                    append("taxiId", TAXI_ID)
                 },
                 block = { method = HttpMethod.Put }
             )
         }.value ?: throw NotFoundedException()
+    }
+
+    private companion object{
+        const val TAXI_ID = "653d6d4f5a253b12181fa2de"
     }
 
 }

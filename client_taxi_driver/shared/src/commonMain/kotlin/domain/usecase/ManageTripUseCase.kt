@@ -23,6 +23,6 @@ class ManageTripUseCase(
     }
 
     override suspend fun updateTripStatus(tripId: String) {
-        tripGateway.updateTrip("0" ,tripId)
+        tripGateway.updateTrip(tripId)
     }
 }
