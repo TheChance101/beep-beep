@@ -15,7 +15,6 @@ fun Scope.authorizationIntercept(client: HttpClient) {
     client.plugin(HttpSend).intercept { request ->
 
         val accessToken = localConfigurationGateway.getAccessToken()
-        val refreshToken = localConfigurationGateway.getRefreshToken()
         val languageCode = localConfigurationGateway.getLanguageCode()
 
         request.headers {
@@ -24,8 +23,8 @@ fun Scope.authorizationIntercept(client: HttpClient) {
         }
 
         val originalCall = execute(request)
-        if (originalCall.response.status.value == 401) {
-            val (access, refresh) = userRemoteGateway.refreshAccessToken(refreshToken)
+        if (originalCall.response.status.value == 401 && accessToken.isNotEmpty() ) {
+            val (access, refresh) = userRemoteGateway.refreshAccessToken()
             localConfigurationGateway.saveAccessToken(access)
             localConfigurationGateway.saveRefreshToken(refresh)
             execute(request)
