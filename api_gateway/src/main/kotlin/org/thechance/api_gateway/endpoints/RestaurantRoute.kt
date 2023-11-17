@@ -122,8 +122,16 @@ fun Route.restaurantRoutes() {
             put("/details") {
                 val language = extractLocalizationHeader()
                 val multipartDto = receiveMultipart<RestaurantDto>(imageValidator)
+                val restaurantId = multipartDto.data.id.toString()
+                val restaurant = restaurantService.getRestaurantInfo(
+                    languageCode = language, restaurantId = restaurantId
+                )
                 val imageUrl = multipartDto.image?.let { image ->
-                    imageService.uploadImage(image, multipartDto.data.name ?: "null")
+                    imageService.uploadImage(
+                        image,
+                        multipartDto.data.name ?: "null",
+                        restaurant.restaurantImage
+                    )
                 }
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val ownerId = tokenClaim?.get(USER_ID).toString()
