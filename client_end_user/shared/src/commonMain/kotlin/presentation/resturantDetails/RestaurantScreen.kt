@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
@@ -39,6 +40,7 @@ import presentation.composable.RatingBar
 import presentation.composable.modifier.noRippleEffect
 import presentation.resturantDetails.Composable.Chip
 import presentation.composable.BackButton
+import presentation.composable.BpImageLoader
 import presentation.resturantDetails.Composable.NeedToLoginSheet
 import presentation.resturantDetails.Composable.ToastMessage
 import resources.Resources
@@ -94,10 +96,15 @@ data class RestaurantScreen(val restaurantId: String) :
                 onBackGroundClicked = listener::onDismissSheet,
                 sheetState = state.sheetState,
             ) {
-                Image(
-                    painter = painterResource(Resources.images.placeholder),
-                    contentDescription = "background",
-                )
+                Box {
+                    Image(
+                        painter = painterResource(Resources.images.placeholder),
+                        contentScale = ContentScale.Crop,
+                        contentDescription = null
+                    )
+                    BpImageLoader(imageUrl = state.restaurantInfo.image, contentScale = ContentScale.Crop)
+                }
+
                 BackButton(
                     onClick = { listener.onBack() },
                     modifier = Modifier.align(Alignment.TopCenter),

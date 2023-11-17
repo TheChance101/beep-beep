@@ -117,5 +117,5 @@ data class ArabicIQ(
     override val setDestination: String = "ضع المكان ",
     override val searchDestination: String = "ابحث عن مكان",
     override val trackYourRide: String = "تتبع رحلتك",
-
+    override val restaurants: String ="المطاعم"
     ) : IStringResources

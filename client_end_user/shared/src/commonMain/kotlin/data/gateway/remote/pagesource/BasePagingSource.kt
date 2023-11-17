@@ -9,29 +9,21 @@ import app.cash.paging.PagingSourceLoadResultPage
 import app.cash.paging.PagingState
 import domain.entity.PaginationItems
 
-@Suppress("CAST_NEVER_SUCCEEDS", "USELESS_CAST", "KotlinRedundantDiagnosticSuppress")
 abstract class BasePagingSource<Value : Any> : PagingSource<Int, Value>() {
 
     protected abstract suspend fun fetchData(page: Int, limit: Int): PaginationItems<Value>
 
     override suspend fun load(params: PagingSourceLoadParams<Int>): PagingSourceLoadResult<Int, Value> {
         val currentPage = params.key ?: 1
-        val limit = 10
+        val limit = params.loadSize
         return try {
             val response = fetchData(currentPage, limit)
-            if (response.items.isNotEmpty()) {
                 PagingSourceLoadResultPage(
                     data = response.items,
                     prevKey = if (currentPage == 1) null else currentPage - 1,
-                    nextKey = response.page.plus(1)
-                )
-            } else {
-                PagingSourceLoadResultPage(
-                    data = emptyList(),
-                    prevKey = null,
-                    nextKey = null
-                )
-            }
+                    nextKey =  (currentPage + 1).takeIf { response.items.lastIndex >= currentPage }
+                    )
+
         } catch (e: Exception) {
             PagingSourceLoadResultError(e)
         }

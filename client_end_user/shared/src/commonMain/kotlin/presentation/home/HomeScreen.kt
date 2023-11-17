@@ -64,6 +64,7 @@ import presentation.home.composable.OrderCard
 import presentation.main.SearchTab
 import presentation.meals.MealsScreen
 import presentation.orderFoodTracking.OrderFoodTrackingScreen
+import presentation.restaurants.RestaurantsScreen
 import presentation.resturantDetails.RestaurantScreen
 import presentation.taxi.TaxiOrderScreen
 import presentation.taxi.TaxiOrderScreenModel
@@ -89,7 +90,10 @@ class HomeScreen : BaseScreen<
             is HomeScreenUiEffect.NavigateToCuisines -> navigator.root?.push(CuisinesScreen())
             is HomeScreenUiEffect.NavigateToChatSupport -> navigator.root?.push(ChatSupportScreen())
             is HomeScreenUiEffect.NavigateToOrderTaxi -> navigator.root?.push(TaxiOrderScreen())
-            is HomeScreenUiEffect.ScrollDownToRecommendedRestaurants -> println("Scroll down home screen")
+            is HomeScreenUiEffect.ScrollDownToRecommendedRestaurants -> navigator.root?.push(
+                RestaurantsScreen()
+            )
+
             is HomeScreenUiEffect.NavigateToOfferItem -> println("Navigate to offer item details ${effect.offerId}")
             is HomeScreenUiEffect.NavigateToOrderDetails -> println("Navigate to order details ${effect.orderId}")
             is HomeScreenUiEffect.NavigateToCart -> navigator.root?.push(CartScreen())

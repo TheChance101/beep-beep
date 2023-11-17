@@ -4,35 +4,24 @@ import data.remote.mapper.toEntity
 import data.remote.mapper.toOrderEntity
 import data.remote.model.BaseResponse
 import data.remote.model.OrderDto
+import data.remote.model.PaginationResponse
 import domain.entity.Order
+import domain.entity.PaginationItems
 import domain.gateway.remote.IOrderRemoteGateway
 import io.ktor.client.HttpClient
+import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
 import io.ktor.client.request.post
-import io.ktor.client.request.setBody
+import io.ktor.http.HttpMethod
+import io.ktor.http.Parameters
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import presentation.base.UnknownErrorException
 
+class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway, BaseRemoteGateway(client) {
 
-class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway,
-    BaseRemoteGateway(client = client) {
-
-    override suspend fun getCurrentOrders(restaurantId: String): Flow<Order>? {
-        return null
-        /*return tryToExecute<BaseResponse<List<OrderDto>>> {
-
-            try {
-                ws("/order/restaurant/$restaurantId") {
-                    //connect
-                    //getCurrentOrders + get active orders
-                }
-            } catch (e: Exception) {
-                //disconnect
-                //get active orders
-            }
-
-            get("/orders/$restaurantId")
-            //todo add pagination
-        }.value.toOrderEntity()*/
+    override suspend fun getCurrentOrders(restaurantId: String): Flow<Order> {
+        return client.tryToExecuteWebSocket<OrderDto>("/orders/$restaurantId").map { it.toEntity() }
     }
 
     override suspend fun getActiveOrders(restaurantId: String): List<Order> {
@@ -41,38 +30,55 @@ class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway,
         }.value?.toOrderEntity() ?: emptyList()
     }
 
-    override suspend fun updateOrderState(orderId: String, orderState: Int): Order {
+    override suspend fun updateOrderState(orderId: String): Order {
         return tryToExecute<BaseResponse<OrderDto>>() {
-            post("/order/$orderId/status"){ setBody(orderState.toString()) }//todo check if correct
+            post("/order/$orderId")
         }.value?.toEntity() ?: throw Exception("Error!")
     }
 
     override suspend fun getOrdersHistory(
         restaurantId: String,
         page: Int,
-        limit: Int
-    ): List<Order> {
-        return tryToExecute<BaseResponse<List<OrderDto>>> {
-            get("/order/history/$restaurantId?page=$page&limit=$limit")
-        }.value?.toOrderEntity() ?: emptyList()
+        limit: Int,
+    ): PaginationItems<Order> {
+        val result = tryToExecute<BaseResponse<PaginationResponse<OrderDto>>> {
+            get("/orders/restaurant/$restaurantId/history?page=$page&limit=$limit")
+        }.value
+        return paginateData(
+            result = result?.items?.map { it.toEntity() } ?: throw UnknownErrorException(""),
+            page = result.page,
+            total = result.total)
     }
 
-    //for charts
     override suspend fun getOrdersRevenueByDaysBefore(
         restaurantId: String,
-        daysBack: Int
+        daysBack: Int,
     ): List<Map<String, Double>> {
-        return tryToExecute<BaseResponse<List<Map<String, Double>>>> {
-            get("/orders/revenue-by-days-back?restaurantId=$restaurantId&&daysBack=$daysBack")
+        val result = tryToExecute<BaseResponse<List<Map<String, Double>>>> {
+            submitForm(
+                url = ("/orders/$restaurantId/revenue-by-days-back"),
+                formParameters = Parameters.build {
+                    append("daysBack", daysBack.toString())
+                },
+                block = { method = HttpMethod.Get }
+            )
         }.value ?: emptyList()
+        return result
     }
 
     override suspend fun getOrdersCountByDaysBefore(
         restaurantId: String,
-        daysBack: Int
+        daysBack: Int,
     ): List<Map<String, Int>> {
-        return tryToExecute<BaseResponse<List<Map<String, Int>>>> {
-            get("/orders/count-by-days-back?restaurantId=$restaurantId&&daysBack=$daysBack")
+        val result = tryToExecute<BaseResponse<List<Map<String, Int>>>> {
+            submitForm(
+                url = ("/orders/$restaurantId/count-by-days-back"),
+                formParameters = Parameters.build {
+                    append("daysBack", daysBack.toString())
+                },
+                block = { method = HttpMethod.Get }
+            )
         }.value ?: emptyList()
+        return result
     }
 }

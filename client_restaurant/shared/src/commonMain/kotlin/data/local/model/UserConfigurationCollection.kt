@@ -7,4 +7,6 @@ class UserConfigurationCollection : RealmObject {
     var accessToken: String = ""
     var refreshToken: String = ""
     var isKeepMeLoggedInMeChecked: Boolean = false
+    var restaurantId: String = ""
+    var numberOfRestaurants: Int = 0
 }

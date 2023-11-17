@@ -84,14 +84,20 @@ private fun OrderItem(
         Image(
             modifier = Modifier.fillMaxHeight().width(80.dp)
                 .clip(RoundedCornerShape(Theme.radius.medium)),
-            painter = rememberAsyncImagePainter(imageUrl),
+            painter = if (imageUrl.isEmpty())
+                rememberAsyncImagePainter("https://static.toiimg.com/thumb/84784534.cms?imgsize=468021&width=800&height=800")
+            else
+                rememberAsyncImagePainter(imageUrl),
             contentScale = ContentScale.Crop,
             contentDescription = Resources.strings.orderImageContentDescription
         )
 
         Column(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically),
+            verticalArrangement = Arrangement.spacedBy(
+                8.dp,
+                alignment = Alignment.CenterVertically
+            ),
         ) {
             Text(
                 text = mealName,
