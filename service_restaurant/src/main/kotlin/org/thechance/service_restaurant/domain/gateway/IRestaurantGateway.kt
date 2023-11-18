@@ -50,4 +50,5 @@ interface IRestaurantGateway {
     suspend fun deleteRestaurantsByOwnerId(ownerId: String): Boolean
     suspend fun getTotalNumberOfMealsByRestaurantId(restaurantId: String): Long
     //endregion
+    suspend fun deleteAll()
 }
