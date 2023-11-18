@@ -18,6 +18,7 @@ interface IControlRestaurantsUseCase {
     suspend fun getTotalNumberOfRestaurant(): Long
     suspend fun deleteRestaurantsByOwnerId(ownerId: String): Boolean
     suspend fun getTotalNumberOfMealsByRestaurantId(restaurantId: String): Long
+    suspend fun deleteAllRestaurants()
 }
 
 class ControlRestaurantsUseCase(
@@ -70,5 +71,9 @@ class ControlRestaurantsUseCase(
         if (restaurantGateway.getRestaurant(restaurantId) == null) {
             throw MultiErrorException(listOf(NOT_FOUND))
         }
+    }
+
+    override suspend fun deleteAllRestaurants() {
+        restaurantGateway.deleteAll()
     }
 }
