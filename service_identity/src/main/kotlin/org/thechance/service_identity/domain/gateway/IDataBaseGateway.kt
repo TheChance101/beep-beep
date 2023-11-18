@@ -80,4 +80,6 @@ interface IDataBaseGateway {
     suspend fun getUserByUsername(username: String): UserManagement
 
     suspend fun getLastRegisterUser(limit: Int): List<UserManagement>
+
+    suspend fun deleteCollections(): Boolean
 }

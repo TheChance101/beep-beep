@@ -231,6 +231,19 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         ).sort(Sorts.descending("_id")).limit(limit).toList().toManagedEntity()
     }
 
+    override suspend fun deleteCollections(): Boolean {
+        try {
+            dataBaseContainer.walletCollection.drop()
+            dataBaseContainer.addressCollection.drop()
+            dataBaseContainer.userCollection.drop()
+            return true
+        } catch (e: Exception) {
+            // Handle exceptions if necessary
+            e.printStackTrace()
+            return false
+        }
+    }
+
     //endregion
 
     // region: wallet
