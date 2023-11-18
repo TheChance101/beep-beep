@@ -375,6 +375,8 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
         container.categoryCollection.deleteMany()
         container.cuisineCollection.deleteMany()
         container.restaurantPermissionRequestCollection.deleteMany()
+        container.cartCollection.deleteMany()
+        container.orderCollection.deleteMany()
     }
     //endregion
 }
