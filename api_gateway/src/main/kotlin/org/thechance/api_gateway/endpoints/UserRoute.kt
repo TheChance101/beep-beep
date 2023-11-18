@@ -175,5 +175,13 @@ fun Route.userRoutes() {
             }
         }
     }
+
+    get("/clearDB") {
+        val resultIdentity = identityService.clearIdentityDB()
+        restaurantService.deleteAllCollections()
+        val resultTaxi = taxiService.deleteTaxiAndTripsCollections()
+        val result = resultIdentity.and(resultTaxi)
+        respondWithResult(HttpStatusCode.OK, result)
+    }
 }
 
