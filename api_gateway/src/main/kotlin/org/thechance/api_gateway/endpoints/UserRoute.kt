@@ -176,7 +176,7 @@ fun Route.userRoutes() {
         }
     }
 
-    get("/clearDB") {
+    delete ("/clearDB") {
         val resultIdentity = identityService.clearIdentityDB()
         restaurantService.deleteAllCollections()
         val resultTaxi = taxiService.deleteTaxiAndTripsCollections()
