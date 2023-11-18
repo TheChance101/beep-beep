@@ -44,6 +44,14 @@ class NotificationService(
         }
     }
 
+    suspend fun deleteNotificationCollection(): Boolean {
+        return client.tryToExecute<Boolean>(
+            APIs.NOTIFICATION_API,
+            attributes = attributes,
+            method = { delete("notifications/deleteCollection") }
+        )
+    }
+
     suspend fun saveToken(userId: String, token: String, languageCode: String): Boolean {
         return client.tryToExecute<Boolean>(
             APIs.NOTIFICATION_API,
@@ -94,6 +102,5 @@ class NotificationService(
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
             method = { get("notifications/history-24hours/$userId") }
         )
-
     }
 }

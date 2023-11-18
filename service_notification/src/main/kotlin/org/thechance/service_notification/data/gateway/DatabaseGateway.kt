@@ -25,6 +25,16 @@ class DatabaseGateway(
     private val userCollection by lazy { databaseContainer.userCollection }
     private val historyCollection by lazy { databaseContainer.historyCollection }
 
+    override suspend fun deleteAllNotification(): Boolean {
+        return try {
+            userCollection.deleteMany()
+            historyCollection.deleteMany()
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
     override suspend fun getUserTokens(userId: String): List<String> {
         val userTokens = userCollection.findOneById(ObjectId(userId))?.deviceTokens
         return userTokens ?: throw NotFoundException(TOKENS_NOT_FOUND)
