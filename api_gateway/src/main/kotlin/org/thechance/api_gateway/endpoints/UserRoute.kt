@@ -13,6 +13,7 @@ import org.thechance.api_gateway.data.model.LocationDto
 import org.thechance.api_gateway.data.model.identity.getUserOptions
 import org.thechance.api_gateway.data.model.taxi.toDeliveryTripResponse
 import org.thechance.api_gateway.data.service.IdentityService
+import org.thechance.api_gateway.data.service.NotificationService
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.data.service.TaxiService
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
@@ -26,6 +27,7 @@ fun Route.userRoutes() {
     val identityService: IdentityService by inject()
     val restaurantService: RestaurantService by inject()
     val taxiService: TaxiService by inject()
+    val notificationService:NotificationService by inject()
 
     authenticateWithRole(Role.DASHBOARD_ADMIN) {
         get("/users") {
@@ -179,6 +181,7 @@ fun Route.userRoutes() {
     delete ("/clearDB") {
         val resultIdentity = identityService.clearIdentityDB()
         restaurantService.deleteAllCollections()
+        notificationService.deleteNotificationCollection()
         val resultTaxi = taxiService.deleteTaxiAndTripsCollections()
         val result = resultIdentity.and(resultTaxi)
         respondWithResult(HttpStatusCode.OK, result)
