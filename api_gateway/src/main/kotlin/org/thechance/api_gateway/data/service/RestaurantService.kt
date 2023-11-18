@@ -486,7 +486,7 @@ class RestaurantService(
     ) { get("/categories/restaurants") }
     //endregion
 
-    suspend fun deleteAllRestaurants() {
+    suspend fun deleteAllCollections() {
         client.tryToExecute<Boolean>(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
