@@ -1,17 +1,21 @@
 package presentation.meals
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -20,16 +24,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpChip
+import com.beepbeep.designSystem.ui.composable.modifier.shimmerEffect
 import com.beepbeep.designSystem.ui.theme.Theme.colors
 import com.beepbeep.designSystem.ui.theme.Theme.dimens
 import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
 import presentation.composable.MealCard
-import presentation.composable.ShimmerItemList
 import presentation.mealManagement.MealScreen
 import presentation.mealManagement.ScreenMode
 import resources.Resources.strings
@@ -45,16 +50,18 @@ class MealsScreen(private val restaurantId: String) :
     override fun onEffect(effect: MealsScreenUIEffect, navigator: Navigator) {
         when (effect) {
             is MealsScreenUIEffect.Back -> navigator.pop()
-            is MealsScreenUIEffect.NavigateToMealDetails ->
-                navigator.push(MealScreen(ScreenMode.EDIT, effect.mealId, restaurantId = restaurantId))
+            is MealsScreenUIEffect.NavigateToMealDetails -> navigator.push(
+                MealScreen(
+                    ScreenMode.EDIT, effect.mealId, restaurantId = restaurantId
+                )
+            )
+
             is MealsScreenUIEffect.NavigateToAddMeal -> navigator.push(
                 MealScreen(ScreenMode.CREATION, restaurantId = effect.restaurantId)
             )
         }
     }
 
-
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun onRender(state: MealsScreenUIState, listener: MealScreenInteractionListener) {
         Scaffold(
@@ -79,39 +86,91 @@ class MealsScreen(private val restaurantId: String) :
                 }
             },
             floatingActionButtonPosition = FabPosition.End,
+        ) { paddingValue ->
+            AnimatedContent(state.isLoading) {
+                if (state.isLoading) {
+                    LoadingMeals(paddingValue)
+                } else {
+                    MealsContent(state, listener, paddingValue)
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun LoadingMeals(paddingValue: PaddingValues) {
+        Column(
+            modifier = Modifier.padding(paddingValue).fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Column(
-                modifier = Modifier.padding(it).fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
+            LazyRow(
+                modifier = Modifier.padding(top = 16.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                LazyRow(
-                    contentPadding = PaddingValues(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                ) {
-                    items(state.cuisines.size) { index ->
-                        BpChip(
-                            label = state.cuisines[index].name,
-                            isSelected = state.cuisines[index] == state.selectedCuisine,
-                            onClick = { listener.onClickCuisineType(state.cuisines[index], index) }
+                items(9) {
+                    Box(
+                        modifier = Modifier.width(100.dp).height(36.dp)
+                            .padding(start = 4.dp)
+                            .shimmerEffect()
+                    )
+                }
+            }
+            LazyVerticalGrid(
+                contentPadding = PaddingValues(dimens.space16),
+                columns = GridCells.Adaptive(150.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                items(13) {
+                    Column {
+                        Box(
+                            modifier = Modifier.fillMaxWidth().padding(dimens.space4)
+                                .clip(shape = shapes.medium).height(104.dp).shimmerEffect()
+                        )
+                        Box(
+                            modifier = Modifier.fillMaxWidth().height(20.dp)
+                                .padding(top = 8.dp, start = 8.dp, end = 16.dp).shimmerEffect()
+                        )
+                        Box(
+                            modifier = Modifier.width(90.dp).height(20.dp)
+                                .padding(top = 8.dp, start = 8.dp)
+                                .shimmerEffect()
                         )
                     }
                 }
-                LazyVerticalGrid(
-                    contentPadding = PaddingValues(dimens.space16),
-                    columns = GridCells.Adaptive(150.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    items(state.meals) { meal ->
-                        ShimmerItemList(
-                            isLoading = state.isLoading,
-                            cardHeight = 100.dp,
-                            cardWidth = 150.dp,
-                            contentAfterLoading = {
-                                MealCard(onClick = { listener.onClickMeal(meal.id) }, meal = meal)
-                            }
-                        )
-                    }
+            }
+        }
+    }
+
+    @Composable
+    fun MealsContent(
+        state: MealsScreenUIState,
+        listener: MealScreenInteractionListener,
+        paddingValue: PaddingValues
+    ) {
+        Column(
+            modifier = Modifier.padding(paddingValue).fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            LazyRow(
+                contentPadding = PaddingValues(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                items(state.cuisines.size) { index ->
+                    BpChip(label = state.cuisines[index].name,
+                        isSelected = state.cuisines[index] == state.selectedCuisine,
+                        onClick = { listener.onClickCuisineType(state.cuisines[index], index) })
+                }
+            }
+            LazyVerticalGrid(
+                contentPadding = PaddingValues(dimens.space16),
+                columns = GridCells.Adaptive(150.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                items(state.meals, key = { it.id }) { meal ->
+                    MealCard(onClick = { listener.onClickMeal(meal.id) }, meal = meal)
                 }
             }
         }

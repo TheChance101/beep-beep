@@ -50,7 +50,6 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
     }
 
     override suspend fun getMealById(mealId: String): Meal {
-        println("remote : $mealId")
         return tryToExecute<BaseResponse<MealDto>> {
             get("meal/$mealId")
         }.value?.toEntity() ?: throw Exception("meal not found")
