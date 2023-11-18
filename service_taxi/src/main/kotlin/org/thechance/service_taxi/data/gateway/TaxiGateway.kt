@@ -1,8 +1,10 @@
 package org.thechance.service_taxi.data.gateway
 
+import com.mongodb.client.model.Filters
 import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.ReturnDocument
 import com.mongodb.client.model.Updates
+import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -26,6 +28,8 @@ import org.thechance.service_taxi.domain.exceptions.ResourceNotFoundException
 import org.thechance.service_taxi.domain.gateway.ITaxiGateway
 
 class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
+
+
     // region taxi curd
     override suspend fun addTaxi(taxi: Taxi): Taxi {
         val taxiCollection = taxi.toCollection()
@@ -346,6 +350,20 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
             filter = TaxiCollection::driverId eq ObjectId(driverId),
             update = set(TaxiCollection::isDeleted setTo true),
         ).isSuccessfullyUpdated()
+    }
+
+    override suspend fun deleteAllCollections(): Boolean = runBlocking {
+        val taxiCollection = container.taxiCollection
+        val tripCollection = container.tripCollection
+
+        try {
+            taxiCollection.deleteMany(Filters.empty())
+            tripCollection.deleteMany(Filters.empty())
+            return@runBlocking true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return@runBlocking false
+        }
     }
     //endregion
 }
