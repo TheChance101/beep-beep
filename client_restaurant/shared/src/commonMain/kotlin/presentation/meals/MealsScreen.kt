@@ -31,12 +31,16 @@ import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.composable.modifier.shimmerEffect
 import com.beepbeep.designSystem.ui.theme.Theme.colors
 import com.beepbeep.designSystem.ui.theme.Theme.dimens
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
+import presentation.composable.BpEmptyScreen
 import presentation.composable.MealCard
 import presentation.mealManagement.MealScreen
 import presentation.mealManagement.ScreenMode
+import resources.Resources
 import resources.Resources.strings
 
 class MealsScreen(private val restaurantId: String) :
@@ -62,6 +66,7 @@ class MealsScreen(private val restaurantId: String) :
         }
     }
 
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun onRender(state: MealsScreenUIState, listener: MealScreenInteractionListener) {
         Scaffold(
@@ -87,6 +92,11 @@ class MealsScreen(private val restaurantId: String) :
             },
             floatingActionButtonPosition = FabPosition.End,
         ) { paddingValue ->
+            BpEmptyScreen(
+                painter = painterResource(Resources.images.emptyScreen),
+                text = strings.noMeals,
+                isVisible = (state.meals.isEmpty()&& !state.isLoading)
+            )
             AnimatedContent(state.isLoading) {
                 if (state.isLoading) {
                     LoadingMeals(paddingValue)
