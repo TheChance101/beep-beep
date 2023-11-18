@@ -485,4 +485,12 @@ class RestaurantService(
         setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
     ) { get("/categories/restaurants") }
     //endregion
+
+    suspend fun deleteAllCollections() {
+        client.tryToExecute<Boolean>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            method = { delete("/restaurant/allCollections") }
+        )
+    }
 }
