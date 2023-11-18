@@ -41,4 +41,5 @@ interface ITaxiGateway {
     suspend fun getNumberOfTripsByClientId(id: String): Long
     suspend fun deleteTaxiByDriverId(driverId: String): Boolean
     //endregion
+    suspend fun deleteAllCollections():Boolean
 }

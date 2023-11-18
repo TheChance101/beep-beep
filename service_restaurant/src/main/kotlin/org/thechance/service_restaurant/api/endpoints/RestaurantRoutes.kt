@@ -130,5 +130,10 @@ fun Route.restaurantRoutes() {
             val isRestaurantExisted = discoverRestaurant.isRestaurantExisted(restaurantId)
             call.respond(HttpStatusCode.OK, isRestaurantExisted)
         }
+
+        delete("/allCollections") {
+            controlRestaurant.deleteAllRestaurants()
+            call.respond(HttpStatusCode.OK, true)
+        }
     }
 }

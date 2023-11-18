@@ -266,4 +266,11 @@ class IdentityService(
         method = { get("user/isExisted/$userId") }
     )
 
+    suspend fun clearIdentityDB(): Boolean {
+        return client.tryToExecute<Boolean>(
+            APIs.IDENTITY_API, attributes = attributes,
+        ) {
+            delete("/collection")
+        }
+    }
 }
