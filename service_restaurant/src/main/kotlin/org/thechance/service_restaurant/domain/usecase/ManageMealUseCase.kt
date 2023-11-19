@@ -35,7 +35,7 @@ class ManageMealUseCase(
         val cuisineIds = meal.cuisines.map { it.id }
         if (!optionsGateway.areCuisinesExist(cuisineIds)) throw MultiErrorException(listOf(NOT_FOUND))
         restaurantGateway.addCuisineToRestaurant(meal.restaurantId, cuisineIds)
-        return restaurantGateway.addMeal(meal.copy(currency = restaurant.currency))
+        return restaurantGateway.addMeal(meal.copy(currency = restaurant.currency, restaurantName = restaurant.name))
     }
 
     override suspend fun updateMealToRestaurant(meal: MealDetails): Meal {
