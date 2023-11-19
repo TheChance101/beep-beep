@@ -61,6 +61,7 @@ class MealScreen(
             println("meal state : ${state.meal}")
             MealContent(
                 state.meal,
+                state.isLoading,
                 listener,
                 screenTitle = screenTitle,
                 buttonTitle = buttonTitle,
