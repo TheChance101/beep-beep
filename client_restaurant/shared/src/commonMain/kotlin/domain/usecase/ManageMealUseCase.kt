@@ -1,6 +1,5 @@
 package domain.usecase
 
-import data.remote.model.MealModificationDto
 import domain.entity.Meal
 import domain.entity.MealModification
 import domain.gateway.remote.ICuisineRemoteGateway
