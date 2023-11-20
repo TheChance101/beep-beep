@@ -45,15 +45,16 @@ fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
 
         val language = extractLocalizationHeader()
         val appId = extractApplicationIdHeader()
-        val token = async { identityService.loginUser(userName, password, tokenConfiguration, language, appId) }.await()
+//        val token = async { identityService.loginUser(userName, password, tokenConfiguration, language, appId) }.await()
 
+        val token = identityService.loginUser(userName, password, tokenConfiguration, language, appId)
         respondWithResult(HttpStatusCode.OK, token)
 
-        if (deviceToken.isNotEmpty()) {
-            val jwt: DecodedJWT = JWT.decode(token.accessToken)
-            val userId = jwt.getClaim(Claim.USER_ID).asString()
-            notificationService.saveToken(userId, deviceToken, language)
-        }
+//        if (deviceToken.isNotEmpty()) {
+//            val jwt: DecodedJWT = JWT.decode(token.accessToken)
+//            val userId = jwt.getClaim(Claim.USER_ID).asString()
+//            notificationService.saveToken(userId, deviceToken, language)
+//        }
     }
 
     authenticateWithRole(Role.END_USER) {
