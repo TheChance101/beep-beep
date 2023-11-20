@@ -30,7 +30,7 @@ class FakeUserGateway : IUserGateway {
         TODO("Not yet implemented")
     }
 
-    override suspend fun refreshAccessToken(refreshToken: String): Pair<String, String> {
+    override suspend fun refreshAccessToken(): Pair<String, String> {
         TODO("Not yet implemented")
     }
 

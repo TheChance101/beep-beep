@@ -205,4 +205,12 @@ class TaxiService(
             method = { get("/trip/actives/$userId") }
         )
     }
+
+    suspend fun deleteTaxiAndTripsCollections(): Boolean {
+        return client.tryToExecute<Boolean>(
+            api = APIs.TAXI_API,
+            attributes = attributes,
+            method = { delete("/taxi-trips") }
+        )
+    }
 }

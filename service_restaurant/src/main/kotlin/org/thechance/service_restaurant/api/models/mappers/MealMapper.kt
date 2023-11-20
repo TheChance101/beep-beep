@@ -21,6 +21,7 @@ fun MealDetails.toDto() = MealDetailsDto(
 
 fun MealWithCuisineDto.toEntity() = MealDetails(
     id = id ?: "",
+    restaurantName = restaurantName ?: "",
     restaurantId = restaurantId ?: "",
     name = name ?: "",
     description = description ?: "",
@@ -33,6 +34,7 @@ fun MealWithCuisineDto.toEntity() = MealDetails(
 fun Meal.toDto() = MealWithCuisineDto(
     id = id,
     restaurantId = restaurantId,
+    restaurantName = restaurantName,
     name = name,
     description = description,
     price = price,

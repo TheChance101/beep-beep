@@ -20,6 +20,8 @@ import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
 import kotlinx.serialization.json.Json
 
 class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
@@ -55,8 +57,8 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
         }.value?.toEntity() ?: throw Exception("meal not found")
     }
 
-    override suspend fun addMeal(meal: MealModification): Boolean {
-        return tryToExecute<BaseResponse<Boolean>> {
+    override suspend fun addMeal(meal: MealModification): MealModification {
+        return tryToExecute<BaseResponse<MealModificationDto>> {
             post("/meal") {
                 setBody(
                     MultiPartFormDataContent(
@@ -66,16 +68,25 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
                                 "data",
                                 Json.encodeToString(MealModificationDto.serializer(), meal.toDto())
                             )
+                            append("image", meal.image, Headers.build {
+                                append(HttpHeaders.ContentType, "image/png/jpg/jpeg")
+                                append(
+                                    HttpHeaders.ContentDisposition,
+                                    "form-data; name=image; filename=image.png"
+                                )
+                            }
+                            )
                         }
                     )
                 )
             }
-        }.value ?: false
+        }.value?.toEntity() ?: MealModificationDto().toEntity()
     }
 
-    override suspend fun updateMeal(meal: MealModification): Boolean {
-        return tryToExecute<BaseResponse<Boolean>> {
-            println(Json.encodeToString(MealModificationDto.serializer(), meal.toDto()))
+    override suspend fun updateMeal(meal: MealModification): MealModification {
+        return tryToExecute<BaseResponse<MealModificationDto>> {
+            println(Json.encodeToString(MealModificationDto.serializer(), meal.toDtoUpdate()))
+            println("imageeee ${meal.image.size}")
             put("/meal") {
                 setBody(
                     MultiPartFormDataContent(
@@ -88,10 +99,21 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
                                     meal.toDtoUpdate()
                                 )
                             )
+                            (if (meal.image.isNotEmpty()) {
+                                append(
+                                    "image", meal.image, Headers.build {
+                                        append(HttpHeaders.ContentType, "image/png/jpg/jpeg")
+                                        append(
+                                            HttpHeaders.ContentDisposition,
+                                            "form-data; name=image; filename=image.png"
+                                        )
+                                    }
+                                )
+                            })
                         }
                     )
                 )
             }
-        }.value == true
+        }.value?.toEntity() ?: MealModificationDto().toEntity()
     }
 }
