@@ -84,9 +84,9 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
         }.value ?: false
     }
 
-    override suspend fun updateMeal(meal: MealModification): Boolean {
-        return tryToExecute<BaseResponse<Boolean>> {
-            println(Json.encodeToString(MealModificationDto.serializer(), meal.toDto()))
+    override suspend fun updateMeal(meal: MealModification): MealModification {
+        return tryToExecute<BaseResponse<MealModificationDto>> {
+            println(Json.encodeToString(MealModificationDto.serializer(), meal.toDtoUpdate()))
             put("/meal") {
                 setBody(
                     MultiPartFormDataContent(
@@ -111,6 +111,6 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
                     )
                 )
             }
-        }.value == true
+        }.value?.toEntity() ?: MealModificationDto().toEntity()
     }
 }

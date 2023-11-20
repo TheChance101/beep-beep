@@ -18,22 +18,37 @@ fun MealDto.toEntity(): Meal {
         cuisines = emptyList(),
     )
 }
-fun MealModification.toDtoUpdate(): MealModificationDto{
+
+fun MealModification.toDtoUpdate(): MealModificationDto {
     return MealModificationDto(
         id = id,
         restaurantId = restaurantId,
-        name = name ,
+        name = name,
         description = description,
-        price = price ,
+        price = price,
         cuisines = cuisines
     )
-}fun MealModification.toDto():MealModificationDto{
+}
+
+fun MealModification.toDto(): MealModificationDto {
     return MealModificationDto(
         restaurantId = restaurantId,
         cuisines = cuisines,
         description = description,
         name = name,
         price = price
+    )
+}
+
+fun MealModificationDto.toEntity(): MealModification {
+    return MealModification(
+        id = id ?: "",
+        restaurantId = restaurantId ?: "",
+        name = name ?: "",
+        description = description ?: "",
+        price = price ?: 0.0,
+        cuisines = emptyList(),
+        image = byteArrayOf()
     )
 }
 

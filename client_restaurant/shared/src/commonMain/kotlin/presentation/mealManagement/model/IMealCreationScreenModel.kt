@@ -2,6 +2,7 @@ package presentation.mealManagement.model
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Cuisine
+import domain.entity.MealModification
 import domain.usecase.IManageCuisineUseCase
 import domain.usecase.IManageMealUseCase
 import domain.usecase.IValidateManageMealUseCase
@@ -43,7 +44,7 @@ private val restaurantId : String
         return false
     }
 
-    override suspend fun updateMeal(): Boolean {
+    override suspend fun updateMeal(): MealModification {
         return manageMeal.updateMeal(state.value.meal.toMealUpdate(mealId = ""))
     }
 
