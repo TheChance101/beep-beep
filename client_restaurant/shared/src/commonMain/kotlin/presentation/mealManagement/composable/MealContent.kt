@@ -45,6 +45,7 @@ import util.rememberBitmapFromBytes
 @Composable
 fun MealContent(
     meal: MealDetails,
+    isLoading: Boolean,
     listener: MealScreenInteractionListener,
     buttonTitle: String,
     imagePicker: ImagePicker,
@@ -127,14 +128,16 @@ fun MealContent(
                 BpButton(
                     onClick = listener::onAddMeal,
                     title = buttonTitle,
-                    enabled = meal.isValid(),
+                    isLoading = isLoading,
+                    enabled = meal.isValid() && !isLoading,
                     modifier = Modifier.fillMaxWidth(),
                 )
-            }else{
+            } else {
                 BpButton(
                     onClick = listener::onUpdateMeal,
                     title = buttonTitle,
-                    enabled = meal.isValid(),
+                    isLoading = isLoading,
+                    enabled = meal.isValid() && !isLoading,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }

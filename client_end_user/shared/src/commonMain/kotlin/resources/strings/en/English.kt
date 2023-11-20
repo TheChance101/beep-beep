@@ -117,4 +117,5 @@ data class English(
     override val setDestination: String = "Set destination ",
     override val searchDestination: String = "Search for Destination",
     override val trackYourRide: String = "Follow your ride",
+    override val restaurants: String ="Restaurants"
     ) : IStringResources

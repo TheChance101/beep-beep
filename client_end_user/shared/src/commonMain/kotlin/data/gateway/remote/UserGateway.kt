@@ -50,9 +50,7 @@ class UserGateway(
     }
 
     override suspend fun loginUser(
-        username: String,
-        password: String,
-        deviceToken: String,
+        username: String, password: String, deviceToken: String,
     ): Session {
         return tryToExecute<ServerResponse<SessionDto>> {
             submitForm(
@@ -73,7 +71,7 @@ class UserGateway(
         return firebaseService.getDeviceToken()
     }
 
-    override suspend fun refreshAccessToken(refreshToken: String): Pair<String, String> {
+    override suspend fun refreshAccessToken(): Pair<String, String> {
         val result = tryToExecute<ServerResponse<SessionDto>> {
             submitForm {
                 url("/refresh-access-token")

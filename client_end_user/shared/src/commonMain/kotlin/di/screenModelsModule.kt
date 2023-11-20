@@ -23,6 +23,7 @@ import presentation.meals.MealsScreenModel
 import presentation.orderFoodTracking.OrderFoodTrackingScreenModel
 import presentation.taxi.TaxiOrderScreenModel
 import presentation.taxi.destinationSearch.SearchDestinationScreenModel
+import presentation.restaurants.RestaurantsScreenModel
 
 val screenModelsModule = module {
     factoryOf(::LoginScreenModel)
@@ -53,6 +54,12 @@ val screenModelsModule = module {
             manageAuthentication = get(),
             manageCart = get(),
             manageOffers = get()
+        )
+    }
+    factory { (offerId: String?) ->
+        RestaurantsScreenModel(
+            offerId = offerId,
+            manageRestaurant = get()
         )
     }
 }

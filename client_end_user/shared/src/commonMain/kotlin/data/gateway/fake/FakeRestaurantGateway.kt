@@ -13,6 +13,10 @@ import domain.entity.Taxi
 import domain.gateway.IRestaurantGateway
 
 class FakeRestaurantGateway : IRestaurantGateway {
+    override suspend fun getRestaurants(page: Int, limit: Int): PaginationItems<Restaurant> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getCuisines(): List<Cuisine> {
         TODO("Not yet implemented")
     }

@@ -25,6 +25,21 @@ import kotlinx.datetime.LocalDate
 import kotlin.random.Random
 
 class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRestaurantGateway {
+    override suspend fun getRestaurants(page: Int, limit: Int): PaginationItems<Restaurant> {
+        val result = tryToExecute<ServerResponse<PaginationResponse<RestaurantDto>>> {
+            get("/restaurants") {
+
+                parameter("page", page)
+                parameter("limit", limit)
+            }
+        }.value
+        return paginateData(
+            result = result?.items?.map { it.toEntity() }
+                ?: throw GeneralException.NotFoundException,
+            page = result.page,
+            total = result.total)
+    }
+
     override suspend fun getCuisines(): List<Cuisine> {
         return tryToExecute<ServerResponse<List<CuisineDto>>> {
             get("/cuisines")
@@ -63,16 +78,19 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRes
         return Pair(result.restaurants.toEntity(), result.meals.toEntity())
     }
 
-    override suspend fun getMealsInCuisine(cuisineId: String, page: Int, limit: Int): PaginationItems<Meal> {
-         val result = tryToExecute<ServerResponse<PaginationResponse<MealDto>>> {
+    override suspend fun getMealsInCuisine(
+        cuisineId: String, page: Int, limit: Int,
+    ): PaginationItems<Meal> {
+        val result = tryToExecute<ServerResponse<PaginationResponse<MealDto>>> {
             get("/cuisine/$cuisineId/meals") {
                 parameter("page", page)
                 parameter("limit", limit)
             }
         }.value
         return paginateData(
-            result = result?.items?.map { it.toEntity() } ?: throw GeneralException.NotFoundException,
-            page= result.page,
+            result = result?.items?.map { it.toEntity() }
+                ?: throw GeneralException.NotFoundException,
+            page = result.page,
             total = result.total)
     }
 }

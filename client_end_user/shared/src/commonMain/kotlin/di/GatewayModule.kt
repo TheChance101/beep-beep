@@ -21,6 +21,7 @@ import domain.gateway.local.ILocationGateway
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import data.gateway.remote.pagesource.RestaurantsPagingSource
 
 val gatewayModule = module {
     singleOf(::FakeChatGateway) { bind<IChatGateway>() } // fake
@@ -34,5 +35,6 @@ val gatewayModule = module {
     singleOf(::LocalConfigurationGateway) { bind<ILocalConfigurationGateway>() }
     singleOf(::LocationGateway) { bind<ILocationGateway>() }
     singleOf(::MealsPagingSource)
+    singleOf(::RestaurantsPagingSource)
     singleOf(::NotificationPagingSource)
 }
