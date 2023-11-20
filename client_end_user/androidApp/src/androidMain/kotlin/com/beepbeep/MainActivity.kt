@@ -7,8 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
-import com.beepbeep.notification.fcm.FCMNotificationImp
-import com.beepbeep.notification.fcm.IFCMNotification
 import com.google.firebase.Firebase
 import com.google.firebase.initialize
 import dev.icerock.moko.geo.LocationTracker
