@@ -78,7 +78,6 @@ private val restaurantId:String) : IMealBehavior() {
         return map {
             if (it.id in cuisineIds) {
                val x= it.copy(isSelected = true)
-                println("TEST $x")
                 x
             } else {
                 it

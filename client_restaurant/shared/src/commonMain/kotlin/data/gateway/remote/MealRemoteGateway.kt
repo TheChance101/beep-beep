@@ -52,7 +52,6 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
     }
 
     override suspend fun getMealById(mealId: String): Meal {
-        println("remote : $mealId")
         return tryToExecute<BaseResponse<MealDto>> {
             get("meal/$mealId")
         }.value?.toEntity() ?: throw Exception("meal not found")
@@ -87,6 +86,7 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
     override suspend fun updateMeal(meal: MealModification): MealModification {
         return tryToExecute<BaseResponse<MealModificationDto>> {
             println(Json.encodeToString(MealModificationDto.serializer(), meal.toDtoUpdate()))
+            println("imageeee ${meal.image.size}")
             put("/meal") {
                 setBody(
                     MultiPartFormDataContent(
@@ -99,14 +99,17 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
                                     meal.toDtoUpdate()
                                 )
                             )
-                            append("image", meal.image, Headers.build {
-                                append(HttpHeaders.ContentType, "image/png/jpg/jpeg")
+                            (if (meal.image.isNotEmpty()) {
                                 append(
-                                    HttpHeaders.ContentDisposition,
-                                    "form-data; name=image; filename=image.png"
+                                    "image", meal.image, Headers.build {
+                                        append(HttpHeaders.ContentType, "image/png/jpg/jpeg")
+                                        append(
+                                            HttpHeaders.ContentDisposition,
+                                            "form-data; name=image; filename=image.png"
+                                        )
+                                    }
                                 )
-                            }
-                            )
+                            })
                         }
                     )
                 )
