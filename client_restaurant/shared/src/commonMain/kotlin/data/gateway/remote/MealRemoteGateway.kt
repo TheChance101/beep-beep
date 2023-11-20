@@ -20,6 +20,8 @@ import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
 import kotlinx.serialization.json.Json
 
 class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
@@ -67,6 +69,14 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
                                 "data",
                                 Json.encodeToString(MealModificationDto.serializer(), meal.toDto())
                             )
+                            append("image", meal.image, Headers.build {
+                                append(HttpHeaders.ContentType, "image/png/jpg/jpeg")
+                                append(
+                                    HttpHeaders.ContentDisposition,
+                                    "form-data; name=image; filename=image.png"
+                                )
+                            }
+                            )
                         }
                     )
                 )
@@ -88,6 +98,14 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
                                     MealModificationDto.serializer(),
                                     meal.toDtoUpdate()
                                 )
+                            )
+                            append("image", meal.image, Headers.build {
+                                append(HttpHeaders.ContentType, "image/png/jpg/jpeg")
+                                append(
+                                    HttpHeaders.ContentDisposition,
+                                    "form-data; name=image; filename=image.png"
+                                )
+                            }
                             )
                         }
                     )

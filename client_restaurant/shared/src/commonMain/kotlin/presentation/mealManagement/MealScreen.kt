@@ -58,7 +58,7 @@ class MealScreen(
             onBackGroundClicked = { listener.onBackgroundClicked() },
             sheetState = sheetState,
         ) {
-            println("meal state : ${state.meal}")
+            println("meal imageUrl : ${state.meal.imageUrl}")
             MealContent(
                 state.meal,
                 state.isLoading,
