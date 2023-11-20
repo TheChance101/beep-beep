@@ -31,7 +31,7 @@ private val restaurantId:String) : IMealBehavior() {
         getMeal()
     }
 
-    override suspend fun addMeal(): Boolean {
+    override suspend fun addMeal(): MealModification {
         return manageMeal.addMeal(state.value.meal.toMealAddition(restaurantId))
     }
 

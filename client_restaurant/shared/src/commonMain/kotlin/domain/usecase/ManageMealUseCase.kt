@@ -7,7 +7,7 @@ import domain.gateway.remote.ICuisineRemoteGateway
 import domain.gateway.remote.IMealRemoteGateway
 
 interface IManageMealUseCase {
-    suspend fun addMeal(meal: MealModification): Boolean
+    suspend fun addMeal(meal: MealModification): MealModification
     suspend fun updateMeal(meal: MealModification): MealModification
     suspend fun getMealById(mealId: String): Meal
     suspend fun isValidMeal(meal: Meal): Boolean
@@ -19,7 +19,7 @@ class ManageMealUseCase(
     private val mealRemoteGateway: IMealRemoteGateway,
     private val cuisineRemoteGateway: ICuisineRemoteGateway
 ) : IManageMealUseCase {
-    override suspend fun addMeal(meal: MealModification): Boolean {
+    override suspend fun addMeal(meal: MealModification): MealModification {
         return mealRemoteGateway.addMeal(meal)
     }
 

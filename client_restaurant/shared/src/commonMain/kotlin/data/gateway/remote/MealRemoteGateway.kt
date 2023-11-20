@@ -58,8 +58,8 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
         }.value?.toEntity() ?: throw Exception("meal not found")
     }
 
-    override suspend fun addMeal(meal: MealModification): Boolean {
-        return tryToExecute<BaseResponse<Boolean>> {
+    override suspend fun addMeal(meal: MealModification): MealModification {
+        return tryToExecute<BaseResponse<MealModificationDto>> {
             post("/meal") {
                 setBody(
                     MultiPartFormDataContent(
@@ -81,7 +81,7 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
                     )
                 )
             }
-        }.value ?: false
+        }.value?.toEntity() ?: MealModificationDto().toEntity()
     }
 
     override suspend fun updateMeal(meal: MealModification): MealModification {

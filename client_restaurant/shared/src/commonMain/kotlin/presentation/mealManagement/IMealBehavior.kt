@@ -14,7 +14,7 @@ abstract class IMealBehavior : BaseScreenModel<MealEditorUIState, MealScreenUIEf
         get() = coroutineScope
 
 
-    protected abstract suspend fun addMeal(): Boolean
+    protected abstract suspend fun addMeal(): MealModification
     protected abstract suspend fun updateMeal(): MealModification
 
     override fun onAddMeal() {
@@ -40,7 +40,7 @@ abstract class IMealBehavior : BaseScreenModel<MealEditorUIState, MealScreenUIEf
         updateState { it.copy(isCuisinesShow = true) }
     }
 
-    private fun onMealAddedSuccessfully(result: Boolean) {
+    private fun onMealAddedSuccessfully(result: MealModification) {
         sendNewEffect(MealScreenUIEffect.MealResponseSuccessfully)
     }
 

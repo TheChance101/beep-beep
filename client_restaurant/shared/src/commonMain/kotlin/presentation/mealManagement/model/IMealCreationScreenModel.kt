@@ -16,7 +16,7 @@ import presentation.mealManagement.toMealUpdate
 import presentation.mealManagement.toUIState
 
 class IMealCreationScreenModel(
-private val restaurantId : String
+    private val restaurantId: String
 ) : IMealBehavior() {
 
     override val viewModelScope: CoroutineScope
@@ -30,7 +30,7 @@ private val restaurantId : String
         getCuisines()
     }
 
-    override suspend fun addMeal(): Boolean {
+    override suspend fun addMeal(): MealModification {
         val state = state.value.meal.toMealAddition(restaurantId)
         val validationResult = restaurantMealValidation.isMealInformationValid(
             name = state.name,
@@ -40,8 +40,9 @@ private val restaurantId : String
         )
         if (validationResult) {
             return manageMeal.addMeal(state)
+        } else {
+            throw Exception("Invalid Meal")
         }
-        return false
     }
 
     override suspend fun updateMeal(): MealModification {
