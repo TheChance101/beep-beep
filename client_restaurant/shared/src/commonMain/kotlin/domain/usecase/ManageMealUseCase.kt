@@ -28,9 +28,7 @@ class ManageMealUseCase(
     }
 
     override suspend fun getMealById(mealId: String): Meal {
-        val meal = mealRemoteGateway.getMealById(mealId)
-        val cuisine = cuisineRemoteGateway.getCuisines()
-        return meal.copy(cuisines = cuisine)
+        return mealRemoteGateway.getMealById(mealId)
     }
 
     override suspend fun getAllMeals(restaurantId: String, page: Int, limit: Int): List<Meal> {

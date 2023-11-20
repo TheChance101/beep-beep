@@ -1,7 +1,9 @@
 package data.remote.mapper
 
+import data.remote.model.CuisineDto
 import data.remote.model.MealModificationDto
 import data.remote.model.MealDto
+import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.MealModification
 
@@ -15,7 +17,7 @@ fun MealDto.toEntity(): Meal {
         description = description ?: "",
         price = price ?: 0.0,
         imageUrl = imageUrl ?: "",
-        cuisines = emptyList(),
+        cuisines = cuisines?.toEntity() ?: emptyList(),
     )
 }
 
