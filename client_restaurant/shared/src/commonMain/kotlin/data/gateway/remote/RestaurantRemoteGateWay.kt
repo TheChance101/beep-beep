@@ -44,14 +44,15 @@ class RestaurantRemoteGateWay(client: HttpClient) : BaseRemoteGateway(client),
                                     restaurant.toDto()
                                 )
                             )
-                            append("image", restaurant.image, Headers.build {
-                                append(HttpHeaders.ContentType, "image/png/jpg/jpeg")
-                                append(
-                                    HttpHeaders.ContentDisposition,
-                                    "form-data; name=image; filename=image.png"
-                                )
+                            if (restaurant.image.isNotEmpty()) {
+                                append("image", restaurant.image, Headers.build {
+                                    append(HttpHeaders.ContentType, "image/png/jpg/jpeg")
+                                    append(
+                                        HttpHeaders.ContentDisposition,
+                                        "form-data; name=image; filename=image.png"
+                                    )
+                                })
                             }
-                            )
                         }
                     )
                 )
