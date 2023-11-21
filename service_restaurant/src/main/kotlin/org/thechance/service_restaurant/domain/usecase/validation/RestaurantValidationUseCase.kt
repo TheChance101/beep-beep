@@ -46,6 +46,9 @@ class RestaurantValidationUseCase(
         if (!basicValidation.isValidTime(restaurant.closingTime) || !basicValidation.isValidTime(restaurant.openingTime)) {
             validationErrors.add(INVALID_TIME)
         }
+        if (restaurant.address.isNotEmpty() && !basicValidation.isValidAddress(restaurant.address)) {
+            validationErrors.add(INVALID_ADDRESS)
+        }
         if (validationErrors.isNotEmpty()) {
             throw MultiErrorException(validationErrors)
         }
@@ -67,6 +70,7 @@ class RestaurantValidationUseCase(
             restaurant.priceLevel.isNullOrEmpty() &&
             restaurant.rate == null &&
             restaurant.phone.isEmpty() &&
+            restaurant.address.isEmpty() &&
             restaurant.closingTime.isEmpty() &&
             restaurant.openingTime.isEmpty() &&
             restaurant.location.latitude == Validation.NULL_DOUBLE &&
@@ -101,7 +105,9 @@ class RestaurantValidationUseCase(
             if (restaurant.openingTime.isNotEmpty() && !basicValidation.isValidTime(restaurant.openingTime)) {
                 validationErrors.add(INVALID_TIME)
             }
-
+            if (restaurant.address.isNotEmpty() && !basicValidation.isValidAddress(restaurant.address)) {
+                validationErrors.add(INVALID_ADDRESS)
+            }
             if (restaurant.location.longitude != Validation.NULL_DOUBLE && !basicValidation.isValidLongitude(
                     restaurant.location.longitude
                 )
@@ -136,6 +142,7 @@ class RestaurantValidationUseCase(
             restaurant.priceLevel.isNullOrEmpty() &&
             restaurant.rate == null &&
             restaurant.phone.isEmpty() &&
+            restaurant.address.isEmpty() &&
             restaurant.address.isEmpty() &&
             restaurant.closingTime.isEmpty() &&
             restaurant.openingTime.isEmpty()
