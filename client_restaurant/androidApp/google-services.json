@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "982548147513",
+    "project_id": "beepbeep-d7de0",
+    "storage_bucket": "beepbeep-d7de0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:982548147513:android:afca2e92ebb6b8fc928ce8",
+        "android_client_info": {
+          "package_name": "org.thechance.beepbeep.enduser"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqKuJqhf-R-5oT5oawaeto0H3oygpszgw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:982548147513:android:1d1f26954dd3d0cb928ce8",
+        "android_client_info": {
+          "package_name": "org.thechance.beepbeep.restaurant"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqKuJqhf-R-5oT5oawaeto0H3oygpszgw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
