@@ -2,7 +2,6 @@ package domain.usecase
 
 import domain.gateway.local.ILocalConfigurationGateway
 import domain.gateway.remote.IIdentityRemoteGateway
-import domain.gateway.remote.IRestaurantRemoteGateway
 import presentation.base.InvalidPasswordException
 import presentation.base.InvalidUserNameException
 import presentation.base.PermissionDenied
@@ -39,9 +38,10 @@ class LoginUserUseCase(
         isKeepMeLoggedInChecked: Boolean,
     ) {
         if (validateLoginFields(userName, password)) {
-            val userTokens = remoteGateway.loginUser(userName, password)
-            localGateWay.saveAccessToken(userTokens.accessToken)
-            localGateWay.saveRefreshToken(userTokens.refreshToken)
+            val deviceToken = remoteGateway.getDeviceToken()
+            val session = remoteGateway.loginUser(userName, password,deviceToken)
+            localGateWay.saveAccessToken(session.accessToken)
+            localGateWay.saveRefreshToken(session.refreshToken)
             localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
         }
     }
