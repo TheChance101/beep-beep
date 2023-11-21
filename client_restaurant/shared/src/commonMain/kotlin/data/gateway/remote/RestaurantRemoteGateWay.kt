@@ -31,7 +31,7 @@ class RestaurantRemoteGateWay(client: HttpClient) : BaseRemoteGateway(client),
     }
 
     override suspend fun updateRestaurantInfo(restaurant: Restaurant): Boolean {
-        return tryToExecute<BaseResponse<Boolean>> {
+        val response = tryToExecute<BaseResponse<RestaurantDto>> {
             put("/restaurant/details") {
                 setBody(
                     MultiPartFormDataContent(
@@ -57,7 +57,8 @@ class RestaurantRemoteGateWay(client: HttpClient) : BaseRemoteGateway(client),
                     )
                 )
             }
-        }.value ?: false
+        }
+        return response.value != null
     }
 
     override suspend fun getRestaurantInfo(restaurantId: String): Restaurant {
