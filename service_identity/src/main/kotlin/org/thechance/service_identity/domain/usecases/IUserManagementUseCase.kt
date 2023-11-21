@@ -20,6 +20,9 @@ interface IUserManagementUseCase {
 
     suspend fun isUserExisted(userId: String): Boolean
 
+    //TODO DELETE THIS LETTER
+    suspend fun deleteCollections(): Boolean
+
 }
 
 @Single
@@ -45,6 +48,10 @@ class UserManagementUseCase(private val dataBaseGateway: IDataBaseGateway) : IUs
 
     override suspend fun isUserExisted(userId: String): Boolean {
         return dataBaseGateway.isUserExisted(userId)
+    }
+
+    override suspend fun deleteCollections(): Boolean {
+        return dataBaseGateway.deleteCollections()
     }
 
     private fun isValidPermission(permission: List<Int>) {

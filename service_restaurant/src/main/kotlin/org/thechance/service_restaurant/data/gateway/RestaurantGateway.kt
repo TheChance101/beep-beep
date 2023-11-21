@@ -367,4 +367,16 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
         )
     }
     //endregion
+
+    //collections region
+    override suspend fun deleteAll() {
+        container.restaurantCollection.deleteMany()
+        container.mealCollection.deleteMany()
+        container.categoryCollection.deleteMany()
+        container.cuisineCollection.deleteMany()
+        container.restaurantPermissionRequestCollection.deleteMany()
+        container.cartCollection.deleteMany()
+        container.orderCollection.deleteMany()
+    }
+    //endregion
 }

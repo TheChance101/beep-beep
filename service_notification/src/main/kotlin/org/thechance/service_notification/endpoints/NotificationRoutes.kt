@@ -43,6 +43,11 @@ fun Route.notificationRoutes() {
     }
 
     route("notifications") {
+
+        delete("/deleteCollection") {
+            val result = notificationManagement.deleteCollection()
+            call.respond(HttpStatusCode.OK, result)
+        }
         post("/send/user") {
             val receivedData = call.receive<NotificationDto>()
             val result = notificationManagement.sendNotificationToUser(receivedData.toEntity())
