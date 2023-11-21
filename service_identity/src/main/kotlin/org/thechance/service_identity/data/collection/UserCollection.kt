@@ -22,7 +22,6 @@ data class UserCollection(
     val hashedPassword: String? = null,
     val salt: String? = null,
     @Contextual
-    @BsonId
     val walletId: ObjectId? = null,
     val addressIds: MutableList<@Contextual ObjectId> = mutableListOf(),
     val favorite: MutableList<@Contextual ObjectId> = mutableListOf(),

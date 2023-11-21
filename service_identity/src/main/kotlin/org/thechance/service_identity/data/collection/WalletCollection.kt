@@ -14,7 +14,6 @@ data class WalletCollection(
     @Contextual
     val id: ObjectId = ObjectId(),
     @Contextual
-    @BsonId
     val userId: ObjectId,
     val walletBalance: Double = 0.0,
     val currency: String = "",
