@@ -15,6 +15,7 @@ data class AddressCollection(
     @Contextual
     val id: ObjectId = ObjectId(),
     @Contextual
+    @BsonId
     val userId: ObjectId,
     val location: LocationCollection? = null,
     val address: String? = null,
