@@ -3,6 +3,7 @@ package presentation.mealManagement.model
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Cuisine
 import domain.entity.Meal
+import domain.entity.MealModification
 import domain.usecase.IManageCuisineUseCase
 import domain.usecase.IManageMealUseCase
 import domain.usecase.IValidateManageMealUseCase
@@ -30,11 +31,11 @@ private val restaurantId:String) : IMealBehavior() {
         getMeal()
     }
 
-    override suspend fun addMeal(): Boolean {
+    override suspend fun addMeal(): MealModification {
         return manageMeal.addMeal(state.value.meal.toMealAddition(restaurantId))
     }
 
-    override suspend fun updateMeal(): Boolean {
+    override suspend fun updateMeal(): MealModification {
         val state = state.value.meal.toMealUpdate(mealId)
         val validationResult = restaurantMealValidation.isMealInformationValid(
             name = state.name,
@@ -44,8 +45,9 @@ private val restaurantId:String) : IMealBehavior() {
         )
         if (validationResult) {
             return manageMeal.updateMeal(state)
+        }else{
+            throw Exception("Invalid Meal")
         }
-        return false
     }
 
 
@@ -76,7 +78,6 @@ private val restaurantId:String) : IMealBehavior() {
         return map {
             if (it.id in cuisineIds) {
                val x= it.copy(isSelected = true)
-                println("TEST $x")
                 x
             } else {
                 it

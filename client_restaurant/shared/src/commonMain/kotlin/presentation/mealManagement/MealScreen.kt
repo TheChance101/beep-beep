@@ -30,9 +30,9 @@ class MealScreen(
 
     @Composable
     override fun Content() {
-        val screenModel = rememberScreenModel { mealScreenModelFactory.create(screenMode, mealId,restaurantId) }
+        val screenModel =
+            rememberScreenModel { mealScreenModelFactory.create(screenMode, mealId, restaurantId) }
         initScreen(screenModel)
-        println("mealId: $mealId")
     }
 
     @Composable
@@ -58,7 +58,6 @@ class MealScreen(
             onBackGroundClicked = { listener.onBackgroundClicked() },
             sheetState = sheetState,
         ) {
-            println("meal state : ${state.meal}")
             MealContent(
                 state.meal,
                 state.isLoading,

@@ -13,6 +13,7 @@ import org.thechance.service_notification.endpoints.NOTIFICATION_NOT_SENT
 import org.thechance.service_notification.endpoints.TOPIC_NOT_EXISTS
 
 interface INotificationManagementUseCase {
+    suspend fun deleteCollection(): Boolean
     suspend fun sendNotificationToUser(notification: Notification): Boolean
 
     suspend fun sendNotificationToTopic(notification: Notification): Boolean
@@ -32,6 +33,9 @@ class NotificationManagementUseCase(
     private val databaseGateway: IDatabaseGateway,
 ) : INotificationManagementUseCase {
 
+    override suspend fun deleteCollection(): Boolean {
+        return databaseGateway.deleteAllNotification()
+    }
     override suspend fun sendNotificationToUser(notification: Notification): Boolean {
         val tokens = databaseGateway.getUserTokens(notification.userId ?: throw NotFoundException(MISSING_PARAMETER))
         return pushNotificationGateway.sendNotification(tokens, notification.title, notification.body).also {

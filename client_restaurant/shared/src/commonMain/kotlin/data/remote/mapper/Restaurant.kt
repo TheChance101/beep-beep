@@ -34,7 +34,6 @@ fun Restaurant.toDto(): UpdateRestaurantDto {
         rate = rate,
         phone = phone,
         openingTime = openingTime,
-        closingTime = closingTime,
-        address = address
+        closingTime = closingTime
     )
 }

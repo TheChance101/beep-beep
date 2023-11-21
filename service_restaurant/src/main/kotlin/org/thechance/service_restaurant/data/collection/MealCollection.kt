@@ -20,6 +20,7 @@ data class MealCollection(
     val currency: String,
     @Contextual
     val restaurantId: ObjectId,
+    val restaurantName: String = "",
     val cuisines: List<@Contextual ObjectId>,
     val image: String = ""
 )
