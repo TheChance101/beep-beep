@@ -27,5 +27,4 @@ data class UserCollection(
     val favorite: MutableList<@Contextual ObjectId> = mutableListOf(),
     val permission: Int = Role.END_USER,
     val isDeleted: Boolean = false
-
 )
