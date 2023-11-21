@@ -1,7 +1,9 @@
 package presentation.order
 
+import domain.entity.Location
 import domain.entity.Order
 import domain.entity.OrderStatus
+import domain.entity.Trip
 
 data class OrderScreenUiState(
     val isLoading: Boolean = true,
@@ -12,7 +14,9 @@ data class OrderScreenUiState(
 )
 
 data class OrderUiState(
-    val id: String = "",
+    val orderId: String = "",
+    val userId: String = "",
+    val restaurantId: String = "",
     val orderMealUiStates: List<OrderMealUiState> = emptyList(),
     val totalPrice: Double = 0.0,
     val orderState: OrderStatus = OrderStatus.PENDING,
@@ -35,7 +39,9 @@ fun Order.Meal.toOrderMealUiState(): OrderMealUiState {
 
 fun Order.toOrderUiState(): OrderUiState {
     return OrderUiState(
-        id = id,
+        orderId = id,
+        userId = userId,
+        restaurantId = restaurantId,
         orderMealUiStates = meals.map { it.toOrderMealUiState() },
         totalPrice = totalPrice,
         orderState = orderState,

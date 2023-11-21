@@ -2,6 +2,7 @@ package domain.gateway.remote
 
 import domain.entity.Order
 import domain.entity.PaginationItems
+import domain.entity.Trip
 import kotlinx.coroutines.flow.Flow
 
 
@@ -11,6 +12,7 @@ interface IOrderRemoteGateway {
     suspend fun getActiveOrders(restaurantId: String): List<Order>
     suspend fun updateOrderState(orderId: String): Order
     suspend fun cancelOrder(orderId: String): Order
+    suspend fun createOrderTrip(trip: Trip): Trip
     suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): PaginationItems<Order>
 
     suspend fun getOrdersRevenueByDaysBefore(

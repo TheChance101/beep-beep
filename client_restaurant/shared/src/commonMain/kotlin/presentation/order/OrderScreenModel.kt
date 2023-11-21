@@ -1,8 +1,10 @@
 package presentation.order
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.Location
 import domain.entity.Order
 import domain.entity.OrderStatus
+import domain.entity.Trip
 import domain.usecase.IManageOrderUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -19,8 +21,6 @@ class OrderScreenModel(
     private var cancelOrderJob: Job? = null
     private var updateOrderJob: Job? = null
 
-
-
     init {
         getOrders()
         getPendingOrders()
@@ -31,7 +31,7 @@ class OrderScreenModel(
     }
 
     override fun onClickCancelOrder(orderId: String) {
-        updateState { it.copy(isLoading = true,noInternetConnection = false) }
+        updateState { it.copy(isLoading = true, noInternetConnection = false) }
         cancelOrderJob?.cancel()
         cancelOrderJob = launchDelayed(500L) {
             tryToExecute(
@@ -44,7 +44,7 @@ class OrderScreenModel(
 
     private fun onCancelOrderSuccess(updatedOrder: Order) {
         updateState { it.copy(isLoading = false) }
-        val order = state.value.pendingOrders.find { it.id == updatedOrder.id }
+        val order = state.value.pendingOrders.find { it.orderId == updatedOrder.id }
         updateState {
             it.copy(
                 pendingOrders = state.value.pendingOrders.toMutableList().apply { remove(order) },
@@ -67,14 +67,14 @@ class OrderScreenModel(
     }
 
     private fun updateOrderState(orderId: String) {
-        updateState { it.copy(isLoading = true,noInternetConnection = false) }
+        updateState { it.copy(isLoading = true, noInternetConnection = false) }
         updateOrderJob?.cancel()
         updateOrderJob = launchDelayed(500L) {
-        tryToExecute(
-            { manageOrders.updateOrderState(orderId).toOrderUiState() },
-            ::onUpdateOrderStateSuccess,
-            ::onError
-        )
+            tryToExecute(
+                { manageOrders.updateOrderState(orderId).toOrderUiState() },
+                ::onUpdateOrderStateSuccess,
+                ::onError
+            )
         }
     }
 
@@ -83,15 +83,18 @@ class OrderScreenModel(
         val inCookingOrders = state.value.inCookingOrders.toMutableList()
         val pendingOrders = state.value.pendingOrders.toMutableList()
 
-        inCookingOrders.find { it.id == updatedOrder.id }?.let {
+        inCookingOrders.find { it.orderId == updatedOrder.orderId }?.let {
             if (it.orderState == OrderStatus.IN_COOKING) {
                 inCookingOrders.remove(it)
-                updateState {currentState-> currentState.copy(totalOrders =currentState.totalOrders.minus(1) ) }
+                updateState { currentState ->
+                    currentState.copy(totalOrders = currentState.totalOrders.minus(1))
+                }
+                createOrderTrip(it)
             }
         }
-        pendingOrders.find { it.id == updatedOrder.id }?.let {
+        pendingOrders.find { it.orderId == updatedOrder.orderId }?.let {
             if (it.orderState == OrderStatus.PENDING) {
-                updateOrderState(updatedOrder.id)
+                updateOrderState(updatedOrder.orderId)
                 pendingOrders.remove(it)
             }
         }
@@ -102,7 +105,7 @@ class OrderScreenModel(
     }
 
     private fun getPendingOrders() {
-        updateState { it.copy(isLoading = true,noInternetConnection = false) }
+        updateState { it.copy(isLoading = true, noInternetConnection = false) }
         tryToCollect(
             { manageOrders.getCurrentOrders(restaurantId) },
             ::onGetPendingOrdersSuccess,
@@ -110,17 +113,40 @@ class OrderScreenModel(
         )
     }
 
-    private fun onGetPendingOrdersSuccess(orders: Order) {
-        updateState { it.copy(
-            pendingOrders = state.value.pendingOrders.toMutableList().apply {add(orders.toOrderUiState()) },
-            totalOrders = state.value.totalOrders.plus(1),
-            isLoading = false,
+    private fun createOrderTrip(order: OrderUiState) {
+        updateState { it.copy(isLoading = true, noInternetConnection = false) }
+        val trip = Trip(
+            clientId = order.userId, orderId = order.orderId, restaurantId = order.restaurantId,
+            startPoint = Location(30.044420, 0.0),
+            destination = Location(30.044420, 31.235712),
+            startPointAddress = "Baghdad", destinationAddress = "Zayouna",
+            price = order.totalPrice, isATaxiTrip = false,
         )
+        tryToExecute(
+            { manageOrders.createOrderTrip(trip) },
+            ::onCreateTripSuccess,
+            ::onError
+        )
+    }
+
+    private fun onCreateTripSuccess(trip: Trip) {
+        println("trip is success: $trip")
+        updateState { it.copy(isLoading = false, noInternetConnection = false) }
+    }
+
+    private fun onGetPendingOrdersSuccess(orders: Order) {
+        updateState {
+            it.copy(
+                pendingOrders = state.value.pendingOrders.toMutableList()
+                    .apply { add(orders.toOrderUiState()) },
+                totalOrders = state.value.totalOrders.plus(1),
+                isLoading = false,
+            )
         }
     }
 
     private fun getOrders() {
-        updateState { it.copy(isLoading = true,noInternetConnection = false) }
+        updateState { it.copy(isLoading = true, noInternetConnection = false) }
         tryToExecute(
             { manageOrders.getActiveOrders(restaurantId) },
             ::onGetOrdersSuccess,
@@ -131,10 +157,11 @@ class OrderScreenModel(
     private fun onGetOrdersSuccess(orders: List<Order>) {
         updateState { it.copy(isLoading = false) }
         val ordersUiState = orders.map { it.toOrderUiState() }
-        val cookingOrders= ordersUiState.filter { it.orderState == OrderStatus.IN_COOKING }
+        val cookingOrders = ordersUiState.filter { it.orderState == OrderStatus.IN_COOKING }
         val pendingOrders = ordersUiState.filter { it.orderState == OrderStatus.PENDING }
         updateState { currentState ->
-            currentState.copy(inCookingOrders = cookingOrders, pendingOrders = pendingOrders,
+            currentState.copy(
+                inCookingOrders = cookingOrders, pendingOrders = pendingOrders,
                 totalOrders = cookingOrders.size + pendingOrders.size
             )
         }
@@ -147,6 +174,7 @@ class OrderScreenModel(
             is ErrorState.NoInternet -> {
                 updateState { it.copy(noInternetConnection = true) }
             }
+
             else -> {
                 sendNewEffect(OrderScreenUiEffect.ShowUnknownError)
             }

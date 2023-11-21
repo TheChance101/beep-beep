@@ -1,22 +1,28 @@
 package data.gateway.remote
 
+import data.remote.mapper.toDto
 import data.remote.mapper.toEntity
 import data.remote.mapper.toOrderEntity
 import data.remote.model.BaseResponse
 import data.remote.model.OrderDto
 import data.remote.model.PaginationResponse
+import data.remote.model.TripDto
 import domain.entity.Order
 import domain.entity.PaginationItems
+import domain.entity.Trip
 import domain.gateway.remote.IOrderRemoteGateway
 import io.ktor.client.HttpClient
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
+import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.put
 import io.ktor.http.HttpMethod
 import io.ktor.http.Parameters
+import io.ktor.util.InternalAPI
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.json.Json
 import presentation.base.UnknownErrorException
 import kotlin.jvm.JvmInline
 
@@ -32,6 +38,13 @@ class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway, BaseRemoteGa
         }.value?.toOrderEntity()?: throw UnknownErrorException("")
         println("getActiveOrdersFrom Gateway: ${result}")
         return result
+    }
+    @OptIn(InternalAPI::class)
+    override suspend fun createOrderTrip(trip: Trip): Trip {
+        val tripDto = trip.toDto()
+        return tryToExecute<BaseResponse<TripDto>> {
+            post("/trip/delivery"){ body = Json.encodeToString(TripDto.serializer(), tripDto) }
+        }.value?.toEntity()?: throw UnknownErrorException("")
     }
 
     override suspend fun updateOrderState(orderId: String): Order {
