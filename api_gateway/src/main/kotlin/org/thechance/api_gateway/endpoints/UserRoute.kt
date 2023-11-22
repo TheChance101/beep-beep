@@ -181,7 +181,7 @@ fun Route.userRoutes() {
             get("/address/{userId}") {
                 val userId = call.parameters["userId"]?.trim().toString()
                 val language = extractLocalizationHeader()
-                val userAddresses = identityService.getUserAddresses(userId, language)
+                val userAddress = identityService.getUserAddresses(userId, language)
                 respondWithResult(HttpStatusCode.OK, userAddress)
             }
         }
