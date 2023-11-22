@@ -1,7 +1,7 @@
 package presentation.order
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.entity.Location
+import domain.entity.AddressInfo
 import domain.entity.Order
 import domain.entity.OrderStatus
 import domain.entity.Trip
@@ -9,6 +9,8 @@ import domain.usecase.IManageOrderUseCase
 import domain.usecase.ManageRestaurantInformationUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
@@ -27,6 +29,24 @@ class OrderScreenModel(
         getOrders()
         getRestaurantLocation()
         getPendingOrders()
+
+    }
+
+    private fun getUserLocation(userId: String) {
+        tryToExecute(
+            { manageOrders.getAddressInfo(userId) },
+            ::onGetUserLocationSuccess,
+            ::onError
+        )
+    }
+
+    private fun onGetUserLocationSuccess(addressInfo: AddressInfo) {
+        updateState {
+            it.copy(
+                destination = addressInfo.location.toUiState(),
+                destinationAddress = addressInfo.address
+            )
+        }
     }
 
     private fun getRestaurantLocation() {
@@ -37,9 +57,13 @@ class OrderScreenModel(
         )
     }
 
-    private fun onGetRestaurantLocationSuccess(location: Pair<Location, String>) {
-        println("location is: $location")
-           updateState { it.copy(startPoint = location.first.toLocationUiState(),startPointAddress = location.second) }
+    private fun onGetRestaurantLocationSuccess(addressInfo: AddressInfo) {
+        println("location is: $addressInfo")
+        updateState { it.copy(
+                startPoint = addressInfo.location.toUiState(),
+                startPointAddress = addressInfo.address
+            )
+        }
     }
 
     override fun onClickBack() {
@@ -131,6 +155,7 @@ class OrderScreenModel(
 
     private fun createOrderTrip(order: OrderUiState) {
         updateState { it.copy(isLoading = true, noInternetConnection = false) }
+        viewModelScope.launch { async{ getUserLocation(order.userId) }.await() }
         val trip = Trip(
             clientId = order.userId, orderId = order.orderId, restaurantId = order.restaurantId,
             startPoint = state.value.startPoint.toEntity(),

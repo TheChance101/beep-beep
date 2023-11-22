@@ -7,6 +7,8 @@ import data.remote.model.BaseResponse
 import data.remote.model.OrderDto
 import data.remote.model.PaginationResponse
 import data.remote.model.TripDto
+import data.remote.model.AddressInfoDto
+import domain.entity.AddressInfo
 import domain.entity.Order
 import domain.entity.PaginationItems
 import domain.entity.Trip
@@ -16,7 +18,6 @@ import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.put
-import io.ktor.client.request.put
 import io.ktor.http.HttpMethod
 import io.ktor.http.Parameters
 import io.ktor.util.InternalAPI
@@ -24,7 +25,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
 import presentation.base.UnknownErrorException
-import kotlin.jvm.JvmInline
 
 class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway, BaseRemoteGateway(client) {
 
@@ -52,6 +52,13 @@ class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway, BaseRemoteGa
             put("/order/$orderId")
         }.value?.toEntity() ?: throw Exception("Error!")
         println("updateOrderStateFrom Gateway: ${result}")
+        return result
+    }
+    override suspend fun getAddressInfo(userId: String): AddressInfo {
+        val result = tryToExecute<BaseResponse<AddressInfoDto>> {
+            put("/user/address/$userId")
+        }.value?.toEntity() ?: throw Exception("Error!")
+        println("getUserLocation Gateway: ${result}")
         return result
     }
     override suspend fun cancelOrder(orderId: String): Order {

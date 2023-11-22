@@ -1,5 +1,6 @@
 package domain.usecase
 
+import domain.entity.AddressInfo
 import domain.entity.Location
 import domain.gateway.local.ILocalConfigurationGateway
 import domain.gateway.remote.IIdentityRemoteGateway
@@ -24,7 +25,7 @@ interface ILoginUserUseCase {
 
     suspend fun getRestaurantId(): String
     suspend fun saveRestaurantId(restaurantId: String)
-    suspend fun saveRestaurantLocation(location: Location,address: String)
+    suspend fun saveRestaurantLocation(addressInfo: AddressInfo)
     suspend fun getNumberOfRestaurants(): Int
 
 }
@@ -83,8 +84,8 @@ class LoginUserUseCase(
         localGateWay.saveRestaurantId(restaurantId)
     }
 
-    override suspend fun saveRestaurantLocation(location: Location,address: String) {
-        localGateWay.saveRestaurantLocation(location,address)
+    override suspend fun saveRestaurantLocation(addressInfo: AddressInfo) {
+        localGateWay.saveRestaurantLocation(addressInfo)
     }
 
     override suspend fun getNumberOfRestaurants(): Int {

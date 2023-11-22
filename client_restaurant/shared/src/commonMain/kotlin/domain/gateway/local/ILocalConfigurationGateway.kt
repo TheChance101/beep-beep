@@ -1,6 +1,6 @@
 package domain.gateway.local
 
-import domain.entity.Location
+import domain.entity.AddressInfo
 
 interface ILocalConfigurationGateway {
 
@@ -12,8 +12,8 @@ interface ILocalConfigurationGateway {
     suspend fun getKeepMeLoggedInFlag(): Boolean
     suspend fun clearTokens()
     suspend fun saveRestaurantId(restaurantId: String)
-    suspend fun saveRestaurantLocation(location: Location,address: String)
-    suspend fun getRestaurantLocation(): Pair<Location,String>
+    suspend fun saveRestaurantLocation(addressInfo: AddressInfo)
+    suspend fun getRestaurantLocation(): AddressInfo
     suspend fun getRestaurantId(): String
     suspend fun saveNumberOfRestaurants(numberOfRestaurants: Int)
     suspend fun getNumberOfRestaurants(): Int

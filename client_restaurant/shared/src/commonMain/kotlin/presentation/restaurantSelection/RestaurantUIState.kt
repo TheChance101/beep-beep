@@ -1,7 +1,7 @@
 package presentation.restaurantSelection
 
 import presentation.order.LocationUiSate
-import presentation.order.toLocationUiState
+import presentation.order.toUiState
 
 data class RestaurantScreenUIState(
     val isLoading: Boolean = false,
@@ -25,7 +25,7 @@ fun domain.entity.Restaurant.toUiState() = RestaurantUIState(
     restaurantPhoneNumber = phone,
     priceLevel = priceLevel,
     isOpen = isRestaurantOpen(),
-    location = location.toLocationUiState(),
+    location = location.toUiState(),
     address = address,
 )
 

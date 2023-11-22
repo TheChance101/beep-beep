@@ -1,6 +1,7 @@
 package presentation.restaurantSelection
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.AddressInfo
 import domain.entity.Location
 import domain.entity.Restaurant
 import domain.usecase.ILoginUserUseCase
@@ -52,9 +53,9 @@ class RestaurantSelectionScreenModel(
     private fun onError(errorState: ErrorState) {
         updateState { it.copy(error = errorState.toString(), isLoading = false) }
     }
-    private fun saveRestaurantLocation(location: Location, address:String) {
+    private fun saveRestaurantLocation(addressInfo: AddressInfo) {
         tryToExecute(
-            { manageUser.saveRestaurantLocation(location,address) },
+            { manageUser.saveRestaurantLocation(addressInfo) },
             { onSaveRestaurantLocationSuccess() },
             ::onError
         )
@@ -66,7 +67,8 @@ class RestaurantSelectionScreenModel(
 
     override fun onClickRestaurant(restaurantId: String, location: LocationUiSate, address: String) {
         onSaveRestaurantId(restaurantId)
-        saveRestaurantLocation(location.toEntity(),address)
+        val addressInfo = AddressInfo(location.toEntity(),address)
+        saveRestaurantLocation(addressInfo)
         updateState { it.copy(isLoading = true) }    }
 
 

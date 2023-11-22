@@ -1,6 +1,7 @@
 package data.gateway.local
 
 import data.local.model.UserConfigurationCollection
+import domain.entity.AddressInfo
 import domain.entity.Location
 import domain.gateway.local.ILocalConfigurationGateway
 import io.realm.kotlin.Realm
@@ -59,12 +60,12 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
                 .find()?.restaurantId = restaurantId
         }
     }
-    override suspend fun saveRestaurantLocation(location: Location, address: String) {
+    override suspend fun saveRestaurantLocation(addressInfo: AddressInfo) {
         realm.write { query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
                 .find()?.apply {
-                    latitude = location.latitude
-                    longitude = location.longitude
-                    this.address = address
+                    latitude = addressInfo.location.latitude
+                    longitude = addressInfo.location.longitude
+                    address = addressInfo.address
                 }
         }
     }
@@ -73,12 +74,12 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
         return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
             .find()?.restaurantId ?: ""
     }
-    override suspend fun getRestaurantLocation(): Pair<Location,String> {
+    override suspend fun getRestaurantLocation(): AddressInfo {
         println("getting location in local")
         val latitude= realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first().find()?.latitude ?:0.0
         val longitude= realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first().find()?.longitude?:0.0
         val address= realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first().find()?.address?:""
-        return Pair(Location(latitude,longitude),address)
+        return AddressInfo(Location(latitude,longitude),address)
     }
 
     override suspend fun saveNumberOfRestaurants(numberOfRestaurants: Int) {

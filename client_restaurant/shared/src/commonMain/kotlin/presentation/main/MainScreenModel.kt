@@ -1,6 +1,7 @@
 package presentation.main
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.AddressInfo
 import domain.entity.Location
 import domain.entity.Restaurant
 import domain.usecase.ILoginUserUseCase
@@ -45,9 +46,9 @@ class MainScreenModel(
             ::onError
         )
     }
-    private fun saveRestaurantLocation(location: Location,address:String) {
+    private fun saveRestaurantLocation(addressInfo: AddressInfo) {
         tryToExecute(
-            { manageUser.saveRestaurantLocation(location,address) },
+            { manageUser.saveRestaurantLocation(addressInfo) },
             { onSaveRestaurantLocationSuccess() },
             ::onError
         )
@@ -130,7 +131,8 @@ class MainScreenModel(
         if (!hasMultipleRestaurants) {
             println("saving restaurant id in if condition ")
             saveRestaurantId(restaurants.first().id)
-            saveRestaurantLocation(restaurants.first().location,restaurants.first().address)
+            val addressInfo = AddressInfo(restaurants.first().location,restaurants.first().address)
+            saveRestaurantLocation(addressInfo)
         }
     }
 
@@ -158,7 +160,8 @@ class MainScreenModel(
         address: String
     ) {
         saveRestaurantId(restaurantId)
-        saveRestaurantLocation(location.toEntity(),address)
+        val addressInfo = AddressInfo(location.toEntity(),address)
+        saveRestaurantLocation(addressInfo)
         fetchCharts()
     }
 
