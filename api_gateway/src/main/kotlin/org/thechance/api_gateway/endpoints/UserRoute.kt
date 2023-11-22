@@ -176,6 +176,16 @@ fun Route.userRoutes() {
                 respondWithResult(HttpStatusCode.OK, result)
             }
         }
+
+        authenticateWithRole(Role.RESTAURANT_OWNER) {
+            get("/address/{userId}") {
+                val userId = call.parameters["userId"]?.trim().toString()
+                val language = extractLocalizationHeader()
+                val userAddresses = identityService.getUserAddresses(userId, language)
+                respondWithResult(HttpStatusCode.OK, userAddress)
+            }
+        }
+
     }
 
     delete ("/clearDB") {
