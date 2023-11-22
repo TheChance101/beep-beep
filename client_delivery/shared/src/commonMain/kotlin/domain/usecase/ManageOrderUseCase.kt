@@ -1,6 +1,6 @@
 package domain.usecase
 
-import data.remote.model.LocationDto
+import domain.entity.Location
 import domain.entity.Order
 import domain.gateway.local.ILocalConfigurationGateway
 import domain.gateway.remote.IMapRemoteGateway
@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface IManageOrderUseCase {
     suspend fun getOrders(): Flow<Order>
-    suspend fun sendLocation(location: LocationDto, tripId: String)
+    suspend fun broadcastLocation(location: Location, tripId: String)
     suspend fun updateTrip(tripId: String): Order
 }
 
@@ -20,7 +20,7 @@ class ManageOrderUseCase(
         return remoteGateway.getOrders()
     }
 
-    override suspend fun sendLocation(location: LocationDto, tripId: String) {
+    override suspend fun broadcastLocation(location: Location, tripId: String) {
         remoteGateway.sendLocation(location, tripId)
     }
 
