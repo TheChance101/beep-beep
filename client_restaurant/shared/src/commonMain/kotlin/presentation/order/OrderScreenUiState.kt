@@ -3,16 +3,22 @@ package presentation.order
 import domain.entity.Location
 import domain.entity.Order
 import domain.entity.OrderStatus
-import domain.entity.Trip
 
 data class OrderScreenUiState(
     val isLoading: Boolean = true,
+    val startPoint: LocationUiSate = LocationUiSate(),
+    val startPointAddress:String = "",
+    val destination: LocationUiSate = LocationUiSate(),
     val noInternetConnection:Boolean = false,
     val inCookingOrders: List<OrderUiState> = emptyList(),
     val pendingOrders: List<OrderUiState> = emptyList(),
     val totalOrders: Int = 0,
 )
 
+data class LocationUiSate(
+    val latitude: Double = 0.0,
+    val longitude: Double = 0.0,
+)
 data class OrderUiState(
     val orderId: String = "",
     val userId: String = "",
@@ -48,3 +54,16 @@ fun Order.toOrderUiState(): OrderUiState {
     )
 }
 
+fun Location.toLocationUiState(): LocationUiSate {
+    return LocationUiSate(
+        latitude = latitude,
+        longitude = longitude,
+    )
+}
+
+fun LocationUiSate.toEntity(): Location {
+    return Location(
+        latitude = latitude,
+        longitude = longitude,
+    )
+}

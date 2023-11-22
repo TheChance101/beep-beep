@@ -188,7 +188,7 @@ class RestaurantSelectionScreen : BaseScreen
         listener: RestaurantSelectionScreenInteractionListener,
     ) {
         RestaurantInformation(
-            onRestaurantClick = { listener.onClickRestaurant(item.restaurantId) },
+            onRestaurantClick = { listener.onClickRestaurant(item.restaurantId,item.location,item.address) },
             restaurantName = item.restaurantName,
             restaurantNumber = item.restaurantPhoneNumber,
             isOpen = item.isOpen

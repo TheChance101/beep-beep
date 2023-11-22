@@ -1,15 +1,20 @@
 package presentation.restaurantSelection
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.Location
 import domain.entity.Restaurant
+import domain.usecase.ILoginUserUseCase
 import domain.usecase.IManageRestaurantInformationUseCase
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
+import presentation.order.LocationUiSate
+import presentation.order.toEntity
 
 class RestaurantSelectionScreenModel(
     private val manageRestaurant: IManageRestaurantInformationUseCase,
-) : BaseScreenModel<RestaurantScreenUIState, RestaurantSelectionScreenUIEffect>
+    private val manageUser: ILoginUserUseCase,
+    ) : BaseScreenModel<RestaurantScreenUIState, RestaurantSelectionScreenUIEffect>
     (RestaurantScreenUIState()), RestaurantSelectionScreenInteractionListener {
 
     override val viewModelScope: CoroutineScope = coroutineScope
@@ -47,9 +52,22 @@ class RestaurantSelectionScreenModel(
     private fun onError(errorState: ErrorState) {
         updateState { it.copy(error = errorState.toString(), isLoading = false) }
     }
-
-    override fun onClickRestaurant(restaurantId: String) {
-        onSaveRestaurantId(restaurantId)
+    private fun saveRestaurantLocation(location: Location, address:String) {
+        tryToExecute(
+            { manageUser.saveRestaurantLocation(location,address) },
+            { onSaveRestaurantLocationSuccess() },
+            ::onError
+        )
     }
+
+    private fun onSaveRestaurantLocationSuccess() {
+        println("main saving location success")
+    }
+
+    override fun onClickRestaurant(restaurantId: String, location: LocationUiSate, address: String) {
+        onSaveRestaurantId(restaurantId)
+        saveRestaurantLocation(location.toEntity(),address)
+        updateState { it.copy(isLoading = true) }    }
+
 
 }

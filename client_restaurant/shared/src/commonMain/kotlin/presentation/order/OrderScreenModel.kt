@@ -6,6 +6,7 @@ import domain.entity.Order
 import domain.entity.OrderStatus
 import domain.entity.Trip
 import domain.usecase.IManageOrderUseCase
+import domain.usecase.ManageRestaurantInformationUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import presentation.base.BaseScreenModel
@@ -13,7 +14,8 @@ import presentation.base.ErrorState
 
 class OrderScreenModel(
     private val restaurantId: String,
-    private val manageOrders: IManageOrderUseCase
+    private val manageOrders: IManageOrderUseCase,
+    private val manageRestaurantInformation: ManageRestaurantInformationUseCase
 ) : BaseScreenModel<OrderScreenUiState, OrderScreenUiEffect>(OrderScreenUiState()),
     OrderScreenInteractionListener {
 
@@ -23,7 +25,21 @@ class OrderScreenModel(
 
     init {
         getOrders()
+        getRestaurantLocation()
         getPendingOrders()
+    }
+
+    private fun getRestaurantLocation() {
+        tryToExecute(
+            { manageRestaurantInformation.getRestaurantLocation() },
+            ::onGetRestaurantLocationSuccess,
+            ::onError
+        )
+    }
+
+    private fun onGetRestaurantLocationSuccess(location: Pair<Location, String>) {
+        println("location is: $location")
+           updateState { it.copy(startPoint = location.first.toLocationUiState(),startPointAddress = location.second) }
     }
 
     override fun onClickBack() {
@@ -117,9 +133,9 @@ class OrderScreenModel(
         updateState { it.copy(isLoading = true, noInternetConnection = false) }
         val trip = Trip(
             clientId = order.userId, orderId = order.orderId, restaurantId = order.restaurantId,
-            startPoint = Location(30.044420, 0.0),
-            destination = Location(30.044420, 31.235712),
-            startPointAddress = "Baghdad", destinationAddress = "Zayouna",
+            startPoint = state.value.startPoint.toEntity(),
+            destination = state.value.destination.toEntity(),
+            startPointAddress = state.value.startPointAddress, destinationAddress = "Zayouna",
             price = order.totalPrice, isATaxiTrip = false,
         )
         tryToExecute(

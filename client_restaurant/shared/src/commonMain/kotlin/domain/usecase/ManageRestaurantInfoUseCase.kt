@@ -1,5 +1,6 @@
 package domain.usecase
 
+import domain.entity.Location
 import domain.entity.Restaurant
 import domain.gateway.local.ILocalConfigurationGateway
 import domain.gateway.remote.IRestaurantRemoteGateway
@@ -9,6 +10,7 @@ interface IManageRestaurantInformationUseCase {
     suspend fun getOwnerRestaurants(): List<Restaurant>
     suspend fun updateRestaurantInformation(restaurant: Restaurant): Boolean
     suspend fun saveRestaurantId(restaurantId: String)
+    suspend fun getRestaurantLocation(): Pair<Location,String>
 }
 
 class ManageRestaurantInformationUseCase(
@@ -31,5 +33,9 @@ class ManageRestaurantInformationUseCase(
 
     override suspend fun saveRestaurantId(restaurantId: String) {
         localGateWay.saveRestaurantId(restaurantId)
+    }
+
+    override suspend fun getRestaurantLocation(): Pair<Location,String> {
+       return localGateWay.getRestaurantLocation()
     }
 }
