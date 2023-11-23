@@ -57,9 +57,13 @@ data class DrawableResources(
     val inCookingFood: String = "food_cooking.png",
     val approvedFood: String = "food_approved.png",
     val warningIcon: String = "ic_error_icon.xml",
-    val arrowDown:String= "arrow_down.xml"
+    val arrowDown: String = "arrow_down.xml",
+    val restaurantErrorPlaceholder: String = "restaurant_error.png",
+    val mealErrorPlaceholder: String = "meal_error_placeholder_light.jpg",
 )
 
 val BpDrawableDarkResources = DrawableResources(
     filledStar = "ic_filled_star_dark.xml",
+    restaurantErrorPlaceholder = "restaurant_error_dark.jpg",
+    mealErrorPlaceholder = "meal_error_placeholder_dark.jpg"
 )

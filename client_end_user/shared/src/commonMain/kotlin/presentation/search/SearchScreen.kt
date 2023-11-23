@@ -1,7 +1,6 @@
 package presentation.search
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,12 +26,12 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.theme.Theme
-import com.seiko.imageloader.rememberAsyncImagePainter
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
 import presentation.composable.BottomSheet
+import presentation.composable.BpImageLoader
 import presentation.composable.MealBottomSheet
 import presentation.composable.MealCard
 import presentation.composable.ModalBottomSheetState
@@ -42,7 +41,6 @@ import presentation.resturantDetails.Composable.NeedToLoginSheet
 import presentation.resturantDetails.Composable.ToastMessage
 import presentation.resturantDetails.RestaurantScreen
 import resources.Resources
-import util.getNavigationBarPadding
 import util.getStatusBarPadding
 import util.root
 
@@ -176,10 +174,9 @@ class SearchScreen :
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
+            BpImageLoader(
                 modifier = Modifier.roundedBorderShape().size(64.dp),
-                painter = rememberAsyncImagePainter(restaurant.image),
-                contentScale = ContentScale.Crop,
+                imageUrl = restaurant.image,
                 contentDescription = restaurant.name,
             )
 

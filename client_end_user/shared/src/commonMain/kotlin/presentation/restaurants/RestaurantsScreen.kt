@@ -97,18 +97,11 @@ data class RestaurantsScreen(val offerId: String? = null) :
             colors = CardDefaults.cardColors(Color.Transparent),
             shape = RoundedCornerShape(0.dp)
         ) {
-            Box(
-                modifier = Modifier.height(156.dp).clip(RoundedCornerShape(8.dp))
-            ) {
+            BpImageLoader(
+                modifier = Modifier.height(156.dp).clip(RoundedCornerShape(8.dp)),
+                imageUrl = restaurant.imageUrl,
+            )
 
-                Image(
-                    painter = painterResource(Resources.images.placeholder),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = null
-                )
-
-                BpImageLoader(imageUrl = restaurant.imageUrl, contentScale = ContentScale.Crop)
-            }
             Row(
                 modifier = Modifier.fillMaxWidth().padding(top = 8.dp).width(232.dp),
                 verticalAlignment = Alignment.CenterVertically

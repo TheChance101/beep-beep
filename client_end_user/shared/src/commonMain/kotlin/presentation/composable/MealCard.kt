@@ -1,6 +1,5 @@
 package presentation.composable
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,13 +12,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
-import com.seiko.imageloader.rememberAsyncImagePainter
 import presentation.composable.modifier.roundedBorderShape
 import presentation.resturantDetails.MealUIState
+import resources.Resources
 
 @Composable
 fun MealCard(
@@ -27,16 +25,15 @@ fun MealCard(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier.fillMaxWidth()
-            .padding(horizontal = 16.dp),
+        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Image(
+        BpImageLoader(
             modifier = Modifier.roundedBorderShape().size(height = 72.dp, width = 80.dp),
-            painter = rememberAsyncImagePainter(meal.image),
-            contentScale = ContentScale.Crop,
-            contentDescription = meal.name
+            errorPlaceholderImageUrl = Resources.images.mealErrorPlaceholder,
+            imageUrl = meal.image,
+            contentDescription = meal.name,
         )
         Column(
             horizontalAlignment = Alignment.Start,
