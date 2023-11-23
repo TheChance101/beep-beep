@@ -64,9 +64,7 @@ fun BpImageCard(
 
             BpImageLoader(
                 imageUrl = imageUrl,
-                contentScale = ContentScale.Crop,
                 contentDescription = title,
-                errorPlaceholderImageUrl = Resources.images.mealErrorPlaceholder
             )
 
             Row(modifier = Modifier.fillMaxWidth()) {

@@ -1,6 +1,5 @@
 package presentation.cart.composable
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,13 +16,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.modifier.noRippleEffect
 import com.beepbeep.designSystem.ui.theme.Theme
+import presentation.composable.BpImageLoader
 import presentation.composable.exitinstion.bottomBorder
+import resources.Resources
 
 @Composable
 fun ItemCart(
@@ -32,7 +31,7 @@ fun ItemCart(
     mealName: String,
     restaurantName: String,
     price: String,
-    imagePainter: Painter,
+    imageUrl: String,
     count: Int,
     index: Int,
     modifier: Modifier = Modifier,
@@ -43,14 +42,14 @@ fun ItemCart(
             .bottomBorder(1.dp, Theme.colors.divider, isDividerVisible),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painter = imagePainter, contentDescription = null,
-            modifier = Modifier.padding(start = 16.dp)
+        BpImageLoader(
+            imageUrl = imageUrl,
+            contentDescription = restaurantName,
+            errorPlaceholderImageUrl = Resources.images.mealErrorPlaceholder,
+            modifier = Modifier
+                .padding(start = 16.dp)
                 .width(80.dp)
-                .height(72.dp).clip(
-                    RoundedCornerShape(8.dp)
-                ),
-            contentScale = ContentScale.Crop,
+                .height(72.dp).clip(RoundedCornerShape(8.dp)),
         )
 
         Column(modifier = Modifier.padding(horizontal = 8.dp)) {
