@@ -60,6 +60,7 @@ data class DrawableResources(
     val arrowDown: String = "arrow_down.xml",
     val restaurantErrorPlaceholder: String = "restaurant_error.png",
     val mealErrorPlaceholder: String = "meal_error_placeholder_light.jpg",
+    val cuisinePlaceholder:String = "cuisine_placeholder.png"
 )
 
 val BpDrawableDarkResources = DrawableResources(

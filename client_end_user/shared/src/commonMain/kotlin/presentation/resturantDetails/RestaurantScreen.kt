@@ -47,7 +47,6 @@ import presentation.resturantDetails.Composable.ToastMessage
 import resources.Resources
 import util.getNavigationBarPadding
 
-
 data class RestaurantScreen(val restaurantId: String) :
     BaseScreen<RestaurantScreenModel, RestaurantUIState, RestaurantUIEffect, RestaurantInteractionListener>() {
 
