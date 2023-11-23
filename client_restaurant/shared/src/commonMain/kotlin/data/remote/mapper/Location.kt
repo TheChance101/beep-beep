@@ -21,7 +21,7 @@ fun Location.toDto(): LocationDto {
 }
 fun AddressInfoDto.toEntity(): AddressInfo {
     return AddressInfo(
-        location = location.toEntity(),
-        address = address
+        location = location?.toEntity()?: Location(0.0,0.0),
+        address = address?:""
     )
 }

@@ -1,14 +1,14 @@
 package data.remote.model
 
-import data.remote.mapper.toEntity
-import domain.entity.AddressInfo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class AddressInfoDto(
+    @SerialName("id")
+    val id: String? = null,
     @SerialName("location")
-    val location: LocationDto,
+    val location: LocationDto? = null,
     @SerialName("address")
-    val address: String
+    val address: String? = null,
 )
