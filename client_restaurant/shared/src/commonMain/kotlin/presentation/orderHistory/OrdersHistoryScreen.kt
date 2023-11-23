@@ -114,7 +114,7 @@ class OrdersHistoryScreen(private val restaurantId: String) :
                     )
                 }
             }
-            items(state.currentOrders, key = { it.id }) { order ->
+            items(state.currentOrders, key = { it.orderId }) { order ->
                 OrderCard(
                     order = order,
                     modifier = Modifier

@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -56,6 +57,12 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
         }
     }
 
+    protected fun launchDelayed(duration: Long, block: suspend CoroutineScope.() -> Unit): Job {
+        return viewModelScope.launch(Dispatchers.IO) {
+            delay(duration)
+            block()
+        }
+    }
     protected fun updateState(updater: (S) -> S) {
         _state.update(updater)
     }

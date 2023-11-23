@@ -1,8 +1,9 @@
 package domain.usecase
 
+import domain.entity.AddressInfo
+import domain.entity.Location
 import domain.gateway.local.ILocalConfigurationGateway
 import domain.gateway.remote.IIdentityRemoteGateway
-import domain.gateway.remote.IRestaurantRemoteGateway
 import presentation.base.InvalidPasswordException
 import presentation.base.InvalidUserNameException
 import presentation.base.PermissionDenied
@@ -24,6 +25,7 @@ interface ILoginUserUseCase {
 
     suspend fun getRestaurantId(): String
     suspend fun saveRestaurantId(restaurantId: String)
+    suspend fun saveRestaurantLocation(addressInfo: AddressInfo)
     suspend fun getNumberOfRestaurants(): Int
 
 }
@@ -80,6 +82,10 @@ class LoginUserUseCase(
 
     override suspend fun saveRestaurantId(restaurantId: String) {
         localGateWay.saveRestaurantId(restaurantId)
+    }
+
+    override suspend fun saveRestaurantLocation(addressInfo: AddressInfo) {
+        localGateWay.saveRestaurantLocation(addressInfo)
     }
 
     override suspend fun getNumberOfRestaurants(): Int {
