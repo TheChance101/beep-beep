@@ -2,6 +2,8 @@ plugins {
     kotlin("multiplatform")
     id("com.android.application")
     id("org.jetbrains.compose")
+    id("com.google.gms.google-services") version "4.4.0"
+
 }
 
 kotlin {
@@ -10,6 +12,8 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation(project(":client_restaurant:shared"))
+                //firebase
+                implementation(libs.firebase.bom)
             }
         }
     }
@@ -39,4 +43,6 @@ android {
 }
 dependencies {
     implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation(libs.firebase.common.ktx)
+    implementation(libs.firebase.messaging.ktx)
 }
