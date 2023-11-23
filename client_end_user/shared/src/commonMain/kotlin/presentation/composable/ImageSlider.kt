@@ -1,6 +1,5 @@
 package presentation.composable
 
-
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateOffsetAsState
 import androidx.compose.animation.core.spring
@@ -29,13 +28,11 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.composable.modifier.noRippleEffect
-
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -60,7 +57,7 @@ fun ImageSlider(
             contentPadding = PaddingValues(0.dp),
             pageSpacing = 0.dp
         ) { page ->
-            BpImageLoader(imageUrl = images[page], contentScale = ContentScale.Crop)
+            BpImageLoader(imageUrl = images[page])
         }
 
         ImageSliderIndicator(

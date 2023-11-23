@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import com.seiko.imageloader.rememberAsyncImagePainter
+import presentation.composable.BpImageLoader
 import presentation.cuisines.CuisineUiState
 import resources.Resources
 
@@ -63,11 +64,12 @@ fun CuisineCard(
                 ).padding(imagePadding),
             contentAlignment = Alignment.Center
         ) {
-            Image(
-                rememberAsyncImagePainter(cuisine.cuisineImageUrl),
+            BpImageLoader(
+                modifier = Modifier.size(48.dp).scale(animatedFloat),
+                imageUrl = cuisine.cuisineImageUrl,
+                showLoadingState = false,
                 contentDescription = "${cuisine.cuisineName} ${Resources.strings.cuisineImageDescription}",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.size(48.dp).scale(animatedFloat)
+                errorPlaceholderImageUrl = Resources.images.cuisinePlaceholder
             )
         }
         Text(

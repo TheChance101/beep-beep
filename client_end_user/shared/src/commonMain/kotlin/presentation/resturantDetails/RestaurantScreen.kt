@@ -1,7 +1,7 @@
 package presentation.resturantDetails
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +19,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,20 +33,19 @@ import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
 import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
+import presentation.composable.BackButton
 import presentation.composable.BottomSheet
+import presentation.composable.BpImageLoader
 import presentation.composable.BpPriceLevel
 import presentation.composable.ItemSection
 import presentation.composable.MealBottomSheet
 import presentation.composable.RatingBar
 import presentation.composable.modifier.noRippleEffect
 import presentation.resturantDetails.Composable.Chip
-import presentation.composable.BackButton
-import presentation.composable.BpImageLoader
 import presentation.resturantDetails.Composable.NeedToLoginSheet
 import presentation.resturantDetails.Composable.ToastMessage
 import resources.Resources
 import util.getNavigationBarPadding
-
 
 data class RestaurantScreen(val restaurantId: String) :
     BaseScreen<RestaurantScreenModel, RestaurantUIState, RestaurantUIEffect, RestaurantInteractionListener>() {
@@ -70,6 +70,15 @@ data class RestaurantScreen(val restaurantId: String) :
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.TopCenter
         ) {
+
+            val favoriteColor by animateColorAsState(
+                if (state.isFavourite) {
+                    Theme.colors.primary
+                } else {
+                    Theme.colors.contentTertiary
+                }
+            )
+
             BottomSheet(
                 sheetContent = {
                     if (state.showMealSheet)
@@ -96,26 +105,28 @@ data class RestaurantScreen(val restaurantId: String) :
                 onBackGroundClicked = listener::onDismissSheet,
                 sheetState = state.sheetState,
             ) {
-                Box {
-                    Image(
-                        painter = painterResource(Resources.images.placeholder),
-                        contentScale = ContentScale.Crop,
-                        contentDescription = null
-                    )
-                    BpImageLoader(imageUrl = state.restaurantInfo.image, contentScale = ContentScale.Crop)
-                }
+
+                BpImageLoader(
+                    modifier = Modifier.fillMaxWidth().fillMaxHeight(0.30f)
+                        .align(Alignment.TopCenter),
+                    contentScale = ContentScale.Crop,
+                    imageUrl = state.restaurantInfo.image,
+                    contentDescription = state.restaurantInfo.name
+                )
 
                 BackButton(
                     onClick = { listener.onBack() },
-                    modifier = Modifier.align(Alignment.TopCenter),
+                    modifier = Modifier.align(Alignment.TopCenter).padding(top = 16.dp),
                     icon = Resources.images.iconBack
                 )
                 Column(
-                    modifier = Modifier.fillMaxWidth().fillMaxHeight(.75f)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(.75f)
                         .verticalScroll(rememberScrollState())
                         .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
                         .background(Theme.colors.surface).align(Alignment.BottomCenter)
-
+                        .padding(getNavigationBarPadding())
                 ) {
                     Row(
                         modifier = Modifier
@@ -130,8 +141,9 @@ data class RestaurantScreen(val restaurantId: String) :
                             color = Theme.colors.contentPrimary
                         )
 
-                        Image(
+                        Icon(
                             painter = painterResource(if (state.isFavourite) Resources.images.heartFilled else Resources.images.heart),
+                            tint = favoriteColor,
                             contentDescription = null,
                             modifier = Modifier.size(24.dp)
                                 .noRippleEffect {
@@ -141,6 +153,7 @@ data class RestaurantScreen(val restaurantId: String) :
                                         listener.onShowLoginSheet()
                                     }
                                 }
+
                         )
                     }
                     Row(

@@ -75,7 +75,7 @@ class CartScreen :
                         onClickPlus = { _, _ ->
                             listener.onClickPlus(index, item.count)
                         },
-                        imagePainter = painterResource(Resources.images.placeholder),
+                        imageUrl = item.image,
                         restaurantName = item.restaurantName,
                         count = item.count,
                         index = index,
