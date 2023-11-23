@@ -1,6 +1,10 @@
 package domain.usecase
 
 import domain.entity.AddressInfo
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import data.gateway.remote.pagesource.OrdersHistoryPagingSource
 import domain.entity.Order
 import domain.entity.Trip
 import domain.gateway.remote.IOrderRemoteGateway
@@ -13,7 +17,9 @@ interface IManageOrderUseCase {
     suspend fun cancelOrder(orderId: String): Order
     suspend fun getAddressInfo(userId: String): AddressInfo
     suspend fun createOrderTrip(trip: Trip): Trip
-    suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
+   // suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
+    suspend fun getOrdersHistory(restaurantId: String): Flow<PagingData<Order>>
+
     suspend fun getOrdersRevenueByDaysBefore(
         restaurantId: String,
         daysBack: Int,
@@ -25,13 +31,17 @@ interface IManageOrderUseCase {
     ): List<Pair<String, Double>>
 }
 
-class ManageOrderUseCase(private val orderRemoteGateway: IOrderRemoteGateway) :
+class ManageOrderUseCase(
+    private val orderRemoteGateway: IOrderRemoteGateway,
+    private val ordersHistoryPagingSource: OrdersHistoryPagingSource
+) :
     IManageOrderUseCase {
-    override suspend fun getCurrentOrders(restaurantId: String): Flow<Order>{
-         return orderRemoteGateway.getCurrentOrders(restaurantId)
+    override suspend fun getCurrentOrders(restaurantId: String): Flow<Order> {
+        return orderRemoteGateway.getCurrentOrders(restaurantId)
     }
-    override suspend fun getActiveOrders(restaurantId: String): List<Order>{
-         return orderRemoteGateway.getActiveOrders(restaurantId)
+
+    override suspend fun getActiveOrders(restaurantId: String): List<Order> {
+        return orderRemoteGateway.getActiveOrders(restaurantId)
     }
 
     override suspend fun updateOrderState(orderId: String): Order {
@@ -42,6 +52,13 @@ class ManageOrderUseCase(private val orderRemoteGateway: IOrderRemoteGateway) :
         return orderRemoteGateway.cancelOrder(orderId)
     }
 
+    override suspend fun getOrdersHistory(restaurantId: String): Flow<PagingData<Order>> {
+        ordersHistoryPagingSource.initOrders(restaurantId)
+        return Pager(
+            config = PagingConfig(pageSize = 10),
+            pagingSourceFactory = { ordersHistoryPagingSource },
+        ).flow
+    }
     override suspend fun getAddressInfo(userId: String): AddressInfo {
         return orderRemoteGateway.getAddressInfo(userId)
     }
@@ -50,15 +67,15 @@ class ManageOrderUseCase(private val orderRemoteGateway: IOrderRemoteGateway) :
         return orderRemoteGateway.createOrderTrip(trip)
     }
 
-    override suspend fun getOrdersHistory(
-        restaurantId: String,
-        page: Int,
-        limit: Int
-    ): List<Order> {
-        val result = orderRemoteGateway.getOrdersHistory(restaurantId, page, limit)
-        println("getOrdersHistory from use case: ${result}")
-        return result.items
-    }
+//    override suspend fun getOrdersHistory(
+//        restaurantId: String,
+//        page: Int,
+//        limit: Int
+//    ): List<Order> {
+//        val result = orderRemoteGateway.getOrdersHistory(restaurantId, page, limit)
+//        println("getOrdersHistory from use case: ${result}")
+//        return result.items
+//    }
 
     override suspend fun getOrdersRevenueByDaysBefore(
         restaurantId: String,
