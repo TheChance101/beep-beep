@@ -99,7 +99,7 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
                                     meal.toDtoUpdate()
                                 )
                             )
-                            (if (meal.image.isNotEmpty()) {
+                            if (meal.image.isNotEmpty()) {
                                 append(
                                     "image", meal.image, Headers.build {
                                         append(HttpHeaders.ContentType, "image/png/jpg/jpeg")
@@ -109,7 +109,7 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
                                         )
                                     }
                                 )
-                            })
+                            }
                         }
                     )
                 )

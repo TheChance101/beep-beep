@@ -64,6 +64,9 @@ kotlin {
                 implementation(libs.kotlin.serialization)
                 //aay chart
                 implementation(libs.aay.chart)
+                //paging3
+                implementation(libs.paging.compose)
+                implementation(libs.paging.common)
             }
         }
         val androidMain by getting {
