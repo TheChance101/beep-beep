@@ -40,6 +40,7 @@ import presentation.composable.BpPriceLevel
 import presentation.resturantDetails.RestaurantScreen
 import resources.Resources
 import util.getNavigationBarPadding
+import util.getStatusBarPadding
 
 
 data class RestaurantsScreen(val offerId: String? = null) :
@@ -64,9 +65,10 @@ data class RestaurantsScreen(val offerId: String? = null) :
     override fun onRender(state: RestaurantsUIState, listener: RestaurantsListener) {
         val restaurants = state.restaurants.collectAsLazyPagingItems()
         Column(
-            Modifier.fillMaxSize().background(Theme.colors.background).padding(
-                getNavigationBarPadding()
-            )
+            Modifier
+                .fillMaxSize()
+                .background(Theme.colors.background)
+                .padding(getNavigationBarPadding())
         ) {
             BpAppBar(
                 title = Resources.strings.restaurants,

@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.modifier.noRippleEffect
 import com.beepbeep.designSystem.ui.theme.Theme
@@ -61,7 +62,12 @@ fun BpImageCard(
                 .height(120.dp).clip(RoundedCornerShape(8.dp))
         ) {
 
-            BpImageLoader(imageUrl = imageUrl, contentScale = ContentScale.Crop)
+            BpImageLoader(
+                imageUrl = imageUrl,
+                contentScale = ContentScale.Crop,
+                contentDescription = title,
+                errorPlaceholderImageUrl = Resources.images.mealErrorPlaceholder
+            )
 
             Row(modifier = Modifier.fillMaxWidth()) {
                 Spacer(modifier = Modifier.weight(1f))
@@ -78,7 +84,9 @@ fun BpImageCard(
                                 text = offer,
                                 modifier = Modifier.padding(horizontal = 4.dp),
                                 style = Theme.typography.caption,
-                                color = Theme.colors.primary
+                                color = Theme.colors.primary,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
                         } else {
                             Icon(
@@ -92,7 +100,9 @@ fun BpImageCard(
                             text = if (hasOffer) Resources.strings.off else deliveryPrice,
                             modifier = Modifier.padding(end = 4.dp),
                             style = Theme.typography.caption,
-                            color = if (hasOffer) Theme.colors.primary else Theme.colors.success
+                            color = if (hasOffer) Theme.colors.primary else Theme.colors.success,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 }
@@ -105,7 +115,9 @@ fun BpImageCard(
             Text(
                 text = title,
                 style = Theme.typography.title,
-                color = Theme.colors.contentPrimary
+                color = Theme.colors.contentPrimary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
             Spacer(Modifier.weight(1f))
             if (hasRate) {
@@ -118,7 +130,9 @@ fun BpImageCard(
                     text = rate.toString(),
                     modifier = Modifier.padding(end = 4.dp),
                     style = Theme.typography.caption,
-                    color = Theme.colors.contentSecondary
+                    color = Theme.colors.contentSecondary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Spacer(
                     modifier.padding(end = 4.dp).clip(CircleShape).size(4.dp)
@@ -129,7 +143,9 @@ fun BpImageCard(
             if (hasPrice) Text(
                 " $currency $price",
                 style = Theme.typography.body,
-                color = Theme.colors.primary
+                color = Theme.colors.primary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }
