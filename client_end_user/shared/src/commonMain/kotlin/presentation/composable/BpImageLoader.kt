@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -19,7 +18,6 @@ import com.seiko.imageloader.LocalImageLoader
 import com.seiko.imageloader.rememberAsyncImagePainter
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import presentation.composable.modifier.roundedBorderShape
 import resources.Resources
 import util.generateImageLoader
 import util.getPlatformContext
@@ -33,28 +31,30 @@ fun BpImageLoader(
     placeHolderModifier: Modifier = Modifier,
     contentDescription: String? = null,
     contentScale: ContentScale = ContentScale.Crop,
-    placeHolderScale:ContentScale = ContentScale.Crop
+    placeHolderScale: ContentScale = ContentScale.Crop,
 ) {
     val context = getPlatformContext()
     CompositionLocalProvider(LocalImageLoader provides remember { generateImageLoader(context) }) {
 
         val painter = rememberAsyncImagePainter(imageUrl)
 
-        Box(modifier = modifier){
+        Box(modifier = modifier) {
             when (painter.requestState) {
                 is ImageRequestState.Loading -> {
-                    Box(Modifier.fillMaxSize().padding(8.dp) , contentAlignment = Alignment.Center){
+                    Box(Modifier.fillMaxSize().padding(8.dp), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator(color = Theme.colors.primary)
                     }
                 }
+
                 is ImageRequestState.Failure -> {
                     Image(
                         modifier = placeHolderModifier.fillMaxSize(),
-                        painter = painterResource( errorPlaceholderImageUrl),
+                        painter = painterResource(errorPlaceholderImageUrl),
                         contentScale = placeHolderScale,
                         contentDescription = contentDescription,
                     )
                 }
+
                 is ImageRequestState.Success -> {
                     Image(
                         modifier = Modifier.fillMaxSize(),
