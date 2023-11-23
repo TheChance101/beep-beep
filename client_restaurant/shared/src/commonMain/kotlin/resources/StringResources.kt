@@ -64,5 +64,6 @@ data class StringResources(
     val userNameIsRequired: String = "Username is required.",
     val passwordIsRequired: String = "Password is required",
     val noOrderYet: String = "No Orders Available at the Moment",
-    val noOrderHistory: String = "No Orders History at the Moment"
+    val noOrderHistory: String = "No Orders History at the Moment",
+    val noMeals: String = "No Meals available at the Moment"
 )

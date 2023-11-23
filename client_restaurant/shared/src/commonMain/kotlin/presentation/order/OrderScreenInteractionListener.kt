@@ -7,4 +7,5 @@ interface OrderScreenInteractionListener : BaseInteractionListener {
     fun onClickFinishOrder(orderId: String)
     fun onClickCancelOrder(orderId: String)
     fun onClickApproveOrder(orderId: String)
+    fun onSnackBarDismissed()
 }

@@ -8,7 +8,7 @@ import util.formatDateTime
 
 fun Order.toOrderHistoryUiState(): OrderUiState {
     return OrderUiState(
-        id = id,
+        orderId = id,
         orderState = orderState,
         orderMealUiStates = meals.map { it.toOrderMealUiState() },
         totalPrice = totalPrice,

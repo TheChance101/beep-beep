@@ -5,6 +5,7 @@ import data.remote.model.BaseResponse
 import data.remote.model.RestaurantRequestPermissionDto
 import data.remote.model.SessionDto
 import data.remote.model.UserTokensDto
+import data.service.IFirebaseMessagingService
 import domain.entity.RestaurantRequestPermission
 import domain.entity.Session
 import domain.gateway.remote.IIdentityRemoteGateway
@@ -16,16 +17,22 @@ import io.ktor.client.request.url
 import io.ktor.http.Parameters
 import presentation.base.InvalidCredentialsException
 
-class IdentityRemoteGateway(client: HttpClient) : IIdentityRemoteGateway,
+class IdentityRemoteGateway(
+    client: HttpClient, private val firebaseService: IFirebaseMessagingService
+) : IIdentityRemoteGateway,
     BaseRemoteGateway(client = client) {
+    override suspend fun getDeviceToken(): String {
+       return firebaseService.getDeviceToken()
+    }
 
-    override suspend fun loginUser(userName: String, password: String): Session {
+    override suspend fun loginUser(userName: String, password: String, deviceToken: String): Session {
         val result = tryToExecute<BaseResponse<SessionDto>> {
             submitForm(
                 url = ("/login"),
                 formParameters = Parameters.build {
                     append("username", userName)
                     append("password", password)
+                    append("token", deviceToken)
                 }
             )
         }.value
