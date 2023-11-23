@@ -1,5 +1,6 @@
 package presentation.composable
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,9 +27,10 @@ import util.getPlatformContext
 @Composable
 fun BpImageLoader(
     imageUrl: String,
-    errorPlaceholderImageUrl: String = Resources.images.restaurantErrorPlaceholder,
     modifier: Modifier = Modifier,
     placeHolderModifier: Modifier = Modifier,
+    errorPlaceholderImageUrl: String = Resources.images.restaurantErrorPlaceholder,
+    showLoadingState: Boolean = true,
     contentDescription: String? = null,
     contentScale: ContentScale = ContentScale.Crop,
     placeHolderScale: ContentScale = ContentScale.Crop,
@@ -41,8 +43,13 @@ fun BpImageLoader(
         Box(modifier = modifier) {
             when (painter.requestState) {
                 is ImageRequestState.Loading -> {
-                    Box(Modifier.fillMaxSize().padding(8.dp), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator(color = Theme.colors.primary)
+                    AnimatedVisibility(showLoadingState) {
+                        Box(
+                            Modifier.fillMaxSize().padding(8.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(color = Theme.colors.primary)
+                        }
                     }
                 }
 

@@ -67,6 +67,7 @@ fun CuisineCard(
             BpImageLoader(
                 modifier = Modifier.size(48.dp).scale(animatedFloat),
                 imageUrl = cuisine.cuisineImageUrl,
+                showLoadingState = false,
                 contentDescription = "${cuisine.cuisineName} ${Resources.strings.cuisineImageDescription}",
                 errorPlaceholderImageUrl = Resources.images.cuisinePlaceholder
             )
