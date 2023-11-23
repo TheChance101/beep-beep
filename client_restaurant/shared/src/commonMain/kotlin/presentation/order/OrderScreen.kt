@@ -146,7 +146,7 @@ class OrderScreen(private val restaurantId: String) :
                     OrderTextButton(
                         text = Resources.strings.finish,
                         onClick = {
-                            listener.onClickFinishOrder(order.id)
+                            listener.onClickFinishOrder(order.orderId)
                         }
                     )
                 }
@@ -166,7 +166,7 @@ class OrderScreen(private val restaurantId: String) :
                         OrderTextButton(
                             text = Resources.strings.cancel,
                             onClick = {
-                                listener.onClickCancelOrder(order.id)
+                                listener.onClickCancelOrder(order.orderId)
                             },
                             textColor = Theme.colors.contentTertiary,
                             border = BorderStroke(0.dp, color = Theme.colors.surface)
@@ -174,7 +174,7 @@ class OrderScreen(private val restaurantId: String) :
                         OrderTextButton(
                             text = Resources.strings.approve,
                             onClick = {
-                                listener.onClickApproveOrder(order.id)
+                                listener.onClickApproveOrder(order.orderId)
                             },
                         )
                     }

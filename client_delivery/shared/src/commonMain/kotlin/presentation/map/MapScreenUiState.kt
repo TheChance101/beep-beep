@@ -46,3 +46,7 @@ fun Order.toUiState() = OrderUiState(
     restaurantImageUrl = restaurantImage,
     destinationAddress = destinationAddress,
 )
+
+fun LocationUiState.toEntity(): Location {
+    return Location(latitude = lat, longitude = lng)
+}

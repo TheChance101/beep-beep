@@ -69,8 +69,11 @@ class MapScreenModel(
             updateState {
                 it.copy(
                     errorState = null,
-                    orderUiState = it.orderUiState.copy(restaurantLocation = location.toUiState())
+                    deliveryLocation = location.toUiState()
                 )
+            }
+            if (state.value.orderState == OrderState.RECEIVED) {
+                broadcastLocation(state.value.tripId, location.toUiState())
             }
         }
     }
@@ -120,7 +123,10 @@ class MapScreenModel(
         val currentStatus = when (order.tripStatus) {
             TripStatus.PENDING -> OrderState.LOADING
             TripStatus.APPROVED -> OrderState.ACCEPTED
-            TripStatus.RECEIVED -> OrderState.RECEIVED
+            TripStatus.RECEIVED -> {
+                OrderState.RECEIVED
+            }
+
             TripStatus.FINISHED -> {
                 sendNewEffect(MapScreenUiEffect.CloseMap)
                 OrderState.LOADING
@@ -134,6 +140,19 @@ class MapScreenModel(
             )
         }
     }
+
+    private fun broadcastLocation(tripId: String, location: LocationUiState) {
+        tryToExecute(
+            function = { manageOrderUseCase.broadcastLocation(location.toEntity(), tripId) },
+            onSuccess = { onBroadCastLocationSuccess(location) },
+            onError = ::onError
+        )
+    }
+
+    private fun onBroadCastLocationSuccess(location: LocationUiState) {
+        println("New emitted Location is $location ")
+    }
+
 
     override fun onRejectClicked() {
         viewModelScope.launch {

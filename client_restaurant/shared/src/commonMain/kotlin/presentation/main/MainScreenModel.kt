@@ -1,6 +1,8 @@
 package presentation.main
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.AddressInfo
+import domain.entity.Location
 import domain.entity.Restaurant
 import domain.usecase.ILoginUserUseCase
 import domain.usecase.IManageOrderUseCase
@@ -10,6 +12,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
+import presentation.order.LocationUiSate
+import presentation.order.toEntity
 import presentation.restaurantSelection.toUiState
 
 class MainScreenModel(
@@ -42,6 +46,13 @@ class MainScreenModel(
             ::onError
         )
     }
+    private fun saveRestaurantLocation(addressInfo: AddressInfo) {
+        tryToExecute(
+            { manageUser.saveRestaurantLocation(addressInfo) },
+            { onSaveRestaurantLocationSuccess() },
+            ::onError
+        )
+    }
 
     private fun onSaveRestaurantIdSuccess(restaurantId: String) {
         updateState {
@@ -51,6 +62,9 @@ class MainScreenModel(
                 expanded = false
             )
         }
+    }
+    private fun onSaveRestaurantLocationSuccess() {
+        println("saved location")
     }
 
     private fun getRestaurantId() {
@@ -115,7 +129,10 @@ class MainScreenModel(
         val hasMultipleRestaurants = restaurants.size > 1
         updateState { it.copy(restaurants = restaurants.toUiState()) }
         if (!hasMultipleRestaurants) {
+            println("saving restaurant id in if condition ")
             saveRestaurantId(restaurants.first().id)
+            val addressInfo = AddressInfo(restaurants.first().location,restaurants.first().address)
+            saveRestaurantLocation(addressInfo)
         }
     }
 
@@ -137,8 +154,14 @@ class MainScreenModel(
         updateState { it.copy(expanded = false) }
     }
 
-    override fun onRestaurantClicked(restaurantId: String) {
+    override fun onRestaurantClicked(
+        restaurantId: String,
+        location: LocationUiSate,
+        address: String
+    ) {
         saveRestaurantId(restaurantId)
+        val addressInfo = AddressInfo(location.toEntity(),address)
+        saveRestaurantLocation(addressInfo)
         fetchCharts()
     }
 

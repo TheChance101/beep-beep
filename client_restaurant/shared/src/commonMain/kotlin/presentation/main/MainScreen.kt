@@ -42,6 +42,7 @@ import presentation.main.composables.ChartItem
 import presentation.main.composables.ChartsLoadingEffect
 import presentation.main.composables.OptionCardItem
 import presentation.meals.MealsScreen
+import presentation.order.LocationUiSate
 import presentation.order.OrderScreen
 import presentation.orderHistory.OrdersHistoryScreen
 import presentation.restaurantSelection.RestaurantUIState
@@ -215,7 +216,7 @@ class MainScreen() :
 
     @Composable
     fun AppBarDropDownLeading(
-        onSelectRestaurant: (restaurantId: String) -> Unit,
+        onSelectRestaurant: (restaurantId: String,location:LocationUiSate,address:String) -> Unit,
         onShowMenu: () -> Unit,
         onDismissMenu: () -> Unit,
         isRestaurantOpened: Boolean,
@@ -266,7 +267,7 @@ class MainScreen() :
                 ) {
                     restaurants.forEach { restaurant ->
                         RestaurantInformation(
-                            onRestaurantClick = { onSelectRestaurant(restaurant.restaurantId) },
+                            onRestaurantClick = { onSelectRestaurant(restaurant.restaurantId,restaurant.location,restaurant.address) },
                             restaurantName = restaurant.restaurantName,
                             restaurantNumber = restaurant.restaurantPhoneNumber,
                             isOpen = restaurant.isOpen
