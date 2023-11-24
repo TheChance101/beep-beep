@@ -2,7 +2,6 @@ package presentation.restaurants
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,11 +21,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import app.cash.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAppBar
+import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.composable.BpPagingList
 import com.beepbeep.designSystem.ui.composable.modifier.noRippleEffect
 import com.beepbeep.designSystem.ui.theme.Theme
@@ -34,13 +33,10 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
-import presentation.composable.BpImageCard
-import presentation.composable.BpImageLoader
 import presentation.composable.BpPriceLevel
 import presentation.resturantDetails.RestaurantScreen
 import resources.Resources
 import util.getNavigationBarPadding
-import util.getStatusBarPadding
 
 
 data class RestaurantsScreen(val offerId: String? = null) :
@@ -102,6 +98,7 @@ data class RestaurantsScreen(val offerId: String? = null) :
             BpImageLoader(
                 modifier = Modifier.height(156.dp).clip(RoundedCornerShape(8.dp)),
                 imageUrl = restaurant.imageUrl,
+                errorPlaceholderImageUrl = Resources.images.restaurantErrorPlaceholder,
             )
 
             Row(

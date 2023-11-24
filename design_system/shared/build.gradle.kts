@@ -37,6 +37,7 @@ kotlin {
                 implementation(libs.compose.materialIcons)
                 implementation(libs.compose.components.resources)
                 implementation(libs.paging.compose)
+                implementation(libs.compose.image.loader)
             }
         }
         val androidMain by getting {

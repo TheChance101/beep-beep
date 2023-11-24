@@ -1,7 +1,6 @@
 package presentation.home.composable
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -25,13 +24,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.theme.Theme
-import com.seiko.imageloader.rememberAsyncImagePainter
-import presentation.composable.BpImageLoader
 import presentation.cuisines.CuisineUiState
 import resources.Resources
 
@@ -67,7 +64,6 @@ fun CuisineCard(
             BpImageLoader(
                 modifier = Modifier.size(48.dp).scale(animatedFloat),
                 imageUrl = cuisine.cuisineImageUrl,
-                showLoadingState = false,
                 contentDescription = "${cuisine.cuisineName} ${Resources.strings.cuisineImageDescription}",
                 errorPlaceholderImageUrl = Resources.images.cuisinePlaceholder
             )
