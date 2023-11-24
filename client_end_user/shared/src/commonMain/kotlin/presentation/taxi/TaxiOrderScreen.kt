@@ -25,16 +25,12 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
-import presentation.cart.CartScreen
 import presentation.composable.BackButton
-import presentation.orderFoodTracking.OrderFoodTrackingUiEffect
-import presentation.orderFoodTracking.OrderFoodTrackingUiState
 import presentation.orderFoodTracking.composables.MapView
 import presentation.taxi.destinationSearch.SearchDestinationScreen
 import resources.Resources
 import util.getNavigationBarPadding
 import util.getStatusBarPadding
-import util.root
 
 class TaxiOrderScreen :
     BaseScreen<TaxiOrderScreenModel, TaxiOrderUiState, TaxiOrderUiEffect, TaxiOrderInteractionListener>() {
