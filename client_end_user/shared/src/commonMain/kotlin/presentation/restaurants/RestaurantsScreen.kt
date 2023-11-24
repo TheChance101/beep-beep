@@ -40,6 +40,7 @@ import presentation.composable.BpPriceLevel
 import presentation.resturantDetails.RestaurantScreen
 import resources.Resources
 import util.getNavigationBarPadding
+import util.getStatusBarPadding
 
 
 data class RestaurantsScreen(val offerId: String? = null) :
@@ -64,9 +65,10 @@ data class RestaurantsScreen(val offerId: String? = null) :
     override fun onRender(state: RestaurantsUIState, listener: RestaurantsListener) {
         val restaurants = state.restaurants.collectAsLazyPagingItems()
         Column(
-            Modifier.fillMaxSize().background(Theme.colors.background).padding(
-                getNavigationBarPadding()
-            )
+            Modifier
+                .fillMaxSize()
+                .background(Theme.colors.background)
+                .padding(getNavigationBarPadding())
         ) {
             BpAppBar(
                 title = Resources.strings.restaurants,
@@ -97,18 +99,11 @@ data class RestaurantsScreen(val offerId: String? = null) :
             colors = CardDefaults.cardColors(Color.Transparent),
             shape = RoundedCornerShape(0.dp)
         ) {
-            Box(
-                modifier = Modifier.height(156.dp).clip(RoundedCornerShape(8.dp))
-            ) {
+            BpImageLoader(
+                modifier = Modifier.height(156.dp).clip(RoundedCornerShape(8.dp)),
+                imageUrl = restaurant.imageUrl,
+            )
 
-                Image(
-                    painter = painterResource(Resources.images.placeholder),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = null
-                )
-
-                BpImageLoader(imageUrl = restaurant.imageUrl, contentScale = ContentScale.Crop)
-            }
             Row(
                 modifier = Modifier.fillMaxWidth().padding(top = 8.dp).width(232.dp),
                 verticalAlignment = Alignment.CenterVertically

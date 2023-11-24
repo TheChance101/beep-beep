@@ -1,7 +1,6 @@
 package presentation.cuisines
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -72,7 +71,7 @@ class CuisinesScreen :
 @Composable
 fun CuisinesContent(
     state: CuisinesUiState,
-    listener: CuisinesInteractionListener
+    listener: CuisinesInteractionListener,
 ) {
     LazyVerticalGrid(
         modifier = Modifier.fillMaxSize(),
