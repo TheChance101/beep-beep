@@ -27,12 +27,10 @@ class OrderHistoryScreenModel(
     private fun getData() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            ::getOrdersHistory, ::onGetOrdersHistorySuccess, ::onError
+            { ordersManagement.getOrdersHistory(restaurantId) },
+            ::onGetOrdersHistorySuccess,
+            ::onError
         )
-    }
-
-    private suspend fun getOrdersHistory(): Flow<PagingData<Order>> {
-        return ordersManagement.getOrdersHistory(restaurantId)
     }
 
     private fun onGetOrdersHistorySuccess(orders: Flow<PagingData<Order>>) {
