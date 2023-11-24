@@ -17,7 +17,6 @@ interface IManageOrderUseCase {
     suspend fun cancelOrder(orderId: String): Order
     suspend fun getAddressInfo(userId: String): AddressInfo
     suspend fun createOrderTrip(trip: Trip): Trip
-   // suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
     suspend fun getOrdersHistory(restaurantId: String): Flow<PagingData<Order>>
 
     suspend fun getOrdersRevenueByDaysBefore(
@@ -66,16 +65,6 @@ class ManageOrderUseCase(
     override suspend fun createOrderTrip(trip: Trip): Trip {
         return orderRemoteGateway.createOrderTrip(trip)
     }
-
-//    override suspend fun getOrdersHistory(
-//        restaurantId: String,
-//        page: Int,
-//        limit: Int
-//    ): List<Order> {
-//        val result = orderRemoteGateway.getOrdersHistory(restaurantId, page, limit)
-//        println("getOrdersHistory from use case: ${result}")
-//        return result.items
-//    }
 
     override suspend fun getOrdersRevenueByDaysBefore(
         restaurantId: String,
