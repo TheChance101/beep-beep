@@ -31,8 +31,10 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.composable.modifier.noRippleEffect
+import resources.Resources
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -43,7 +45,7 @@ fun ImageSlider(
     indicatorColor: Color = Theme.colors.primary,
     indicatorAlignment: Alignment = Alignment.BottomEnd,
 ) {
-    val pagerState = rememberPagerState{
+    val pagerState = rememberPagerState {
         images.size
     }
 
@@ -57,7 +59,10 @@ fun ImageSlider(
             contentPadding = PaddingValues(0.dp),
             pageSpacing = 0.dp
         ) { page ->
-            BpImageLoader(imageUrl = images[page])
+            BpImageLoader(
+                imageUrl = images[page],
+                errorPlaceholderImageUrl = Resources.images.restaurantErrorPlaceholder,
+            )
         }
 
         ImageSliderIndicator(
@@ -75,7 +80,7 @@ private fun BoxScope.ImageSliderIndicator(
     itemCount: Int,
     pagerState: PagerState,
     indicatorColor: Color,
-    indicatorAlignment: Alignment
+    indicatorAlignment: Alignment,
 ) {
     val circleOffsetList = remember { mutableStateListOf(Offset(0f, 0f)) }
 
@@ -90,7 +95,7 @@ private fun BoxScope.ImageSliderIndicator(
             .drawBehind {
                 drawCircle(
                     color = indicatorColor,
-                    center = Offset(animateOffset.x + 3.dp.toPx(),size.height / 2),
+                    center = Offset(animateOffset.x + 3.dp.toPx(), size.height / 2),
                     radius = 3.dp.toPx()
                 )
             }

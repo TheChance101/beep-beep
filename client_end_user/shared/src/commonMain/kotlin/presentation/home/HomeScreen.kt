@@ -38,6 +38,7 @@ import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.BpAppBar
 import com.beepbeep.designSystem.ui.composable.BpButton
+import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import domain.entity.FoodOrder
@@ -48,7 +49,6 @@ import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
 import presentation.cart.CartScreen
 import presentation.chatSupport.ChatSupportScreen
-import presentation.composable.BpImageLoader
 import presentation.composable.ImageSlider
 import presentation.composable.ItemSection
 import presentation.composable.SectionHeader
@@ -67,7 +67,6 @@ import presentation.orderFoodTracking.OrderFoodTrackingScreen
 import presentation.restaurants.RestaurantsScreen
 import presentation.resturantDetails.RestaurantScreen
 import presentation.taxi.TaxiOrderScreen
-import presentation.taxi.TaxiOrderScreenModel
 import resources.Resources
 import util.getNavigationBarPadding
 import util.root
@@ -414,9 +413,12 @@ class HomeScreen : BaseScreen<
             )
             Row(modifier = Modifier.fillMaxWidth().height(80.dp).padding(top = 8.dp)) {
                 BpImageLoader(
-                    modifier = Modifier.fillMaxHeight().width(104.dp)
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(104.dp)
                         .clip(RoundedCornerShape(8.dp)),
-                    imageUrl = order.image
+                    imageUrl = order.image,
+                    errorPlaceholderImageUrl = Resources.images.restaurantErrorPlaceholder
                 )
                 Column(
                     modifier = Modifier.padding(8.dp).fillMaxSize(),

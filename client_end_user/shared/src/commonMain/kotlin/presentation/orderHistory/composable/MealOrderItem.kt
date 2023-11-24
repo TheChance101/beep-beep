@@ -14,10 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import presentation.composable.BpImageLoader
 import presentation.orderHistory.OrderHistoryUiState
+import resources.Resources
 
 @Composable
 fun MealOrderItem(
@@ -38,6 +38,7 @@ fun MealOrderItem(
                     .size(64.dp)
                     .clip(shape = RoundedCornerShape(Theme.radius.medium)),
                 imageUrl = orders.restaurantImageUrl,
+                errorPlaceholderImageUrl = Resources.images.restaurantErrorPlaceholder,
                 contentScale = ContentScale.Crop
             )
             Row(

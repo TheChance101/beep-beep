@@ -22,10 +22,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.composable.modifier.noRippleEffect
 import com.beepbeep.designSystem.ui.theme.Theme
 import domain.entity.PriceLevel
@@ -64,6 +63,7 @@ fun BpImageCard(
 
             BpImageLoader(
                 imageUrl = imageUrl,
+                errorPlaceholderImageUrl = Resources.images.restaurantErrorPlaceholder,
                 contentDescription = title,
             )
 

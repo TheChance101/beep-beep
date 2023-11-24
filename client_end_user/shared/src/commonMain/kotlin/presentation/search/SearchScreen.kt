@@ -19,11 +19,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -31,7 +31,6 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
 import presentation.composable.BottomSheet
-import presentation.composable.BpImageLoader
 import presentation.composable.MealBottomSheet
 import presentation.composable.MealCard
 import presentation.composable.ModalBottomSheetState
@@ -177,6 +176,7 @@ class SearchScreen :
             BpImageLoader(
                 modifier = Modifier.roundedBorderShape().size(64.dp),
                 imageUrl = restaurant.image,
+                errorPlaceholderImageUrl = Resources.images.restaurantErrorPlaceholder,
                 contentDescription = restaurant.name,
             )
 

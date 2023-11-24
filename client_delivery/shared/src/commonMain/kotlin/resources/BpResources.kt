@@ -4,10 +4,13 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import com.beepbeep.designSystem.ui.theme.BpTheme
+import com.seiko.imageloader.LocalImageLoader
 import util.SetInsetsController
-
+import util.generateImageLoader
+import util.getPlatformContext
 
 private val localDrawableResources = staticCompositionLocalOf { DrawableResources() }
 private val localStringResources = staticCompositionLocalOf { StringResources() }
@@ -18,10 +21,12 @@ fun BeepBeepTheme(
     content: @Composable () -> Unit,
 ) {
     val drawableResources = if (useDarkTheme) BpDrawableDarkResources else DrawableResources()
+    val context = getPlatformContext()
 
     CompositionLocalProvider(
         localDrawableResources provides drawableResources,
         localStringResources provides StringResources(),
+        LocalImageLoader provides remember { generateImageLoader(context) }
     ) {
         BpTheme {
             SetInsetsController(useDarkTheme)
