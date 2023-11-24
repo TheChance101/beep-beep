@@ -21,7 +21,7 @@ fun NoItemsPlaceholder(
     painter: Painter, text: String,
     modifier: Modifier = Modifier,
     style: TextStyle = Theme.typography.body,
-    isVisible: Boolean = false
+    isVisible: Boolean = false,
 ) {
     if (isVisible) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -35,7 +35,7 @@ fun NoItemsPlaceholder(
                     contentDescription = "",
                     modifier = Modifier.size(120.dp)
                 )
-                Text(text, style = style, color = style.color.copy(alpha = 0.38f))
+                Text(text, style = style, color = Theme.colors.contentTertiary)
             }
         }
     }
