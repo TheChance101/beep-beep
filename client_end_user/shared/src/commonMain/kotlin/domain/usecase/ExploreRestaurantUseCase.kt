@@ -9,6 +9,7 @@ import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.Restaurant
 import domain.gateway.IRestaurantGateway
+import domain.gateway.local.ILocalConfigurationGateway
 import kotlinx.coroutines.flow.Flow
 
 interface IExploreRestaurantUseCase {
@@ -16,6 +17,7 @@ interface IExploreRestaurantUseCase {
     suspend fun getRestaurantDetails(restaurantId: String): Restaurant
     suspend fun getMealById(mealId: String): Meal
     suspend fun getCuisines(): List<Cuisine>
+    suspend fun getPreferredCuisines(): List<Cuisine>
     suspend fun getMealsInCuisine(cuisineId: String): Flow<PagingData<Meal>>
     suspend fun getCuisinesWithMealsInRestaurant(restaurantId: String): List<Cuisine>
 }
@@ -24,6 +26,7 @@ class ExploreRestaurantUseCase(
     private val restaurantGateway: IRestaurantGateway,
     private val mealDataSource: MealsPagingSource,
     private val restaurants: RestaurantsPagingSource,
+    private val localGateway: ILocalConfigurationGateway
 ) : IExploreRestaurantUseCase {
 
 
@@ -37,6 +40,12 @@ class ExploreRestaurantUseCase(
 
     override suspend fun getCuisines(): List<Cuisine> {
         return restaurantGateway.getCuisines()
+    }
+
+    override suspend fun getPreferredCuisines(): List<Cuisine> {
+        val preferredFood = localGateway.getPreferredFood()
+        val cuisines = restaurantGateway.getCuisines()
+        return cuisines.filter { preferredFood.contains(it.id) }
     }
 
     override suspend fun getRestaurants(): Flow<PagingData<Restaurant>> {

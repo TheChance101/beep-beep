@@ -187,7 +187,6 @@ class HomeScreen : BaseScreen<
                     recommendedCuisines = state.recommendedCuisines,
                     onClickCuisineItem = listener::onClickCuisineItem,
                     onClickSeeAllCuisines = listener::onClickSeeAllCuisines,
-                    showSeeAllCuisine = state.isMoreCuisine
                 )
             }
 
@@ -471,7 +470,6 @@ class HomeScreen : BaseScreen<
 
     @Composable
     private fun Cuisines(
-        showSeeAllCuisine: Boolean,
         recommendedCuisines: List<CuisineUiState>,
         onClickSeeAllCuisines: () -> Unit,
         onClickCuisineItem: (String) -> Unit,
@@ -484,7 +482,7 @@ class HomeScreen : BaseScreen<
             SectionHeader(
                 onClickViewAll = onClickSeeAllCuisines,
                 title = Resources.strings.cuisineSectionTitle,
-                showViewAll = showSeeAllCuisine
+                showViewAll = true
             )
 
             Row(

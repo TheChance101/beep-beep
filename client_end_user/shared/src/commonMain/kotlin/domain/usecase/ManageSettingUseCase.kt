@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface IManageSettingUseCase {
     suspend fun savePreferredFood(food: List<String>)
-    suspend fun getPreferredFood(): List<String>?
     suspend fun saveLanguageCode(code: String)
     suspend fun getLanguageCode(): Flow<String>
     suspend fun savePriceLevel(priceLevel: String)
@@ -25,10 +24,6 @@ class ManageSettingUseCase(private val localGateway: ILocalConfigurationGateway)
     IManageSettingUseCase {
     override suspend fun savePreferredFood(food: List<String>) {
         return localGateway.savePreferredFood(food)
-    }
-
-    override suspend fun getPreferredFood(): List<String>? {
-        return localGateway.getPreferredFood()
     }
 
     override suspend fun saveLanguageCode(code: String) {
