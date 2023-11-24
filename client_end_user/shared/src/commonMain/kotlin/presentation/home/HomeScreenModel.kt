@@ -1,7 +1,6 @@
 package presentation.home
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.entity.Cart
 import domain.entity.DeliveryRide
 import domain.entity.FoodOrder
 import domain.entity.Offer
@@ -371,20 +370,13 @@ class HomeScreenModel(
 
     private fun getRecommendedCuisines() {
         tryToExecute(
-            { exploreRestaurant.getCuisines().toCuisineUiState() },
+            { exploreRestaurant.getPreferredCuisines().toCuisineUiState() },
             ::onGetCuisinesSuccess,
             ::onGetCuisinesError
         )
     }
-
     private fun onGetCuisinesSuccess(cuisines: List<CuisineUiState>) {
-        val popularCuisines = cuisines.shuffled().take(state.value.maxCuisinesInHome)
-        updateState {
-            it.copy(
-                recommendedCuisines = popularCuisines,
-                isMoreCuisine = cuisines.size > it.maxCuisinesInHome
-            )
-        }
+        updateState { it.copy(recommendedCuisines = cuisines,) }
     }
 
     private fun onGetCuisinesError(error: ErrorState) {
