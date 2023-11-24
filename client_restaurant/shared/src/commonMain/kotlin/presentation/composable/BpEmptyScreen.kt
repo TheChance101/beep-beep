@@ -17,7 +17,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 
 
 @Composable
-fun BpEmptyScreen(
+fun NoItemsPlaceholder(
     painter: Painter, text: String,
     modifier: Modifier = Modifier,
     style: TextStyle = Theme.typography.body,

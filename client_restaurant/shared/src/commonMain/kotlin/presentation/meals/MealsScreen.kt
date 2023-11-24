@@ -42,7 +42,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
-import presentation.composable.BpEmptyScreen
+import presentation.composable.NoItemsPlaceholder
 import presentation.composable.MealCard
 import presentation.mealManagement.MealScreen
 import presentation.mealManagement.ScreenMode
@@ -98,7 +98,7 @@ class MealsScreen(private val restaurantId: String) :
             },
             floatingActionButtonPosition = FabPosition.End,
         ) { paddingValue ->
-            BpEmptyScreen(
+            NoItemsPlaceholder(
                 painter = painterResource(Resources.images.emptyScreen),
                 text = strings.noMeals,
                 isVisible = (state.meals.isEmpty() && !state.isLoading)

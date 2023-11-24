@@ -35,7 +35,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
-import presentation.composable.BpEmptyScreen
+import presentation.composable.NoItemsPlaceholder
 import presentation.order.composable.OrderCard
 import presentation.order.composable.header
 import resources.Resources
@@ -127,7 +127,7 @@ class OrdersHistoryScreen(private val restaurantId: String) :
             }
         }
 
-        BpEmptyScreen(
+        NoItemsPlaceholder(
             painter = painterResource(Resources.images.emptyScreen),
             text = Resources.strings.noOrderHistory,
             isVisible = (state.orders.isEmpty()),
