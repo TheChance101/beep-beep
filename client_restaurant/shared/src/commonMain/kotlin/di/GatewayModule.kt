@@ -15,6 +15,7 @@ import domain.gateway.remote.IRestaurantRemoteGateway
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import data.gateway.remote.pagesource.OrdersHistoryPagingSource
 
 val GatewayModule = module {
 //    singleOf(::FakeRemoteGateWay) { bind<IFakeRemoteGateway>() }
@@ -24,5 +25,7 @@ val GatewayModule = module {
     singleOf(::IdentityRemoteGateway) { bind<IIdentityRemoteGateway>() }
     singleOf(::OrderRemoteGateway) { bind<IOrderRemoteGateway>() }
     singleOf(::RestaurantRemoteGateWay) { bind<IRestaurantRemoteGateway>() }
+    singleOf(::OrdersHistoryPagingSource)
+
 
 }
