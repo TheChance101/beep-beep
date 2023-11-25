@@ -27,6 +27,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -35,7 +36,6 @@ import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
 import presentation.composable.BackButton
 import presentation.composable.BottomSheet
-import presentation.composable.BpImageLoader
 import presentation.composable.BpPriceLevel
 import presentation.composable.ItemSection
 import presentation.composable.MealBottomSheet
@@ -111,6 +111,7 @@ data class RestaurantScreen(val restaurantId: String) :
                         .align(Alignment.TopCenter),
                     contentScale = ContentScale.Crop,
                     imageUrl = state.restaurantInfo.image,
+                    errorPlaceholderImageUrl = Resources.images.restaurantErrorPlaceholder,
                     contentDescription = state.restaurantInfo.name
                 )
 

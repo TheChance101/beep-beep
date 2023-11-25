@@ -18,9 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.composable.modifier.noRippleEffect
 import com.beepbeep.designSystem.ui.theme.Theme
-import presentation.composable.BpImageLoader
 import presentation.composable.exitinstion.bottomBorder
 import resources.Resources
 
@@ -35,7 +35,7 @@ fun ItemCart(
     count: Int,
     index: Int,
     modifier: Modifier = Modifier,
-    isDividerVisible: Boolean = false
+    isDividerVisible: Boolean = false,
 ) {
     Row(
         modifier = modifier.fillMaxWidth().height(104.dp)
@@ -105,7 +105,5 @@ fun ItemCart(
                 }
             }
         }
-
     }
-
 }

@@ -62,6 +62,9 @@ kotlin {
                 implementation(libs.ktor.client.cio)
                 implementation(libs.kotlin.serialization)
 
+                //image loader
+                implementation(libs.compose.image.loader)
+
                 api(libs.calf)
                 api(libs.moko.geo)
             }

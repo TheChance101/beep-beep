@@ -12,9 +12,10 @@ data class DrawableResources(
     val iconClock: String = "ic_clock_circle.xml",
     val test: String = "test.jpg",
     val close: String = "close.xml",
-    val readyDeliveryBike: String = "ready_delivery_bike.png"
+    val readyDeliveryBike: String = "ready_delivery_bike.png",
+    val restaurantErrorPlaceholder: String = "restaurant_error.png",
 )
 
 val BpDrawableDarkResources = DrawableResources(
-
+    restaurantErrorPlaceholder = "restaurant_error_dark.jpg",
 )

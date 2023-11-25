@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.composable.modifier.roundedBorderShape
 import presentation.resturantDetails.MealUIState
@@ -69,5 +70,4 @@ fun MealCard(
             )
         }
     }
-
 }
