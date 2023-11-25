@@ -39,7 +39,7 @@ fun MapView(
         if (orderState == OrderState.LOADING) {
             stateWebView.evaluateJavascript("clearDirections()", null)
         }
-        if (orderState == OrderState.NEW_ORDER) {
+        if (orderState == OrderState.NEW_ORDER || orderState == OrderState.ACCEPTED || orderState == OrderState.DELIVERED) {
             stateWebView.evaluateJavascript(
                 "getDirections(${restaurantLocation.lat},${restaurantLocation.lng},${destination.lat},${destination.lng})",
                 null
