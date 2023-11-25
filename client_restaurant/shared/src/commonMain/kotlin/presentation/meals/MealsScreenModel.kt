@@ -23,7 +23,7 @@ class MealsScreenModel(
     }
 
     private fun getCuisine() {
-        updateState { it.copy(isLoading = true) }
+        updateState { it.copy(isCuisinesLoading = true,isMealsLoading = true) }
         tryToExecute(
             function = { manageCousin.getCuisines() },
             ::onGetCuisineSuccessfully,
@@ -33,7 +33,9 @@ class MealsScreenModel(
 
     private fun onGetCuisineSuccessfully(cuisines: List<Cuisine>) {
         updateState {
-            it.copy(isLoading = false,
+            it.copy(
+                isCuisinesLoading = false,
+                isMealsLoading = false,
                 cuisines = cuisines.toCuisineUIState(),
                 selectedCuisine = cuisines.toCuisineUIState().first()
             )
@@ -42,20 +44,20 @@ class MealsScreenModel(
     }
 
     private fun getMeals(restaurantId: String) {
-        updateState { it.copy(isLoading = true) }
+        updateState { it.copy(isMealsLoading = true) }
         tryToExecute(
-            function = { manageMeal.getAllMeals(restaurantId,1,20) },
+            function = { manageMeal.getAllMeals(restaurantId, 1, 20) },
             ::onGetMealSuccessfully,
             ::onError
         )
     }
 
     private fun onGetMealSuccessfully(meals: List<Meal>) {
-        updateState { it.copy(meals = meals.toMealUIState(), isLoading = false) }
+        updateState { it.copy(meals = meals.toMealUIState(), isMealsLoading = false) }
     }
 
     private fun getMealsByCuisineId(cuisineId: String) {
-        updateState { it.copy(isLoading = true) }
+        updateState { it.copy(isMealsLoading = true) }
         tryToExecute(
             { manageMeal.getMealsByCuisineId(cuisineId, 1, 20) },
             ::onGetMealsByCuisineIdSuccessfully,
@@ -64,11 +66,11 @@ class MealsScreenModel(
     }
 
     private fun onGetMealsByCuisineIdSuccessfully(meals: List<Meal>) {
-        updateState { it.copy(meals = meals.toMealUIState(), isLoading = false) }
+        updateState { it.copy(meals = meals.toMealUIState(), isMealsLoading = false) }
     }
 
     private fun onError(error: ErrorState) {
-        updateState { it.copy(error = error, isLoading = false) }
+        updateState { it.copy(error = error, isCuisinesLoading = false, isMealsLoading = false) }
     }
 
     override fun onClickBack() {

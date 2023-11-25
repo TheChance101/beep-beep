@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -101,11 +102,11 @@ class MealsScreen(private val restaurantId: String) :
             NoItemsPlaceholder(
                 painter = painterResource(Resources.images.emptyScreen),
                 text = strings.noMeals,
-                isVisible = (state.meals.isEmpty() && !state.isLoading)
+                isVisible = (state.meals.isEmpty() && !state.isCuisinesLoading && !state.isMealsLoading)
             )
-            AnimatedContent(state.isLoading) {
-                if (state.isLoading) {
-                    LoadingMeals(paddingValue)
+            AnimatedContent(state) {
+                if (state.isMealsLoading && state.isCuisinesLoading) {
+                    LoadingCuisinesAndMeals(paddingValue)
                 } else {
                     MealsContent(state, listener, paddingValue)
                 }
@@ -113,52 +114,63 @@ class MealsScreen(private val restaurantId: String) :
         }
     }
 
+
     @Composable
-    fun LoadingMeals(paddingValue: PaddingValues) {
+    fun LoadingCuisinesAndMeals(paddingValue: PaddingValues) {
         Column(
             modifier = Modifier.padding(paddingValue).fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            LazyRow(
-                modifier = Modifier.padding(top = 16.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                items(10) {
+            LoadingCuisines()
+            LoadingMeals()
+        }
+    }
+
+    @Composable
+    fun LoadingMeals() {
+        LazyVerticalGrid(
+            contentPadding = PaddingValues(dimens.space16),
+            columns = GridCells.Adaptive(150.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            items(10) {
+                Column {
                     Box(
-                        modifier = Modifier
-                            .width(100.dp)
-                            .height(36.dp)
-                            .padding(start = 4.dp)
-                            .clip(RoundedCornerShape(8.dp))
+                        modifier = Modifier.fillMaxWidth().padding(dimens.space4)
+                            .clip(shape = shapes.medium).height(104.dp).shimmerEffect()
+                    )
+                    Box(
+                        modifier = Modifier.fillMaxWidth().height(20.dp)
+                            .padding(top = 8.dp, start = 8.dp, end = 16.dp).shimmerEffect()
+                    )
+                    Box(
+                        modifier = Modifier.width(90.dp).height(20.dp)
+                            .padding(top = 8.dp, start = 8.dp)
                             .shimmerEffect()
                     )
                 }
             }
-            LazyVerticalGrid(
-                contentPadding = PaddingValues(dimens.space16),
-                columns = GridCells.Adaptive(150.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                items(10) {
-                    Column {
-                        Box(
-                            modifier = Modifier.fillMaxWidth().padding(dimens.space4)
-                                .clip(shape = shapes.medium).height(104.dp).shimmerEffect()
-                        )
-                        Box(
-                            modifier = Modifier.fillMaxWidth().height(20.dp)
-                                .padding(top = 8.dp, start = 8.dp, end = 16.dp).shimmerEffect()
-                        )
-                        Box(
-                            modifier = Modifier.width(90.dp).height(20.dp)
-                                .padding(top = 8.dp, start = 8.dp)
-                                .shimmerEffect()
-                        )
-                    }
-                }
+        }
+    }
+
+    @Composable
+    fun LoadingCuisines() {
+        LazyRow(
+            modifier = Modifier.padding(top = 16.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            items(10) {
+                Box(
+                    modifier = Modifier
+                        .width(100.dp)
+                        .height(36.dp)
+                        .padding(start = 4.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .shimmerEffect()
+                )
             }
         }
     }
@@ -175,35 +187,66 @@ class MealsScreen(private val restaurantId: String) :
             modifier = Modifier.padding(paddingValue).fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            LazyRow(
-                contentPadding = PaddingValues(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                state = lazyRowState
-            ) {
-                items(state.cuisines.size) { index ->
-                    BpChip(
-                        label = state.cuisines[index].name,
-                        isSelected = state.cuisines[index] == selectedCuisine,
-                        onClick = { listener.onClickCuisineType(state.cuisines[index], index) }
-                    )
+            ShowCuisines(lazyRowState, state, selectedCuisine, listener)
+            AnimatedContent(state) {
+                if (state.isMealsLoading) {
+                    LoadingMeals()
+                } else {
+                    ShowMeals(state, listener)
                 }
             }
-            LazyVerticalGrid(
-                contentPadding = PaddingValues(16.dp),
-                columns = GridCells.Adaptive(150.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                items(state.meals, key = { it.id }) { meal ->
-                    MealCard(onClick = { listener.onClickMeal(meal.id) }, meal = meal)
-                }
-            }
+        }
+    }
 
-            LaunchedEffect(selectedCuisine) {
-                val index = state.cuisines.indexOf(selectedCuisine)
-                if (index >= 0) {
-                    lazyRowState.animateScrollToItem(index)
-                }
+    @Composable
+    private fun ShowMeals(
+        state: MealsScreenUIState,
+        listener: MealScreenInteractionListener
+    ) {
+        LazyVerticalGrid(
+            contentPadding = PaddingValues(16.dp),
+            columns = GridCells.Adaptive(150.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            items(state.meals, key = { it.id }) { meal ->
+                MealCard(onClick = { listener.onClickMeal(meal.id) }, meal = meal)
+            }
+        }
+    }
+
+    @Composable
+    private fun ShowCuisines(
+        lazyRowState: LazyListState,
+        state: MealsScreenUIState,
+        selectedCuisine: CuisineUIState,
+        listener: MealScreenInteractionListener
+    ) {
+        LazyRow(
+            contentPadding = PaddingValues(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            state = lazyRowState
+        ) {
+            items(state.cuisines.size) { index ->
+                BpChip(
+                    label = state.cuisines[index].name,
+                    isSelected = state.cuisines[index] == selectedCuisine,
+                    onClick = { listener.onClickCuisineType(state.cuisines[index], index) }
+                )
+            }
+        }
+        UpdateCuisineSelection(selectedCuisine, state, lazyRowState)
+    }
+    @Composable
+    private fun UpdateCuisineSelection(
+        selectedCuisine: CuisineUIState,
+        state: MealsScreenUIState,
+        lazyRowState: LazyListState
+    ) {
+        LaunchedEffect(selectedCuisine) {
+            val index = state.cuisines.indexOf(selectedCuisine)
+            if (index >= 0) {
+                lazyRowState.animateScrollToItem(index)
             }
         }
     }
