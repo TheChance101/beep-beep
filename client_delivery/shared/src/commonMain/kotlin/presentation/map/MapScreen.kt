@@ -40,7 +40,6 @@ class MapScreen:BaseScreen<MapScreenModel,MapScreenUiState,MapScreenUiEffect,Map
                 restaurantLocation = state.orderUiState.restaurantLocation ,
                 destination = state.orderUiState.destinationLocation,
                 orderState = state.orderState,
-               calculateRouteDistance =  {distance, time -> }
             )
             BpAppBar(
                 isBackIconVisible = false,

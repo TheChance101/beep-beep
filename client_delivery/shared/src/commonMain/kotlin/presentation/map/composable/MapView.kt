@@ -16,7 +16,6 @@ fun MapView(
     destination: LocationUiState,
     modifier: Modifier = Modifier,
     orderState: OrderState,
-    calculateRouteDistance: (distance: String, time: String) -> Unit,
 ) {
     val stateWebView = rememberWebViewStateWithHTMLData(
         data = map,
@@ -45,18 +44,6 @@ fun MapView(
                 "getDirections(${restaurantLocation.lat},${restaurantLocation.lng},${destination.lat},${destination.lng})",
                 null
             )
-        }
-
-        if (orderState == OrderState.ACCEPTED) {
-            val distanceJsCode = """
-            calculateDistance(${restaurantLocation.lat},${restaurantLocation.lng},${destination.lat},${destination.lng})
-             """.trimIndent()
-
-
-            stateWebView.evaluateJavascript(distanceJsCode) { result ->
-                println("Distance calculation result: $result")
-                calculateRouteDistance(result.toString(), "20:22")
-            }
         }
     }
 }
@@ -149,16 +136,6 @@ function clearDirections() {
 
 function clearMap() {
     map.entities.clear();
-}
-
-function calculateDistance(startLat, startLng, endLat, endLng) {
-    const startLocation = new Microsoft.Maps.Location(startLat, startLng);
-    const endLocation = new Microsoft.Maps.Location(endLat, endLng);
-    
-    const distanceInMeters = Microsoft.Maps.Location.calculateDistance(startLocation, endLocation);
-    
-    const distanceInKilometers = distanceInMeters / 1000;
-    return distanceInKilometers;
 }
 
 </script>
