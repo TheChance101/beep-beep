@@ -20,11 +20,10 @@ class MealsScreenModel(
 
     init {
         getCuisine()
-        getMeals(restaurantId)
     }
 
     private fun getCuisine() {
-        updateState { it.copy(isCuisinesLoading = true) }
+        updateState { it.copy(isCuisinesLoading = true,isMealsLoading = true) }
         tryToExecute(
             function = { manageCousin.getCuisines() },
             ::onGetCuisineSuccessfully,
@@ -36,11 +35,12 @@ class MealsScreenModel(
         updateState {
             it.copy(
                 isCuisinesLoading = false,
+                isMealsLoading = false,
                 cuisines = cuisines.toCuisineUIState(),
                 selectedCuisine = cuisines.toCuisineUIState().first()
             )
         }
-
+        getMeals(restaurantId)
     }
 
     private fun getMeals(restaurantId: String) {

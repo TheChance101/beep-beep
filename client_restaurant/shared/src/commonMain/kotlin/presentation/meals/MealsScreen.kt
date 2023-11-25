@@ -187,24 +187,12 @@ class MealsScreen(private val restaurantId: String) :
             modifier = Modifier.padding(paddingValue).fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            AnimatedContent(state) {
-                if (state.isCuisinesLoading) {
-                    LoadingCuisines()
-                } else {
-                    ShowCuisines(lazyRowState, state, selectedCuisine, listener)
-                }
-            }
+            ShowCuisines(lazyRowState, state, selectedCuisine, listener)
             AnimatedContent(state) {
                 if (state.isMealsLoading) {
                     LoadingMeals()
                 } else {
                     ShowMeals(state, listener)
-                }
-            }
-            LaunchedEffect(selectedCuisine) {
-                val index = state.cuisines.indexOf(selectedCuisine)
-                if (index >= 0) {
-                    lazyRowState.animateScrollToItem(index)
                 }
             }
         }
@@ -245,6 +233,20 @@ class MealsScreen(private val restaurantId: String) :
                     isSelected = state.cuisines[index] == selectedCuisine,
                     onClick = { listener.onClickCuisineType(state.cuisines[index], index) }
                 )
+            }
+        }
+        UpdateCuisineSelection(selectedCuisine, state, lazyRowState)
+    }
+    @Composable
+    private fun UpdateCuisineSelection(
+        selectedCuisine: CuisineUIState,
+        state: MealsScreenUIState,
+        lazyRowState: LazyListState
+    ) {
+        LaunchedEffect(selectedCuisine) {
+            val index = state.cuisines.indexOf(selectedCuisine)
+            if (index >= 0) {
+                lazyRowState.animateScrollToItem(index)
             }
         }
     }
