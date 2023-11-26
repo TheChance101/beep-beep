@@ -244,14 +244,10 @@ data class RestaurantScreen(val restaurantId: String) :
             }
 
             ToastMessage(
-                modifier = Modifier.align(Alignment.BottomCenter)
-                    .padding(getNavigationBarPadding()),
+                modifier = Modifier.align(Alignment.BottomCenter).padding(getNavigationBarPadding()),
                 state = state.showToast,
-                message = if (state.errorAddToCart == null) {
-                    Resources.strings.mealAddedToYourCart
-                } else {
-                    Resources.strings.mealFailedToAddInCart
-                },
+                message = if (state.errorAddToCart == null) Resources.strings.mealAddedToYourCart else Resources.strings.mealFailedToAddInCart,
+                isError = state.errorAddToCart != null
             )
         }
     }
