@@ -222,14 +222,16 @@ class RestaurantScreenModel(
     }
 
     private fun onAddToCartSuccess(success: Boolean) {
+        println("successssss")
         updateState { it.copy(isAddToCartLoading = false, errorAddToCart = null) }
         onDismissSheet()
-        showToast()
+        updateState { it.copy(showToast = true) }
     }
 
     private fun onAddToCartError(errorState: ErrorState) {
+        println("errrrrror:$errorState")
         updateState { it.copy(isAddToCartLoading = false, errorAddToCart = errorState) }
-        showToast()
+        updateState { it.copy(showToast = true ) }
     }
 
     override fun onShowMealSheet() {
@@ -244,17 +246,14 @@ class RestaurantScreenModel(
         sendNewEffect(RestaurantUIEffect.onGoToLogin)
     }
 
+    override fun onDismissSnackBar() {
+        updateState { it.copy(showToast = false) }
+    }
+
     private suspend fun delayAndChangePermissionSheetState(show: Boolean) {
         delay(300)
         updateState { it.copy(showLoginSheet = show, showMealSheet = show) }
     }
 
-    private fun showToast() {
-        viewModelScope.launch {
-            updateState { it.copy(showToast = true) }
-            delay(2000)
-            updateState { it.copy(showToast = false) }
-            delay(300)
-        }
-    }
+
 }

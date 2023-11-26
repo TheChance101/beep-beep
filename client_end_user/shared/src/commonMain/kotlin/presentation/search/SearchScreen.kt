@@ -26,6 +26,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.theme.Theme
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.auth.login.LoginScreen
@@ -37,7 +38,7 @@ import presentation.composable.ModalBottomSheetState
 import presentation.composable.modifier.noRippleEffect
 import presentation.composable.modifier.roundedBorderShape
 import presentation.resturantDetails.Composable.NeedToLoginSheet
-import presentation.resturantDetails.Composable.ToastMessage
+import presentation.composable.ToastMessage
 import presentation.resturantDetails.RestaurantScreen
 import resources.Resources
 import util.getStatusBarPadding
@@ -88,14 +89,19 @@ class SearchScreen :
                 content = { content(state, listener) }
             )
 
+            LaunchedEffect(state.showToast) {
+                if (state.showToast) {
+                    delay(2000)
+                    listener.onDismissSnackBar()
+                }
+            }
+
             ToastMessage(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 state = state.showToast,
-                message = if (state.errorAddToCart == null) {
-                    Resources.strings.mealAddedToYourCart
-                } else {
-                    Resources.strings.mealFailedToAddInCart
-                },
+                message = if (state.errorAddToCart == null)
+                    Resources.strings.mealAddedToYourCart else Resources.strings.mealFailedToAddInCart,
+                isError = state.errorAddToCart != null
             )
         }
 

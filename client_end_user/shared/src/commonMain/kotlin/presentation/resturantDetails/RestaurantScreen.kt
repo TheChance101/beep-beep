@@ -19,6 +19,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.theme.Theme
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
@@ -43,7 +45,7 @@ import presentation.composable.RatingBar
 import presentation.composable.modifier.noRippleEffect
 import presentation.resturantDetails.Composable.Chip
 import presentation.resturantDetails.Composable.NeedToLoginSheet
-import presentation.resturantDetails.Composable.ToastMessage
+import presentation.composable.ToastMessage
 import resources.Resources
 import util.getNavigationBarPadding
 
@@ -240,6 +242,13 @@ data class RestaurantScreen(val restaurantId: String) :
                             )
                         }
                     }
+                }
+            }
+
+            LaunchedEffect(state.showToast) {
+                if (state.showToast) {
+                    delay(2000)
+                    listener.onDismissSnackBar()
                 }
             }
 
