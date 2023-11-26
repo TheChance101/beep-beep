@@ -41,8 +41,7 @@ class LoginUserUseCase(
         isKeepMeLoggedInChecked: Boolean,
     ) {
         if (validateLoginFields(userName, password)) {
-            val deviceToken = remoteGateway.getDeviceToken()
-            val session = remoteGateway.loginUser(userName, password,deviceToken)
+            val session = remoteGateway.loginUser(userName, password)
             localGateWay.saveAccessToken(session.accessToken)
             localGateWay.saveRefreshToken(session.refreshToken)
             localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
