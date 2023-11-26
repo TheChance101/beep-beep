@@ -19,7 +19,6 @@ import domain.usecase.IManageProfileUseCase
 import domain.usecase.ITrackOrdersUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -304,6 +303,10 @@ class HomeScreenModel(
         sendNewEffect(HomeScreenUiEffect.NavigateToOrderTaxi)
     }
 
+    override fun onDismissSnackBar() {
+        updateState { it.copy(showSnackBar = false) }
+    }
+
     override fun onClickOrderFood() {
         sendNewEffect(HomeScreenUiEffect.ScrollDownToRecommendedRestaurants)
     }
@@ -354,19 +357,11 @@ class HomeScreenModel(
 
     private fun onStartTrackUserLocationError(errorState: ErrorState) {
         when (errorState) {
-            ErrorState.LocationPermissionDenied -> showSnackBar()
+            ErrorState.LocationPermissionDenied -> updateState { it.copy(showSnackBar = true) }
             else -> {}
         }
     }
 
-    private fun showSnackBar() {
-        viewModelScope.launch {
-            updateState { it.copy(showSnackBar = true) }
-            delay(4000)
-            updateState { it.copy(showSnackBar = false) }
-        }
-
-    }
 
     private fun getRecommendedCuisines() {
         tryToExecute(
@@ -375,8 +370,9 @@ class HomeScreenModel(
             ::onGetCuisinesError
         )
     }
+
     private fun onGetCuisinesSuccess(cuisines: List<CuisineUiState>) {
-        updateState { it.copy(recommendedCuisines = cuisines,) }
+        updateState { it.copy(recommendedCuisines = cuisines) }
     }
 
     private fun onGetCuisinesError(error: ErrorState) {

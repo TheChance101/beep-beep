@@ -47,6 +47,10 @@ class RegistrationScreenModel(private val validation: IValidationUseCase) :
     override fun onBackButtonClicked() {
         sendNewEffect(RegistrationScreenEffect.NavigateBack)
     }
+
+    override fun onDismissSnackBar() {
+        TODO("Not yet implemented")
+    }
     // endregion
 
     // region private methods

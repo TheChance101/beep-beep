@@ -95,7 +95,7 @@ fun MealBottomSheet(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 24.dp),
             title = Resources.strings.addToCart,
             onClick = onAddToCart,
-            isLoading = isLoading
+            isLoading = isLoading,
         )
     }
 

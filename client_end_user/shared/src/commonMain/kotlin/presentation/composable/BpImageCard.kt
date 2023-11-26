@@ -115,7 +115,8 @@ fun BpImageCard(
                 style = Theme.typography.title,
                 color = Theme.colors.contentPrimary,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(3f)
             )
             Spacer(Modifier.weight(1f))
             if (hasRate) {
