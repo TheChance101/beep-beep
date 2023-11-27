@@ -9,8 +9,7 @@ data class MealsScreenUIState(
     val cuisines: List<CuisineUIState> = emptyList(),
     val meals: List<MealUIState> = emptyList(),
     val selectedCuisine: CuisineUIState = CuisineUIState(),
-    val isCuisinesLoading: Boolean = false,
-    val isMealsLoading: Boolean = false,
+    val isLoading: Boolean = false,
     val error: ErrorState? = null,
 )
 
