@@ -1,9 +1,7 @@
 package data.remote.mapper
 
-import data.remote.model.CuisineDto
-import data.remote.model.MealModificationDto
 import data.remote.model.MealDto
-import domain.entity.Cuisine
+import data.remote.model.MealModificationDto
 import domain.entity.Meal
 import domain.entity.MealModification
 

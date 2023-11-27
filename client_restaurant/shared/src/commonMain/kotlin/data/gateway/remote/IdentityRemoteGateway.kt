@@ -18,21 +18,22 @@ import io.ktor.http.Parameters
 import presentation.base.InvalidCredentialsException
 
 class IdentityRemoteGateway(
-    client: HttpClient, private val firebaseService: IFirebaseMessagingService
+    client: HttpClient,/*, private val firebaseService: IFirebaseMessagingService*/
 ) : IIdentityRemoteGateway,
     BaseRemoteGateway(client = client) {
     override suspend fun getDeviceToken(): String {
-       return firebaseService.getDeviceToken()
+//        return firebaseService.getDeviceToken()
+        TODO()
     }
 
-    override suspend fun loginUser(userName: String, password: String, deviceToken: String): Session {
+    override suspend fun loginUser(userName: String, password: String): Session {
         val result = tryToExecute<BaseResponse<SessionDto>> {
             submitForm(
                 url = ("/login"),
                 formParameters = Parameters.build {
                     append("username", userName)
                     append("password", password)
-                    append("token", deviceToken)
+//                    append("token", deviceToken)
                 }
             )
         }.value

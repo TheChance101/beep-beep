@@ -1,10 +1,5 @@
-import platform.UIKit.UIViewController
-import util.statusbar.WindowInsetsUIViewController
+import androidx.compose.ui.window.ComposeUIViewController
+import presentation.app.App
 
-fun MainViewController(): UIViewController {
-    return WindowInsetsUIViewController {
-        App()
-    }
-}
-
+fun MainViewController() = ComposeUIViewController { App() }
 
