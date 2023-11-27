@@ -44,7 +44,7 @@ fun MapView(
         if (orderState == OrderFoodTrackingUiState.FoodOrderStatus.ORDER_IN_THE_ROUTE) {
             stateWebView.evaluateJavascript("clearDirections()", null)
             stateWebView.evaluateJavascript(
-                "getDirections(${deliveryLocation.latitude},${deliveryLocation.longitude} , ${currentLocation.latitude},${currentLocation.longitude} , '$icon1', '$icon2')",
+                "getDirections(${currentLocation.latitude},${currentLocation.longitude} , ${deliveryLocation.latitude},${deliveryLocation.longitude}  , '$icon2', '$icon1')",
                 null
             )
         }
