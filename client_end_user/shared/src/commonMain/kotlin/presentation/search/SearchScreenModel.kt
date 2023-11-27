@@ -8,7 +8,6 @@ import domain.usecase.IManageCartUseCase
 import domain.usecase.ISearchUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -143,12 +142,12 @@ class SearchScreenModel(
     private fun onAddToCartSuccess(success: Boolean) {
         updateState { it.copy(isAddToCartLoading = false, errorAddToCart = null) }
         onDismissSheet()
-        showToast()
+        updateState { it.copy(showToast = true) }
     }
 
     private fun onAddToCartError(errorState: ErrorState) {
         updateState { it.copy(isAddToCartLoading = false, errorAddToCart = errorState) }
-        showToast()
+        updateState { it.copy(showToast = true) }
     }
 
     override fun onLoginClicked() {
@@ -156,13 +155,9 @@ class SearchScreenModel(
         sendNewEffect(SearchUiEffect.NavigateToLogin)
     }
 
-    private fun showToast() {
-        viewModelScope.launch {
-            updateState { it.copy(showToast = true) }
-            delay(2000)
-            updateState { it.copy(showToast = false) }
-            delay(300)
-        }
+    override fun onDismissSnackBar() {
+        updateState { it.copy(showToast = false) }
     }
+
 
 }

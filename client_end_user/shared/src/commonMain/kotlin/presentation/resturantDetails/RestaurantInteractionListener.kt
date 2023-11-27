@@ -10,4 +10,5 @@ interface RestaurantInteractionListener : BaseInteractionListener, MealInteracti
     fun onShowLoginSheet()
     fun onShowMealSheet()
     fun onGoToLogin()
+    fun onDismissSnackBar()
 }

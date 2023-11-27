@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -22,36 +23,36 @@ import resources.Resources
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun DistanceInfo(orderDistance: String, orderDuration: String) {
+fun DistanceInfo(orderDistance: String, orderDuration: String, modifier: Modifier = Modifier) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(
-            12.dp,
-            alignment = Alignment.CenterHorizontally
-        ),
-        modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
+        horizontalArrangement = Arrangement.spacedBy(12.dp, alignment = Alignment.CenterHorizontally),
+        modifier = modifier.fillMaxWidth().padding(top = 16.dp)
     ) {
         DistanceInfoItem(
             text = orderDistance,
-            icon = painterResource(Resources.images.iconPointOnMap)
+            icon = painterResource(Resources.images.iconPointOnMap),
+            modifier = Modifier.weight(1f)
         )
         DistanceInfoItem(
             text = orderDuration,
-            icon = painterResource(Resources.images.iconClock)
+            icon = painterResource(Resources.images.iconClock),
+            modifier = Modifier.weight(1f)
         )
     }
 }
 
 @Composable
-private fun DistanceInfoItem(text: String, icon: Painter) {
+private fun DistanceInfoItem(text: String, icon: Painter, modifier: Modifier = Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
+        verticalArrangement = Arrangement.SpaceEvenly,
+        modifier = modifier
             .border(
                 border = BorderStroke(width = 1.dp, color = Theme.colors.divider),
                 shape = RoundedCornerShape(8.dp)
-            )
-            .padding(vertical = 8.dp, horizontal = 44.dp)
+            ).padding(vertical = 8.dp)
+
     ) {
         Icon(
             painter = icon,
