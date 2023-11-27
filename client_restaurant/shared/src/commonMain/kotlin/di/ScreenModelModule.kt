@@ -19,7 +19,7 @@ val screenModelModule = module {
     factoryOf(::IMealCreationScreenModel)
     factory { (restaurantId: String) -> OrderScreenModel(restaurantId, get(),get()) }
     factoryOf(::RestaurantInformationScreenModel)
-    factory { (restaurantId: String) -> MealsScreenModel(restaurantId, get(), get()) }
+    factory { (restaurantId: String) -> MealsScreenModel(restaurantId, get()) }
     factoryOf(::RestaurantSelectionScreenModel)
     factory { (restaurantId: String) -> OrderHistoryScreenModel(restaurantId, get()) }
     factoryOf(::MealScreenModelFactory)

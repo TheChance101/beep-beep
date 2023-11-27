@@ -1,6 +1,7 @@
 package presentation.meals
 
 import domain.entity.Cuisine
+import domain.entity.CuisineWithMeals
 import domain.entity.Meal
 import presentation.base.ErrorState
 
@@ -16,6 +17,7 @@ data class MealsScreenUIState(
 data class CuisineUIState(
     val id: String = "",
     val name: String = "",
+    val meals: List<MealUIState> = emptyList(),
 )
 
 fun Cuisine.toMealUIState(): CuisineUIState {
@@ -23,6 +25,21 @@ fun Cuisine.toMealUIState(): CuisineUIState {
         id = id,
         name = name,
     )
+}
+
+fun CuisineWithMeals.toCuisineWithMealsUIState(): CuisineUIState {
+    return CuisineUIState(
+        id = id,
+        name = name,
+        meals = meals?.toMealUIState() ?: emptyList(),
+    )
+}
+
+fun List<CuisineWithMeals>.toCuisinesWithMealsUIState(): List<CuisineUIState> {
+    val cuisines = mutableListOf<CuisineUIState>()
+    cuisines.add(CuisineUIState("", "All"))
+    cuisines.addAll(map { it.toCuisineWithMealsUIState() })
+    return cuisines.toList()
 }
 
 fun List<Cuisine>.toCuisineUIState(): List<CuisineUIState> {
