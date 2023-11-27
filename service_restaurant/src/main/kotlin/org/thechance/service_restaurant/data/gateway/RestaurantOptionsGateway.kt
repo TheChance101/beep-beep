@@ -186,9 +186,12 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
                         localField = CuisineCollection::meals.name,
                         foreignField = "_id",
                         newAs = CuisinesMealDetails::meals.name
-                    ),
+                    )
                 )
-            ).toList().toCuisineMealsEntity()
+            ).toList().map { cuisinesMealDetails ->
+                val meals = cuisinesMealDetails.meals.filter { it.restaurantId == ObjectId(restaurantId) }
+                cuisinesMealDetails.copy(meals = meals).toCuisineMealsEntity()
+            }
         } else {
             emptyList()
         }

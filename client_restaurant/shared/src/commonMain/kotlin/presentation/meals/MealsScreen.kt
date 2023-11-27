@@ -26,9 +26,6 @@ import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,8 +40,8 @@ import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
-import presentation.composable.NoItemsPlaceholder
 import presentation.composable.MealCard
+import presentation.composable.NoItemsPlaceholder
 import presentation.mealManagement.MealScreen
 import presentation.mealManagement.ScreenMode
 import resources.Resources
@@ -102,10 +99,10 @@ class MealsScreen(private val restaurantId: String) :
             NoItemsPlaceholder(
                 painter = painterResource(Resources.images.emptyScreen),
                 text = strings.noMeals,
-                isVisible = (state.meals.isEmpty() && !state.isCuisinesLoading && !state.isMealsLoading)
+                isVisible = (state.meals.isEmpty() && !state.isLoading)
             )
-            AnimatedContent(state) {
-                if (state.isMealsLoading && state.isCuisinesLoading) {
+            AnimatedContent(state.isLoading) {
+                if (state.isLoading) {
                     LoadingCuisinesAndMeals(paddingValue)
                 } else {
                     MealsContent(state, listener, paddingValue)
@@ -181,20 +178,12 @@ class MealsScreen(private val restaurantId: String) :
         listener: MealScreenInteractionListener,
         paddingValue: PaddingValues,
     ) {
-        val selectedCuisine by remember { mutableStateOf(state.selectedCuisine) }
-        val lazyRowState = rememberLazyListState()
         Column(
             modifier = Modifier.padding(paddingValue).fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            ShowCuisines(lazyRowState, state, selectedCuisine, listener)
-            AnimatedContent(state) {
-                if (state.isMealsLoading) {
-                    LoadingMeals()
-                } else {
-                    ShowMeals(state, listener)
-                }
-            }
+            ShowCuisines(state, listener)
+            ShowMeals(state, listener)
         }
     }
 
@@ -209,7 +198,7 @@ class MealsScreen(private val restaurantId: String) :
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            items(state.meals, key = { it.id }) { meal ->
+            items(state.meals) { meal ->
                 MealCard(onClick = { listener.onClickMeal(meal.id) }, meal = meal)
             }
         }
@@ -217,11 +206,10 @@ class MealsScreen(private val restaurantId: String) :
 
     @Composable
     private fun ShowCuisines(
-        lazyRowState: LazyListState,
         state: MealsScreenUIState,
-        selectedCuisine: CuisineUIState,
         listener: MealScreenInteractionListener
     ) {
+        val lazyRowState = rememberLazyListState()
         LazyRow(
             contentPadding = PaddingValues(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -230,13 +218,14 @@ class MealsScreen(private val restaurantId: String) :
             items(state.cuisines.size) { index ->
                 BpChip(
                     label = state.cuisines[index].name,
-                    isSelected = state.cuisines[index] == selectedCuisine,
+                    isSelected = state.cuisines[index] == state.selectedCuisine,
                     onClick = { listener.onClickCuisineType(state.cuisines[index], index) }
                 )
             }
         }
-        UpdateCuisineSelection(selectedCuisine, state, lazyRowState)
+        UpdateCuisineSelection(state.selectedCuisine, state, lazyRowState)
     }
+
     @Composable
     private fun UpdateCuisineSelection(
         selectedCuisine: CuisineUIState,
