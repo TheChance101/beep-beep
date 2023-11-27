@@ -25,6 +25,7 @@ import presentation.composable.BpAppBar
 import presentation.composable.BpCard
 import presentation.composable.BpRating
 import presentation.composable.BpTitleWithContentSection
+import presentation.composable.modifier.noRippleEffect
 import presentation.login.LoginScreen
 import resources.Resources
 import util.ImagePicker
@@ -48,7 +49,7 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
     @Composable
     override fun onRender(
         state: RestaurantInformationUiState,
-        listener: RestaurantInformationInteractionListener
+        listener: RestaurantInformationInteractionListener,
     ) {
 
         val scrollState = rememberScrollState()
@@ -126,7 +127,7 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
         priceLevel: String,
         image: ByteArray?,
         imageUrl: String,
-        imagePicker: ImagePicker
+        imagePicker: ImagePicker,
     ) {
         imagePicker.registerPicker { onImagePicked(it) }
         BpCard(
@@ -215,7 +216,7 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
     @Composable
     private fun RestaurantUpdateInformationCard(
         state: RestaurantInformationUiState,
-        listener: RestaurantInformationInteractionListener
+        listener: RestaurantInformationInteractionListener,
     ) {
         BpCard(
             modifier = Modifier.fillMaxWidth().padding(16.dp)
@@ -298,13 +299,13 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     private fun LogoutCard(
-        onClickLogout: () -> Unit
+        onClickLogout: () -> Unit,
     ) {
         BpCard(modifier = Modifier.fillMaxWidth().padding(
             start = 16.dp,
             end = 16.dp,
             bottom = 16.dp
-        ).clickable { onClickLogout() }) {
+        ).noRippleEffect { onClickLogout() }) {
             Row {
                 Icon(
                     painter = painterResource(Resources.images.logout), modifier = Modifier
