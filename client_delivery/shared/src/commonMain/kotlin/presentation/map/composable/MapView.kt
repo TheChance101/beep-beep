@@ -17,6 +17,7 @@ fun MapView(
     modifier: Modifier = Modifier,
     orderState: OrderState,
 ) {
+
     val stateWebView = rememberWebViewStateWithHTMLData(
         data = map,
         mimeType = "text/html",
@@ -27,6 +28,11 @@ fun MapView(
                 GetMap();
                 clearDirections();
             """.trimIndent()
+
+    val icon1 =
+        "https://beepbeep-resource.fra1.digitaloceanspaces.com/Cheese_0.9092009843595866.png"
+    val icon2 =
+        "https://beepbeep-resource.fra1.digitaloceanspaces.com/Cheese_Pizzaa0.027885622802020227.png"
 
     stateWebView.settings.javaScriptEnabled = true
     WebView(
@@ -39,13 +45,40 @@ fun MapView(
         if (orderState == OrderState.LOADING) {
             stateWebView.evaluateJavascript("clearDirections()", null)
         }
-        if (orderState == OrderState.NEW_ORDER || orderState == OrderState.ACCEPTED || orderState == OrderState.DELIVERED) {
+        if (orderState == OrderState.NEW_ORDER) {
+            stateWebView.evaluateJavascript("clearDirections()", null)
             stateWebView.evaluateJavascript(
-                "getDirections(${restaurantLocation.lat},${restaurantLocation.lng},${destination.lat},${destination.lng})",
+                "getDirections(${restaurantLocation.lat},${restaurantLocation.lng},${destination.lat},${destination.lng}, '$icon1' , '$icon2')",
+                null
+            )
+        }
+        if (orderState == OrderState.ACCEPTED ){
+            stateWebView.evaluateJavascript("clearDirections()", null)
+            stateWebView.evaluateJavascript(
+                "getDirectionsAfterAccept(${restaurantLocation.lat},${restaurantLocation.lng},${destination.lat},${destination.lng} , ${deliveryLocation.lat},${deliveryLocation.lng} , '$icon1', '$icon2', '$icon1')",
+                null
+            )
+        }
+
+        if (orderState == OrderState.RECEIVED){
+            stateWebView.evaluateJavascript("clearDirections()", null)
+            stateWebView.evaluateJavascript(
+                "getDirections(${deliveryLocation.lat},${deliveryLocation.lng} , ${destination.lat},${destination.lng} , '$icon1', '$icon2')",
                 null
             )
         }
     }
+
+    LaunchedEffect(deliveryLocation){
+        if (orderState == OrderState.RECEIVED){
+            stateWebView.evaluateJavascript("clearDirections()", null)
+            stateWebView.evaluateJavascript(
+                "getDirections(${deliveryLocation.lat},${deliveryLocation.lng} , ${destination.lat},${destination.lng} , '$icon1', '$icon2')",
+                null
+            )
+        }
+    }
+
 }
 
 private val map = """<!doctype HTML><head>
@@ -80,6 +113,7 @@ private val map = """<!doctype HTML><head>
 </div>
 <script>
 var map, directionsManager;
+
 function GetMap() {
     map = new Microsoft.Maps.Map('#myMap', {
         credentials: 'Access_token',
@@ -89,7 +123,7 @@ function GetMap() {
     });
 }
 
-function getDirections(startLat, startLng, endLat, endLng) {
+function getDirections(startLat, startLng, endLat, endLng , icon1 , icon2) {
     Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
         directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
 
@@ -107,31 +141,68 @@ function getDirections(startLat, startLng, endLat, endLng) {
             autoUpdateMapView: true
         };
 
-        const startWaypoint = createWaypoint(startLat, startLng ,'../../../../resources/restaurant_location.svg');
-        const endWaypoint = createWaypoint(endLat, endLng , '../../../../resources/current_location.svg');
+        const startWaypoint = createWaypoint(startLat, startLng, icon1);
+        const endWaypoint = createWaypoint(endLat, endLng, icon2);
 
         directionsManager.addWaypoint(startWaypoint);
         directionsManager.addWaypoint(endWaypoint);
         directionsManager.setRequestOptions(requestOptions);
-        directionsManager.setRenderOptions(renderOptions); 
+        directionsManager.setRenderOptions(renderOptions);
         directionsManager.calculateDirections();
     });
 }
 
-function createWaypoint(lat, lng , icon) {
-    const pushpin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(lat, lng), {
+function getDirectionsAfterAccept(startLat, startLng, endLat, endLng , currentLat, currentLng , icon1,icon2) {
+    Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
+        directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
+
+        const requestOptions = {
+            routeMode: Microsoft.Maps.Directions.RouteMode.driving,
+            routeDraggable: false,
+            autoUpdateMapView: false,
+        };
+
+        const renderOptions = {
+            drivingPolylineOptions: {
+                strokeColor: 'red',
+                strokeThickness: 8,
+            },
+            autoUpdateMapView: true
+        };
+
+        const currentWayPoint = createWaypoint(currentLat, currentLng, icon2);
+        const startWaypoint = createWaypoint(startLat, startLng, icon1);
+        const endWaypoint = createWaypoint(endLat, endLng, icon2);
+
+        directionsManager.addWaypoint(currentWayPoint , 0);
+        directionsManager.addWaypoint(startWaypoint);
+        directionsManager.addWaypoint(endWaypoint);
+        directionsManager.setRequestOptions(requestOptions);
+        directionsManager.setRenderOptions(renderOptions);
+        directionsManager.calculateDirections();
+    });
+}
+
+
+function createWaypoint(lat, lng, icon) {
+    const location = new Microsoft.Maps.Location(lat, lng);
+    const pushpin = new Microsoft.Maps.Pushpin(location, {
         icon: icon,
-        anchor: new Microsoft.Maps.Point(1, 1),
+        anchor: new Microsoft.Maps.Point(12, 39),
     });
 
-    map.entities.push(pushpin)
+    map.entities.push(pushpin);
 
-    return new Microsoft.Maps.Directions.Waypoint({ location: pushpin.getLocation(), pushpin: pushpin });
+    return new Microsoft.Maps.Directions.Waypoint({
+        location: location,
+        pushpin: pushpin,
+    });
 }
 
 function clearDirections() {
     directionsManager.clearAll();
     directionsManager.clearDisplay();
+    map.entities.clear();
 }
 
 function clearMap() {

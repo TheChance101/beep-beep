@@ -14,6 +14,8 @@ data class DrawableResources(
     val close: String = "close.xml",
     val readyDeliveryBike: String = "ready_delivery_bike.png",
     val restaurantErrorPlaceholder: String = "restaurant_error.png",
+    val currentLocation:String = "current_location.svg",
+    val restaurantLocation:String = "restaurant_location.svg"
 )
 
 val BpDrawableDarkResources = DrawableResources(
