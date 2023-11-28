@@ -144,16 +144,11 @@ function createWaypoint(lat, lng, icon) {
 function clearDirections() {
     directionsManager.clearAll();
     directionsManager.clearDisplay();
-    removeAllPushpins();
+    map.entities.clear();
 }
 
-function removeAllPushpins() {
-    var pushpins = map.entities.getPrimitives().filter(function (entity) {
-        return entity instanceof Microsoft.Maps.Pushpin;
-    });
-    pushpins.forEach(function (pushpin) {
-        map.entities.remove(pushpin);
-    });
+function clearMap() {
+    map.entities.clear();
 }
 
 </script>
