@@ -54,11 +54,11 @@ class TaxiOrderScreen :
                 .background(color = Theme.colors.background)
                 .padding(getStatusBarPadding())
         ) {
-            MapView(
-                modifier = Modifier.fillMaxSize(),
-                currentLocation = state.currentLocation,
-                destination = state.destination
-            )
+//            MapView(
+//                modifier = Modifier.fillMaxSize(),
+//                currentLocation = state.currentLocation,
+//                destination = state.destination
+//            )
             Column(
                 modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween
             ) {
