@@ -118,7 +118,7 @@ data class English(
     override val searchDestination: String = "Search for Destination",
     override val trackYourRide: String = "Follow your ride",
     override val restaurants: String = "Restaurants",
-    override val addFromDifferentCartMessage: String = "Meal not in same Restaurant. Delete last cart item to add? Confirm?",
+    override val addFromDifferentCartMessage: String = "This meal isn't in the same restaurant. \n Are you sure you want to delete the cart?",
     override val yesIamSure: String = "Yes, I'm sure",
     override val goToCart: String = "Go to cart",
     override val youCanAddMeal: String ="Now you can add meal if you want.",

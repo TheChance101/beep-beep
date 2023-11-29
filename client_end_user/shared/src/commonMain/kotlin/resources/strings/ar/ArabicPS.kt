@@ -117,7 +117,7 @@ data class ArabicPS(
     override val setDestination: String = "ضع المكان ",
     override val searchDestination: String = "ابحث عن مكان",
     override val trackYourRide: String = "تتبع رحلتك",
-    override val addFromDifferentCartMessage: String="الوجبة غير موجود في نفس المطعم. هل ترغب في حذف عنصر السلة الأخير لإضافة هذه الوجية؟ هل تؤكد؟",
+    override val addFromDifferentCartMessage: String="الوجبة غير موجود في نفس المطعم. هل انت متاكد من حذف عناصر السلة لإضافة هذه الوجية؟ ",
     override val restaurants: String = "المطاعم",
     override val yesIamSure: String = "نعم أنا متأكد",
     override val goToCart: String = "الذهاب الى العربة",
