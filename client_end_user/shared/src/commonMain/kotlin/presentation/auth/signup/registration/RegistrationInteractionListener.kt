@@ -8,4 +8,5 @@ interface RegistrationInteractionListener : BaseInteractionListener {
     fun onPasswordChanged(password: String)
     fun onNextButtonClicked()
     fun onBackButtonClicked()
+    fun onDismissSnackBar()
 }

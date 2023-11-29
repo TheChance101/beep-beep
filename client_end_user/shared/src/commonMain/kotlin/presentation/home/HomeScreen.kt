@@ -25,6 +25,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,7 +36,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
-import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.BpAppBar
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpImageLoader
@@ -43,6 +43,7 @@ import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import domain.entity.FoodOrder
 import domain.entity.TripStatus
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.auth.login.LoginScreen
@@ -65,6 +66,7 @@ import presentation.main.SearchTab
 import presentation.meals.MealsScreen
 import presentation.orderFoodTracking.OrderFoodTrackingScreen
 import presentation.restaurants.RestaurantsScreen
+import presentation.composable.ToastMessage
 import presentation.resturantDetails.RestaurantScreen
 import presentation.taxi.TaxiOrderScreen
 import resources.Resources
@@ -212,18 +214,19 @@ class HomeScreen : BaseScreen<
             )
 
             item {
-                BPSnackBar(
-                    icon = painterResource(Resources.images.warningIcon),
-                    iconBackgroundColor = Theme.colors.warningContainer,
-                    iconTint = Theme.colors.warning,
-                    isVisible = state.showSnackBar,
-                    modifier = Modifier.padding(bottom = getNavigationBarPadding().calculateBottomPadding())
-                ) {
-                    Text(
-                        text = Resources.strings.accessDeniedMessage,
-                        style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
-                    )
+                LaunchedEffect(state.showSnackBar) {
+                    if (state.showSnackBar) {
+                        delay(4000)
+                        listener.onDismissSnackBar()
+                    }
                 }
+                ToastMessage(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(bottom = getNavigationBarPadding().calculateBottomPadding()),
+                    state = state.showSnackBar,
+                    message = Resources.strings.accessDeniedMessage,
+                    isError = true
+                )
             }
         }
     }

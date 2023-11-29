@@ -31,7 +31,6 @@ kotlin {
             baseName = "shared"
             isStatic = true
         }
-        pod("FirebaseFirestore", linkOnly = true)
         pod("FirebaseMessaging")
     }
 

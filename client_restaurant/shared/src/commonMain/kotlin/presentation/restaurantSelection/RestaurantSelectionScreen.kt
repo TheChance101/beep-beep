@@ -50,11 +50,8 @@ import resources.Resources
 import util.getNavigationBarPadding
 import util.getStatusBarPadding
 
-class RestaurantSelectionScreen : BaseScreen
-<RestaurantSelectionScreenModel,
-        RestaurantScreenUIState,
-        RestaurantSelectionScreenUIEffect,
-        RestaurantSelectionScreenInteractionListener>() {
+class RestaurantSelectionScreen :
+    BaseScreen<RestaurantSelectionScreenModel, RestaurantScreenUIState, RestaurantSelectionScreenUIEffect, RestaurantSelectionScreenInteractionListener>() {
 
     @Composable
     override fun Content() {
@@ -66,7 +63,6 @@ class RestaurantSelectionScreen : BaseScreen
         state: RestaurantScreenUIState,
         listener: RestaurantSelectionScreenInteractionListener,
     ) {
-
         val lazyListState = rememberLazyListState()
         var isExpanding by remember { mutableStateOf(false) }
         val bottomSheetSize by animateFloatAsState(
@@ -188,7 +184,13 @@ class RestaurantSelectionScreen : BaseScreen
         listener: RestaurantSelectionScreenInteractionListener,
     ) {
         RestaurantInformation(
-            onRestaurantClick = { listener.onClickRestaurant(item.restaurantId,item.location,item.address) },
+            onRestaurantClick = {
+                listener.onClickRestaurant(
+                    item.restaurantId,
+                    item.location,
+                    item.address
+                )
+            },
             restaurantName = item.restaurantName,
             restaurantNumber = item.restaurantPhoneNumber,
             isOpen = item.isOpen

@@ -22,7 +22,11 @@ fun AcceptedOrderCard(state: MapScreenUiState, listener: AcceptedOrderInteractio
             restaurantLocation = state.orderUiState.restaurantAddress,
             orderLocation = state.orderUiState.destinationAddress
         )
-        DistanceInfo(orderDistance = state.orderDistance, orderDuration = state.orderDuration)
+
+        DistanceInfo(
+            orderDistance = "${state.orderDistance} KM",
+            orderDuration = "${state.orderDuration} min"
+        )
 
         BpButton(
             onClick = listener::onReceivedClicked,

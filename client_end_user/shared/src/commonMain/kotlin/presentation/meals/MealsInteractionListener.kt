@@ -9,4 +9,5 @@ interface MealsInteractionListener : BaseInteractionListener, MealInteractionLis
     fun onDismissSheet()
     fun onBackClicked()
     fun onLoginClicked()
+    fun onDismissSnackBar()
 }

@@ -27,7 +27,6 @@ import presentation.map.composable.MapView
 import presentation.map.composable.NewOrderCard
 import resources.Resources
 
-
 class MapScreen:BaseScreen<MapScreenModel,MapScreenUiState,MapScreenUiEffect,MapScreenInteractionsListener>() {
     @OptIn(ExperimentalResourceApi::class)
     @Composable
@@ -38,7 +37,9 @@ class MapScreen:BaseScreen<MapScreenModel,MapScreenUiState,MapScreenUiEffect,Map
             MapView(
                 modifier = Modifier.fillMaxSize(),
                 deliveryLocation = state.deliveryLocation,
-                destination = state.orderUiState.destinationLocation
+                restaurantLocation = state.orderUiState.restaurantLocation ,
+                destination = state.orderUiState.destinationLocation,
+                orderState = state.orderState,
             )
             BpAppBar(
                 isBackIconVisible = false,
