@@ -84,8 +84,26 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
     override suspend fun orderNow(): Boolean {
         return tryToExecute<ServerResponse<FoodOrderDto>> { post("/cart/orderNow") }.value != null
     }
-    override suspend fun clearCart(): Boolean {
-        return tryToExecute<ServerResponse<Boolean>> { put("/cart/clear") }.value != null
+
+    override suspend fun clearCart(): Boolean{
+        return try {
+            val response= tryToExecute<ServerResponse<Boolean>> {
+                put("/cart/clear")
+            }
+            if (response.isSuccess) {
+                return response.value?: throw NotFoundException(response.status.errorMessages?.keys?.firstOrNull() ?: "Not found")
+            } else {
+                if (response.status.code == 404) {
+                    throw NotFoundException(response.status.errorMessages?.keys?.firstOrNull() ?: "Not found")
+                } else {
+                    throw UnknownErrorException("Unknown")
+                }
+            }
+        }catch (e:Exception){
+            println(e.message)
+            false
+        }
+
     }
 
     @OptIn(InternalAPI::class)
