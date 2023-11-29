@@ -286,6 +286,14 @@ class RestaurantService(
             post("/cart/$userId/orderNow")
         }
     }
+    suspend fun clearCart(userId: String, language: String): Boolean {
+        return client.tryToExecute(
+            api = APIs.RESTAURANT_API, attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, language) }
+        ) {
+            put("/cart/$userId/clear")
+        }
+    }
     //endregion
 
     //region order

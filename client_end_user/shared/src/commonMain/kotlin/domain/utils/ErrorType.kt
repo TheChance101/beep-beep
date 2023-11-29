@@ -5,9 +5,13 @@ sealed class InternetException : Exception() {
     class NoInternetException : InternetException()
     class NetworkNotSupportedException : InternetException()
 }
+open class BpException(message: String) : Exception(message)
 
+class UnknownErrorException(message: String) : BpException(message)
 
-sealed class AuthorizationException(val errorMessage: String = "") : Exception() {
+class NotFoundException(message: String) : BpException(message)
+
+open class AuthorizationException(val errorMessage: String = "") : BpException(errorMessage) {
     data object UnAuthorizedException : AuthorizationException()
     data object InvalidUsernameException : AuthorizationException()
     data object InvalidPasswordException : AuthorizationException()
@@ -22,7 +26,8 @@ sealed class AuthorizationException(val errorMessage: String = "") : Exception()
     class LocationAccessDeniedException(message: String) : AuthorizationException(message)
 }
 
-sealed class GeneralException : Exception() {
-    data object UnknownErrorException : GeneralException()
-    data object NotFoundException : GeneralException()
+
+open class RestaurantException(errorMessage: String = "") : BpException(errorMessage) {
+    class CartIsFullException(message: String) : RestaurantException(message)
+    class RestaurantClosedException(message: String) : RestaurantException(message)
 }

@@ -15,6 +15,8 @@ data class RestaurantUIState(
     val sheetState: ModalBottomSheetState = ModalBottomSheetState(),
     val sheetMealState: ModalBottomSheetState = ModalBottomSheetState(),
     val showLoginSheet: Boolean = false,
+    val showWarningCartIsFull : Boolean = false,
+    val showToastClearCart : Boolean = false,
 
     val selectedMeal: MealUIState = MealUIState(),
     val showMealSheet: Boolean = false,

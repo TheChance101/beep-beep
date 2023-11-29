@@ -7,7 +7,7 @@ import presentation.base.ErrorState
 data class CartUiState(
     val meals: List<CartMealUiState> = emptyList(),
     val currency: String = "",
-
+    val showToast: Boolean = false,
     val isOrderNowLoading: Boolean = false,
     val orderError: ErrorState? = null,
 ) {

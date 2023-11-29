@@ -31,6 +31,7 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
+import presentation.cart.CartScreen
 import presentation.composable.BottomSheet
 import presentation.composable.MealBottomSheet
 import presentation.composable.MealCard
@@ -39,8 +40,10 @@ import presentation.composable.modifier.noRippleEffect
 import presentation.composable.modifier.roundedBorderShape
 import presentation.resturantDetails.Composable.NeedToLoginSheet
 import presentation.composable.ToastMessage
+import presentation.resturantDetails.Composable.WarningCartIsFullDialog
 import presentation.resturantDetails.RestaurantScreen
 import resources.Resources
+import util.getNavigationBarPadding
 import util.getStatusBarPadding
 import util.root
 
@@ -56,6 +59,7 @@ class SearchScreen :
         when (effect) {
             is SearchUiEffect.NavigateToRestaurant -> navigator.root?.push(RestaurantScreen(effect.restaurantId))
             is SearchUiEffect.NavigateToLogin -> navigator.push(LoginScreen())
+            is SearchUiEffect.onGoToCart -> navigator.root?.push(CartScreen())
         }
     }
 
@@ -66,6 +70,14 @@ class SearchScreen :
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.TopCenter
         ) {
+            WarningCartIsFullDialog(
+                modifier = Modifier.padding(getNavigationBarPadding()),
+                text = Resources.strings.addFromDifferentCartMessage,
+                onClickClearCart = listener::onClearCart,
+                onClickGoToCart = listener::onGoToCart,
+                onDismiss = listener::onDismissSheet,
+                isVisitable = state.showWarningCartIsFull
+            )
             BottomSheet(
                 sheetContent = {
                     if (state.showMealSheet)
@@ -95,6 +107,12 @@ class SearchScreen :
                     listener.onDismissSnackBar()
                 }
             }
+            LaunchedEffect(state.showToastClearCart) {
+                if (state.showToastClearCart) {
+                    delay(2000)
+                    listener.onDismissSnackBar()
+                }
+            }
 
             ToastMessage(
                 modifier = Modifier.align(Alignment.BottomCenter),
@@ -102,6 +120,12 @@ class SearchScreen :
                 message = if (state.errorAddToCart == null)
                     Resources.strings.mealAddedToYourCart else Resources.strings.mealFailedToAddInCart,
                 isError = state.errorAddToCart != null
+            )
+            ToastMessage(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                state = state.showToastClearCart,
+                message = Resources.strings.youCanAddMeal ,
+                isError = false
             )
         }
 
