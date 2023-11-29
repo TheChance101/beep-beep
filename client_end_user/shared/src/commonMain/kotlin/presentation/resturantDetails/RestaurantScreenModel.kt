@@ -1,6 +1,7 @@
 package presentation.resturantDetails
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.Cart
 import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.Restaurant
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
+import presentation.cart.toUiState
 
 class RestaurantScreenModel(
     private val restaurantId: String,
@@ -169,6 +171,25 @@ class RestaurantScreenModel(
         }
     }
 
+    override fun onDismissDialog() {
+        updateState { it.copy(showWarningCartIsFull =false) }
+    }
+
+    override fun onGoToCart() {
+        onDismissDialog()
+        sendNewEffect(RestaurantUIEffect.onGoToCart)
+    }
+
+    override fun onClearCart() {
+//        tryToExecute(
+//            { manageCart.clearCart() },
+//            ::onClearCartSuccess,
+//            ::onError
+//        )
+        onDismissDialog()
+    }
+
+
     override fun onShowLoginSheet() {
         coroutineScope.launch {
             state.value.sheetState.dismiss()
@@ -230,8 +251,15 @@ class RestaurantScreenModel(
 
     private fun onAddToCartError(errorState: ErrorState) {
         println("errrrrror:$errorState")
-        updateState { it.copy(isAddToCartLoading = false, errorAddToCart = errorState) }
-        updateState { it.copy(showToast = true ) }
+        when(errorState){
+            is ErrorState.CartIsFull -> {
+                updateState { it.copy(isAddToCartLoading = false, errorAddToCart = errorState) }
+                updateState { it.copy(showToast = true , showWarningCartIsFull = true) }
+            }
+            else -> {
+                updateState { it.copy(error = errorState) }
+            }
+        }
     }
 
     override fun onShowMealSheet() {
@@ -252,7 +280,7 @@ class RestaurantScreenModel(
 
     private suspend fun delayAndChangePermissionSheetState(show: Boolean) {
         delay(300)
-        updateState { it.copy(showLoginSheet = show, showMealSheet = show) }
+        updateState { it.copy(showLoginSheet = show, showMealSheet = show, showWarningCartIsFull = show) }
     }
 
 

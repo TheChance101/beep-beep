@@ -36,6 +36,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
 import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
+import presentation.cart.CartScreen
 import presentation.composable.BackButton
 import presentation.composable.BottomSheet
 import presentation.composable.BpPriceLevel
@@ -46,6 +47,7 @@ import presentation.composable.modifier.noRippleEffect
 import presentation.resturantDetails.Composable.Chip
 import presentation.resturantDetails.Composable.NeedToLoginSheet
 import presentation.composable.ToastMessage
+import presentation.resturantDetails.Composable.WarningCartIsFullDialog
 import resources.Resources
 import util.getNavigationBarPadding
 
@@ -57,6 +59,7 @@ data class RestaurantScreen(val restaurantId: String) :
             is RestaurantUIEffect.onBack -> navigator.pop()
             is RestaurantUIEffect.onGoToDetails -> {}
             is RestaurantUIEffect.onGoToLogin -> navigator.push(LoginScreen())
+            is RestaurantUIEffect.onGoToCart -> navigator.push(CartScreen())
         }
     }
 
@@ -80,7 +83,14 @@ data class RestaurantScreen(val restaurantId: String) :
                     Theme.colors.contentTertiary
                 }
             )
-
+            WarningCartIsFullDialog(
+                modifier = Modifier.padding(getNavigationBarPadding()),
+                text = Resources.strings.addFromDifferentCartMessage,
+                onClickClearCart = listener::onClearCart,
+                onClickGoToCart = listener::onGoToCart,
+                onDismiss = listener::onDismissSheet,
+                isVisitable = state.showWarningCartIsFull
+            )
             BottomSheet(
                 sheetContent = {
                     if (state.showMealSheet)

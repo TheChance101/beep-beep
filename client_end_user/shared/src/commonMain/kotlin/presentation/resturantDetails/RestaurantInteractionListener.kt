@@ -7,6 +7,10 @@ interface RestaurantInteractionListener : BaseInteractionListener, MealInteracti
     fun onBack()
     fun onGoToDetails(mealId: String)
     fun onDismissSheet()
+    fun onGoToCart()
+    fun onDismissDialog()
+    fun onClearCart()
+
     fun onShowLoginSheet()
     fun onShowMealSheet()
     fun onGoToLogin()

@@ -3,13 +3,13 @@ package data.gateway.remote
 import data.remote.model.ServerResponse
 import domain.entity.PaginationItems
 import domain.utils.AuthorizationException
-import domain.utils.GeneralException
 import domain.utils.InternetException
+import domain.utils.RestaurantException
+import domain.utils.UnknownErrorException
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.websocket.receiveDeserialized
-import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.client.plugins.websocket.wss
 import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.Dispatchers
@@ -40,11 +40,11 @@ abstract class BaseGateway(val client: HttpClient) {
         } catch (e: ClientRequestException) {
             val errorMessages = e.response.body<ServerResponse<T>>().status.errorMessages
             errorMessages?.let(::throwMatchingException)
-            throw GeneralException.UnknownErrorException
+            throw UnknownErrorException(e.message.toString())
         } catch (e: InternetException.NoInternetException) {
             throw InternetException.NoInternetException()
         } catch (e: Exception) {
-            throw GeneralException.UnknownErrorException
+            throw UnknownErrorException(e.message.toString())
         }
     }
 
@@ -62,13 +62,19 @@ abstract class BaseGateway(val client: HttpClient) {
                 throw AuthorizationException.UserNotFoundException(it.getOrEmpty(USER_NOT_EXIST))
             }
 
+            if (it.containsErrors(MEAL_ALREADY_EXIST)) {
+                throw RestaurantException.CartIsFullException(it.getOrEmpty(MEAL_ALREADY_EXIST))
+            }
+
             if (it.containsErrors(USER_ALREADY_EXIST)) {
                 throw AuthorizationException.UserAlreadyExistException(
-                    it.getOrEmpty(USER_ALREADY_EXIST)
+                    it.getOrEmpty(
+                        USER_ALREADY_EXIST
+                    )
                 )
             }
 
-            throw GeneralException.UnknownErrorException
+            throw UnknownErrorException(it.getOrEmpty("unknown"))
         }
     }
 
@@ -81,6 +87,7 @@ abstract class BaseGateway(val client: HttpClient) {
         const val WRONG_PASSWORD = "1013"
         const val USER_NOT_EXIST = "1043"
         const val USER_ALREADY_EXIST = "1002"
+        const val MEAL_ALREADY_EXIST = "2503"
     }
 
     fun <T> paginateData(result: List<T>, page: Int, total: Long): PaginationItems<T> {

@@ -7,7 +7,7 @@ import data.remote.model.TicketDto
 import domain.entity.Message
 import domain.entity.Ticket
 import domain.gateway.IChatGateway
-import domain.utils.GeneralException
+import domain.utils.NotFoundException
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +20,7 @@ class FakeChatGateway : IChatGateway {
     @OptIn(FlowPreview::class)
     override fun getTickets(): Flow<Ticket> {
         return tickets.sample(1500)
-            .map { it.firstOrNull()?.toEntity() ?: throw GeneralException.NotFoundException }
+            .map { it.firstOrNull()?.toEntity() ?: throw NotFoundException("NotFound") }
     }
 
     override fun getMessages(ticketId: String): Flow<List<Message>> {

@@ -22,7 +22,8 @@ import domain.entity.PaginationItems
 import domain.entity.TaxiRide
 import domain.entity.Trip
 import domain.gateway.ITransactionsGateway
-import domain.utils.GeneralException
+import domain.utils.NotFoundException
+import domain.utils.UnknownErrorException
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -43,7 +44,7 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
         }.value
         return paginateData(
             result = result?.items?.map { it.toTripEntity() }
-                ?: throw GeneralException.UnknownErrorException,
+                ?: throw UnknownErrorException("Unknown"),
             page = result.page, total = result.total
         )
     }
@@ -57,7 +58,7 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
         }.value
         return paginateData(
             result = result?.items?.map { it.toEntity() }
-                ?: throw GeneralException.NotFoundException,
+                ?: throw NotFoundException("Not Found"),
             page = result.page, total = result.total
         )
     }
@@ -65,7 +66,7 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
     override suspend fun getCart(): Cart {
         return tryToExecute<ServerResponse<CartDto>> {
             get("/cart")
-        }.value?.toEntity() ?: throw GeneralException.NotFoundException
+        }.value?.toEntity() ?: throw NotFoundException("Not Found")
     }
 
     @OptIn(InternalAPI::class)
@@ -77,7 +78,7 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
             put("/cart") {
                 body = Json.encodeToString(MealCartDto.serializer(), meal)
             }
-        }.value?.toEntity() ?: throw GeneralException.NotFoundException
+        }.value?.toEntity() ?: throw NotFoundException("Not Found")
     }
 
     override suspend fun orderNow(): Boolean {
@@ -100,12 +101,12 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
         if (response.isSuccess) {
 
             return response.value?.toTripEntity()
-                ?: throw GeneralException.NotFoundException
+                ?: throw NotFoundException(response.status.errorMessages?.keys?.firstOrNull() ?: "Not found")
         } else {
             if (response.status.code == 404) {
-                throw GeneralException.NotFoundException
+                throw NotFoundException(response.status.errorMessages?.keys?.firstOrNull() ?: "Not found")
             } else {
-                throw GeneralException.UnknownErrorException
+                throw UnknownErrorException("Unknown")
             }
         }
     }
@@ -117,12 +118,12 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
         if (response.isSuccess) {
 
             return response.value?.map { it.toDeliveryRideEntity() }
-                ?: throw GeneralException.NotFoundException
+                ?: throw NotFoundException(response.status.errorMessages?.keys?.firstOrNull() ?: "Not found")
         } else {
             if (response.status.code == 404) {
-                throw GeneralException.NotFoundException
+                throw NotFoundException(response.status.errorMessages?.keys?.firstOrNull() ?: "Not found")
             } else {
-                throw GeneralException.UnknownErrorException
+                throw UnknownErrorException("Unknown")
             }
         }
     }
@@ -132,12 +133,12 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
             get("/active/orders")
         }
         if (response.isSuccess) {
-            return response.value?.toEntity() ?: throw GeneralException.NotFoundException
+            return response.value?.toEntity() ?: throw NotFoundException(response.status.errorMessages?.keys?.firstOrNull() ?: "Not found")
         } else {
             if (response.status.code == 404) {
-                throw GeneralException.NotFoundException
+                throw NotFoundException(response.status.errorMessages?.keys?.firstOrNull() ?: "Not found")
             } else {
-                throw GeneralException.UnknownErrorException
+                throw UnknownErrorException("Unknown")
             }
         }
     }
@@ -148,12 +149,12 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
         }
         if (response.isSuccess) {
             return response.value?.toTripEntity()
-                ?: throw GeneralException.NotFoundException
+                ?: throw NotFoundException(response.status.errorMessages?.keys?.firstOrNull() ?: "Not found")
         } else {
             if (response.status.code == 404) {
-                throw GeneralException.NotFoundException
+                throw NotFoundException(response.status.errorMessages?.keys?.firstOrNull() ?: "Not found")
             } else {
-                throw GeneralException.UnknownErrorException
+                throw UnknownErrorException("Unknown")
             }
         }
     }
@@ -164,12 +165,12 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
         }
         if (response.isSuccess) {
             return response.value?.toTripEntity()
-                ?: throw GeneralException.NotFoundException
+                ?: throw NotFoundException(response.status.errorMessages?.keys?.firstOrNull() ?: "Not found")
         } else {
             if (response.status.code == 404) {
-                throw GeneralException.NotFoundException
+                throw NotFoundException(response.status.errorMessages?.keys?.firstOrNull() ?: "Not found")
             } else {
-                throw GeneralException.UnknownErrorException
+                throw UnknownErrorException("Unknown")
             }
         }
     }
@@ -180,12 +181,12 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
         }
         if (response.isSuccess) {
             return response.value?.toEntity()
-                ?: throw GeneralException.NotFoundException
+                ?: throw NotFoundException(response.status.errorMessages?.keys?.firstOrNull() ?: "Not found")
         } else {
             if (response.status.code == 404) {
-                throw GeneralException.NotFoundException
+                throw NotFoundException(response.status.errorMessages?.keys?.firstOrNull() ?: "Not found")
             } else {
-                throw GeneralException.UnknownErrorException
+                throw UnknownErrorException("Unknown")
             }
         }
     }

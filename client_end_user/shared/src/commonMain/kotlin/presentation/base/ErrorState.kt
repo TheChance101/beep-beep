@@ -2,9 +2,11 @@ package presentation.base
 
 import domain.utils.AuthorizationException
 import domain.utils.InternetException
+import domain.utils.RestaurantException
 
 
 sealed interface ErrorState {
+    data class CartIsFull(val message: String) : ErrorState
     // region Authorization
     data object UnAuthorized : ErrorState
     data object InvalidUsername : ErrorState
@@ -38,6 +40,14 @@ fun handelInternetException(
         is InternetException.WifiDisabledException -> onError(ErrorState.WifiDisabled)
     }
 }
+fun handelRestaurantException(
+    exception: RestaurantException,
+    onError: (t: ErrorState) -> Unit,
+) {
+    when (exception) {
+        is RestaurantException.CartIsFullException -> onError(ErrorState.CartIsFull(exception.message.toString()))
+    }
+}
 
 fun handelAuthorizationException(
     exception: AuthorizationException,
@@ -48,15 +58,11 @@ fun handelAuthorizationException(
         is AuthorizationException.InvalidUsernameException -> onError(ErrorState.InvalidUsername)
         is AuthorizationException.InvalidPasswordException -> onError(ErrorState.InvalidPassword)
         is AuthorizationException.InvalidCredentialsException -> onError(
-            ErrorState.WrongPassword(
-                exception.errorMessage
-            )
+            ErrorState.WrongPassword(exception.errorMessage)
         )
 
         is AuthorizationException.UserAlreadyExistException -> onError(
-            ErrorState.UserAlreadyExists(
-                exception.errorMessage
-            )
+            ErrorState.UserAlreadyExists(exception.errorMessage)
         )
 
         is AuthorizationException.UserNotFoundException -> onError(ErrorState.UserNotFound(exception.errorMessage))

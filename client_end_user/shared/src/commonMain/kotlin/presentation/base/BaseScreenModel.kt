@@ -4,6 +4,9 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.utils.AuthorizationException
 import domain.utils.InternetException
+import domain.utils.NotFoundException
+import domain.utils.RestaurantException
+import domain.utils.UnknownErrorException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -83,7 +86,11 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
                 handelAuthorizationException(exception, onError)
             } catch (e: AuthorizationException.LocationAccessDeniedException) {
                 onError(ErrorState.LocationPermissionDenied)
-            } catch (exception: Exception) {
+            } catch (e: RestaurantException) {
+                handelRestaurantException(e, onError)
+            } catch (exception: NotFoundException) {
+                onError(ErrorState.RequestFailed)
+            } catch (exception: UnknownErrorException) {
                 onError(ErrorState.RequestFailed)
             }
         }
