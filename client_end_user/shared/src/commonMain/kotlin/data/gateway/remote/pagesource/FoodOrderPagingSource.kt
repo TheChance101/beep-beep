@@ -2,15 +2,15 @@ package data.gateway.remote.pagesource
 
 import domain.entity.FoodOrder
 import domain.entity.PaginationItems
-import domain.gateway.ITransactionsGateway
+import domain.usecase.IGetTransactionHistoryUseCase
 import org.koin.core.component.KoinComponent
 
 class FoodOrderPagingSource(
-    private val transactionsGateway: ITransactionsGateway,
+    private val transactionHistory: IGetTransactionHistoryUseCase
 ) : BasePagingSource<FoodOrder>(), KoinComponent {
 
     override suspend fun fetchData(page: Int, limit: Int): PaginationItems<FoodOrder> {
-        return transactionsGateway.getOrderHistoryGateway(page, limit)
+        return transactionHistory.getOrdersHistory(page, limit)
     }
 
 }

@@ -30,11 +30,7 @@ val gatewayModule = module {
     singleOf(::UserGateway) { bind<IUserGateway>() }
     singleOf(::LocalConfigurationGateway) { bind<ILocalConfigurationGateway>() }
     singleOf(::LocalRestaurantGateway) { bind<ILocalRestaurantGateway>() }
-    singleOf(::FoodOrderPagingSource)
-    singleOf(::TaxiOrderPagingSource)
     singleOf(::LocalConfigurationGateway) { bind<ILocalConfigurationGateway>() }
     singleOf(::LocationGateway) { bind<ILocationGateway>() }
-    singleOf(::MealsPagingSource)
-    singleOf(::RestaurantsPagingSource)
-    singleOf(::NotificationPagingSource)
+
 }

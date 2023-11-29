@@ -3,13 +3,14 @@ package data.gateway.remote.pagesource
 import domain.entity.PaginationItems
 import domain.entity.Restaurant
 import domain.gateway.IRestaurantGateway
+import domain.usecase.IExploreRestaurantUseCase
 
 class RestaurantsPagingSource(
-    private val remoteGateway: IRestaurantGateway,
+    private val exploreRestaurant: IExploreRestaurantUseCase
 ) : BasePagingSource<Restaurant>() {
 
     override suspend fun fetchData(page: Int, limit: Int ): PaginationItems<Restaurant> {
-        return remoteGateway.getRestaurants(page, 10)
+        return exploreRestaurant.getRestaurants(page, limit)
     }
 
 }

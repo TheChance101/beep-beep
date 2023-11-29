@@ -10,9 +10,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
+import presentation.util.IPagingDataSource
 
 class NotificationScreenModel(
     private val transaction: IGetTransactionHistoryUseCase,
+    private val transactionDatasource: IPagingDataSource,
     private val manageAuthentication: IManageAuthenticationUseCase,
 ) : BaseScreenModel<NotificationsUiState, NotificationUiEffect>(NotificationsUiState()),
     NotificationInteractionListener {
@@ -58,7 +60,7 @@ class NotificationScreenModel(
         ).join()
 
         tryToExecute(
-            function = transaction::getNotificationHistory,
+            function = transactionDatasource::getNotificationHistory,
             onSuccess = ::onGetNotificationHistorySuccess,
             onError = ::onGetNotificationHistoryError
         ).join()

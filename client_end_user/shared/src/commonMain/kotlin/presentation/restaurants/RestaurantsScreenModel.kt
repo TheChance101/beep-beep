@@ -8,11 +8,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
+import presentation.util.IPagingDataSource
 
 
 class RestaurantsScreenModel(
     private val offerId: String? = null,
-    private val manageRestaurant: IExploreRestaurantUseCase,
+    private val manageRestaurant: IPagingDataSource,
 ) : BaseScreenModel<RestaurantsUIState, RestaurantsUIEffect>(RestaurantsUIState()),
     RestaurantsListener {
     override val viewModelScope: CoroutineScope = coroutineScope

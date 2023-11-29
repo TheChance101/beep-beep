@@ -3,19 +3,17 @@ package presentation.orderHistory
 import androidx.paging.PagingData
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.FoodOrder
-import domain.entity.Meal
 import domain.entity.Trip
-import domain.usecase.GetTransactionHistoryUseCase
 import domain.usecase.IManageAuthenticationUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
-import presentation.resturantDetails.toUIState
+import presentation.util.IPagingDataSource
 
 class OrderHistoryScreenModel(
-    private val orderHistoryUseCase: GetTransactionHistoryUseCase,
+    private val orderHistory: IPagingDataSource,
     private val manageAuthentication: IManageAuthenticationUseCase,
 ) : BaseScreenModel<OrderScreenUiState, OrderHistoryScreenUiEffect>(OrderScreenUiState()),
     OrderHistoryScreenInteractionListener {
@@ -55,7 +53,7 @@ class OrderHistoryScreenModel(
 
     private fun getOrdersHistory() {
         tryToExecute(
-            { orderHistoryUseCase.getOrdersHistory() },
+            { orderHistory.getOrdersHistory() },
             ::onGetOrdersHistorySuccess,
             ::onError
         )
@@ -63,7 +61,7 @@ class OrderHistoryScreenModel(
 
     private fun getTripsHistory() {
         tryToExecute(
-            { orderHistoryUseCase.getTripsHistory() },
+            { orderHistory.getTripsHistory() },
             ::onGetTripsHistorySuccess,
             ::onError
         )
