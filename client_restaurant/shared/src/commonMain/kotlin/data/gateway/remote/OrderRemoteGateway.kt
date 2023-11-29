@@ -82,33 +82,19 @@ class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway, BaseRemoteGa
     }
 
     override suspend fun getOrdersRevenueByDaysBefore(
-        restaurantId: String,
-        daysBack: Int,
+        restaurantId: String, daysBack: Int,
     ): List<Map<String, Double>> {
         val result = tryToExecute<BaseResponse<List<Map<String, Double>>>> {
-            submitForm(
-                url = ("/orders/$restaurantId/revenue-by-days-back"),
-                formParameters = Parameters.build {
-                    append("daysBack", daysBack.toString())
-                },
-                block = { method = HttpMethod.Get }
-            )
+            get("/orders/$restaurantId/revenue-by-days-back")
         }.value ?: emptyList()
         return result
     }
 
     override suspend fun getOrdersCountByDaysBefore(
-        restaurantId: String,
-        daysBack: Int,
+        restaurantId: String, daysBack: Int,
     ): List<Map<String, Int>> {
         val result = tryToExecute<BaseResponse<List<Map<String, Int>>>> {
-            submitForm(
-                url = ("/orders/$restaurantId/count-by-days-back"),
-                formParameters = Parameters.build {
-                    append("daysBack", daysBack.toString())
-                },
-                block = { method = HttpMethod.Get }
-            )
+            get("/orders/$restaurantId/count-by-days-back")
         }.value ?: emptyList()
         return result
     }
