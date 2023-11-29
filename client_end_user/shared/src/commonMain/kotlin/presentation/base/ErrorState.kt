@@ -7,6 +7,7 @@ import domain.utils.RestaurantException
 
 sealed interface ErrorState {
     data class CartIsFull(val message: String) : ErrorState
+    data class RestaurantClosed(val message: String) : ErrorState
     // region Authorization
     data object UnAuthorized : ErrorState
     data object InvalidUsername : ErrorState
@@ -46,6 +47,7 @@ fun handelRestaurantException(
 ) {
     when (exception) {
         is RestaurantException.CartIsFullException -> onError(ErrorState.CartIsFull(exception.message.toString()))
+        is RestaurantException.RestaurantClosedException -> onError(ErrorState.RestaurantClosed(exception.message.toString()))
     }
 }
 

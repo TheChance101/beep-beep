@@ -122,5 +122,6 @@ data class ArabicSY(
     override val yesIamSure: String = "نعم أنا متأكد",
     override val goToCart: String="الذهاب الى العربة",
     override val youCanAddMeal: String ="الان يمكن اضاف الوجبة اذا اردت.",
+    override val restaurantClosed: String = "المطعم مغلق في الوقت الحالي",
 
     ) : IStringResources

@@ -120,4 +120,5 @@ interface IStringResources {
     val restaurants: String
     val yesIamSure: String
     val goToCart: String
+    val restaurantClosed: String
 }

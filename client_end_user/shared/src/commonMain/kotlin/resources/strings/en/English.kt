@@ -122,4 +122,5 @@ data class English(
     override val yesIamSure: String = "Yes, I'm sure",
     override val goToCart: String = "Go to cart",
     override val youCanAddMeal: String ="Now you can add meal if you want.",
+    override val restaurantClosed: String = "Restaurant Closed at The Moment",
     ) : IStringResources

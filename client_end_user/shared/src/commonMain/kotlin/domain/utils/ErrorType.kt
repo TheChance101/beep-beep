@@ -29,4 +29,5 @@ open class AuthorizationException(val errorMessage: String = "") : BpException(e
 
 open class RestaurantException(errorMessage: String = "") : BpException(errorMessage) {
     class CartIsFullException(message: String) : RestaurantException(message)
+    class RestaurantClosedException(message: String) : RestaurantException(message)
 }

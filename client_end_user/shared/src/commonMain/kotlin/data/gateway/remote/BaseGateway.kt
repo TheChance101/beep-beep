@@ -65,6 +65,9 @@ abstract class BaseGateway(val client: HttpClient) {
             if (it.containsErrors(MEAL_ALREADY_EXIST)) {
                 throw RestaurantException.CartIsFullException(it.getOrEmpty(MEAL_ALREADY_EXIST))
             }
+            if (it.containsErrors(RESTAURANT_CLOSED)) {
+                throw RestaurantException.RestaurantClosedException(it.getOrEmpty(RESTAURANT_CLOSED))
+            }
 
             if (it.containsErrors(USER_ALREADY_EXIST)) {
                 throw AuthorizationException.UserAlreadyExistException(
@@ -88,6 +91,7 @@ abstract class BaseGateway(val client: HttpClient) {
         const val USER_NOT_EXIST = "1043"
         const val USER_ALREADY_EXIST = "1002"
         const val MEAL_ALREADY_EXIST = "2503"
+        const val RESTAURANT_CLOSED="2500"
     }
 
     fun <T> paginateData(result: List<T>, page: Int, total: Long): PaginationItems<T> {
