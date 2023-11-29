@@ -121,4 +121,5 @@ data class English(
     override val addFromDifferentCartMessage: String = "Meal not in same Restaurant. Delete last cart item to add? Confirm?",
     override val yesIamSure: String = "Yes, I'm sure",
     override val goToCart: String = "Go to cart",
-) : IStringResources
+    override val youCanAddMeal: String ="Now you can add meal if you want.",
+    ) : IStringResources

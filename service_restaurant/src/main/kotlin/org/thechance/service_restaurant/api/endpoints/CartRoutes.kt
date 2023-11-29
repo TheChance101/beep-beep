@@ -28,6 +28,11 @@ fun Route.cartRoutes() {
             val result = manageCart.getUserCart(userId)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
+        put("/clear") {
+            val userId = call.parameters["userId"] ?: throw MultiErrorException(listOf(NOT_FOUND))
+            val result = manageCart.clearCart(userId)
+            call.respond(HttpStatusCode.OK, result)
+        }
 
         put {
             val userId = call.parameters["userId"] ?: throw MultiErrorException(listOf(NOT_FOUND))

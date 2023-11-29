@@ -33,6 +33,10 @@ class FakeTransactionsGateway : ITransactionsGateway {
         TODO("Not yet implemented")
     }
 
+    override suspend fun clearCart(): Boolean {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun updateCart(cart: Cart) {
         TODO("Not yet implemented")
     }

@@ -101,6 +101,7 @@ interface IStringResources {
     val loginToAddToFavourite: String
     val addToCart: String
     val mealAddedToYourCart: String
+    val youCanAddMeal: String
     val mealFailedToAddInCart: String
     val addFromDifferentCartMessage: String
     val message: String

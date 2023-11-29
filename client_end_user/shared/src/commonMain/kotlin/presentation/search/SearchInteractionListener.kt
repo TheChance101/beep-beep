@@ -10,5 +10,8 @@ interface SearchInteractionListener : BaseInteractionListener , MealInteractionL
     fun onMealClicked(meal: MealUIState)
     fun onDismissSheet()
     fun onLoginClicked()
+    fun onGoToCart()
+    fun onDismissDialog()
+    fun onClearCart()
     fun onDismissSnackBar()
 }

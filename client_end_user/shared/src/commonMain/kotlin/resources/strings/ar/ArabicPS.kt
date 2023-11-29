@@ -121,4 +121,6 @@ data class ArabicPS(
     override val restaurants: String = "المطاعم",
     override val yesIamSure: String = "نعم أنا متأكد",
     override val goToCart: String = "الذهاب الى العربة",
-) : IStringResources
+    override val youCanAddMeal: String ="الان يمكن اضاف الوجبة اذا اردت.",
+
+    ) : IStringResources

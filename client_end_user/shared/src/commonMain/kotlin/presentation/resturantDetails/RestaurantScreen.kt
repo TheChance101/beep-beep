@@ -261,12 +261,25 @@ data class RestaurantScreen(val restaurantId: String) :
                     listener.onDismissSnackBar()
                 }
             }
+            LaunchedEffect(state.showToastClearCart) {
+                if (state.showToastClearCart) {
+                    delay(2000)
+                    listener.onDismissSnackBar()
+                }
+            }
 
             ToastMessage(
                 modifier = Modifier.align(Alignment.BottomCenter).padding(getNavigationBarPadding()),
                 state = state.showToast,
                 message = if (state.errorAddToCart == null) Resources.strings.mealAddedToYourCart else Resources.strings.mealFailedToAddInCart,
                 isError = state.errorAddToCart != null
+            )
+
+            ToastMessage(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                state = state.showToastClearCart,
+                message = Resources.strings.youCanAddMeal ,
+                isError = false
             )
         }
     }

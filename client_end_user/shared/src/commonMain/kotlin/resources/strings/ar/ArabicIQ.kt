@@ -121,4 +121,6 @@ data class ArabicIQ(
     override val addFromDifferentCartMessage: String="الوجبة غير موجود في نفس المطعم. هل ترغب في حذف عنصر السلة الأخير لإضافة هذه الوجية؟ هل تؤكد؟",
     override val yesIamSure: String = "نعم أنا متأكد",
     override val goToCart: String="الذهاب الى العربة",
-) : IStringResources
+    override val youCanAddMeal: String ="الان يمكن اضاف الوجبة اذا اردت.",
+
+    ) : IStringResources

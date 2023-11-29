@@ -181,14 +181,19 @@ class RestaurantScreenModel(
     }
 
     override fun onClearCart() {
-//        tryToExecute(
-//            { manageCart.clearCart() },
-//            ::onClearCartSuccess,
-//            ::onError
-//        )
-        onDismissDialog()
+        tryToExecute(
+            { manageCart.clearCart() },
+            ::onClearCartSuccess,
+            ::onError
+        )
     }
 
+   private fun onClearCartSuccess(isClear:Boolean){
+       if(isClear){
+           onDismissDialog()
+           updateState { it.copy(showToastClearCart = true) }
+       }
+    }
 
     override fun onShowLoginSheet() {
         coroutineScope.launch {
@@ -243,18 +248,15 @@ class RestaurantScreenModel(
     }
 
     private fun onAddToCartSuccess(success: Boolean) {
-        println("successssss")
         updateState { it.copy(isAddToCartLoading = false, errorAddToCart = null) }
         onDismissSheet()
         updateState { it.copy(showToast = true) }
     }
 
     private fun onAddToCartError(errorState: ErrorState) {
-        println("errrrrror:$errorState")
         when(errorState){
             is ErrorState.CartIsFull -> {
-                updateState { it.copy(isAddToCartLoading = false, errorAddToCart = errorState) }
-                updateState { it.copy(showToast = true , showWarningCartIsFull = true) }
+                updateState { it.copy(isAddToCartLoading = false, showWarningCartIsFull = true,errorAddToCart = errorState) }
             }
             else -> {
                 updateState { it.copy(error = errorState) }
@@ -275,7 +277,7 @@ class RestaurantScreenModel(
     }
 
     override fun onDismissSnackBar() {
-        updateState { it.copy(showToast = false) }
+        updateState { it.copy(showToast = false,showToastClearCart =false) }
     }
 
     private suspend fun delayAndChangePermissionSheetState(show: Boolean) {
