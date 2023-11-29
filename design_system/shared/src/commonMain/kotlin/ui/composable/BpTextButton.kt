@@ -44,7 +44,7 @@ fun BpTextButton(
         Text(
             text = text,
             style = typography.body,
-            color = colors.onPrimary,
+            color = colors.contentTertiary,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxSize()
                 .padding(horizontal = dimens.space16, vertical = dimens.space16)

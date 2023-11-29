@@ -65,7 +65,7 @@ fun WarningCartIsFullDialog(
                             text = text,
                             modifier = Modifier
                                 .padding(horizontal = 16.dp),
-                            color = Theme.colors.warning,
+                            color = Theme.colors.contentSecondary,
                             style = Theme.typography.body,
                             textAlign = TextAlign.Center
                         )
