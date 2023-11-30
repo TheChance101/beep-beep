@@ -7,12 +7,8 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
 import org.thechance.api_gateway.data.model.MealRequestDto
-import org.thechance.api_gateway.data.model.notification.NotificationDto
-import org.thechance.api_gateway.data.model.notification.NotificationSender
 import org.thechance.api_gateway.data.model.restaurant.CartDto
-import org.thechance.api_gateway.data.service.NotificationService
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
@@ -20,11 +16,8 @@ import org.thechance.api_gateway.endpoints.utils.respondWithResult
 import org.thechance.api_gateway.util.Claim
 import org.thechance.api_gateway.util.Role
 
-
 fun Route.cartRoutes() {
     val restaurantService: RestaurantService by inject()
-    val localizedMessagesFactory by inject<LocalizedMessagesFactory>()
-    val notificationService: NotificationService by inject()
 
     authenticateWithRole(Role.END_USER) {
         route("/cart") {
@@ -68,19 +61,6 @@ fun Route.cartRoutes() {
                 val userId = tokenClaim?.get(Claim.USER_ID).toString()
                 val result = restaurantService.orderCart(userId, language)
                 respondWithResult(HttpStatusCode.OK, result)
-
-                val notificationTitle = localizedMessagesFactory.createLocalizedMessages(language).newOrderTitle
-                val notificationBody = localizedMessagesFactory.createLocalizedMessages(language).newOrderBody
-                val restaurant = restaurantService.getRestaurantInfo(
-                    languageCode = language, restaurantId = result.restaurantId!!
-                )
-                val orderNotification = NotificationDto(
-                    userId = restaurant.ownerId,
-                    title = notificationTitle,
-                    body = notificationBody,
-                    sender = NotificationSender.UNDEFINED.code
-                )
-                notificationService.sendNotificationToUser(notificationDto = orderNotification, language)
             }
         }
     }

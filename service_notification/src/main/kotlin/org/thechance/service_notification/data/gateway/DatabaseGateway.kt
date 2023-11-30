@@ -1,6 +1,7 @@
 package org.thechance.service_notification.data.gateway
 
 import com.mongodb.client.model.UpdateOptions
+import com.mongodb.client.model.Updates
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.*
@@ -11,11 +12,11 @@ import org.thechance.service_notification.data.collection.UserCollection
 import org.thechance.service_notification.data.mappers.toCollection
 import org.thechance.service_notification.data.mappers.toNotificationEntity
 import org.thechance.service_notification.data.utils.paginate
-import org.thechance.service_notification.data.utils.toDate
 import org.thechance.service_notification.domain.entity.NotFoundException
 import org.thechance.service_notification.domain.entity.NotificationHistory
 import org.thechance.service_notification.domain.gateway.IDatabaseGateway
 import org.thechance.service_notification.endpoints.TOKENS_NOT_FOUND
+import org.thechance.service_notification.endpoints.TOKEN_NOT_REGISTERED
 
 @Single
 class DatabaseGateway(
@@ -35,9 +36,31 @@ class DatabaseGateway(
             false
         }
     }
+
     override suspend fun getUserTokens(userId: String): List<String> {
         val userTokens = userCollection.findOneById(ObjectId(userId))?.deviceTokens
         return userTokens ?: throw NotFoundException(TOKENS_NOT_FOUND)
+    }
+    override suspend fun clearDeviceToken(userId: String, deviceToken: String): Boolean {
+        val userTokens = getUserTokens(userId)
+        val newUserTokens = userTokens.filterNot { it == deviceToken }
+        val result = userCollection.updateOne(
+            UserCollection::id eq ObjectId(userId),
+            Updates.set(UserCollection::deviceTokens.name, newUserTokens)
+        )
+        return result.wasAcknowledged()
+    }
+
+    override suspend fun clearAllDeviceUserTokens(userId: String): Boolean {
+        val result = userCollection.updateOne(
+            UserCollection::id eq ObjectId(userId),
+            pullAll(UserCollection::deviceTokens, listOf<String>())
+        )
+        if (result.wasAcknowledged() && result.modifiedCount > 0) {
+            return true
+        } else {
+            throw NotFoundException(TOKENS_NOT_FOUND)
+        }
     }
 
     override suspend fun registerToken(userId: String, token: String): Boolean {
