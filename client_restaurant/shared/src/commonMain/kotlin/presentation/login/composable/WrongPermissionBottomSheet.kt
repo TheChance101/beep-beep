@@ -62,7 +62,7 @@ fun WrongPermissionBottomSheet(
         BpTransparentButton(
             onClick = listener::onCancelClicked,
             title = Resources.strings.cancel,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16, bottom = Theme.dimens.space24),
         )
     }
 

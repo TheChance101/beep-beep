@@ -6,8 +6,8 @@ open class BpException(message: String) : Exception(message)
 class NoInternetException : BpException("No internet connection")
 
 //endregion
-open class AuthorizationException : BpException("")
-class PermissionDenied : AuthorizationException()
+open class AuthorizationException(message: String) : BpException(message)
+class PermissionDenied(message: String) : AuthorizationException(message)
 
 
 open class RequestException(message: String) : BpException(message)
@@ -17,9 +17,8 @@ class UserNotFoundException(val errorMessage: String) : RequestException(errorMe
 class WrongPasswordException(val errorMessage: String) : RequestException(errorMessage)
 
 
-open class InvalidCredentialsException : BpException("")
+open class InvalidCredentialsException() : BpException("")
 class InvalidUserNameException : InvalidCredentialsException()
 class InvalidPasswordException : InvalidCredentialsException()
-
 class NotFoundedException : BpException("Not founded")
 

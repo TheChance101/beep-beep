@@ -11,6 +11,7 @@ data class StringResources(
     val add: String = "Add",
     val name: String = "Name",
     val description: String = "Description",
+    val whyBeepBeep: String = "Why Beep Beep?",
     val price: String = "Price",
     val cuisines: String = "Cuisines",
     val chooseCuisine: String = "Choose cuisine",

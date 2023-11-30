@@ -72,7 +72,7 @@ class LoginUserUseCase(
 
     private fun validatePermissionRestaurant(permission: String?): Boolean {
         if (permission != HAS_PERMISSION) {
-            throw PermissionDenied()
+            throw PermissionDenied("You don't have permission to login")
         } else return true
     }
 
