@@ -1,10 +1,15 @@
 package presentation.orderHistory
 
+import androidx.paging.PagingData
+import androidx.paging.filter
+import androidx.paging.map
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Order
 import domain.entity.OrderStatus
 import domain.usecase.IManageOrderUseCase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
@@ -22,22 +27,30 @@ class OrderHistoryScreenModel(
     private fun getData() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            ::getOrdersHistory, ::onGetOrdersHistorySuccess, ::onError
+            { ordersManagement.getOrdersHistory(restaurantId) },
+            ::onGetOrdersHistorySuccess,
+            ::onError
         )
     }
 
-    private suspend fun getOrdersHistory(): List<Order> {
-        return ordersManagement.getOrdersHistory(restaurantId, 1, 10)//todo just for testing
-    }
+    private fun onGetOrdersHistorySuccess(orders: Flow<PagingData<Order>>) {
+        val ordersUiState = orders.map { pagingData ->
+            pagingData.map { order -> order.toOrderHistoryUiState() }
+        }
 
-    private fun onGetOrdersHistorySuccess(orders: List<Order>) {
-        val ordersUiState = orders.map { it.toOrderHistoryUiState() }
         updateState { currentState ->
-            currentState.copy(isLoading = false,
+            currentState.copy(
+                isLoading = false,
                 orders = ordersUiState,
-                currentOrders = ordersUiState.filter {
-                    currentState.selectedType == OrderHistoryScreenUiState.OrderSelectType.FINISHED && it.orderState == OrderStatus.DONE || currentState.selectedType == OrderHistoryScreenUiState.OrderSelectType.CANCELLED && it.orderState == OrderStatus.CANCELED
-                })
+                currentOrders = ordersUiState.map { pagingData ->
+                    pagingData.filter {
+                        currentState.selectedType == OrderHistoryScreenUiState.OrderSelectType.FINISHED
+                                && it.orderState == OrderStatus.DONE
+                                || currentState.selectedType == OrderHistoryScreenUiState.OrderSelectType.CANCELLED
+                                && it.orderState == OrderStatus.CANCELED
+                    }
+                }
+            )
         }
     }
 
@@ -53,11 +66,13 @@ class OrderHistoryScreenModel(
         updateState { currentState ->
             currentState.copy(
                 selectedType = type,
-                currentOrders = currentState.orders.filter {
-                    type == OrderHistoryScreenUiState.OrderSelectType.FINISHED &&
-                            it.orderState == OrderStatus.DONE ||
-                            type == OrderHistoryScreenUiState.OrderSelectType.CANCELLED
-                            && it.orderState == OrderStatus.CANCELED
+                currentOrders = currentState.orders.map { pagingData ->
+                    pagingData.filter {
+                        type == OrderHistoryScreenUiState.OrderSelectType.FINISHED
+                                && it.orderState == OrderStatus.DONE ||
+                                type == OrderHistoryScreenUiState.OrderSelectType.CANCELLED &&
+                                it.orderState == OrderStatus.CANCELED
+                    }
                 }
             )
         }

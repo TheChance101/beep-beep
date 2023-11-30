@@ -26,6 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
+import app.cash.paging.LoadStateNotLoading
+import app.cash.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAnimatedTabLayout
 import com.beepbeep.designSystem.ui.composable.modifier.shimmerEffect
@@ -87,6 +89,7 @@ class OrdersHistoryScreen(private val restaurantId: String) :
         state: OrderHistoryScreenUiState,
         listener: OrderHistoryScreenInteractionListener
     ) {
+        val orders = state.orders.collectAsLazyPagingItems()
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Adaptive(300.dp),
             contentPadding = PaddingValues(16.dp),
@@ -114,23 +117,25 @@ class OrdersHistoryScreen(private val restaurantId: String) :
                     )
                 }
             }
-            items(state.currentOrders, key = { it.orderId }) { order ->
-                OrderCard(
-                    order = order,
-                    modifier = Modifier
-                ) {
-                    Text(
-                        order.createdAt,
-                        style = Theme.typography.caption.copy(color = Theme.colors.contentTertiary),
-                    )
+            items(items = orders.itemSnapshotList, key = { it?.orderId ?: "" }) { order ->
+                order?.let {
+                    OrderCard(
+                        order = it,
+                        modifier = Modifier
+                    ) {
+                        Text(
+                            order.createdAt,
+                            style = Theme.typography.caption.copy(color = Theme.colors.contentTertiary),
+                        )
+                    }
                 }
+
             }
         }
-
         NoItemsPlaceholder(
             painter = painterResource(Resources.images.emptyScreen),
             text = Resources.strings.noOrderHistory,
-            isVisible = (state.orders.isEmpty()),
+            isVisible = (orders.loadState.refresh is LoadStateNotLoading && orders.itemCount < 1),
         )
     }
 
