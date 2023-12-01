@@ -23,6 +23,7 @@ data class DrawableResources(
     val revenue: String = "revenue.png",
     val arrowDown: String = "arrow_down.xml",
     val errorIcon: String = "ic_error_icon.xml",
+    val iconEdit: String = "ic_edit.xml",
     val emptyScreen: String = "empty.png",
     val restaurantErrorPlaceholder: String = "restaurant_error.png",
     val mealErrorPlaceholder: String = "meal_error_placeholder_light.jpg",
