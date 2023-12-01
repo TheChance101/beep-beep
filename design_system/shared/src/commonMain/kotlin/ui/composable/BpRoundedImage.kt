@@ -39,12 +39,7 @@ fun BpRoundedImage(
             .clip(shape = RoundedCornerShape(Theme.radius.medium))
             .background(backgroundColor)
             .size(boxSize)
-            .clickable { onClick() }
-            .border(
-                width = strokeWidth,
-                color = strokeColor,
-                shape = RoundedCornerShape(Theme.radius.medium)
-            ),
+            .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
         Image(
@@ -97,20 +92,21 @@ fun BpRoundedImage(
     backgroundColor: Color = Theme.colors.surface,
     imageScale: ContentScale = ContentScale.Crop,
 ) {
-    Box(
-        modifier = modifier
-            .clip(shape = RoundedCornerShape(Theme.radius.medium))
-            .background(backgroundColor)
-            .size(boxSize)
-            .clickable { onClick() }
-            .border(
-                width = strokeWidth,
-                color = strokeColor,
-                shape = RoundedCornerShape(Theme.radius.medium)
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        if (bitmap == null) {
+
+    if (bitmap == null) {
+        Box(
+            modifier = modifier
+                .clip(shape = RoundedCornerShape(Theme.radius.medium))
+                .background(backgroundColor)
+                .size(boxSize)
+                .clickable { onClick() }
+                .border(
+                    width = strokeWidth,
+                    color = strokeColor,
+                    shape = RoundedCornerShape(Theme.radius.medium)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
             Image(
                 modifier = Modifier.size(imageSize),
                 painter = placeholder,
@@ -118,9 +114,20 @@ fun BpRoundedImage(
                 alignment = Alignment.Center,
                 contentScale = imageScale
             )
-        } else {
+
+        }
+    } else {
+        Box(
+            modifier = modifier
+                .clip(shape = RoundedCornerShape(Theme.radius.medium))
+                .background(backgroundColor)
+                .size(boxSize)
+                .clickable { onClick() },
+            contentAlignment = Alignment.Center
+        ) {
             Image(
-                modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(Theme.radius.medium)),
+                modifier = Modifier.fillMaxSize()
+                    .clip(RoundedCornerShape(Theme.radius.medium)),
                 bitmap = bitmap,
                 contentDescription = "",
                 alignment = Alignment.Center,
