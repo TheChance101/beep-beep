@@ -39,7 +39,7 @@ import presentation.composable.ModalBottomSheetState
 import presentation.composable.modifier.noRippleEffect
 import presentation.composable.modifier.roundedBorderShape
 import presentation.resturantDetails.Composable.NeedToLoginSheet
-import presentation.composable.ToastMessage
+import com.beepbeep.designSystem.ui.composable.BpToastMessage
 import presentation.resturantDetails.Composable.WarningCartIsFullDialog
 import presentation.resturantDetails.RestaurantScreen
 import resources.Resources
@@ -63,6 +63,7 @@ class SearchScreen :
         }
     }
 
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun onRender(state: SearchUiState, listener: SearchInteractionListener) {
         val sheetState = remember { ModalBottomSheetState() }
@@ -114,18 +115,21 @@ class SearchScreen :
                 }
             }
 
-            ToastMessage(
+            BpToastMessage(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 state = state.showToast,
                 message = if (state.errorAddToCart == null)
                     Resources.strings.mealAddedToYourCart else Resources.strings.mealFailedToAddInCart,
-                isError = state.errorAddToCart != null
+                isError = state.errorAddToCart != null,
+                successIcon = painterResource(Resources.images.unread),
+                warningIcon = painterResource(Resources.images.warningIcon)
             )
-            ToastMessage(
+            BpToastMessage(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 state = state.showToastClearCart,
                 message = Resources.strings.youCanAddMeal ,
-                isError = false
+                isError = false,
+                successIcon = painterResource(Resources.images.unread),
             )
         }
 
