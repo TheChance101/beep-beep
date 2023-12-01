@@ -19,8 +19,10 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.BpAnimationContent
+import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.composable.modifier.shimmerEffect
 import com.beepbeep.designSystem.ui.theme.Theme
 import kotlinx.coroutines.delay
@@ -36,7 +39,9 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
+import presentation.composable.BPDashedDivider
 import presentation.composable.BpAppBar
+import presentation.composable.LoadingOrderItem
 import presentation.composable.NoItemsPlaceholder
 import presentation.order.composable.OrderCard
 import presentation.order.composable.OrderTextButton
@@ -100,7 +105,7 @@ class OrderScreen(private val restaurantId: String) :
                             }
                         )
                     },
-                    loadingContent = { LoadingOrder() }
+                    loadingContent = { OrderLoading() }
                 )
             }
             BPSnackBar(
@@ -189,52 +194,41 @@ class OrderScreen(private val restaurantId: String) :
     }
 
     @Composable
-    fun LoadingOrder() {
+    fun OrderLoading() {
         LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Adaptive(300.dp),
-            contentPadding = PaddingValues(16.dp),
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(bottom = 16.dp, start = 16.dp, end = 16.dp),
+            columns = StaggeredGridCells.Adaptive(minSize = 360.dp),
             verticalItemSpacing = 16.dp,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.fillMaxSize()
-                .padding(bottom = getNavigationBarPadding().calculateBottomPadding())
         ) {
-            items(13) {
-                Row(
-                    modifier = Modifier.fillMaxWidth().height(70.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
+            header { Box {
                     Box(
-                        modifier = Modifier.fillMaxHeight().width(100.dp)
-                            .clip(shape = RoundedCornerShape(Theme.radius.medium))
+                        modifier = Modifier
+                            .padding(top = 16.dp)
+                            .width(150.dp)
+                            .height(18.dp)
+                            .clip(RoundedCornerShape(Theme.radius.medium))
                             .shimmerEffect()
                     )
-
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(
-                            8.dp,
-                            alignment = Alignment.CenterVertically
-                        ),
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(16.dp)
-                                .padding(top = 8.dp, end = 16.dp)
-                                .shimmerEffect()
-                        )
-                        Box(
-                            modifier = Modifier
-                                .width(90.dp)
-                                .height(16.dp)
-                                .padding(top = 8.dp)
-                                .shimmerEffect()
-                        )
-                    }
+                } }
+            items(3) { LoadingOrderItem() }
+            header {
+                Box {
+                    Box(
+                        modifier = Modifier
+                            .padding(top = 16.dp)
+                            .width(150.dp)
+                            .height(18.dp)
+                            .clip(RoundedCornerShape(Theme.radius.medium))
+                            .shimmerEffect()
+                    )
                 }
             }
+            items(3) { LoadingOrderItem() }
         }
     }
+
 
     @Composable
     private fun OrdersHeader(text: String, modifier: Modifier = Modifier) {

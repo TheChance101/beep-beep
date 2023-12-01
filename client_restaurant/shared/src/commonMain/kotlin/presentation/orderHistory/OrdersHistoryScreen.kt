@@ -8,12 +8,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
@@ -35,6 +34,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
+import presentation.composable.LoadingOrderItem
 import presentation.composable.NoItemsPlaceholder
 import presentation.order.composable.OrderCard
 import presentation.order.composable.header
@@ -92,7 +92,6 @@ class OrdersHistoryScreen(private val restaurantId: String) :
     }
 
     @Composable
-    @OptIn(ExperimentalResourceApi::class)
     private fun OrdersHistoryContent(
         state: OrderHistoryScreenUiState,
         listener: OrderHistoryScreenInteractionListener
@@ -148,40 +147,28 @@ class OrdersHistoryScreen(private val restaurantId: String) :
             modifier = Modifier.fillMaxSize()
                 .padding(bottom = getNavigationBarPadding().calculateBottomPadding())
         ) {
-            items(13) {
-                Row(
-                    modifier = Modifier.fillMaxWidth().height(70.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    Box(
-                        modifier = Modifier.fillMaxHeight().width(100.dp)
-                            .clip(shape = RoundedCornerShape(Theme.radius.medium))
-                            .shimmerEffect()
-                    )
-
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(
-                            8.dp,
-                            alignment = Alignment.CenterVertically
-                        ),
+            header {
+                Box {
+                    Row(
+                        Modifier.fillMaxWidth().clip(RoundedCornerShape(Theme.radius.medium))
+                            .background(Theme.colors.surface).wrapContentHeight(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
                     ) {
                         Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(16.dp)
-                                .padding(top = 8.dp, end = 16.dp)
+                            modifier = Modifier.height(42.dp).padding(4.dp).weight(1f)
+                                .clip(RoundedCornerShape(Theme.radius.medium))
                                 .shimmerEffect()
                         )
                         Box(
-                            modifier = Modifier
-                                .width(90.dp)
-                                .height(16.dp)
-                                .padding(top = 8.dp)
-                                .shimmerEffect()
+                            modifier = Modifier.weight(1f)
+                                .clip(RoundedCornerShape(Theme.radius.medium))
                         )
                     }
                 }
+            }
+            items(5) {
+                LoadingOrderItem()
             }
         }
     }
