@@ -4,6 +4,7 @@ import data.remote.mapper.toEntity
 import data.remote.model.BaseResponse
 import data.remote.model.RestaurantRequestPermissionDto
 import data.remote.model.SessionDto
+import data.remote.model.TripDto
 import data.remote.model.UserTokensDto
 import data.service.IFirebaseMessagingService
 import domain.entity.RestaurantRequestPermission
@@ -15,6 +16,8 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.http.Parameters
+import io.ktor.util.InternalAPI
+import kotlinx.serialization.json.Json
 import presentation.base.InvalidCredentialsException
 
 class IdentityRemoteGateway(
@@ -55,18 +58,23 @@ class IdentityRemoteGateway(
         return Pair(result.accessToken, result.refreshToken)
     }
 
+    @OptIn(InternalAPI::class)
     override suspend fun createRequestPermission(
         restaurantRequestPermission: String,
         ownerEmail: String,
         description: String,
     ): Boolean {
-        val result = tryToExecute<BaseResponse<Boolean>> {
-            post("/restaurant-permission-request") {
-                post("/meal") { setBody(restaurantRequestPermission) }
+       return tryToExecute<BaseResponse<RestaurantRequestPermissionDto>> {
+            val restaurantRequestDto = RestaurantRequestPermissionDto(
+                restaurantName = restaurantRequestPermission,
+                ownerEmail = ownerEmail,
+                cause = description
+            )
+            post("/permission/restaurant") {
+                body = Json.encodeToString(RestaurantRequestPermissionDto.serializer(), restaurantRequestDto)
             }
-        }.value ?: throw Exception()
+        }.isSuccess
 
-        return result
     }
 }
 

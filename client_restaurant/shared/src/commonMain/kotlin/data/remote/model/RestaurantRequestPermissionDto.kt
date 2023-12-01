@@ -5,7 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RestaurantRequestPermissionDto(
-    @SerialName("restaurantName") val restaurantName: String,
-    @SerialName("ownerEmail") val ownerEmail: String,
-    @SerialName("cause") val cause: String
+    @SerialName("id") val id: String? = null,
+    @SerialName("restaurantName") val restaurantName: String? = null,
+    @SerialName("ownerEmail") val ownerEmail: String? = null,
+    @SerialName("cause") val cause: String? = null
 )
