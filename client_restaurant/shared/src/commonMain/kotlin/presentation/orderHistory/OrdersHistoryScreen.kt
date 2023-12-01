@@ -100,7 +100,7 @@ class OrdersHistoryScreen(private val restaurantId: String) :
                     tabItems = OrderHistoryScreenUiState.OrderSelectType.values().toList(),
                     selectedTab = state.selectedType,
                     onTabSelected = { listener.onClickTab(it) },
-                    modifier = Modifier.height(40.dp).fillMaxWidth(),
+                    modifier = Modifier.height(49.dp).fillMaxWidth().padding(bottom = 8.dp),
                     horizontalPadding = 4.dp,
                 ) { type ->
                     Text(
