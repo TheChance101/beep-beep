@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -115,8 +116,8 @@ fun MealContent(
                 label = Resources.strings.price,
                 keyboardType = KeyboardType.Decimal,
                 currency = meal.currency,
-                flag = painterResource(Resources.images.flag),
-                modifier = Modifier.fillMaxWidth(),
+                flag = painterResource(getFlag(meal.currency)),
+                modifier = Modifier.fillMaxWidth().size(48.dp),
             )
 
             CuisineTextField(
@@ -187,5 +188,16 @@ private fun CuisineTextField(
                 tint = Theme.colors.contentPrimary
             )
         }
+    }
+}
+
+@Composable
+private fun getFlag(currency: String): String {
+    return when (currency) {
+        "EGP" -> Resources.images.flagEgypt
+        "IQD" -> Resources.images.flagIraq
+        "SYP" -> Resources.images.flagSyria
+        "ILS" -> Resources.images.flagPalestine
+        else -> Resources.images.flag
     }
 }

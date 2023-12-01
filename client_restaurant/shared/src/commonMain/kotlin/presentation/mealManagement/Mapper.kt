@@ -40,6 +40,7 @@ fun Meal.toUIState() = MealDetails(
     description = description,
     imageUrl = imageUrl,
     price = "$price",
+    currency= currency,
     mealCuisines = cuisines.toUIState()
 )
 

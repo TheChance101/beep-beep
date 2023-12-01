@@ -59,7 +59,7 @@ fun Meal.toMealUIState(): MealUIState {
     return MealUIState(
         id = id,
         name = name,
-        price = "\$ $price",
+        price = "$currency $price",
         imageUrl = imageUrl,
     )
 }
