@@ -13,7 +13,13 @@ data class DrawableResources(
     val pattern: String = "pattern.png",
     val galleryAdd: String = "gallery_add.xml",
     val edit: String = "edit.xml",
+
     val flag: String = "flag.xml",
+    val flagEgypt: String = "flag_egypt.xml",
+    val flagIraq: String = "flag_iraq.xml",
+    val flagSyria: String = "flag_syria.xml",
+    val flagPalestine: String = "flag_of_palestine.xml",
+
     val logout: String = "ic_logout.xml",
     val info: String = "info.png",
     val meals: String = "meals.png",
@@ -27,7 +33,7 @@ data class DrawableResources(
     val emptyScreen: String = "empty.png",
     val restaurantErrorPlaceholder: String = "restaurant_error.png",
     val mealErrorPlaceholder: String = "meal_error_placeholder_light.jpg",
-    val cuisinePlaceholder:String = "cuisine_placeholder.png",
+    val cuisinePlaceholder: String = "cuisine_placeholder.png",
     val unread: String = "unread.xml",
 )
 
