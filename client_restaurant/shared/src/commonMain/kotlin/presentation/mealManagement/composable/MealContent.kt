@@ -26,6 +26,7 @@ import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpCircleImage
 import com.beepbeep.designSystem.ui.composable.BpExpandableTextField
 import com.beepbeep.designSystem.ui.composable.BpPriceField
+import com.beepbeep.designSystem.ui.composable.BpRoundedImage
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import com.seiko.imageloader.rememberAsyncImagePainter
@@ -77,17 +78,17 @@ fun MealContent(
         ) {
 
             if (meal.imageUrl.isEmpty() || meal.image != null) {
-                BpCircleImage(
-                    modifier = Modifier.sizeIn(minHeight = 104.dp, minWidth = 104.dp),
+                BpRoundedImage(
+                    modifier = Modifier.sizeIn(minHeight = 120.dp).fillMaxWidth(),
                     bitmap = rememberBitmapFromBytes(meal.image),
                     placeholder = painterResource(Resources.images.galleryAdd),
                     onClick = { imagePicker.pickImage() }
                 )
             } else {
-                BpCircleImage(
-                    imageSize = 104.dp,
-                    modifier = Modifier.sizeIn(minHeight = 104.dp, minWidth = 104.dp),
+                BpRoundedImage(
+                    modifier = Modifier.sizeIn(minHeight = 120.dp).fillMaxWidth(),
                     painter = rememberAsyncImagePainter(meal.imageUrl),
+                    editPainter = painterResource(Resources.images.edit),
                     onClick = { imagePicker.pickImage() }
                 )
             }

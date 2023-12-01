@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.BpButton
-import com.beepbeep.designSystem.ui.composable.BpCircleImage
+import com.beepbeep.designSystem.ui.composable.BpRoundedImage
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import com.seiko.imageloader.rememberAsyncImagePainter
@@ -139,23 +139,24 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth().padding(
-                    bottom = 16.dp
+                    bottom = 16.dp,
+                    top = 16.dp
                 ),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 if (imageUrl.isEmpty() || image != null) {
-                    BpCircleImage(
-                        modifier = Modifier.sizeIn(minHeight = 104.dp, minWidth = 104.dp),
+                    BpRoundedImage(
+                        modifier = Modifier.sizeIn(minHeight = 120.dp).fillMaxWidth(),
                         bitmap = rememberBitmapFromBytes(image),
                         placeholder = painterResource(Resources.images.galleryAdd),
                         onClick = { imagePicker.pickImage() }
                     )
                 } else {
-                    BpCircleImage(
-                        imageSize = 104.dp,
-                        modifier = Modifier.sizeIn(minHeight = 104.dp, minWidth = 104.dp),
+                    BpRoundedImage(
+                        modifier = Modifier.sizeIn(minHeight = 120.dp).fillMaxWidth(),
                         painter = rememberAsyncImagePainter(url = imageUrl),
+                        editPainter = painterResource(Resources.images.edit),
                         onClick = { imagePicker.pickImage() }
                     )
                 }
