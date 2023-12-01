@@ -58,12 +58,7 @@ fun BpRoundedImage(
                         shape = MaterialTheme.shapes.large
                     )
                     .size(boxSize)
-                    .clickable { onClick() }
-                    .border(
-                        width = strokeWidth,
-                        color = strokeColor,
-                        shape = RoundedCornerShape(Theme.radius.medium)
-                    ),
+                    .clickable { onClick() },
                 contentAlignment = Alignment.Center
             ) {
                 Image(
