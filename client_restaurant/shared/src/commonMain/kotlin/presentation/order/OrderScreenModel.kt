@@ -107,7 +107,7 @@ class OrderScreenModel(
     }
 
     private fun updateOrderState(orderId: String) {
-        updateState { it.copy(isLoading = true, noInternetConnection = false) }
+        updateState { it.copy( noInternetConnection = false) }
         updateOrderJob?.cancel()
         updateOrderJob = launchDelayed(500L) {
             tryToExecute(
@@ -119,7 +119,6 @@ class OrderScreenModel(
     }
 
     private fun onUpdateOrderStateSuccess(updatedOrder: OrderUiState) {
-        updateState { it.copy(isLoading = false) }
         val inCookingOrders = state.value.inCookingOrders.toMutableList()
         val pendingOrders = state.value.pendingOrders.toMutableList()
 
@@ -154,7 +153,7 @@ class OrderScreenModel(
     }
 
     private fun createOrderTrip(order: OrderUiState) {
-        updateState { it.copy(isLoading = true, noInternetConnection = false) }
+        updateState { it.copy( noInternetConnection = false) }
         viewModelScope.launch { async{ getUserLocation(order.userId) }.await() }
         val trip = Trip(
             clientId = order.userId, orderId = order.orderId, restaurantId = order.restaurantId,

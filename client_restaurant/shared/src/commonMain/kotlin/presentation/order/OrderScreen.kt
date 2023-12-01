@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -109,7 +110,7 @@ class OrderScreen(private val restaurantId: String) :
                     .align(Alignment.BottomCenter)
             ) {
                 Text(
-                    text =  Resources.strings.noInternetConnection,
+                    text = Resources.strings.noInternetConnection,
                     style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
                 )
             }
@@ -127,56 +128,58 @@ class OrderScreen(private val restaurantId: String) :
     ) {
         LazyVerticalStaggeredGrid(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
+            contentPadding = PaddingValues(bottom = 16.dp, start = 16.dp, end = 16.dp),
             columns = StaggeredGridCells.Adaptive(minSize = 360.dp),
-            verticalItemSpacing = 8.dp,
+            verticalItemSpacing = 16.dp,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-
-            header {
-                OrdersHeader(
-                    text = Resources.strings.inCookingOrders,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                        .alpha(if (state.inCookingOrders.isEmpty()) 0f else 1f)
-                )
-            }
-
-            items(state.inCookingOrders) { order ->
-                OrderCard(order = order) {
-                    OrderTextButton(
-                        text = Resources.strings.finish,
-                        onClick = {
-                            listener.onClickFinishOrder(order.orderId)
-                        }
+            if (state.inCookingOrders.isNotEmpty()) {
+                header {
+                    OrdersHeader(
+                        text = Resources.strings.inCookingOrders,
+                        modifier = Modifier.padding(top = 16.dp)
                     )
+                }
+
+
+                items(state.inCookingOrders) { order ->
+                    OrderCard(order = order) {
+                        OrderTextButton(
+                            text = Resources.strings.finish,
+                            onClick = {
+                                listener.onClickFinishOrder(order.orderId)
+                            }
+                        )
+                    }
                 }
             }
 
-            header {
-                OrdersHeader(
-                    text = Resources.strings.requestedOrders,
-                    modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
-                        .alpha(if (state.pendingOrders.isEmpty()) 0f else 1f)
-                )
-            }
+            if(state.pendingOrders.isNotEmpty()) {
+                header {
+                    OrdersHeader(
+                        text = Resources.strings.requestedOrders,
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
+                }
 
-            items(state.pendingOrders) { order ->
-                OrderCard(order = order) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8)) {
-                        OrderTextButton(
-                            text = Resources.strings.cancel,
-                            onClick = {
-                                listener.onClickCancelOrder(order.orderId)
-                            },
-                            textColor = Theme.colors.contentTertiary,
-                            border = BorderStroke(0.dp, color = Theme.colors.surface)
-                        )
-                        OrderTextButton(
-                            text = Resources.strings.approve,
-                            onClick = {
-                                listener.onClickApproveOrder(order.orderId)
-                            },
-                        )
+                items(state.pendingOrders) { order ->
+                    OrderCard(order = order) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8)) {
+                            OrderTextButton(
+                                text = Resources.strings.cancel,
+                                onClick = {
+                                    listener.onClickCancelOrder(order.orderId)
+                                },
+                                textColor = Theme.colors.contentTertiary,
+                                border = BorderStroke(0.dp, color = Theme.colors.surface)
+                            )
+                            OrderTextButton(
+                                text = Resources.strings.approve,
+                                onClick = {
+                                    listener.onClickApproveOrder(order.orderId)
+                                },
+                            )
+                        }
                     }
                 }
             }
