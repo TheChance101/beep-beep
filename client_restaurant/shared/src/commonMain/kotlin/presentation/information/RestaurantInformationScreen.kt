@@ -157,7 +157,6 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
                     BpRoundedImage(
                         modifier = Modifier.sizeIn(minHeight = 120.dp).fillMaxWidth(),
                         painter = rememberAsyncImagePainter(url = imageUrl),
-                        strokeWidth = 0.dp,
                         editPainter = painterResource(Resources.images.iconEdit),
                         onClick = { imagePicker.pickImage() }
                     )

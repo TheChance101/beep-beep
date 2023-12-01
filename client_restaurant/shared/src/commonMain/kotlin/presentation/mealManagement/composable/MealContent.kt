@@ -88,7 +88,6 @@ fun MealContent(
                 BpRoundedImage(
                     modifier = Modifier.sizeIn(minHeight = 120.dp).fillMaxWidth(),
                     painter = rememberAsyncImagePainter(meal.imageUrl),
-                    strokeWidth = 0.dp,
                     editPainter = painterResource(Resources.images.iconEdit),
                     onClick = { imagePicker.pickImage() }
                 )
