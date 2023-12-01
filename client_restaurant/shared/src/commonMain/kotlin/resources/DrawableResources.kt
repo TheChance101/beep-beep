@@ -26,7 +26,8 @@ data class DrawableResources(
     val emptyScreen: String = "empty.png",
     val restaurantErrorPlaceholder: String = "restaurant_error.png",
     val mealErrorPlaceholder: String = "meal_error_placeholder_light.jpg",
-    val cuisinePlaceholder:String = "cuisine_placeholder.png"
+    val cuisinePlaceholder:String = "cuisine_placeholder.png",
+    val unread: String = "unread.xml",
 )
 
 val BpDrawableDarkResources = DrawableResources(

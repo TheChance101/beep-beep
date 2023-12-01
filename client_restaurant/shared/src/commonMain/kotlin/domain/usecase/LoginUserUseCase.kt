@@ -55,11 +55,7 @@ class LoginUserUseCase(
     override suspend fun requestPermission(
         restaurantName: String, ownerEmail: String, description: String,
     ): Boolean {
-        return remoteGateway.createRequestPermission(
-            restaurantName,
-            ownerEmail,
-            description
-        )
+        return remoteGateway.createRequestPermission(restaurantName, ownerEmail, description)
     }
 
     private fun validateLoginFields(username: String, password: String): Boolean {

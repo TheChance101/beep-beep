@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -18,7 +19,9 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpCheckBox
 import com.beepbeep.designSystem.ui.composable.BpTextField
+import com.beepbeep.designSystem.ui.composable.BpToastMessage
 import com.beepbeep.designSystem.ui.theme.Theme
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
@@ -29,6 +32,7 @@ import presentation.login.composable.WrongPermissionBottomSheet
 import presentation.main.MainScreen
 import presentation.restaurantSelection.RestaurantSelectionScreen
 import resources.Resources
+import util.getNavigationBarPadding
 
 class LoginScreen :
     BaseScreen<LoginScreenModel, LoginScreenUIState, LoginScreenUIEffect, LoginScreenInteractionListener>() {
@@ -50,9 +54,13 @@ class LoginScreen :
         }
     }
 
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun onRender(state: LoginScreenUIState, listener: LoginScreenInteractionListener) {
-
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.TopCenter
+        ) {
         Column(modifier = Modifier.fillMaxSize()) {
             CustomBottomSheet(
                 sheetContent = {
@@ -73,6 +81,23 @@ class LoginScreen :
             ) {
                 LoginScreenContent(state, listener)
             }
+        }
+        LaunchedEffect(state.showSnackbar) {
+            if (state.showSnackbar) {
+                delay(2000)
+                listener.onDismissSnackBar()
+            }
+        }
+        BpToastMessage(
+            modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth()
+                .padding(bottom = getNavigationBarPadding().calculateBottomPadding()),
+            state = state.showSnackbar,
+            message = if (state.errorPermission == null)
+                Resources.strings.yourRequestHasBeenSentSuccessfully else Resources.strings.somethingWentWrong,
+            isError = state.errorPermission != null,
+            successIcon = painterResource(Resources.images.unread),
+            warningIcon = painterResource(Resources.images.errorIcon)
+        )
         }
     }
 }
