@@ -6,6 +6,8 @@ interface IDatabaseGateway {
 
     suspend fun deleteAllNotification(): Boolean
     suspend fun getUserTokens(userId: String): List<String>
+    suspend fun clearDeviceToken(userId: String ,deviceToken:String):Boolean
+    suspend fun clearAllDeviceUserTokens(userId: String):Boolean
 
     suspend fun addNotificationToHistory(notificationHistory: NotificationHistory)
 

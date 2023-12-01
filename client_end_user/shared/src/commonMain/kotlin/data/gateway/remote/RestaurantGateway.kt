@@ -16,7 +16,7 @@ import domain.entity.PaginationItems
 import domain.entity.Price
 import domain.entity.Restaurant
 import domain.gateway.IRestaurantGateway
-import domain.utils.GeneralException
+import domain.utils.NotFoundException
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -35,7 +35,7 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRes
         }.value
         return paginateData(
             result = result?.items?.map { it.toEntity() }
-                ?: throw GeneralException.NotFoundException,
+                ?: throw NotFoundException(""),
             page = result.page,
             total = result.total)
     }
@@ -43,38 +43,38 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRes
     override suspend fun getCuisines(): List<Cuisine> {
         return tryToExecute<ServerResponse<List<CuisineDto>>> {
             get("/cuisines")
-        }.value?.toCuisineEntity() ?: throw GeneralException.NotFoundException
+        }.value?.toCuisineEntity() ?: throw NotFoundException("")
     }
 
     override suspend fun getRestaurantDetails(restaurantId: String): Restaurant {
         return tryToExecute<ServerResponse<RestaurantDto>> {
             get("/restaurant/$restaurantId")
-        }.value?.toEntity() ?: throw GeneralException.NotFoundException
+        }.value?.toEntity() ?: throw NotFoundException("")
     }
 
     override suspend fun getMealById(mealId: String): Meal {
         return tryToExecute<ServerResponse<MealDto>> {
             get("/meal/$mealId")
-        }.value?.toEntity() ?: throw GeneralException.NotFoundException
+        }.value?.toEntity() ?: throw NotFoundException("")
     }
 
     override suspend fun getNewOffers(): List<Offer> {
         return tryToExecute<ServerResponse<List<OfferDto>>> {
             get("/offers/restaurants")
-        }.value?.toEntity() ?: throw GeneralException.NotFoundException
+        }.value?.toEntity() ?: throw NotFoundException("")
     }
 
 
     override suspend fun getCuisinesWithMealsInRestaurant(restaurantId: String): List<Cuisine> {
         return tryToExecute<ServerResponse<List<CuisineDto>>> {
             get("/restaurant/${restaurantId}/cuisineMeals")
-        }.value?.toCuisineEntity() ?: throw GeneralException.NotFoundException
+        }.value?.toCuisineEntity() ?: throw NotFoundException("")
     }
 
     override suspend fun search(query: String): Pair<List<Restaurant>, List<Meal>> {
         val result = tryToExecute<ServerResponse<MealRestaurantDto>> {
             get("/restaurants/search?query=$query")
-        }.value ?: throw GeneralException.NotFoundException
+        }.value ?: throw NotFoundException("")
         return Pair(result.restaurants.toEntity(), result.meals.toEntity())
     }
 
@@ -89,7 +89,7 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRes
         }.value
         return paginateData(
             result = result?.items?.map { it.toEntity() }
-                ?: throw GeneralException.NotFoundException,
+                ?: throw NotFoundException(""),
             page = result.page,
             total = result.total)
     }

@@ -1,6 +1,5 @@
 package presentation.order.composable
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,10 +16,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.theme.Theme
-import com.seiko.imageloader.rememberAsyncImagePainter
 import presentation.composable.BPDashedDivider
 import presentation.order.OrderUiState
 import resources.Resources
@@ -29,7 +27,7 @@ import resources.Resources
 fun OrderCard(
     order: OrderUiState,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -81,14 +79,13 @@ private fun OrderItem(
         modifier = modifier.fillMaxWidth().height(56.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Image(
-            modifier = Modifier.fillMaxHeight().width(80.dp)
+        BpImageLoader(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(80.dp)
                 .clip(RoundedCornerShape(Theme.radius.medium)),
-            painter = if (imageUrl.isEmpty())
-                rememberAsyncImagePainter("https://static.toiimg.com/thumb/84784534.cms?imgsize=468021&width=800&height=800")
-            else
-                rememberAsyncImagePainter(imageUrl),
-            contentScale = ContentScale.Crop,
+            imageUrl = imageUrl,
+            errorPlaceholderImageUrl = Resources.images.mealErrorPlaceholder,
             contentDescription = Resources.strings.orderImageContentDescription
         )
 

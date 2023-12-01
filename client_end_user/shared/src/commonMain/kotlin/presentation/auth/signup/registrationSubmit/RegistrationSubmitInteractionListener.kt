@@ -8,4 +8,5 @@ interface RegistrationSubmitInteractionListener : BaseInteractionListener {
     fun onAddressChanged(address: String)
     fun onSignUpButtonClicked()
     fun onBackButtonClicked()
+    fun onDismissSnackBar()
 }

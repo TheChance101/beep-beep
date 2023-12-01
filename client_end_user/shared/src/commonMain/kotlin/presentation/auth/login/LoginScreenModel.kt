@@ -27,6 +27,10 @@ class LoginScreenModel(
         updateState { it.copy(keepLoggedIn = !it.keepLoggedIn) }
     }
 
+    override fun onDismissSnackBar() {
+        updateState { it.copy(showSnackbar = false,snackbarMessage = "") }
+    }
+
     override fun onClickLogin(username: String, password: String, keepLoggedIn: Boolean) {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
@@ -51,24 +55,15 @@ class LoginScreenModel(
             ErrorState.InvalidUsername -> updateState { it.copy(isUsernameError = true) }
 
             is ErrorState.WrongPassword -> {
-                showSnackbar(errorState.message)
+                updateState { it.copy(snackbarMessage = errorState.message, showSnackbar = true) }
             }
 
             is ErrorState.UserNotFound -> {
-                showSnackbar(errorState.message)
+                updateState { it.copy(snackbarMessage = errorState.message, showSnackbar = true) }
+
             }
 
             else -> {}
-        }
-    }
-
-    private fun showSnackbar(message: String) {
-        viewModelScope.launch {
-            updateState { it.copy(snackbarMessage = message, showSnackbar = true) }
-            delay(2000) // wait for snackbar to show
-            updateState { it.copy(showSnackbar = false) }
-            delay(300) // wait for snackbar to hide
-            updateState { it.copy(snackbarMessage = "") }
         }
     }
 

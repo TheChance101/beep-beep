@@ -3,10 +3,13 @@ package data.gateway.remote
 import data.remote.mapper.toDto
 import data.remote.mapper.toDtoUpdate
 import data.remote.mapper.toEntity
+import data.remote.mapper.toCuisinesWithMealsEntity
 import data.remote.model.BaseResponse
+import data.remote.model.CuisineWithMealsDto
 import data.remote.model.MealDto
 import data.remote.model.MealModificationDto
 import data.remote.model.PaginationResponse
+import domain.entity.CuisineWithMeals
 import domain.entity.Meal
 import domain.entity.MealModification
 import domain.gateway.remote.IMealRemoteGateway
@@ -55,6 +58,12 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
         return tryToExecute<BaseResponse<MealDto>> {
             get("meal/$mealId")
         }.value?.toEntity() ?: throw Exception("meal not found")
+    }
+
+    override suspend fun getCuisinesWithMealsInRestaurant(restaurantId: String): List<CuisineWithMeals> {
+        return tryToExecute<BaseResponse<List<CuisineWithMealsDto>>> {
+            get("/restaurant/${restaurantId}/cuisineMeals")
+        }.value?.toCuisinesWithMealsEntity() ?: throw Exception("Cuisines not found")
     }
 
     override suspend fun addMeal(meal: MealModification): MealModification {

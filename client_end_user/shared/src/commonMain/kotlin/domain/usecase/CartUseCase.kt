@@ -10,6 +10,7 @@ interface IManageCartUseCase {
     suspend fun isCartEmpty(): Flow<Boolean>
     suspend fun addMealTCart(mealId: String, restaurantId: String, quantity: Int): Boolean
     suspend fun orderNow(): Boolean
+    suspend fun clearCart(): Boolean
     suspend fun updateCart(cart: Cart)
 
 }
@@ -43,6 +44,9 @@ class ManageCartUseCase(
         val result = transactionGateway.orderNow()
         localGateway.saveCartStatus(isCartEmpty = result)
         return result
+    }
+    override suspend fun clearCart(): Boolean {
+        return transactionGateway.clearCart()
     }
 
     override suspend fun updateCart(cart: Cart) {

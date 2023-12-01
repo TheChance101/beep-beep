@@ -1,6 +1,5 @@
 package presentation.meals
 
-import androidx.paging.map
 import app.cash.paging.PagingData
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Meal
@@ -8,9 +7,7 @@ import domain.usecase.IExploreRestaurantUseCase
 import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageCartUseCase
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
@@ -126,26 +123,22 @@ class MealsScreenModel(
     private fun onAddToCartSuccess(success: Boolean) {
         updateState { it.copy(isAddToCartLoading = false, errorAddToCart = null) }
         onDismissSheet()
-        showToast()
+        updateState { it.copy(showToast = true) }
     }
 
     private fun onAddToCartError(errorState: ErrorState) {
         updateState { it.copy(isAddToCartLoading = false, errorAddToCart = errorState) }
-        showToast()
-    }
-
-    private fun showToast() {
-        viewModelScope.launch {
-            updateState { it.copy(showToast = true) }
-            delay(2000)
-            updateState { it.copy(showToast = false) }
-            delay(300)
-        }
+        updateState { it.copy(showToast = true) }
     }
 
     override fun onLoginClicked() {
         onDismissSheet()
         sendNewEffect(MealsUiEffect.NavigateToLogin)
+    }
+
+    override fun onDismissSnackBar() {
+        updateState { it.copy(showToast = false) }
+
     }
 
     override fun onMealClicked(meal: MealUIState) {

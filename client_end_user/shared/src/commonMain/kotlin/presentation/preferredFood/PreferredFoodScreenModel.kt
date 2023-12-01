@@ -53,8 +53,7 @@ class PreferredFoodScreenModel(
     }
 
     private fun addPreferredFood(id: String) {
-        val updatedPreferredCuisine =
-            state.value.preferredFood.filterNot { it.cuisineId == id }
+        val updatedPreferredCuisine = state.value.preferredFood.filterNot { it.cuisineId == id }
         updateState {
             it.copy(
                 preferredFood = updatedPreferredCuisine,
@@ -68,6 +67,6 @@ class PreferredFoodScreenModel(
     }
 
     private fun onError(errorState: ErrorState) {
-        println(errorState)
+        println("Error :$errorState")
     }
 }

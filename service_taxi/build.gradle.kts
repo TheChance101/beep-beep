@@ -3,6 +3,7 @@ val kotlinVersion: String by project
 val logbackVersion: String by project
 val exposedVersion: String by project
 val h2Version: String by project
+val status_pages : String by project
 
 plugins {
     kotlin("jvm") version "1.8.10"
@@ -69,11 +70,11 @@ dependencies {
     //kotlinx-datetime
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 
-    //validation
-    implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
+    // Status pages error handler
+    implementation("io.ktor:ktor-server-status-pages-jvm:$status_pages")
+    implementation("io.ktor:ktor-server-request-validation:$ktorVersion")
 
     //webSocket
     implementation("io.ktor:ktor-server-websockets-jvm:$ktorVersion")
-
 }
 

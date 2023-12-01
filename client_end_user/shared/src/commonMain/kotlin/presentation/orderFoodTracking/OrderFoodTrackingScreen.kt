@@ -65,7 +65,8 @@ class OrderFoodTrackingScreen(private val orderId: String, private val tripId: S
             MapView(
                 modifier = Modifier.fillMaxSize(),
                 currentLocation = state.userLocation,
-                destination = state.deliveryLocation
+                deliveryLocation = state.deliveryLocation,
+                orderState = state.order.currentOrderStatus
             )
             Column(
                 modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween

@@ -1,7 +1,6 @@
 package presentation.search
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,18 +19,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.theme.Theme
-import com.seiko.imageloader.rememberAsyncImagePainter
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
+import presentation.cart.CartScreen
 import presentation.composable.BottomSheet
 import presentation.composable.MealBottomSheet
 import presentation.composable.MealCard
@@ -39,7 +39,8 @@ import presentation.composable.ModalBottomSheetState
 import presentation.composable.modifier.noRippleEffect
 import presentation.composable.modifier.roundedBorderShape
 import presentation.resturantDetails.Composable.NeedToLoginSheet
-import presentation.resturantDetails.Composable.ToastMessage
+import presentation.composable.ToastMessage
+import presentation.resturantDetails.Composable.WarningCartIsFullDialog
 import presentation.resturantDetails.RestaurantScreen
 import resources.Resources
 import util.getNavigationBarPadding
@@ -58,6 +59,7 @@ class SearchScreen :
         when (effect) {
             is SearchUiEffect.NavigateToRestaurant -> navigator.root?.push(RestaurantScreen(effect.restaurantId))
             is SearchUiEffect.NavigateToLogin -> navigator.push(LoginScreen())
+            is SearchUiEffect.onGoToCart -> navigator.root?.push(CartScreen())
         }
     }
 
@@ -68,6 +70,14 @@ class SearchScreen :
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.TopCenter
         ) {
+            WarningCartIsFullDialog(
+                modifier = Modifier.padding(getNavigationBarPadding()),
+                text = Resources.strings.addFromDifferentCartMessage,
+                onClickClearCart = listener::onClearCart,
+                onClickGoToCart = listener::onGoToCart,
+                onDismiss = listener::onDismissSheet,
+                isVisitable = state.showWarningCartIsFull
+            )
             BottomSheet(
                 sheetContent = {
                     if (state.showMealSheet)
@@ -91,14 +101,31 @@ class SearchScreen :
                 content = { content(state, listener) }
             )
 
+            LaunchedEffect(state.showToast) {
+                if (state.showToast) {
+                    delay(2000)
+                    listener.onDismissSnackBar()
+                }
+            }
+            LaunchedEffect(state.showToastClearCart) {
+                if (state.showToastClearCart) {
+                    delay(2000)
+                    listener.onDismissSnackBar()
+                }
+            }
+
             ToastMessage(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 state = state.showToast,
-                message = if (state.errorAddToCart == null) {
-                    Resources.strings.mealAddedToYourCart
-                } else {
-                    Resources.strings.mealFailedToAddInCart
-                },
+                message = if (state.errorAddToCart == null)
+                    Resources.strings.mealAddedToYourCart else Resources.strings.mealFailedToAddInCart,
+                isError = state.errorAddToCart != null
+            )
+            ToastMessage(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                state = state.showToastClearCart,
+                message = Resources.strings.youCanAddMeal ,
+                isError = false
             )
         }
 
@@ -176,10 +203,10 @@ class SearchScreen :
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
+            BpImageLoader(
                 modifier = Modifier.roundedBorderShape().size(64.dp),
-                painter = rememberAsyncImagePainter(restaurant.image),
-                contentScale = ContentScale.Crop,
+                imageUrl = restaurant.image,
+                errorPlaceholderImageUrl = Resources.images.restaurantErrorPlaceholder,
                 contentDescription = restaurant.name,
             )
 

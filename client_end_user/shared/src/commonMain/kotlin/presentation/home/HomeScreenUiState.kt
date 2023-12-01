@@ -19,7 +19,6 @@ data class HomeScreenUiState(
     val user: UserUiState = UserUiState(),
     val showCart: Boolean = false,
     val isLoggedIn: Boolean = false,
-    val isMoreCuisine: Boolean = false,
     val isThereLastOrder: Boolean = false,
     val showSnackBar: Boolean = false,
 ) {

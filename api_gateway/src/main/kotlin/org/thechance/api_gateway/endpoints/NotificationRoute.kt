@@ -42,33 +42,50 @@ fun Route.notificationRoute() {
                 val result = notificationService.saveToken(userId, userToken, language)
                 respondWithResult(HttpStatusCode.Created, result)
             }
-        }
-    }
 
-    route("/notifications") {
-        post("send/user") {
-            val language = extractLocalizationHeader()
-            val receivedData = call.receive<NotificationDto>()
-            val result = notificationService.sendNotificationToUser(receivedData, language)
-            respondWithResult(HttpStatusCode.OK, result)
-        }
-        authenticateWithRole(Role.END_USER) {
-            get("/history") {
+            delete("/device/{deviceToken}") {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val userId = tokenClaim?.get(Claim.USER_ID).toString()
+                val deviceToken = call.parameters["deviceToken"].orEmpty()
                 val language = extractLocalizationHeader()
-                val page = call.parameters["page"].orEmpty()
-                val limit = call.parameters["limit"].orEmpty()
-                val result = notificationService.getNotificationHistoryForUser(userId, page, limit, language)
+                val result = notificationService.deleteDeviceToken(userId, deviceToken, language)
                 respondWithResult(HttpStatusCode.OK, result)
             }
 
-            get("/history-24hours") {
+            delete("/allDevices") {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val userId = tokenClaim?.get(Claim.USER_ID).toString()
                 val language = extractLocalizationHeader()
-                val result = notificationService.getNotificationHistoryForUserInLast24Hours(userId, language)
+                val result = notificationService.clearDevicesTokens(userId, language)
                 respondWithResult(HttpStatusCode.OK, result)
+            }
+        }
+
+        route("/notifications") {
+            post("send/user") {
+                val language = extractLocalizationHeader()
+                val receivedData = call.receive<NotificationDto>()
+                val result = notificationService.sendNotificationToUser(receivedData, language)
+                respondWithResult(HttpStatusCode.OK, result)
+            }
+            authenticateWithRole(Role.END_USER) {
+                get("/history") {
+                    val tokenClaim = call.principal<JWTPrincipal>()
+                    val userId = tokenClaim?.get(Claim.USER_ID).toString()
+                    val language = extractLocalizationHeader()
+                    val page = call.parameters["page"].orEmpty()
+                    val limit = call.parameters["limit"].orEmpty()
+                    val result = notificationService.getNotificationHistoryForUser(userId, page, limit, language)
+                    respondWithResult(HttpStatusCode.OK, result)
+                }
+
+                get("/history-24hours") {
+                    val tokenClaim = call.principal<JWTPrincipal>()
+                    val userId = tokenClaim?.get(Claim.USER_ID).toString()
+                    val language = extractLocalizationHeader()
+                    val result = notificationService.getNotificationHistoryForUserInLast24Hours(userId, language)
+                    respondWithResult(HttpStatusCode.OK, result)
+                }
             }
         }
     }

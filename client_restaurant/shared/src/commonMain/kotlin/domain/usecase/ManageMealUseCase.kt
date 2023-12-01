@@ -1,5 +1,6 @@
 package domain.usecase
 
+import domain.entity.CuisineWithMeals
 import domain.entity.Meal
 import domain.entity.MealModification
 import domain.gateway.remote.ICuisineRemoteGateway
@@ -12,6 +13,7 @@ interface IManageMealUseCase {
     suspend fun isValidMeal(meal: Meal): Boolean
     suspend fun getAllMeals(restaurantId: String, page: Int, limit: Int): List<Meal>
     suspend fun getMealsByCuisineId(cuisineId: String, page: Int, limit: Int): List<Meal>
+    suspend fun getCuisinesWithMealsInRestaurant(restaurantId: String): List<CuisineWithMeals>
 }
 
 class ManageMealUseCase(
@@ -31,7 +33,12 @@ class ManageMealUseCase(
     }
 
     override suspend fun getAllMeals(restaurantId: String, page: Int, limit: Int): List<Meal> {
-        return mealRemoteGateway.getAllMealsByRestaurantId(restaurantId,page,limit)
+        return mealRemoteGateway.getAllMealsByRestaurantId(restaurantId, page, limit)
+    }
+
+    override suspend fun getCuisinesWithMealsInRestaurant(restaurantId: String)
+            : List<CuisineWithMeals> {
+        return mealRemoteGateway.getCuisinesWithMealsInRestaurant(restaurantId)
     }
 
     override suspend fun getMealsByCuisineId(cuisineId: String, page: Int, limit: Int): List<Meal> {

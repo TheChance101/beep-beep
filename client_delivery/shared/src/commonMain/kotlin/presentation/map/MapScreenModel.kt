@@ -122,7 +122,25 @@ class MapScreenModel(
     private fun onUpdateOrderSuccess(order: Order) {
         val currentStatus = when (order.tripStatus) {
             TripStatus.PENDING -> OrderState.LOADING
-            TripStatus.APPROVED -> OrderState.ACCEPTED
+            TripStatus.APPROVED -> {
+                viewModelScope.launch {
+                    val destinationInKM = manageOrderUseCase.calculateDistance(
+                        order.startPoint.latitude,
+                        order.startPoint.longitude,
+                        order.destination.latitude,
+                        order.destination.longitude,
+                    )
+                    val timeInMin = manageOrderUseCase.calculateTimeInMinutes(destinationInKM)
+                    updateState {
+                        it.copy(
+                            orderDistance = destinationInKM.toInt(),
+                            orderDuration = timeInMin.toInt()
+                        )
+                    }
+                }
+                OrderState.ACCEPTED
+            }
+
             TripStatus.RECEIVED -> {
                 OrderState.RECEIVED
             }

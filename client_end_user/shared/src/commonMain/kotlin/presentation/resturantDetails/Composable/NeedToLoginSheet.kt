@@ -17,7 +17,7 @@ import resources.Resources
 fun NeedToLoginSheet(
     onClick: () -> Unit,
     text: String,
-    modifier: Modifier= Modifier
+    modifier: Modifier= Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Text(

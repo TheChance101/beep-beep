@@ -3,7 +3,6 @@ package presentation.resturantDetails
 import domain.entity.PriceLevel
 import presentation.base.ErrorState
 import presentation.composable.ModalBottomSheetState
-import presentation.cuisines.CuisineUiState
 
 data class RestaurantUIState(
     val restaurantInfo: RestaurantInfoUIState = RestaurantInfoUIState(),
@@ -12,9 +11,12 @@ data class RestaurantUIState(
     val isLoading: Boolean = false,
     val isAddToCartLoading: Boolean = false,
     val isLogin: Boolean = false,
+    val isEnable :Boolean = true,
     val sheetState: ModalBottomSheetState = ModalBottomSheetState(),
     val sheetMealState: ModalBottomSheetState = ModalBottomSheetState(),
     val showLoginSheet: Boolean = false,
+    val showWarningCartIsFull : Boolean = false,
+    val showToastClearCart : Boolean = false,
 
     val selectedMeal: MealUIState = MealUIState(),
     val showMealSheet: Boolean = false,

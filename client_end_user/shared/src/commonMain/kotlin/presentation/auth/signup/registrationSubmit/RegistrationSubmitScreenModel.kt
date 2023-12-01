@@ -9,7 +9,6 @@ import domain.utils.AuthorizationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,9 +36,11 @@ class RegistrationSubmitScreenModel(
     override val viewModelScope: CoroutineScope = coroutineScope
     private val _language: MutableStateFlow<LanguageCode> = MutableStateFlow(LanguageCode.EN)
     val language: StateFlow<LanguageCode> = _language.asStateFlow()
+
     init {
         getUserLanguageCode()
     }
+
     private fun getUserLanguageCode() {
         coroutineScope.launch(Dispatchers.IO) {
             manageUser.getUserLanguageCode().distinctUntilChanged().collectLatest { lang ->
@@ -60,7 +61,7 @@ class RegistrationSubmitScreenModel(
 
     override fun onPhoneChanged(phone: String) {
         updateState { it.copy(phone = phone) }
-        tryCatch { validation.validatePhone(phone,_language.value.value) }
+        tryCatch { validation.validatePhone(phone, _language.value.value) }
     }
 
     override fun onAddressChanged(address: String) {
@@ -101,13 +102,19 @@ class RegistrationSubmitScreenModel(
 
             InvalidPhone -> updateState { it.copy(isPhoneError = true) }
 
-            is UserAlreadyExists -> showSnackbar(error.message)
+            is UserAlreadyExists ->
+                updateState { it.copy(snackbarMessage = error.message, showSnackbar = true) }
+
             else -> {}
         }
     }
 
     override fun onBackButtonClicked() {
         sendNewEffect(RegistrationSubmitScreenEffect.NavigateBack)
+    }
+
+    override fun onDismissSnackBar() {
+        updateState { it.copy(snackbarMessage = "", showSnackbar = false) }
     }
     // endregion
 
@@ -122,7 +129,7 @@ class RegistrationSubmitScreenModel(
             updateState {
                 it.copy(isPhoneError = true)
             }
-        } catch (e: AuthorizationException.InvalidAddressException){
+        } catch (e: AuthorizationException.InvalidAddressException) {
             updateState {
                 it.copy(isAddressError = true)
             }
@@ -140,14 +147,5 @@ class RegistrationSubmitScreenModel(
         }
     }
 
-    private fun showSnackbar(message: String) {
-        viewModelScope.launch {
-            updateState { it.copy(snackbarMessage = message, showSnackbar = true) }
-            delay(2000) // wait for snackbar to show
-            updateState { it.copy(showSnackbar = false) }
-            delay(300) // wait for snackbar to hide
-            updateState { it.copy(snackbarMessage = "") }
-        }
-    }
     // endregion
 }

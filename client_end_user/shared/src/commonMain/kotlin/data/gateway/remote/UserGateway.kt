@@ -21,7 +21,8 @@ import domain.entity.Session
 import domain.entity.User
 import domain.gateway.IUserGateway
 import domain.utils.AuthorizationException
-import domain.utils.GeneralException
+import domain.utils.NotFoundException
+import domain.utils.UnknownErrorException
 import io.ktor.client.HttpClient
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
@@ -94,12 +95,12 @@ class UserGateway(
         }
         if (response.isSuccess) {
             return response.value?.map { it.toEntity() }
-                ?: throw GeneralException.NotFoundException
+                ?: throw NotFoundException(response.status.successMessage ?: "Not found")
         } else {
             if (response.status.code == 404) {
-                throw GeneralException.NotFoundException
+                throw NotFoundException(response.status.errorMessages?.keys?.firstOrNull() ?: "Not found")
             } else {
-                throw GeneralException.UnknownErrorException
+                throw UnknownErrorException("Unknown")
             }
         }
     }
@@ -123,7 +124,7 @@ class UserGateway(
     override suspend fun getFavoriteRestaurants(): List<Restaurant> {
         return tryToExecute<ServerResponse<List<RestaurantDto>>> {
             get("/user/favorite")
-        }.value?.map { it.toEntity() } ?: throw GeneralException.NotFoundException
+        }.value?.map { it.toEntity() } ?: throw NotFoundException("Not found")
     }
 
     override suspend fun addRestaurantToFavorites(restaurantId: String): Boolean {
@@ -136,7 +137,7 @@ class UserGateway(
             ) {
                 method = HttpMethod.Post
             }
-        }.value ?: throw GeneralException.NotFoundException
+        }.value ?: throw NotFoundException("Not Found")
     }
 
     override suspend fun removeRestaurantFromFavorites(restaurantId: String): Boolean {
@@ -149,7 +150,7 @@ class UserGateway(
             ) {
                 method = HttpMethod.Delete
             }
-        }.value ?: throw GeneralException.NotFoundException
+        }.value ?: throw NotFoundException("Not Found")
     }
 
     override suspend fun getNotificationHistory(
@@ -172,6 +173,6 @@ class UserGateway(
     override suspend fun getNotificationHistoryInLast24Hours(): List<NotificationHistory> {
         return tryToExecute<ServerResponse<List<NotificationHistoryDto>>> {
             get("/notifications/history-24hours")
-        }.value?.map { it.toEntity() } ?: throw GeneralException.NotFoundException
+        }.value?.map { it.toEntity() } ?: throw NotFoundException("Not found")
     }
 }

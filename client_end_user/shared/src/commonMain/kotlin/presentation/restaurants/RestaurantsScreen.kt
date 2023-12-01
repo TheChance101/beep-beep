@@ -2,7 +2,6 @@ package presentation.restaurants
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,11 +21,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import app.cash.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAppBar
+import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.composable.BpPagingList
 import com.beepbeep.designSystem.ui.composable.modifier.noRippleEffect
 import com.beepbeep.designSystem.ui.theme.Theme
@@ -34,8 +33,6 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
-import presentation.composable.BpImageCard
-import presentation.composable.BpImageLoader
 import presentation.composable.BpPriceLevel
 import presentation.resturantDetails.RestaurantScreen
 import resources.Resources
@@ -64,9 +61,10 @@ data class RestaurantsScreen(val offerId: String? = null) :
     override fun onRender(state: RestaurantsUIState, listener: RestaurantsListener) {
         val restaurants = state.restaurants.collectAsLazyPagingItems()
         Column(
-            Modifier.fillMaxSize().background(Theme.colors.background).padding(
-                getNavigationBarPadding()
-            )
+            Modifier
+                .fillMaxSize()
+                .background(Theme.colors.background)
+                .padding(getNavigationBarPadding())
         ) {
             BpAppBar(
                 title = Resources.strings.restaurants,
@@ -97,18 +95,12 @@ data class RestaurantsScreen(val offerId: String? = null) :
             colors = CardDefaults.cardColors(Color.Transparent),
             shape = RoundedCornerShape(0.dp)
         ) {
-            Box(
-                modifier = Modifier.height(156.dp).clip(RoundedCornerShape(8.dp))
-            ) {
+            BpImageLoader(
+                modifier = Modifier.height(156.dp).clip(RoundedCornerShape(8.dp)),
+                imageUrl = restaurant.imageUrl,
+                errorPlaceholderImageUrl = Resources.images.restaurantErrorPlaceholder,
+            )
 
-                Image(
-                    painter = painterResource(Resources.images.placeholder),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = null
-                )
-
-                BpImageLoader(imageUrl = restaurant.imageUrl, contentScale = ContentScale.Crop)
-            }
             Row(
                 modifier = Modifier.fillMaxWidth().padding(top = 8.dp).width(232.dp),
                 verticalAlignment = Alignment.CenterVertically

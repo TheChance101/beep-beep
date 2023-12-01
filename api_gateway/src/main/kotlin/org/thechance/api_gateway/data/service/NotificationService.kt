@@ -61,6 +61,24 @@ class NotificationService(
         )
     }
 
+    suspend fun deleteDeviceToken(userId: String, token: String, languageCode: String): Boolean {
+        return client.tryToExecute<Boolean>(
+            APIs.NOTIFICATION_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { delete("device/token/$userId?deviceToken=$token") }
+        )
+    }
+
+    suspend fun clearDevicesTokens(userId: String, languageCode: String): Boolean {
+        return client.tryToExecute<Boolean>(
+            APIs.NOTIFICATION_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { delete("device/allTokens/$userId") }
+        )
+    }
+
     @OptIn(InternalAPI::class)
     suspend fun sendNotificationToUser(notificationDto: NotificationDto, languageCode: String): Boolean {
         return client.tryToExecute<Boolean>(
