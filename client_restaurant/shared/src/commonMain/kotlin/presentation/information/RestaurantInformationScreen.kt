@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BPSnackBar
@@ -307,7 +308,9 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
             end = 16.dp,
             bottom = 16.dp
         ).noRippleEffect { onClickLogout() }) {
-            Row {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 Icon(
                     painter = painterResource(Resources.images.logout), modifier = Modifier
                         .padding(
@@ -322,7 +325,6 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
                 Text(
                     Resources.strings.logout,
                     style = Theme.typography.title.copy(color = Theme.colors.primary),
-                    modifier = Modifier.padding(vertical = 16.dp)
                 )
             }
         }
