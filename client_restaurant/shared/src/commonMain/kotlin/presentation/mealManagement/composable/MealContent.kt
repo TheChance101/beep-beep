@@ -117,7 +117,8 @@ fun MealContent(
                 keyboardType = KeyboardType.Decimal,
                 currency = meal.currency,
                 flag = painterResource(getFlag(meal.currency)),
-                modifier = Modifier.fillMaxWidth().size(48.dp),
+                modifier = Modifier.fillMaxWidth(),
+                imageModifier = Modifier.size(width = 12.dp, height = 10.dp)
             )
 
             CuisineTextField(
