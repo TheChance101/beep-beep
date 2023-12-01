@@ -1,7 +1,7 @@
 package presentation.main
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -28,11 +28,11 @@ import com.aay.compose.baseComponents.model.LegendPosition
 import com.aay.compose.lineChart.LineChart
 import com.aay.compose.lineChart.model.LineParameters
 import com.aay.compose.lineChart.model.LineType
+import com.beepbeep.designSystem.ui.composable.BpAnimationContent
 import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.BpDropdownMenu
 import presentation.composable.RestaurantInformation
@@ -48,7 +48,6 @@ import presentation.orderHistory.OrdersHistoryScreen
 import presentation.restaurantSelection.RestaurantUIState
 import resources.Resources
 import util.getNavigationBarPadding
-import util.getStatusBarPadding
 import util.toWeekDay
 
 class MainScreen() :
@@ -59,7 +58,7 @@ class MainScreen() :
         initScreen(getScreenModel())
     }
 
-    @OptIn(ExperimentalLayoutApi::class)
+    @OptIn(ExperimentalLayoutApi::class, ExperimentalAnimationApi::class)
     @Composable
     override fun onRender(state: MainScreenUIState, listener: MainScreenInteractionListener) {
         var screenSize by remember { mutableStateOf(IntSize.Zero) }
@@ -139,13 +138,11 @@ class MainScreen() :
                 }
 
                 item(span = { GridItemSpan(maxCurrentLineSpan) }) {
-                    AnimatedContent(state.isLoading) {
-                        if (state.isLoading) {
-                            ChartsLoadingEffect()
-                        } else {
-                            ChartsContent(state)
-                        }
-                    }
+                    BpAnimationContent(
+                        state.isLoading,
+                        content = { ChartsContent(state) },
+                        loadingContent = { ChartsLoadingEffect() }
+                    )
                 }
             }
         }
@@ -217,7 +214,7 @@ class MainScreen() :
 
     @Composable
     fun AppBarDropDownLeading(
-        onSelectRestaurant: (restaurantId: String,location:LocationUiSate,address:String) -> Unit,
+        onSelectRestaurant: (restaurantId: String, location: LocationUiSate, address: String) -> Unit,
         onShowMenu: () -> Unit,
         onDismissMenu: () -> Unit,
         isRestaurantOpened: Boolean,
@@ -268,7 +265,13 @@ class MainScreen() :
                 ) {
                     restaurants.forEach { restaurant ->
                         RestaurantInformation(
-                            onRestaurantClick = { onSelectRestaurant(restaurant.restaurantId,restaurant.location,restaurant.address) },
+                            onRestaurantClick = {
+                                onSelectRestaurant(
+                                    restaurant.restaurantId,
+                                    restaurant.location,
+                                    restaurant.address
+                                )
+                            },
                             restaurantName = restaurant.restaurantName,
                             restaurantNumber = restaurant.restaurantPhoneNumber,
                             isOpen = restaurant.isOpen

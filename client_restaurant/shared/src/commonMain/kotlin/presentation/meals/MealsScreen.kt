@@ -1,6 +1,5 @@
 package presentation.meals
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BpAnimationContent
 import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.composable.modifier.shimmerEffect
 import com.beepbeep.designSystem.ui.theme.Theme.colors
@@ -96,18 +96,22 @@ class MealsScreen(private val restaurantId: String) :
             },
             floatingActionButtonPosition = FabPosition.End,
         ) { paddingValue ->
-            NoItemsPlaceholder(
-                painter = painterResource(Resources.images.emptyScreen),
-                text = strings.noMeals,
-                isVisible = (state.meals.isEmpty() && !state.isLoading)
+            BpAnimationContent(
+                state.isLoading,
+                content = {
+                    BpAnimationContent(
+                        (state.meals.isEmpty() && !state.isLoading),
+                        content = { MealsContent(state, listener, paddingValue) },
+                        loadingContent = {
+                            NoItemsPlaceholder(
+                                painter = painterResource(Resources.images.emptyScreen),
+                                text = strings.noMeals,
+                            )
+                        }
+                    )
+                },
+                loadingContent = { LoadingCuisinesAndMeals(paddingValue) }
             )
-            AnimatedContent(state.isLoading) {
-                if (state.isLoading) {
-                    LoadingCuisinesAndMeals(paddingValue)
-                } else {
-                    MealsContent(state, listener, paddingValue)
-                }
-            }
         }
     }
 

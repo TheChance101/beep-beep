@@ -1,6 +1,5 @@
 package presentation.order
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,12 +23,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BPSnackBar
+import com.beepbeep.designSystem.ui.composable.BpAnimationContent
 import com.beepbeep.designSystem.ui.composable.modifier.shimmerEffect
 import com.beepbeep.designSystem.ui.theme.Theme
 import kotlinx.coroutines.delay
@@ -86,20 +84,24 @@ class OrderScreen(private val restaurantId: String) :
                         modifier = Modifier.padding(end = 16.dp)
                     )
                 }
-                NoItemsPlaceholder(
-                    painter = painterResource(Resources.images.emptyScreen),
-                    text = Resources.strings.noOrderYet,
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    isVisible = (state.pendingOrders.isEmpty() && state.inCookingOrders.isEmpty() && !state.isLoading)
-                )
-                AnimatedContent(state.isLoading) {
-                    if (state.isLoading) {
-                        LoadingOrder()
-                    } else {
-                        OrderContent(state, listener)
-                    }
-                }
 
+                BpAnimationContent(
+                    state.isLoading,
+                    content = {
+                        BpAnimationContent(
+                            state =(state.pendingOrders.isEmpty() && state.inCookingOrders.isEmpty() && !state.isLoading),
+                            content = { OrderContent(state, listener) },
+                            loadingContent = {
+                                NoItemsPlaceholder(
+                                    painter = painterResource(Resources.images.emptyScreen),
+                                    text = Resources.strings.noOrderYet,
+                                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                                )
+                            }
+                        )
+                    },
+                    loadingContent = { LoadingOrder() }
+                )
             }
             BPSnackBar(
                 icon = painterResource(Resources.images.bpIcon),
@@ -154,7 +156,7 @@ class OrderScreen(private val restaurantId: String) :
                 }
             }
 
-            if(state.pendingOrders.isNotEmpty()) {
+            if (state.pendingOrders.isNotEmpty()) {
                 header {
                     OrdersHeader(
                         text = Resources.strings.requestedOrders,

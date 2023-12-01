@@ -1,6 +1,5 @@
 package presentation.orderHistory
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,6 +27,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAnimatedTabLayout
+import com.beepbeep.designSystem.ui.composable.BpAnimationContent
 import com.beepbeep.designSystem.ui.composable.modifier.shimmerEffect
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -57,6 +57,7 @@ class OrdersHistoryScreen(private val restaurantId: String) :
         }
     }
 
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun onRender(
         state: OrderHistoryScreenUiState,
@@ -71,13 +72,22 @@ class OrdersHistoryScreen(private val restaurantId: String) :
                     .border(width = 1.dp, color = Theme.colors.divider, shape = RectangleShape),
                 actions = {}
             )
-            AnimatedContent(state.isLoading) {
-                if (state.isLoading) {
-                    LoadingOrdersHistory()
-                } else {
-                    OrdersHistoryContent(state, listener)
-                }
-            }
+            BpAnimationContent(
+                state.isLoading,
+                content = {
+                    BpAnimationContent(
+                        state = state.orders.isEmpty(),
+                        content = { OrdersHistoryContent(state, listener) },
+                        loadingContent = {
+                            NoItemsPlaceholder(
+                                painter = painterResource(Resources.images.emptyScreen),
+                                text = Resources.strings.noOrderHistory,
+                            )
+                        }
+                    )
+                },
+                loadingContent = { LoadingOrdersHistory() }
+            )
         }
     }
 
@@ -126,12 +136,6 @@ class OrdersHistoryScreen(private val restaurantId: String) :
                 }
             }
         }
-
-        NoItemsPlaceholder(
-            painter = painterResource(Resources.images.emptyScreen),
-            text = Resources.strings.noOrderHistory,
-            isVisible = (state.orders.isEmpty()),
-        )
     }
 
     @Composable

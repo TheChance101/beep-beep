@@ -32,6 +32,7 @@ class MainScreenModel(
     }
 
     private fun fetchCharts() {
+        updateState { it.copy(isLoading = true) }
         viewModelScope.launch {
             async { getOrdersCountByDays() }.await()
             async { getOrdersRevenueByDaysBefore() }.await()
@@ -81,12 +82,8 @@ class MainScreenModel(
     }
 
     private fun getData() {
-        tryToExecute(this::callee, this::onSuccess, this::onError)
-    }
-
-    private suspend fun callee(): List<Restaurant> {
         updateState { it.copy(isLoading = true) }
-        return manageRestaurant.getOwnerRestaurants()
+        tryToExecute(manageRestaurant::getOwnerRestaurants, this::onSuccess, this::onError)
     }
 
     private fun getOrdersCountByDays() {
