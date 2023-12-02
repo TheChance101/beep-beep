@@ -20,7 +20,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 fun Modifier.shimmerEffect(
     colors: List<Color> = listOf(
         Theme.colors.contentBorder,
-        Theme.colors.contentBorder.copy(alpha = 0.5f),
+        Theme.colors.contentBorder.copy(alpha = 0.2f),
         Theme.colors.contentBorder,
     ),
     durationMillis: Int = 2000,
