@@ -139,10 +139,7 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
             )
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth().padding(
-                    bottom = 16.dp,
-                    top = 16.dp
-                ),
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
