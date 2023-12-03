@@ -7,17 +7,17 @@ import domain.entity.MealModification
 
 fun List<MealDto>.toEntity(): List<Meal> = map { it.toEntity() }
 
-fun MealDto.toEntity(): Meal {
-    return Meal(
-        id = id,
-        restaurantId = restaurantId,
-        name = name ?: "",
-        description = description ?: "",
-        price = price ?: 0.0,
-        imageUrl = imageUrl ?: "",
-        cuisines = cuisines?.toEntity() ?: emptyList(),
-    )
-}
+fun MealDto.toEntity() = Meal(
+    id = id,
+    restaurantId = restaurantId,
+    name = name ?: "",
+    description = description ?: "",
+    price = price ?: 0.0,
+    imageUrl = imageUrl ?: "",
+    currency = currency ?: "$",
+    cuisines = cuisines?.toEntity() ?: emptyList(),
+)
+
 
 fun MealModification.toDtoUpdate(): MealModificationDto {
     return MealModificationDto(

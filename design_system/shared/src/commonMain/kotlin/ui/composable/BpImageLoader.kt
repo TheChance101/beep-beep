@@ -31,11 +31,12 @@ fun BpImageLoader(
 ) {
 
     when (painter.requestState) {
-        is ImageRequestState.Loading -> {
-            AnimatedVisibility(showLoadingState) {
-                Box(modifier.fillMaxSize().clip(RoundedCornerShape(4.dp)).shimmerEffect())
-            }
-        }
+        is ImageRequestState.Loading,
+            /*  ->{
+                 AnimatedVisibility(showLoadingState) {
+                     Box(modifier.fillMaxSize().clip(RoundedCornerShape(4.dp)).shimmerEffect())
+                 }
+             }*/
 
         is ImageRequestState.Failure -> {
             Image(

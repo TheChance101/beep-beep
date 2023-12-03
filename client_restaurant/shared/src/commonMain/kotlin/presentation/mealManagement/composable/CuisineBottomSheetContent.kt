@@ -23,6 +23,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.mealManagement.CuisineUIState
 import presentation.mealManagement.MealScreenInteractionListener
 import resources.Resources
+import util.getNavigationBarPadding
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -33,7 +34,11 @@ fun CuisineBottomSheet(
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth().heightIn(max = 320.dp)
-            .padding(top = Theme.dimens.space16).padding(horizontal = Theme.dimens.space16)
+
+            .padding(
+                top = Theme.dimens.space16,
+                bottom = getNavigationBarPadding().calculateBottomPadding()
+            ).padding(horizontal = Theme.dimens.space16)
     ) {
 
         stickyHeader {

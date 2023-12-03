@@ -13,5 +13,6 @@ fun Order.toOrderHistoryUiState(): OrderUiState {
         orderMealUiStates = meals.map { it.toOrderMealUiState() },
         totalPrice = totalPrice,
         createdAt = createdAt.formatDateTime(),
+        currency = currency
     )
 }

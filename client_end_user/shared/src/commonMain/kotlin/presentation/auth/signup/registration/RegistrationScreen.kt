@@ -29,7 +29,7 @@ import presentation.base.BaseScreen
 import presentation.composable.BpBrandBackgroundContainer
 import presentation.composable.HeadFirstCard
 import presentation.composable.modifier.noRippleEffect
-import presentation.composable.ToastMessage
+import com.beepbeep.designSystem.ui.composable.BpToastMessage
 import resources.Resources
 import util.getNavigationBarPadding
 import util.getStatusBarPadding
@@ -115,12 +115,14 @@ class RegistrationScreen :
                     listener.onDismissSnackBar()
                 }
             }
-            ToastMessage(
+            BpToastMessage(
                 modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth()
                     .padding(bottom = getNavigationBarPadding().calculateBottomPadding()),
                 state = state.showSnackbar,
                 message = state.snackbarMessage,
-                isError = state.snackbarMessage.isNotEmpty()
+                isError = state.snackbarMessage.isNotEmpty(),
+                successIcon = painterResource(Resources.images.unread),
+                warningIcon = painterResource(Resources.images.warningIcon)
             )
         }
     }

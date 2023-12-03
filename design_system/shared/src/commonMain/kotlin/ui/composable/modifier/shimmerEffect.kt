@@ -19,11 +19,11 @@ import com.beepbeep.designSystem.ui.theme.Theme
 @Composable
 fun Modifier.shimmerEffect(
     colors: List<Color> = listOf(
-        Theme.colors.disable,
-        Theme.colors.disable.copy(alpha = 0.5f),
-        Theme.colors.disable,
+        Theme.colors.contentBorder,
+        Theme.colors.contentBorder.copy(alpha = 0.2f),
+        Theme.colors.contentBorder,
     ),
-    durationMillis: Int = 1000,
+    durationMillis: Int = 2000,
 ): Modifier = composed {
     var size by remember { mutableStateOf(IntSize.Zero) }
     val transition = rememberInfiniteTransition()

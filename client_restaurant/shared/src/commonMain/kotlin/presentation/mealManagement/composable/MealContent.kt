@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,6 +27,7 @@ import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpCircleImage
 import com.beepbeep.designSystem.ui.composable.BpExpandableTextField
 import com.beepbeep.designSystem.ui.composable.BpPriceField
+import com.beepbeep.designSystem.ui.composable.BpRoundedImage
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import com.seiko.imageloader.rememberAsyncImagePainter
@@ -77,17 +79,17 @@ fun MealContent(
         ) {
 
             if (meal.imageUrl.isEmpty() || meal.image != null) {
-                BpCircleImage(
-                    modifier = Modifier.sizeIn(minHeight = 104.dp, minWidth = 104.dp),
+                BpRoundedImage(
+                    modifier = Modifier.sizeIn(minHeight = 120.dp).fillMaxWidth(),
                     bitmap = rememberBitmapFromBytes(meal.image),
                     placeholder = painterResource(Resources.images.galleryAdd),
                     onClick = { imagePicker.pickImage() }
                 )
             } else {
-                BpCircleImage(
-                    imageSize = 104.dp,
-                    modifier = Modifier.sizeIn(minHeight = 104.dp, minWidth = 104.dp),
+                BpRoundedImage(
+                    modifier = Modifier.sizeIn(minHeight = 120.dp).fillMaxWidth(),
                     painter = rememberAsyncImagePainter(meal.imageUrl),
+                    editPainter = painterResource(Resources.images.iconEdit),
                     onClick = { imagePicker.pickImage() }
                 )
             }
@@ -114,8 +116,9 @@ fun MealContent(
                 label = Resources.strings.price,
                 keyboardType = KeyboardType.Decimal,
                 currency = meal.currency,
-                flag = painterResource(Resources.images.flag),
+                flag = painterResource(getFlag(meal.currency)),
                 modifier = Modifier.fillMaxWidth(),
+                imageModifier = Modifier.size(width = 12.dp, height = 10.dp)
             )
 
             CuisineTextField(
@@ -186,5 +189,16 @@ private fun CuisineTextField(
                 tint = Theme.colors.contentPrimary
             )
         }
+    }
+}
+
+@Composable
+private fun getFlag(currency: String): String {
+    return when (currency) {
+        "EGP" -> Resources.images.flagEgypt
+        "IQD" -> Resources.images.flagIraq
+        "SYP" -> Resources.images.flagSyria
+        "ILS" -> Resources.images.flagPalestine
+        else -> Resources.images.flag
     }
 }

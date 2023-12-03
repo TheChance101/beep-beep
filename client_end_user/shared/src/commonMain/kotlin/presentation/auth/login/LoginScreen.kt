@@ -27,7 +27,8 @@ import presentation.composable.BpBrandBackgroundContainer
 import presentation.composable.HeadFirstCard
 import presentation.composable.SimpleTextButton
 import presentation.main.MainContainer
-import presentation.composable.ToastMessage
+import com.beepbeep.designSystem.ui.composable.BpToastMessage
+import org.jetbrains.compose.resources.painterResource
 import resources.Resources
 import util.getNavigationBarPadding
 
@@ -121,12 +122,14 @@ class LoginScreen :
                     listener.onDismissSnackBar()
                 }
             }
-            ToastMessage(
+            BpToastMessage(
                 modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth()
                     .padding(bottom = getNavigationBarPadding().calculateBottomPadding()),
                 state = state.showSnackbar,
                 message = state.snackbarMessage,
-                isError = state.snackbarMessage.isNotEmpty()
+                isError = state.snackbarMessage.isNotEmpty(),
+                successIcon = painterResource(Resources.images.unread),
+                warningIcon = painterResource(Resources.images.warningIcon)
             )
         }
     }

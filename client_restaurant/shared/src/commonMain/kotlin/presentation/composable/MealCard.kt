@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.theme.Theme
@@ -40,7 +41,9 @@ fun MealCard(onClick: () -> Unit, meal: MealUIState) {
             text = meal.name,
             style = Theme.typography.body,
             color = Theme.colors.contentPrimary,
-            modifier = Modifier.padding(4.dp)
+            modifier = Modifier.padding(4.dp),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
         Text(
             text = meal.price,

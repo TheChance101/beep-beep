@@ -18,13 +18,13 @@ data class OrderScreenUiState(
 )
 
 
-
 data class OrderUiState(
     val orderId: String = "",
     val userId: String = "",
     val restaurantId: String = "",
     val orderMealUiStates: List<OrderMealUiState> = emptyList(),
     val totalPrice: Double = 0.0,
+    val currency: String = "$",
     val orderState: OrderStatus = OrderStatus.PENDING,
     val createdAt: String = "",
 )
@@ -49,12 +49,15 @@ fun Order.toOrderUiState() = OrderUiState(
     restaurantId = restaurantId,
     orderMealUiStates = meals.map { it.toOrderMealUiState() },
     totalPrice = totalPrice,
+    currency = currency,
     orderState = orderState,
 )
+
 data class LocationUiSate(
     val latitude: Double = 0.0,
     val longitude: Double = 0.0,
 )
+
 fun Location.toUiState() = LocationUiSate(latitude = latitude, longitude = longitude)
 fun LocationUiSate.toEntity() = Location(latitude = latitude, longitude = longitude)
 
@@ -68,6 +71,6 @@ fun AddressInfo.toUiState(): AddressInfoUiState {
 
 
 data class AddressInfoUiState(
-    val location: LocationUiSate= LocationUiSate(),
-    val address: String= "",
+    val location: LocationUiSate = LocationUiSate(),
+    val address: String = "",
 )

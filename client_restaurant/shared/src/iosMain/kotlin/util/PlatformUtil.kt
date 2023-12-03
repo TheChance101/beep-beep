@@ -14,7 +14,7 @@ actual fun setInsetsController(isDark: Boolean) {
 
 @Composable
 actual fun getNavigationBarPadding(): PaddingValues {
-    return PaddingValues(bottom = 10.dp)
+    return PaddingValues(bottom = 30.dp)
 }
 
 @OptIn(ExperimentalForeignApi::class)

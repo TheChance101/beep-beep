@@ -1,5 +1,6 @@
 package presentation.login
 
+import data.remote.model.RestaurantPermission
 import presentation.base.ErrorState
 import presentation.composables.ModalBottomSheetState
 
@@ -19,6 +20,8 @@ data class LoginScreenUIState(
     val passwordErrorMsg: String = "",
     //permission
     val restaurantName: String = "",
+    val showSnackbar: Boolean = false,
+    val errorPermission: ErrorState? = null,
     val description: String = "",
     val ownerEmail: String = "",
     val hasPermission: Boolean = false,

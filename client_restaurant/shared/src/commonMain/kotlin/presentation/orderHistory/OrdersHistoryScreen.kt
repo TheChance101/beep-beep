@@ -1,6 +1,5 @@
 package presentation.orderHistory
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -9,12 +8,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
@@ -28,6 +26,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAnimatedTabLayout
+import com.beepbeep.designSystem.ui.composable.BpAnimationContent
 import com.beepbeep.designSystem.ui.composable.modifier.shimmerEffect
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -35,6 +34,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
+import presentation.composable.LoadingOrderItem
 import presentation.composable.NoItemsPlaceholder
 import presentation.order.composable.OrderCard
 import presentation.order.composable.header
@@ -57,10 +57,11 @@ class OrdersHistoryScreen(private val restaurantId: String) :
         }
     }
 
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun onRender(
         state: OrderHistoryScreenUiState,
-        listener: OrderHistoryScreenInteractionListener
+        listener: OrderHistoryScreenInteractionListener,
     ) {
         Column(Modifier.fillMaxSize().background(Theme.colors.background)) {
             BpAppBar(
@@ -71,21 +72,29 @@ class OrdersHistoryScreen(private val restaurantId: String) :
                     .border(width = 1.dp, color = Theme.colors.divider, shape = RectangleShape),
                 actions = {}
             )
-            AnimatedContent(state.isLoading) {
-                if (state.isLoading) {
-                    LoadingOrdersHistory()
-                } else {
-                    OrdersHistoryContent(state, listener)
-                }
-            }
+            BpAnimationContent(
+                state.isLoading,
+                content = {
+                    BpAnimationContent(
+                        state = state.orders.isEmpty(),
+                        content = { OrdersHistoryContent(state, listener) },
+                        loadingContent = {
+                            NoItemsPlaceholder(
+                                painter = painterResource(Resources.images.emptyScreen),
+                                text = Resources.strings.noOrderHistory,
+                            )
+                        }
+                    )
+                },
+                loadingContent = { LoadingOrdersHistory() }
+            )
         }
     }
 
     @Composable
-    @OptIn(ExperimentalResourceApi::class)
     private fun OrdersHistoryContent(
         state: OrderHistoryScreenUiState,
-        listener: OrderHistoryScreenInteractionListener
+        listener: OrderHistoryScreenInteractionListener,
     ) {
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Adaptive(300.dp),
@@ -100,7 +109,7 @@ class OrdersHistoryScreen(private val restaurantId: String) :
                     tabItems = OrderHistoryScreenUiState.OrderSelectType.values().toList(),
                     selectedTab = state.selectedType,
                     onTabSelected = { listener.onClickTab(it) },
-                    modifier = Modifier.height(40.dp).fillMaxWidth(),
+                    modifier = Modifier.height(54.dp).fillMaxWidth().padding(bottom = 8.dp),
                     horizontalPadding = 4.dp,
                 ) { type ->
                     Text(
@@ -110,7 +119,7 @@ class OrdersHistoryScreen(private val restaurantId: String) :
                             if (type == state.selectedType) Theme.colors.onPrimary
                             else Theme.colors.contentTertiary
                         ).value,
-                        modifier = Modifier.padding(4.dp)
+                        modifier = Modifier.padding(8.dp)
                     )
                 }
             }
@@ -126,12 +135,6 @@ class OrdersHistoryScreen(private val restaurantId: String) :
                 }
             }
         }
-
-        NoItemsPlaceholder(
-            painter = painterResource(Resources.images.emptyScreen),
-            text = Resources.strings.noOrderHistory,
-            isVisible = (state.orders.isEmpty()),
-        )
     }
 
     @Composable
@@ -144,40 +147,28 @@ class OrdersHistoryScreen(private val restaurantId: String) :
             modifier = Modifier.fillMaxSize()
                 .padding(bottom = getNavigationBarPadding().calculateBottomPadding())
         ) {
-            items(13) {
-                Row(
-                    modifier = Modifier.fillMaxWidth().height(70.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    Box(
-                        modifier = Modifier.fillMaxHeight().width(100.dp)
-                            .clip(shape = RoundedCornerShape(Theme.radius.medium))
-                            .shimmerEffect()
-                    )
-
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(
-                            8.dp,
-                            alignment = Alignment.CenterVertically
-                        ),
+            header {
+                Box {
+                    Row(
+                        Modifier.fillMaxWidth().clip(RoundedCornerShape(Theme.radius.medium))
+                            .background(Theme.colors.surface).wrapContentHeight(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
                     ) {
                         Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(16.dp)
-                                .padding(top = 8.dp, end = 16.dp)
+                            modifier = Modifier.height(42.dp).padding(4.dp).weight(1f)
+                                .clip(RoundedCornerShape(Theme.radius.medium))
                                 .shimmerEffect()
                         )
                         Box(
-                            modifier = Modifier
-                                .width(90.dp)
-                                .height(16.dp)
-                                .padding(top = 8.dp)
-                                .shimmerEffect()
+                            modifier = Modifier.weight(1f)
+                                .clip(RoundedCornerShape(Theme.radius.medium))
                         )
                     }
                 }
+            }
+            items(5) {
+                LoadingOrderItem()
             }
         }
     }

@@ -23,7 +23,7 @@ fun Scope.intercept(client: HttpClient) {
         }
         val originalCall = execute(request)
 
-        if (originalCall.response.status.value == 401) {
+        if (originalCall.response.status.value == 401 && accessToken.isNotBlank()) {
             val (access, refresh) = remoteIdentityGateway.refreshAccessToken(refreshToken)
             localConfigurationGateway.saveAccessToken(access)
             localConfigurationGateway.saveRefreshToken(refresh)
