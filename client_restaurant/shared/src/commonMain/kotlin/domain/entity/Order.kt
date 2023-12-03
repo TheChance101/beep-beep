@@ -8,8 +8,9 @@ data class Order(
     val restaurantId: String,
     val meals: List<Meal>,
     val totalPrice: Double,
+    val currency: String,
     val createdAt: LocalDateTime,
-    val orderState: OrderStatus
+    val orderState: OrderStatus,
 ) {
     data class Meal(
         val id: String,

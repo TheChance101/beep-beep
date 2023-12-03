@@ -40,12 +40,17 @@ fun OrderCard(
             OrderItem(
                 imageUrl = order.mealImageUrl,
                 mealName = order.mealName,
-                quantity = order.quantity,
-
+                quantity = order.quantity
             )
         }
 
-        BPDashedDivider(showDiamondIcon = true, modifier = Modifier.padding(top =8.dp))
+        BPDashedDivider(
+            showDiamondIcon = true,
+            modifier = Modifier.padding(top = 8.dp),
+            color = Theme.colors.contentBorder,
+            strokeWidth = 2f,
+            spaceWidth = 15.dp
+        )
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -57,10 +62,10 @@ fun OrderCard(
                     text = Resources.strings.totalPrice,
                     style = Theme.typography.caption,
                     color = Theme.colors.contentTertiary,
-                    modifier =Modifier.padding(bottom = 4.dp)
+                    modifier = Modifier.padding(bottom = 4.dp)
                 )
                 Text(
-                    text = "${Resources.strings.dollarSign} ${order.totalPrice}",
+                    text = "${order.currency} ${order.totalPrice}",
                     style = Theme.typography.titleLarge,
                     color = Theme.colors.contentPrimary
                 )

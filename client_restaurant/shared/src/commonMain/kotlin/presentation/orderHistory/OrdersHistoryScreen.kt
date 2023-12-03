@@ -61,7 +61,7 @@ class OrdersHistoryScreen(private val restaurantId: String) :
     @Composable
     override fun onRender(
         state: OrderHistoryScreenUiState,
-        listener: OrderHistoryScreenInteractionListener
+        listener: OrderHistoryScreenInteractionListener,
     ) {
         Column(Modifier.fillMaxSize().background(Theme.colors.background)) {
             BpAppBar(
@@ -94,7 +94,7 @@ class OrdersHistoryScreen(private val restaurantId: String) :
     @Composable
     private fun OrdersHistoryContent(
         state: OrderHistoryScreenUiState,
-        listener: OrderHistoryScreenInteractionListener
+        listener: OrderHistoryScreenInteractionListener,
     ) {
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Adaptive(300.dp),
@@ -109,7 +109,7 @@ class OrdersHistoryScreen(private val restaurantId: String) :
                     tabItems = OrderHistoryScreenUiState.OrderSelectType.values().toList(),
                     selectedTab = state.selectedType,
                     onTabSelected = { listener.onClickTab(it) },
-                    modifier = Modifier.height(49.dp).fillMaxWidth().padding(bottom = 8.dp),
+                    modifier = Modifier.height(54.dp).fillMaxWidth().padding(bottom = 8.dp),
                     horizontalPadding = 4.dp,
                 ) { type ->
                     Text(
@@ -119,7 +119,7 @@ class OrdersHistoryScreen(private val restaurantId: String) :
                             if (type == state.selectedType) Theme.colors.onPrimary
                             else Theme.colors.contentTertiary
                         ).value,
-                        modifier = Modifier.padding(4.dp)
+                        modifier = Modifier.padding(8.dp)
                     )
                 }
             }
