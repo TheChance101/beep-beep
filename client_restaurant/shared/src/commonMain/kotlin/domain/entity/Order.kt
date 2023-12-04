@@ -1,16 +1,16 @@
 package domain.entity
 
 import kotlinx.datetime.LocalDateTime
-import presentation.base.RequestException
 
 data class Order(
     val id: String,
     val userId: String,
     val restaurantId: String,
-    val meals: List<Order.Meal>,
+    val meals: List<Meal>,
     val totalPrice: Double,
+    val currency: String,
     val createdAt: LocalDateTime,
-    val orderState: OrderState
+    val orderState: OrderStatus,
 ) {
     data class Meal(
         val id: String,
@@ -26,9 +26,3 @@ data class Order(
     }
 }
 
-enum class OrderState {
-    PENDING,
-    IN_COOKING,
-    CANCELED,
-    FINISHED;
-}

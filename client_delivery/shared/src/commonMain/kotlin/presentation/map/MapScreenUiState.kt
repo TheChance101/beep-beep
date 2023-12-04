@@ -10,8 +10,8 @@ data class MapScreenUiState(
     val username: String = "",
     val orderState: OrderState = OrderState.LOADING,
     val errorState: ErrorState? = null,
-    val orderDistance: String = "",
-    val orderDuration: String = "",
+    val orderDistance: Int = 0,
+    val orderDuration: Int = 0,
     val tripId: String = "",
     val orderUiState: OrderUiState = OrderUiState(),
     val deliveryLocation: LocationUiState = LocationUiState(),
@@ -46,3 +46,7 @@ fun Order.toUiState() = OrderUiState(
     restaurantImageUrl = restaurantImage,
     destinationAddress = destinationAddress,
 )
+
+fun LocationUiState.toEntity(): Location {
+    return Location(latitude = lat, longitude = lng)
+}

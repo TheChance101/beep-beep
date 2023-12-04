@@ -25,6 +25,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,20 +36,20 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
-import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.BpAppBar
 import com.beepbeep.designSystem.ui.composable.BpButton
+import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import domain.entity.FoodOrder
 import domain.entity.TripStatus
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
 import presentation.cart.CartScreen
 import presentation.chatSupport.ChatSupportScreen
-import presentation.composable.BpImageLoader
 import presentation.composable.ImageSlider
 import presentation.composable.ItemSection
 import presentation.composable.SectionHeader
@@ -64,9 +65,10 @@ import presentation.home.composable.OrderCard
 import presentation.main.SearchTab
 import presentation.meals.MealsScreen
 import presentation.orderFoodTracking.OrderFoodTrackingScreen
+import presentation.restaurants.RestaurantsScreen
+import com.beepbeep.designSystem.ui.composable.BpToastMessage
 import presentation.resturantDetails.RestaurantScreen
 import presentation.taxi.TaxiOrderScreen
-import presentation.taxi.TaxiOrderScreenModel
 import resources.Resources
 import util.getNavigationBarPadding
 import util.root
@@ -89,7 +91,10 @@ class HomeScreen : BaseScreen<
             is HomeScreenUiEffect.NavigateToCuisines -> navigator.root?.push(CuisinesScreen())
             is HomeScreenUiEffect.NavigateToChatSupport -> navigator.root?.push(ChatSupportScreen())
             is HomeScreenUiEffect.NavigateToOrderTaxi -> navigator.root?.push(TaxiOrderScreen())
-            is HomeScreenUiEffect.ScrollDownToRecommendedRestaurants -> println("Scroll down home screen")
+            is HomeScreenUiEffect.ScrollDownToRecommendedRestaurants -> navigator.root?.push(
+                RestaurantsScreen()
+            )
+
             is HomeScreenUiEffect.NavigateToOfferItem -> println("Navigate to offer item details ${effect.offerId}")
             is HomeScreenUiEffect.NavigateToOrderDetails -> println("Navigate to order details ${effect.orderId}")
             is HomeScreenUiEffect.NavigateToCart -> navigator.root?.push(CartScreen())
@@ -184,7 +189,6 @@ class HomeScreen : BaseScreen<
                     recommendedCuisines = state.recommendedCuisines,
                     onClickCuisineItem = listener::onClickCuisineItem,
                     onClickSeeAllCuisines = listener::onClickSeeAllCuisines,
-                    showSeeAllCuisine = state.isMoreCuisine
                 )
             }
 
@@ -210,18 +214,21 @@ class HomeScreen : BaseScreen<
             )
 
             item {
-                BPSnackBar(
-                    icon = painterResource(Resources.images.warningIcon),
-                    iconBackgroundColor = Theme.colors.warningContainer,
-                    iconTint = Theme.colors.warning,
-                    isVisible = state.showSnackBar,
-                    modifier = Modifier.padding(bottom = getNavigationBarPadding().calculateBottomPadding())
-                ) {
-                    Text(
-                        text = Resources.strings.accessDeniedMessage,
-                        style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
-                    )
+                LaunchedEffect(state.showSnackBar) {
+                    if (state.showSnackBar) {
+                        delay(4000)
+                        listener.onDismissSnackBar()
+                    }
                 }
+                BpToastMessage(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(bottom = getNavigationBarPadding().calculateBottomPadding()),
+                    state = state.showSnackBar,
+                    message = Resources.strings.accessDeniedMessage,
+                    isError = true,
+                    successIcon = painterResource(Resources.images.unread),
+                    warningIcon = painterResource(Resources.images.warningIcon)
+                )
             }
         }
     }
@@ -410,9 +417,12 @@ class HomeScreen : BaseScreen<
             )
             Row(modifier = Modifier.fillMaxWidth().height(80.dp).padding(top = 8.dp)) {
                 BpImageLoader(
-                    modifier = Modifier.fillMaxHeight().width(104.dp)
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(104.dp)
                         .clip(RoundedCornerShape(8.dp)),
-                    imageUrl = order.image
+                    imageUrl = order.image,
+                    errorPlaceholderImageUrl = Resources.images.restaurantErrorPlaceholder
                 )
                 Column(
                     modifier = Modifier.padding(8.dp).fillMaxSize(),
@@ -465,7 +475,6 @@ class HomeScreen : BaseScreen<
 
     @Composable
     private fun Cuisines(
-        showSeeAllCuisine: Boolean,
         recommendedCuisines: List<CuisineUiState>,
         onClickSeeAllCuisines: () -> Unit,
         onClickCuisineItem: (String) -> Unit,
@@ -478,7 +487,7 @@ class HomeScreen : BaseScreen<
             SectionHeader(
                 onClickViewAll = onClickSeeAllCuisines,
                 title = Resources.strings.cuisineSectionTitle,
-                showViewAll = showSeeAllCuisine
+                showViewAll = true
             )
 
             Row(

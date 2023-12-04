@@ -1,8 +1,5 @@
 package presentation.auth.signup.registrationSubmit
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -13,17 +10,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
-import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
@@ -32,6 +29,7 @@ import presentation.base.BaseScreen
 import presentation.composable.BpBrandBackgroundContainer
 import presentation.composable.HeadFirstCard
 import presentation.composable.modifier.noRippleEffect
+import com.beepbeep.designSystem.ui.composable.BpToastMessage
 import resources.Resources
 import util.getNavigationBarPadding
 
@@ -108,20 +106,21 @@ class RegistrationSubmitScreen(
                 )
             }
 
-            AnimatedVisibility(
-                visible = state.showSnackbar,
-                enter = slideInVertically { it },
-                exit = slideOutVertically { it },
-                modifier = Modifier.align(Alignment.BottomCenter)
-            ) {
-                BPSnackBar(icon = painterResource(Resources.images.icError),modifier = Modifier
-                    .padding(bottom = getNavigationBarPadding().calculateBottomPadding())) {
-                    Text(
-                        text = state.snackbarMessage,
-                        style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
-                    )
+            LaunchedEffect(state.showSnackbar) {
+                if (state.showSnackbar) {
+                    delay(2000)
+                    listener.onDismissSnackBar()
                 }
             }
+            BpToastMessage(
+                modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth()
+                    .padding(bottom = getNavigationBarPadding().calculateBottomPadding()),
+                state = state.showSnackbar,
+                message = state.snackbarMessage,
+                isError = state.snackbarMessage.isNotEmpty(),
+                successIcon = painterResource(Resources.images.unread),
+                warningIcon = painterResource(Resources.images.warningIcon)
+            )
         }
     }
 

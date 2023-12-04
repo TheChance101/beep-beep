@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -21,12 +22,12 @@ actual fun getPlatformContext(): PlatformContext = util.PlatformContext(LocalCon
 actual class ImagePicker(
     private val activity: ComponentActivity
 ) {
-    private lateinit var getContent: ActivityResultLauncher<String>
+    private lateinit var getContent: ActivityResultLauncher<PickVisualMediaRequest>
 
     @Composable
     actual fun registerPicker(onImagePicked: (ByteArray) -> Unit) {
         getContent = rememberLauncherForActivityResult(
-            ActivityResultContracts.GetContent()
+            contract = ActivityResultContracts.PickVisualMedia()
         ) { uri ->
             uri?.let {
                 activity.contentResolver.openInputStream(uri)?.use {
@@ -37,11 +38,13 @@ actual class ImagePicker(
     }
 
     actual fun pickImage() {
-        getContent.launch("image/*")
+        getContent.launch(
+            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+        )
     }
 }
 
-actual class ImagePickerFactory actual constructor(context: PlatformContext){
+actual class ImagePickerFactory actual constructor(context: PlatformContext) {
 
     @Composable
     actual fun createPicker(): ImagePicker {
@@ -55,7 +58,7 @@ actual class ImagePickerFactory actual constructor(context: PlatformContext){
 @Composable
 actual fun rememberBitmapFromBytes(bytes: ByteArray?): ImageBitmap? {
     return remember(bytes) {
-        if(bytes != null) {
+        if (bytes != null) {
             BitmapFactory.decodeByteArray(bytes, 0, bytes.size).asImageBitmap()
         } else {
             null

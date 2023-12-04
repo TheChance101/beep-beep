@@ -12,6 +12,7 @@ import org.thechance.service_identity.domain.util.Role
 @Serializable
 data class DetailedUser(
     @SerialName("_id")
+    @BsonId
     @Contextual
     val id: ObjectId,
     val fullName: String,
@@ -23,3 +24,4 @@ data class DetailedUser(
     val wallet: WalletCollection,
     val addresses: List<AddressCollection> = emptyList()
 )
+

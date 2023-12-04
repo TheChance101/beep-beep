@@ -13,6 +13,7 @@ import org.thechance.api_gateway.data.model.LocationDto
 import org.thechance.api_gateway.data.model.identity.getUserOptions
 import org.thechance.api_gateway.data.model.taxi.toDeliveryTripResponse
 import org.thechance.api_gateway.data.service.IdentityService
+import org.thechance.api_gateway.data.service.NotificationService
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.data.service.TaxiService
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
@@ -26,6 +27,7 @@ fun Route.userRoutes() {
     val identityService: IdentityService by inject()
     val restaurantService: RestaurantService by inject()
     val taxiService: TaxiService by inject()
+    val notificationService: NotificationService by inject()
 
     authenticateWithRole(Role.DASHBOARD_ADMIN) {
         get("/users") {
@@ -78,6 +80,13 @@ fun Route.userRoutes() {
                 respondWithResult(HttpStatusCode.OK, user)
             }
 
+            get("/profile") {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val username = tokenClaim?.get(Claim.USERNAME).toString()
+                val language = extractLocalizationHeader()
+                val user = identityService.getUserByUsername(username, language)
+                respondWithResult(HttpStatusCode.OK, user)
+            }
             get("/addresses") {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val userId = tokenClaim?.get(Claim.USER_ID).toString()
@@ -174,6 +183,25 @@ fun Route.userRoutes() {
                 respondWithResult(HttpStatusCode.OK, result)
             }
         }
+
+        authenticateWithRole(Role.RESTAURANT_OWNER) {
+            get("/address/{userId}") {
+                val userId = call.parameters["userId"]?.trim().toString()
+                val language = extractLocalizationHeader()
+                val userAddress = identityService.getUserAddresses(userId, language)
+                respondWithResult(HttpStatusCode.OK, userAddress)
+            }
+        }
+
+    }
+
+    delete("/clearDB") {
+        val resultIdentity = identityService.clearIdentityDB()
+        restaurantService.deleteAllCollections()
+        notificationService.deleteNotificationCollection()
+        val resultTaxi = taxiService.deleteTaxiAndTripsCollections()
+        val result = resultIdentity.and(resultTaxi)
+        respondWithResult(HttpStatusCode.OK, result)
     }
 }
 

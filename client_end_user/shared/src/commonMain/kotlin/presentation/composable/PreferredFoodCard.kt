@@ -18,17 +18,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.cuisines.CuisineUiState
+import resources.Resources
 
-
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun PreferredFoodCard(
     onClick: (String) -> Unit,
     state: CuisineUiState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -49,11 +48,14 @@ fun PreferredFoodCard(
             modifier = Modifier.padding(start = 12.dp, top = 12.dp, bottom = 4.dp)
         )
         BpImageLoader(
+            modifier = Modifier
+                .size(88.dp)
+                .clip(shape = MaterialTheme.shapes.medium)
+                .align(Alignment.End),
             imageUrl = state.cuisineImageUrl,
             contentDescription = "${state.cuisineName} Picture",
+            errorPlaceholderImageUrl = Resources.images.cuisinePlaceholder,
             contentScale = ContentScale.Crop,
-            modifier = Modifier.size(88.dp).clip(shape = MaterialTheme.shapes.medium)
-                .align(Alignment.End)
         )
 
     }

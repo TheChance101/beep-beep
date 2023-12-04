@@ -1,19 +1,31 @@
 package presentation.order
 
+import domain.entity.Location
 import domain.entity.Order
-import domain.entity.OrderState
+import domain.entity.OrderStatus
+import domain.entity.AddressInfo
 
 data class OrderScreenUiState(
+    val isLoading: Boolean = true,
+    val startPoint: LocationUiSate = LocationUiSate(),
+    val startPointAddress: String = "",
+    val destinationAddress: String = "",
+    val destination: LocationUiSate = LocationUiSate(),
+    val noInternetConnection: Boolean = false,
     val inCookingOrders: List<OrderUiState> = emptyList(),
     val pendingOrders: List<OrderUiState> = emptyList(),
     val totalOrders: Int = 0,
 )
 
+
 data class OrderUiState(
-    val id: String = "",
+    val orderId: String = "",
+    val userId: String = "",
+    val restaurantId: String = "",
     val orderMealUiStates: List<OrderMealUiState> = emptyList(),
     val totalPrice: Double = 0.0,
-    val orderState: OrderState = OrderState.PENDING,
+    val currency: String = "$",
+    val orderState: OrderStatus = OrderStatus.PENDING,
     val createdAt: String = "",
 )
 
@@ -31,12 +43,34 @@ fun Order.Meal.toOrderMealUiState(): OrderMealUiState {
     )
 }
 
-fun Order.toOrderUiState(): OrderUiState {
-    return OrderUiState(
-        id = id,
-        orderMealUiStates = meals.map { it.toOrderMealUiState() },
-        totalPrice = totalPrice,
-        orderState = orderState,
+fun Order.toOrderUiState() = OrderUiState(
+    orderId = id,
+    userId = userId,
+    restaurantId = restaurantId,
+    orderMealUiStates = meals.map { it.toOrderMealUiState() },
+    totalPrice = totalPrice,
+    currency = currency,
+    orderState = orderState,
+)
+
+data class LocationUiSate(
+    val latitude: Double = 0.0,
+    val longitude: Double = 0.0,
+)
+
+fun Location.toUiState() = LocationUiSate(latitude = latitude, longitude = longitude)
+fun LocationUiSate.toEntity() = Location(latitude = latitude, longitude = longitude)
+
+
+fun AddressInfo.toUiState(): AddressInfoUiState {
+    return AddressInfoUiState(
+        location = location.toUiState(),
+        address = address
     )
 }
 
+
+data class AddressInfoUiState(
+    val location: LocationUiSate = LocationUiSate(),
+    val address: String = "",
+)

@@ -1,6 +1,7 @@
 package presentation.resturantDetails
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.Cart
 import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.Restaurant
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
+import presentation.cart.toUiState
 
 class RestaurantScreenModel(
     private val restaurantId: String,
@@ -169,6 +171,30 @@ class RestaurantScreenModel(
         }
     }
 
+    override fun onDismissDialog() {
+        updateState { it.copy(showWarningCartIsFull =false) }
+    }
+
+    override fun onGoToCart() {
+        onDismissDialog()
+        sendNewEffect(RestaurantUIEffect.onGoToCart)
+    }
+
+    override fun onClearCart() {
+        tryToExecute(
+            { manageCart.clearCart() },
+            ::onClearCartSuccess,
+            ::onError
+        )
+    }
+
+   private fun onClearCartSuccess(isClear:Boolean){
+       if(isClear){
+           onDismissDialog()
+           updateState { it.copy(showToastClearCart = true) }
+       }
+    }
+
     override fun onShowLoginSheet() {
         coroutineScope.launch {
             state.value.sheetState.dismiss()
@@ -224,12 +250,18 @@ class RestaurantScreenModel(
     private fun onAddToCartSuccess(success: Boolean) {
         updateState { it.copy(isAddToCartLoading = false, errorAddToCart = null) }
         onDismissSheet()
-        showToast()
+        updateState { it.copy(showToast = true) }
     }
 
     private fun onAddToCartError(errorState: ErrorState) {
-        updateState { it.copy(isAddToCartLoading = false, errorAddToCart = errorState) }
-        showToast()
+        when(errorState){
+            is ErrorState.CartIsFull -> {
+                updateState { it.copy(isAddToCartLoading = false, showWarningCartIsFull = true,errorAddToCart = errorState) }
+            }
+            else -> {
+                updateState { it.copy(error = errorState) }
+            }
+        }
     }
 
     override fun onShowMealSheet() {
@@ -244,17 +276,14 @@ class RestaurantScreenModel(
         sendNewEffect(RestaurantUIEffect.onGoToLogin)
     }
 
-    private suspend fun delayAndChangePermissionSheetState(show: Boolean) {
-        delay(300)
-        updateState { it.copy(showLoginSheet = show, showMealSheet = show) }
+    override fun onDismissSnackBar() {
+        updateState { it.copy(showToast = false,showToastClearCart =false) }
     }
 
-    private fun showToast() {
-        viewModelScope.launch {
-            updateState { it.copy(showToast = true) }
-            delay(2000)
-            updateState { it.copy(showToast = false) }
-            delay(300)
-        }
+    private suspend fun delayAndChangePermissionSheetState(show: Boolean) {
+        delay(300)
+        updateState { it.copy(showLoginSheet = show, showMealSheet = show, showWarningCartIsFull = show) }
     }
+
+
 }

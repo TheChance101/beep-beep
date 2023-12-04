@@ -1,9 +1,7 @@
 package presentation.search
 
-import domain.entity.Meal
 import domain.entity.Restaurant
 import presentation.base.ErrorState
-import presentation.composable.ModalBottomSheetState
 import presentation.resturantDetails.MealUIState
 
 
@@ -13,11 +11,13 @@ data class SearchUiState(
     val restaurants: List<RestaurantUiState> = emptyList(),
     val showMealSheet: Boolean = false,
     val selectedMeal: MealUIState = MealUIState(),
-
+    val showWarningCartIsFull: Boolean = false,
     val isAddToCartLoading: Boolean = false,
     val isLogin: Boolean = false,
     val showLoginSheet: Boolean = false,
     val showToast: Boolean = false,
+    val showToastClearCart: Boolean = false,
+
     val errorAddToCart: ErrorState? = null,
     val error: ErrorState? = null,
 )

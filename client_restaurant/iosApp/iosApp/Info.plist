@@ -28,7 +28,14 @@
 		<false/>
 	</dict>
 	<key>UILaunchScreen</key>
-	<dict/>
+	<dict>
+		<key>UIColorName</key>
+		<string>Primary</string>
+		<key>UIImageName</key>
+		<string>logobeep</string>
+		<key>UIImageRespectsSafeAreaInsets</key>
+		<true/>
+	</dict>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
@@ -46,10 +53,10 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-		<key>UIAppFonts</key>
-            	<array>
-            	<string>roboto_medium.ttf</string>
-            	<string>roboto_regular.ttf</string>
-            	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>roboto_medium.ttf</string>
+		<string>roboto_regular.ttf</string>
+	</array>
 </dict>
 </plist>

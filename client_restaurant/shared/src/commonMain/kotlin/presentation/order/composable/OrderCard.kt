@@ -1,6 +1,5 @@
 package presentation.order.composable
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,10 +16,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.theme.Theme
-import com.seiko.imageloader.rememberAsyncImagePainter
 import presentation.composable.BPDashedDivider
 import presentation.order.OrderUiState
 import resources.Resources
@@ -29,7 +27,7 @@ import resources.Resources
 fun OrderCard(
     order: OrderUiState,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -46,7 +44,13 @@ fun OrderCard(
             )
         }
 
-        BPDashedDivider(showDiamondIcon = true)
+        BPDashedDivider(
+            showDiamondIcon = true,
+            modifier = Modifier.padding(top = 8.dp),
+            color = Theme.colors.contentBorder,
+            strokeWidth = 2f,
+            spaceWidth = 15.dp
+        )
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -57,10 +61,11 @@ fun OrderCard(
                 Text(
                     text = Resources.strings.totalPrice,
                     style = Theme.typography.caption,
-                    color = Theme.colors.contentTertiary
+                    color = Theme.colors.contentTertiary,
+                    modifier = Modifier.padding(bottom = 4.dp)
                 )
                 Text(
-                    text = "${Resources.strings.dollarSign} ${order.totalPrice}",
+                    text = "${order.currency} ${order.totalPrice}",
                     style = Theme.typography.titleLarge,
                     color = Theme.colors.contentPrimary
                 )
@@ -81,22 +86,28 @@ private fun OrderItem(
         modifier = modifier.fillMaxWidth().height(56.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Image(
-            modifier = Modifier.fillMaxHeight().width(80.dp)
+        BpImageLoader(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(80.dp)
                 .clip(RoundedCornerShape(Theme.radius.medium)),
-            painter = rememberAsyncImagePainter(imageUrl),
-            contentScale = ContentScale.Crop,
+            imageUrl = imageUrl,
+            errorPlaceholderImageUrl = Resources.images.mealErrorPlaceholder,
             contentDescription = Resources.strings.orderImageContentDescription
         )
 
         Column(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically),
+            verticalArrangement = Arrangement.spacedBy(
+                8.dp,
+                alignment = Alignment.CenterVertically
+            ),
         ) {
             Text(
                 text = mealName,
                 style = Theme.typography.title,
-                color = Theme.colors.contentPrimary
+                color = Theme.colors.contentPrimary,
+                maxLines = 1,
             )
             Text(
                 text = "${Resources.strings.quantity} - $quantity",

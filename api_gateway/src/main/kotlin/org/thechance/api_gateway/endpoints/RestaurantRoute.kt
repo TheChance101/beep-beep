@@ -61,8 +61,15 @@ fun Route.restaurantRoutes() {
 
         get("/{restaurantId}/meals") {
             val language = extractLocalizationHeader()
+            val page = call.parameters["page"]?.toInt() ?: 1
+            val limit = call.parameters["limit"]?.toInt() ?: 10
             val restaurantId = call.parameters["restaurantId"]?.trim().toString()
-            val meals = restaurantService.getMealsByRestaurantId(restaurantId = restaurantId, languageCode = language)
+            val meals = restaurantService.getMealsByRestaurantId(
+                restaurantId = restaurantId,
+                page = page,
+                limit = limit,
+                languageCode = language
+            )
             respondWithResult(HttpStatusCode.OK, meals)
         }
 
@@ -115,8 +122,16 @@ fun Route.restaurantRoutes() {
             put("/details") {
                 val language = extractLocalizationHeader()
                 val multipartDto = receiveMultipart<RestaurantDto>(imageValidator)
+                val restaurantId = multipartDto.data.id.toString()
+                val restaurant = restaurantService.getRestaurantInfo(
+                    languageCode = language, restaurantId = restaurantId
+                )
                 val imageUrl = multipartDto.image?.let { image ->
-                    imageService.uploadImage(image, multipartDto.data.name ?: "null")
+                    imageService.uploadImage(
+                        image,
+                        multipartDto.data.name ?: "null",
+                        restaurant.restaurantImage
+                    )
                 }
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val ownerId = tokenClaim?.get(USER_ID).toString()

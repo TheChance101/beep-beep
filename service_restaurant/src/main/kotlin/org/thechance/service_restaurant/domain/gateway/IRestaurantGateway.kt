@@ -17,7 +17,7 @@ interface IRestaurantGateway {
     suspend fun getRestaurant(id: String): Restaurant?
     suspend fun getRestaurantIds(): List<String>
     suspend fun getCuisineInRestaurant(restaurantId: String): List<Cuisine>
-    suspend fun getMealsByRestaurantId(restaurantId: String): List<Meal>
+    suspend fun getMealsByRestaurantId(restaurantId: String, page: Int, limit: Int): List<Meal>
     suspend fun isRestaurantExisted(restaurantId: String): Boolean
     //endregion
 
@@ -50,4 +50,5 @@ interface IRestaurantGateway {
     suspend fun deleteRestaurantsByOwnerId(ownerId: String): Boolean
     suspend fun getTotalNumberOfMealsByRestaurantId(restaurantId: String): Long
     //endregion
+    suspend fun deleteAll()
 }

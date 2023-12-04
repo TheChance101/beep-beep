@@ -42,7 +42,27 @@ fun Route.notificationRoutes() {
         }
     }
 
+    route("device") {
+
+        delete("/token/{userId}") {
+            val userId = call.parameters.requireNotEmpty("userId")
+            val deviceToken = call.parameters.requireNotEmpty("deviceToken")
+            val result = notificationManagement.clearDeviceToken(deviceToken = deviceToken, userId = userId)
+            call.respond(HttpStatusCode.OK, result)
+        }
+
+        delete("/allTokens/{userId}") {
+            val userId = call.parameters.requireNotEmpty("userId")
+            val result = notificationManagement.clearAllDevicesTokensForUser(userId)
+            call.respond(HttpStatusCode.OK, result)
+        }
+    }
     route("notifications") {
+
+        delete("/deleteCollection") {
+            val result = notificationManagement.deleteCollection()
+            call.respond(HttpStatusCode.OK, result)
+        }
         post("/send/user") {
             val receivedData = call.receive<NotificationDto>()
             val result = notificationManagement.sendNotificationToUser(receivedData.toEntity())

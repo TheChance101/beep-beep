@@ -101,7 +101,9 @@ interface IStringResources {
     val loginToAddToFavourite: String
     val addToCart: String
     val mealAddedToYourCart: String
+    val youCanAddMeal: String
     val mealFailedToAddInCart: String
+    val addFromDifferentCartMessage: String
     val message: String
     val supportTeam: String
     val sendMessageToStartLiveChat: String
@@ -114,5 +116,9 @@ interface IStringResources {
     val whereToGo: String
     val searchDestinationHint: String
     val setDestination: String
-    val searchDestination:String
+    val searchDestination: String
+    val restaurants: String
+    val yesIamSure: String
+    val goToCart: String
+    val restaurantClosed: String
 }

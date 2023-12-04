@@ -42,7 +42,7 @@ class WebSocketServerHandler(
         session: DefaultWebSocketServerSession,
     ) {
         try {
-            values.flowOn(Dispatchers.IO).collect { value ->
+            values.collectLatest { value ->
                 session.sendSerialized(value)
             }
         } catch (e: Exception) {

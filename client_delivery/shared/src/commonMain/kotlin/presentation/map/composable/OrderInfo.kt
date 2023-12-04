@@ -16,10 +16,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.theme.Theme
-import com.seiko.imageloader.rememberAsyncImagePainter
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import resources.Resources
@@ -30,22 +29,23 @@ fun OrderInfo(
     restaurantImageUrl: String,
     restaurantName: String,
     restaurantLocation: String,
-    orderLocation: String
+    orderLocation: String,
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier.padding(bottom = 28.dp)
     ) {
-        Image(
-            modifier = Modifier.size(48.dp).clip(shape = RoundedCornerShape(4.dp))
+        BpImageLoader(
+            modifier = Modifier
+                .size(48.dp)
+                .clip(shape = RoundedCornerShape(4.dp))
                 .border(
                     border = BorderStroke(width = 1.dp, color = Theme.colors.divider),
                     shape = RoundedCornerShape(4.dp)
                 ),
-            painter =
-            rememberAsyncImagePainter(url = restaurantImageUrl),
-            contentDescription = null,
-            contentScale = ContentScale.Crop
+            imageUrl = restaurantImageUrl,
+            errorPlaceholderImageUrl = Resources.images.restaurantErrorPlaceholder,
+            contentDescription = restaurantName,
         )
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp),

@@ -30,15 +30,17 @@ fun MealDetails.toMealAddition(restaurantId: String) = MealModification(
     description = description,
     price = price.toDouble(),
     cuisines = mealCuisines.map { it.id },
-    restaurantId = restaurantId
+    restaurantId = restaurantId,
+    image = image ?: byteArrayOf()
 )
 
 fun Meal.toUIState() = MealDetails(
-    restaurantId =restaurantId,
+    restaurantId = restaurantId,
     name = name,
     description = description,
     imageUrl = imageUrl,
     price = "$price",
+    currency= currency,
     mealCuisines = cuisines.toUIState()
 )
 
@@ -48,5 +50,6 @@ fun MealDetails.toMealUpdate(mealId: String) = MealModification(
     price = price.toDouble(),
     cuisines = mealCuisines.toCuisineEntity().map { it.id },
     restaurantId = restaurantId,
-    id = mealId
+    id = mealId,
+    image = image ?: byteArrayOf()
 )

@@ -50,11 +50,8 @@ import resources.Resources
 import util.getNavigationBarPadding
 import util.getStatusBarPadding
 
-class RestaurantSelectionScreen : BaseScreen
-<RestaurantSelectionScreenModel,
-        RestaurantScreenUIState,
-        RestaurantSelectionScreenUIEffect,
-        RestaurantSelectionScreenInteractionListener>() {
+class RestaurantSelectionScreen :
+    BaseScreen<RestaurantSelectionScreenModel, RestaurantScreenUIState, RestaurantSelectionScreenUIEffect, RestaurantSelectionScreenInteractionListener>() {
 
     @Composable
     override fun Content() {
@@ -64,9 +61,8 @@ class RestaurantSelectionScreen : BaseScreen
     @Composable
     override fun onRender(
         state: RestaurantScreenUIState,
-        listener: RestaurantSelectionScreenInteractionListener
+        listener: RestaurantSelectionScreenInteractionListener,
     ) {
-
         val lazyListState = rememberLazyListState()
         var isExpanding by remember { mutableStateOf(false) }
         val bottomSheetSize by animateFloatAsState(
@@ -149,7 +145,7 @@ class RestaurantSelectionScreen : BaseScreen
     private fun BottomSheetContent(
         lazyListState: LazyListState,
         state: RestaurantScreenUIState,
-        listener: RestaurantSelectionScreenInteractionListener
+        listener: RestaurantSelectionScreenInteractionListener,
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxWidth()
@@ -176,8 +172,8 @@ class RestaurantSelectionScreen : BaseScreen
 
     override fun onEffect(effect: RestaurantSelectionScreenUIEffect, navigator: Navigator) {
         when (effect) {
-            is RestaurantSelectionScreenUIEffect.SelectRestaurant -> navigator.push(
-                MainScreen(effect.restaurantId)
+            is RestaurantSelectionScreenUIEffect.NavigateToMainScreen -> navigator.replaceAll(
+                MainScreen()
             )
         }
     }
@@ -185,12 +181,18 @@ class RestaurantSelectionScreen : BaseScreen
     @Composable
     private fun RestaurantSelectionItem(
         item: RestaurantUIState,
-        listener: RestaurantSelectionScreenInteractionListener
+        listener: RestaurantSelectionScreenInteractionListener,
     ) {
         RestaurantInformation(
-            onRestaurantClick = { listener.onClickRestaurant(item.id) },
+            onRestaurantClick = {
+                listener.onClickRestaurant(
+                    item.restaurantId,
+                    item.location,
+                    item.address
+                )
+            },
             restaurantName = item.restaurantName,
-            restaurantNumber = item.restaurantNumber,
+            restaurantNumber = item.restaurantPhoneNumber,
             isOpen = item.isOpen
         )
     }

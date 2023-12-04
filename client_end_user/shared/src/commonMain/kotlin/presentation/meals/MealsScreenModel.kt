@@ -7,7 +7,6 @@ import domain.usecase.IExploreRestaurantUseCase
 import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageCartUseCase
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
@@ -41,6 +40,10 @@ class MealsScreenModel(
         )
     }
 
+    private fun onGetMealsSuccess(meals: Flow<PagingData<Meal>>) {
+        updateState { it.copy(meals = meals.toUIState(), isLoading = false) }
+    }
+
     private fun checkLoginStatus() {
         tryToExecute(
             { manageAuthentication.getAccessToken() },
@@ -72,10 +75,6 @@ class MealsScreenModel(
                 updateState { it.copy(error = errorState) }
             }
         }
-    }
-
-    private fun onGetMealsSuccess(meals: Flow<PagingData<Meal>>) {
-        updateState { it.copy(meals = meals.toUIState(), isLoading = false) }
     }
 
     override fun onIncreaseMealQuantity() {
@@ -124,26 +123,22 @@ class MealsScreenModel(
     private fun onAddToCartSuccess(success: Boolean) {
         updateState { it.copy(isAddToCartLoading = false, errorAddToCart = null) }
         onDismissSheet()
-        showToast()
+        updateState { it.copy(showToast = true) }
     }
 
     private fun onAddToCartError(errorState: ErrorState) {
         updateState { it.copy(isAddToCartLoading = false, errorAddToCart = errorState) }
-        showToast()
-    }
-
-    private fun showToast() {
-        viewModelScope.launch {
-            updateState { it.copy(showToast = true) }
-            delay(2000)
-            updateState { it.copy(showToast = false) }
-            delay(300)
-        }
+        updateState { it.copy(showToast = true) }
     }
 
     override fun onLoginClicked() {
         onDismissSheet()
         sendNewEffect(MealsUiEffect.NavigateToLogin)
+    }
+
+    override fun onDismissSnackBar() {
+        updateState { it.copy(showToast = false) }
+
     }
 
     override fun onMealClicked(meal: MealUIState) {

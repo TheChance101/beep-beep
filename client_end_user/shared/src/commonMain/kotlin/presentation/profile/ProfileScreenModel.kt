@@ -4,7 +4,6 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.User
 import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageProfileUseCase
-import domain.usecase.IManageSettingUseCase
 import domain.usecase.validation.IValidationUseCase
 import domain.utils.AuthorizationException
 import kotlinx.coroutines.CoroutineScope
@@ -31,7 +30,7 @@ class ProfileScreenModel(
         tryToExecute(
             { manageAuthentication.getAccessToken() },
             ::onCheckIfLoggedInSuccess,
-            ::onError
+            ::onLogoutError
         )
     }
 
@@ -39,7 +38,7 @@ class ProfileScreenModel(
         tryToExecute(
             { manageProfile.getUserProfile() },
             ::onGetUserProfileSuccess,
-            ::onError
+            ::onGetUserProfileError
         )
     }
 
@@ -57,6 +56,10 @@ class ProfileScreenModel(
         }
     }
 
+    private fun onGetUserProfileError(errorState: ErrorState) {
+        println("Error when get user profile: $errorState")
+    }
+
     private fun onCheckIfLoggedInSuccess(accessToken: Flow<String>) {
         coroutineScope.launch {
             accessToken.distinctUntilChanged().collectLatest { token ->
@@ -70,7 +73,7 @@ class ProfileScreenModel(
         }
     }
 
-    private fun onError(errorState: ErrorState) {
+    private fun onLogoutError(errorState: ErrorState) {
         updateState { it.copy(isLoggedIn = false) }
     }
 
@@ -104,10 +107,15 @@ class ProfileScreenModel(
     }
 
     override fun onLogout() {
+        tryToExecute(
+            { manageAuthentication.logout() },
+            { onLogoutSuccess() },
+            ::onLogoutError
+        )
+    }
+
+    private fun onLogoutSuccess() {
         updateState { it.copy(isLoggedIn = false) }
-        viewModelScope.launch {
-            manageAuthentication.logout()
-        }
     }
 
     override fun onClickLogin() {

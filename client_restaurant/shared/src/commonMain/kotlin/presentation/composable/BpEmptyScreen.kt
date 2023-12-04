@@ -17,26 +17,24 @@ import com.beepbeep.designSystem.ui.theme.Theme
 
 
 @Composable
-fun BpEmptyScreen(
+fun NoItemsPlaceholder(
     painter: Painter, text: String,
     modifier: Modifier = Modifier,
     style: TextStyle = Theme.typography.body,
-    isVisible: Boolean = false
 ) {
-    if (isVisible) {
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = modifier
-            ) {
-                Image(
-                    painter = painter,
-                    contentDescription = "",
-                    modifier = Modifier.size(120.dp)
-                )
-                Text(text, style = style, color = style.color.copy(alpha = 0.38f))
-            }
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier
+        ) {
+            Image(
+                painter = painter,
+                contentDescription = "",
+                modifier = Modifier.size(120.dp)
+            )
+            Text(text, style = style, color = Theme.colors.contentTertiary)
         }
     }
+
 }

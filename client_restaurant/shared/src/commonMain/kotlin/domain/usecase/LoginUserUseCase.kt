@@ -1,10 +1,9 @@
 package domain.usecase
 
-import data.remote.model.RestaurantPermission
+import domain.entity.AddressInfo
+import domain.entity.Location
 import domain.gateway.local.ILocalConfigurationGateway
 import domain.gateway.remote.IIdentityRemoteGateway
-import io.ktor.util.decodeBase64Bytes
-import kotlinx.serialization.json.Json
 import presentation.base.InvalidPasswordException
 import presentation.base.InvalidUserNameException
 import presentation.base.PermissionDenied
@@ -14,32 +13,37 @@ interface ILoginUserUseCase {
     suspend fun loginUser(
         userName: String,
         password: String,
-        isKeepMeLoggedInChecked: Boolean
+        isKeepMeLoggedInChecked: Boolean,
     )
 
     suspend fun getKeepMeLoggedInFlag(): Boolean
-
     suspend fun requestPermission(
         restaurantName: String,
         ownerEmail: String,
-        description: String
+        description: String,
     ): Boolean
+
+    suspend fun getRestaurantId(): String
+    suspend fun saveRestaurantId(restaurantId: String)
+    suspend fun saveRestaurantLocation(addressInfo: AddressInfo)
+    suspend fun getNumberOfRestaurants(): Int
+
 }
 
 class LoginUserUseCase(
     private val remoteGateway: IIdentityRemoteGateway,
-    private val localGateWay: ILocalConfigurationGateway
+    private val localGateWay: ILocalConfigurationGateway,
 ) : ILoginUserUseCase {
 
     override suspend fun loginUser(
         userName: String,
         password: String,
-        isKeepMeLoggedInChecked: Boolean
+        isKeepMeLoggedInChecked: Boolean,
     ) {
         if (validateLoginFields(userName, password)) {
-            val userTokens = remoteGateway.loginUser(userName, password)
-            localGateWay.saveAccessToken(userTokens.accessToken)
-            localGateWay.saveRefreshToken(userTokens.refreshToken)
+            val session = remoteGateway.loginUser(userName, password)
+            localGateWay.saveAccessToken(session.accessToken)
+            localGateWay.saveRefreshToken(session.refreshToken)
             localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
         }
     }
@@ -49,26 +53,9 @@ class LoginUserUseCase(
     }
 
     override suspend fun requestPermission(
-        restaurantName: String, ownerEmail: String, description: String
+        restaurantName: String, ownerEmail: String, description: String,
     ): Boolean {
-        return remoteGateway.createRequestPermission(
-            restaurantName,
-            ownerEmail,
-            description
-        )
-    }
-
-    private fun decodedToken(input: String): Boolean {
-        val elements = input.split('.')
-        val payload = elements[1]
-        val decryptionTokenValue = payload.decodeBase64Bytes().decodeToString()
-        val result = parseToRestaurantPermission(decryptionTokenValue)
-
-        return validatePermissionRestaurant(result.permission)
-    }
-
-    private fun parseToRestaurantPermission(decryptionTokenValue: String): RestaurantPermission {
-        return Json.decodeFromString(decryptionTokenValue)
+        return remoteGateway.createRequestPermission(restaurantName, ownerEmail, description)
     }
 
     private fun validateLoginFields(username: String, password: String): Boolean {
@@ -81,8 +68,24 @@ class LoginUserUseCase(
 
     private fun validatePermissionRestaurant(permission: String?): Boolean {
         if (permission != HAS_PERMISSION) {
-            throw PermissionDenied()
+            throw PermissionDenied("You don't have permission to login")
         } else return true
+    }
+
+    override suspend fun getRestaurantId(): String {
+        return localGateWay.getRestaurantId()
+    }
+
+    override suspend fun saveRestaurantId(restaurantId: String) {
+        localGateWay.saveRestaurantId(restaurantId)
+    }
+
+    override suspend fun saveRestaurantLocation(addressInfo: AddressInfo) {
+        localGateWay.saveRestaurantLocation(addressInfo)
+    }
+
+    override suspend fun getNumberOfRestaurants(): Int {
+        return localGateWay.getNumberOfRestaurants()
     }
 
     companion object {

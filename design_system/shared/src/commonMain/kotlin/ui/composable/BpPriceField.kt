@@ -30,7 +30,7 @@ fun BpPriceField(
     text: String,
     onValueChange: (String) -> Unit,
     flag: Painter,
-    currency: String ,
+    currency: String,
     modifier: Modifier = Modifier,
     label: String = "",
     hint: String = "",
@@ -39,7 +39,7 @@ fun BpPriceField(
     errorMessage: String = "",
     correctValidation: Boolean = false,
     isError: Boolean = errorMessage.isNotEmpty(),
-
+    imageModifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
@@ -75,7 +75,9 @@ fun BpPriceField(
                 ) {
                     Image(
                         painter = flag,
-                        contentDescription = currency,)
+                        contentDescription = currency,
+                        modifier = imageModifier
+                    )
                     Text(
                         text = currency,
                         style = Theme.typography.body,
@@ -105,6 +107,7 @@ fun BpPriceField(
         }
     }
 }
+
 @Composable
 private fun ContainerColor(isError: Boolean, correctValidation: Boolean): Color {
     return if (isError) {

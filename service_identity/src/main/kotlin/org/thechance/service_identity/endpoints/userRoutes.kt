@@ -88,4 +88,9 @@ fun Route.userRoutes() {
         }
     }
 
+
+    delete("/collection") {
+        val result = manageUser.deleteCollections()
+        call.respond(HttpStatusCode.OK, result)
+    }
 }

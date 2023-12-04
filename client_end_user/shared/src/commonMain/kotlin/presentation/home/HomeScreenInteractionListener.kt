@@ -7,6 +7,7 @@ interface HomeScreenInteractionListener : BaseInteractionListener {
     fun onClickSeeAllCuisines()
     fun onClickChatSupport()
     fun onClickOrderTaxi()
+    fun onDismissSnackBar()
     fun onClickOrderFood()
     fun onClickOffersSlider(position: Int)
     fun onClickOrderAgain(orderId: String)

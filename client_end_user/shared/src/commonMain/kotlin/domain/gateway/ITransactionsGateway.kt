@@ -16,6 +16,7 @@ interface ITransactionsGateway {
     suspend fun addMealToCart(mealId: String, restaurantId: String, quantity: Int): Cart
 
     suspend fun orderNow(): Boolean
+    suspend fun clearCart(): Boolean
     suspend fun updateCart(cart: Cart)
     suspend fun getActiveTaxiTrips(): List<Trip>
     suspend fun getActiveDeliveryTrips(): List<DeliveryRide>

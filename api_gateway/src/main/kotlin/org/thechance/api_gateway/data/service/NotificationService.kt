@@ -44,12 +44,38 @@ class NotificationService(
         }
     }
 
+    suspend fun deleteNotificationCollection(): Boolean {
+        return client.tryToExecute<Boolean>(
+            APIs.NOTIFICATION_API,
+            attributes = attributes,
+            method = { delete("notifications/deleteCollection") }
+        )
+    }
+
     suspend fun saveToken(userId: String, token: String, languageCode: String): Boolean {
         return client.tryToExecute<Boolean>(
             APIs.NOTIFICATION_API,
             attributes = attributes,
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
             method = { post("tokens/save-token/$userId?token=$token") }
+        )
+    }
+
+    suspend fun deleteDeviceToken(userId: String, token: String, languageCode: String): Boolean {
+        return client.tryToExecute<Boolean>(
+            APIs.NOTIFICATION_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { delete("device/token/$userId?deviceToken=$token") }
+        )
+    }
+
+    suspend fun clearDevicesTokens(userId: String, languageCode: String): Boolean {
+        return client.tryToExecute<Boolean>(
+            APIs.NOTIFICATION_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { delete("device/allTokens/$userId") }
         )
     }
 
@@ -94,6 +120,5 @@ class NotificationService(
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
             method = { get("notifications/history-24hours/$userId") }
         )
-
     }
 }

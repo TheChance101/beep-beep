@@ -5,15 +5,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.darwin.Darwin
+import kotlinx.cinterop.ExperimentalForeignApi
+import platform.UIKit.UIApplication
+
+@Composable
+actual fun setInsetsController(isDark: Boolean) {
+}
 
 @Composable
 actual fun getNavigationBarPadding(): PaddingValues {
-    return PaddingValues(bottom = 10.dp)
+    return PaddingValues(bottom = 30.dp)
 }
 
-
+@OptIn(ExperimentalForeignApi::class)
 @Composable
-actual fun SetInsetsController(isDark: Boolean) {
+actual fun getStatusBarPadding(): PaddingValues {
+    val statusBarSize = UIApplication.sharedApplication.statusBarFrame.size
+    return PaddingValues(top = statusBarSize.dp)
 }
 
 

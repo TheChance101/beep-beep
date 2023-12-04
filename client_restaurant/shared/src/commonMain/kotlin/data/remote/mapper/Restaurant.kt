@@ -19,7 +19,9 @@ fun RestaurantDto.toEntity(): Restaurant {
         openingTime = openingTime ?: "",
         closingTime = closingTime ?: "",
         location = location.toEntity(),
-        address = address ?: ""
+        address = address ?: "",
+        imageUrl = imageUrl ?: "",
+        image = byteArrayOf()
     )
 }
 
@@ -32,7 +34,6 @@ fun Restaurant.toDto(): UpdateRestaurantDto {
         rate = rate,
         phone = phone,
         openingTime = openingTime,
-        closingTime = closingTime,
-        address = address
+        closingTime = closingTime
     )
 }

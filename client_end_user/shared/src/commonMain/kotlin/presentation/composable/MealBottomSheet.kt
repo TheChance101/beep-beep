@@ -1,6 +1,5 @@
 package presentation.composable
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,9 +17,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpButton
+import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.composable.modifier.noRippleEffect
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -28,7 +27,7 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.resturantDetails.MealUIState
 import resources.Resources
 
-@OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MealBottomSheet(
     meal: MealUIState,
@@ -40,13 +39,11 @@ fun MealBottomSheet(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        Box(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Image(
-                painter = painterResource(Resources.images.placeholder),
-                contentScale = ContentScale.Crop,
-                contentDescription = "${meal.name} image",
+        Box(modifier = Modifier.fillMaxWidth()) {
+            BpImageLoader(
+                imageUrl = meal.image,
+                contentDescription = meal.name,
+                errorPlaceholderImageUrl = Resources.images.mealErrorPlaceholder,
                 modifier = Modifier.height(240.dp).padding(bottom = 24.dp)
                     .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
             )
@@ -98,9 +95,10 @@ fun MealBottomSheet(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 24.dp),
             title = Resources.strings.addToCart,
             onClick = onAddToCart,
-            isLoading = isLoading
+            isLoading = isLoading,
         )
     }
+
 }
 
 @OptIn(ExperimentalResourceApi::class)

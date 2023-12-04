@@ -7,9 +7,11 @@ data class StringResources(
     val pickWhichRestaurant: String = "Pick which restaurant you want to manage right now.",
     val open: String = "Open",
     val closed: String = "Closed",
+    val noInternetConnection: String = "No internet connection",
     val add: String = "Add",
     val name: String = "Name",
     val description: String = "Description",
+    val whyBeepBeep: String = "Why Beep Beep?",
     val price: String = "Price",
     val cuisines: String = "Cuisines",
     val chooseCuisine: String = "Choose cuisine",
@@ -62,6 +64,9 @@ data class StringResources(
     val closingTimeErrorMessage: String = "Closing time should be between 00:00 to 23:59",
     val userNameIsRequired: String = "Username is required.",
     val passwordIsRequired: String = "Password is required",
+    val yourRequestHasBeenSentSuccessfully: String = "Your request has been sent successfully",
+    val somethingWentWrong: String = "Something went wrong",
     val noOrderYet: String = "No Orders Available at the Moment",
-    val noOrderHistory: String = "No Orders History at the Moment"
+    val noOrderHistory: String = "No Orders History at the Moment",
+    val noMeals: String = "No Meals available at the Moment"
 )

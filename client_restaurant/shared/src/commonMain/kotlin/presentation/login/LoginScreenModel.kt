@@ -1,19 +1,47 @@
 package presentation.login
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.Restaurant
 import domain.usecase.ILoginUserUseCase
+import domain.usecase.IManageRestaurantInformationUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
-class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
+class LoginScreenModel(
+    private val loginUserUseCase: ILoginUserUseCase,
+    private val manageRestaurant: IManageRestaurantInformationUseCase,
+) :
     BaseScreenModel<LoginScreenUIState, LoginScreenUIEffect>(LoginScreenUIState()),
     LoginScreenInteractionListener {
 
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
+
+
+    private fun getRestaurants() {
+        updateState { it.copy(isLoading = true) }
+        tryToExecute(
+            { manageRestaurant.getOwnerRestaurants() },
+            ::onGetRestaurantsSuccess,
+            ::onError
+        )
+    }
+
+    private fun onGetRestaurantsSuccess(restaurants: List<Restaurant>) {
+        val hasMultipleRestaurants = restaurants.size > 1
+        if (hasMultipleRestaurants) {
+            sendNewEffect(LoginScreenUIEffect.OnNavigateToRestaurantScreenSelection)
+        } else {
+            sendNewEffect(LoginScreenUIEffect.OnNavigateToMainScreen)
+        }
+    }
+
+    private fun onError(errorState: ErrorState) {
+        updateState { it.copy(isLoading = false, error = errorState) }
+    }
 
     override fun onUserNameChanged(userName: String) {
         updateState { it.copy(userName = userName, isUsernameError = false) }
@@ -30,9 +58,9 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
     override fun onClickLogin(
         userName: String,
         password: String,
-        isKeepMeLoggedInChecked: Boolean
+        isKeepMeLoggedInChecked: Boolean,
     ) {
-        updateState { it.copy(isLoading = true, isEnable = false) }
+        updateState { it.copy(isLoading = true, noInternetConnection = false, isEnable = false) }
         tryToExecute(
             { loginUserUseCase.loginUser(userName, password, isKeepMeLoggedInChecked) },
             { onLoginSuccess() },
@@ -45,13 +73,14 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
             it.copy(
                 isLoading = false,
                 isSuccess = true,
+                noInternetConnection = false,
                 isCredentialsError = false,
                 usernameErrorMsg = "",
                 passwordErrorMsg = ""
             )
         }
 
-        sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
+        getRestaurants()
     }
 
     private fun onLoginFailed(error: ErrorState) {
@@ -61,7 +90,9 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
 
     private fun handleErrorState(error: ErrorState) {
         when (error) {
-            ErrorState.NoInternet -> {}
+            ErrorState.NoInternet -> {
+                updateState { it.copy(noInternetConnection = true) }
+            }
             ErrorState.RequestFailed -> {}
             ErrorState.UnAuthorized -> {}
             ErrorState.HasNoPermission -> {
@@ -119,6 +150,10 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
 
     }
 
+    override fun onDismissSnackBar() {
+        updateState { it.copy(showSnackbar = false) }
+    }
+
     private fun showPermissionSheetWithDelay() {
         coroutineScope.launch {
             state.value.sheetState.dismiss()
@@ -131,7 +166,7 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
     override fun onSubmitClicked(
         restaurantName: String,
         ownerEmail: String,
-        description: String
+        description: String,
     ) {
         tryToExecute(
             {
@@ -151,16 +186,12 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
         coroutineScope.launch {
             delayAndChangePermissionSheetState(false)
         }
-        // todo send effect for that to show toast or something
+        updateState { it.copy(showSnackbar = true,errorPermission = null) }
     }
 
 
     private fun onAskForPermissionFailed(error: ErrorState) {
-        state.value.sheetState.dismiss()
-        coroutineScope.launch {
-            delayAndChangePermissionSheetState(false)
-        }
-        // todo send effect for that to show toast or something
+        updateState { it.copy(showSnackbar = true,errorPermission = error) }
     }
 
     override fun onCancelClicked() {

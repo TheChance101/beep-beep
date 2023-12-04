@@ -78,4 +78,9 @@ fun Route.taxiRoutes() {
             call.respond(HttpStatusCode.OK, result)
         }
     }
+
+    delete ("/taxi-trips"){
+        val result = manageTaxiUseCase.deleteAllCollections()
+        call.respond(HttpStatusCode.OK, result)
+    }
 }

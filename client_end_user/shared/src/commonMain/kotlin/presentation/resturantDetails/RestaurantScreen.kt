@@ -1,7 +1,7 @@
 package presentation.resturantDetails
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,18 +19,25 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.theme.Theme
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
 import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
+import presentation.cart.CartScreen
+import presentation.composable.BackButton
 import presentation.composable.BottomSheet
 import presentation.composable.BpPriceLevel
 import presentation.composable.ItemSection
@@ -38,12 +45,11 @@ import presentation.composable.MealBottomSheet
 import presentation.composable.RatingBar
 import presentation.composable.modifier.noRippleEffect
 import presentation.resturantDetails.Composable.Chip
-import presentation.composable.BackButton
 import presentation.resturantDetails.Composable.NeedToLoginSheet
-import presentation.resturantDetails.Composable.ToastMessage
+import com.beepbeep.designSystem.ui.composable.BpToastMessage
+import presentation.resturantDetails.Composable.WarningCartIsFullDialog
 import resources.Resources
 import util.getNavigationBarPadding
-
 
 data class RestaurantScreen(val restaurantId: String) :
     BaseScreen<RestaurantScreenModel, RestaurantUIState, RestaurantUIEffect, RestaurantInteractionListener>() {
@@ -53,6 +59,7 @@ data class RestaurantScreen(val restaurantId: String) :
             is RestaurantUIEffect.onBack -> navigator.pop()
             is RestaurantUIEffect.onGoToDetails -> {}
             is RestaurantUIEffect.onGoToLogin -> navigator.push(LoginScreen())
+            is RestaurantUIEffect.onGoToCart -> navigator.push(CartScreen())
         }
     }
 
@@ -68,6 +75,22 @@ data class RestaurantScreen(val restaurantId: String) :
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.TopCenter
         ) {
+
+            val favoriteColor by animateColorAsState(
+                if (state.isFavourite) {
+                    Theme.colors.primary
+                } else {
+                    Theme.colors.contentTertiary
+                }
+            )
+            WarningCartIsFullDialog(
+                modifier = Modifier.padding(getNavigationBarPadding()),
+                text = Resources.strings.addFromDifferentCartMessage,
+                onClickClearCart = listener::onClearCart,
+                onClickGoToCart = listener::onGoToCart,
+                onDismiss = listener::onDismissSheet,
+                isVisitable = state.showWarningCartIsFull
+            )
             BottomSheet(
                 sheetContent = {
                     if (state.showMealSheet)
@@ -94,21 +117,29 @@ data class RestaurantScreen(val restaurantId: String) :
                 onBackGroundClicked = listener::onDismissSheet,
                 sheetState = state.sheetState,
             ) {
-                Image(
-                    painter = painterResource(Resources.images.placeholder),
-                    contentDescription = "background",
+
+                BpImageLoader(
+                    modifier = Modifier.fillMaxWidth().fillMaxHeight(0.30f)
+                        .align(Alignment.TopCenter),
+                    contentScale = ContentScale.Crop,
+                    imageUrl = state.restaurantInfo.image,
+                    errorPlaceholderImageUrl = Resources.images.restaurantErrorPlaceholder,
+                    contentDescription = state.restaurantInfo.name
                 )
+
                 BackButton(
                     onClick = { listener.onBack() },
-                    modifier = Modifier.align(Alignment.TopCenter),
+                    modifier = Modifier.align(Alignment.TopCenter).padding(top = 16.dp),
                     icon = Resources.images.iconBack
                 )
                 Column(
-                    modifier = Modifier.fillMaxWidth().fillMaxHeight(.75f)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(.75f)
                         .verticalScroll(rememberScrollState())
                         .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
                         .background(Theme.colors.surface).align(Alignment.BottomCenter)
-
+                        .padding(getNavigationBarPadding())
                 ) {
                     Row(
                         modifier = Modifier
@@ -123,8 +154,9 @@ data class RestaurantScreen(val restaurantId: String) :
                             color = Theme.colors.contentPrimary
                         )
 
-                        Image(
+                        Icon(
                             painter = painterResource(if (state.isFavourite) Resources.images.heartFilled else Resources.images.heart),
+                            tint = favoriteColor,
                             contentDescription = null,
                             modifier = Modifier.size(24.dp)
                                 .noRippleEffect {
@@ -134,6 +166,7 @@ data class RestaurantScreen(val restaurantId: String) :
                                         listener.onShowLoginSheet()
                                     }
                                 }
+
                         )
                     }
                     Row(
@@ -222,15 +255,35 @@ data class RestaurantScreen(val restaurantId: String) :
                 }
             }
 
-            ToastMessage(
-                modifier = Modifier.align(Alignment.BottomCenter)
-                    .padding(getNavigationBarPadding()),
+            LaunchedEffect(state.showToast) {
+                if (state.showToast) {
+                    delay(2000)
+                    listener.onDismissSnackBar()
+                }
+            }
+            LaunchedEffect(state.showToastClearCart) {
+                if (state.showToastClearCart) {
+                    delay(2000)
+                    listener.onDismissSnackBar()
+                }
+            }
+
+            BpToastMessage(
+                modifier = Modifier.align(Alignment.BottomCenter).padding(getNavigationBarPadding()),
                 state = state.showToast,
-                message = if (state.errorAddToCart == null) {
-                    Resources.strings.mealAddedToYourCart
-                } else {
-                    Resources.strings.mealFailedToAddInCart
-                },
+                message = if (state.errorAddToCart == null) Resources.strings.mealAddedToYourCart else Resources.strings.mealFailedToAddInCart,
+                isError = state.errorAddToCart != null,
+                successIcon = painterResource(Resources.images.unread),
+                warningIcon = painterResource(Resources.images.warningIcon)
+            )
+
+            BpToastMessage(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                state = state.showToastClearCart,
+                message = Resources.strings.youCanAddMeal ,
+                isError = false,
+                successIcon = painterResource(Resources.images.unread),
+                warningIcon = painterResource(Resources.images.warningIcon)
             )
         }
     }

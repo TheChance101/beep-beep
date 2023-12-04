@@ -2,6 +2,7 @@ package presentation.mealManagement.model
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Cuisine
+import domain.entity.MealModification
 import domain.usecase.IManageCuisineUseCase
 import domain.usecase.IManageMealUseCase
 import domain.usecase.IValidateManageMealUseCase
@@ -15,7 +16,7 @@ import presentation.mealManagement.toMealUpdate
 import presentation.mealManagement.toUIState
 
 class IMealCreationScreenModel(
-private val restaurantId : String
+    private val restaurantId: String
 ) : IMealBehavior() {
 
     override val viewModelScope: CoroutineScope
@@ -29,7 +30,7 @@ private val restaurantId : String
         getCuisines()
     }
 
-    override suspend fun addMeal(): Boolean {
+    override suspend fun addMeal(): MealModification {
         val state = state.value.meal.toMealAddition(restaurantId)
         val validationResult = restaurantMealValidation.isMealInformationValid(
             name = state.name,
@@ -39,11 +40,12 @@ private val restaurantId : String
         )
         if (validationResult) {
             return manageMeal.addMeal(state)
+        } else {
+            throw Exception("Invalid Meal")
         }
-        return false
     }
 
-    override suspend fun updateMeal(): Boolean {
+    override suspend fun updateMeal(): MealModification {
         return manageMeal.updateMeal(state.value.meal.toMealUpdate(mealId = ""))
     }
 

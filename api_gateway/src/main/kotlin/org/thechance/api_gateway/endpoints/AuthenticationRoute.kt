@@ -8,6 +8,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
+import kotlinx.coroutines.async
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
 import org.thechance.api_gateway.data.model.authenticate.TokenConfiguration
@@ -44,13 +45,15 @@ fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
 
         val language = extractLocalizationHeader()
         val appId = extractApplicationIdHeader()
-        val token = identityService.loginUser(userName, password, tokenConfiguration, language, appId)
-        if (deviceToken.isNotEmpty()){
+        val token = async { identityService.loginUser(userName, password, tokenConfiguration, language, appId) }.await()
+
+        respondWithResult(HttpStatusCode.OK, token)
+
+        if (deviceToken.isNotEmpty()) {
             val jwt: DecodedJWT = JWT.decode(token.accessToken)
             val userId = jwt.getClaim(Claim.USER_ID).asString()
             notificationService.saveToken(userId, deviceToken, language)
         }
-        respondWithResult(HttpStatusCode.OK, token)
     }
 
     authenticateWithRole(Role.END_USER) {

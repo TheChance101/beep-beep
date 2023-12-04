@@ -90,6 +90,11 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
         orderNow()
     }
 
+    override fun onDismissSnackBar() {
+        updateState { it.copy(showToast = false) }
+
+    }
+
     override fun onClickBack() {
         sendNewEffect(CartUiEffect.NavigateUp)
     }
@@ -100,5 +105,16 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
 
     private fun onOrderError(error: ErrorState) {
         updateState { it.copy(isOrderNowLoading = false, orderError = error) }
+        when (error) {
+            is ErrorState.RestaurantClosed -> {
+                println("RestaurantClosed")
+                updateState { it.copy(showToast = true) }
+            }
+            is ErrorState.NoInternet -> {
+
+            }
+
+            else -> {}
+        }
     }
 }

@@ -9,12 +9,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.BpButton
+import com.beepbeep.designSystem.ui.composable.BpRoundedImage
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
+import com.seiko.imageloader.rememberAsyncImagePainter
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
@@ -23,9 +26,14 @@ import presentation.composable.BpAppBar
 import presentation.composable.BpCard
 import presentation.composable.BpRating
 import presentation.composable.BpTitleWithContentSection
+import presentation.composable.modifier.noRippleEffect
 import presentation.login.LoginScreen
 import resources.Resources
+import util.ImagePicker
+import util.ImagePickerFactory
 import util.getNavigationBarPadding
+import util.getPlatformContext
+import util.rememberBitmapFromBytes
 
 class RestaurantInformationScreen(private val id: String) : BaseScreen<
         RestaurantInformationScreenModel,
@@ -36,19 +44,19 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
     @Composable
     override fun Content() {
         initScreen(getScreenModel { parametersOf(id) })
-
     }
 
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun onRender(
         state: RestaurantInformationUiState,
-        listener: RestaurantInformationInteractionListener
+        listener: RestaurantInformationInteractionListener,
     ) {
 
         val scrollState = rememberScrollState()
         Box(
-            modifier = Modifier.fillMaxSize().background(Theme.colors.background),
+            modifier = Modifier.fillMaxSize().background(Theme.colors.background)
+                .padding(bottom = getNavigationBarPadding().calculateBottomPadding()),
             contentAlignment = Alignment.Center
         ) {
             Column {
@@ -67,10 +75,14 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
                         .background(Theme.colors.background)
                 ) {
                     RestaurantInfoCard(
-                        state.restaurant.ownerUsername,
-                        state.restaurant.address,
-                        state.restaurant.rating,
-                        state.restaurant.priceLevel
+                        onImagePicked = listener::onImagePicked,
+                        ownerUsername = state.restaurant.ownerUsername,
+                        address = state.restaurant.address,
+                        rating = state.restaurant.rating,
+                        priceLevel = state.restaurant.priceLevel,
+                        image = state.restaurant.image,
+                        imageUrl = state.restaurant.imageUrl,
+                        imagePicker = ImagePickerFactory(context = getPlatformContext()).createPicker()
                     )
 
                     RestaurantUpdateInformationCard(state, listener)
@@ -109,11 +121,16 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     private fun RestaurantInfoCard(
+        onImagePicked: (ByteArray) -> Unit,
         ownerUsername: String,
         address: String,
         rating: Double,
-        priceLevel: String
+        priceLevel: String,
+        image: ByteArray?,
+        imageUrl: String,
+        imagePicker: ImagePicker,
     ) {
+        imagePicker.registerPicker { onImagePicked(it) }
         BpCard(
             modifier = Modifier.fillMaxWidth().padding(
                 start = 16.dp,
@@ -121,7 +138,27 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
                 top = 16.dp
             )
         ) {
-
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                if (imageUrl.isEmpty() || image != null) {
+                    BpRoundedImage(
+                        modifier = Modifier.sizeIn(minHeight = 120.dp).fillMaxWidth(),
+                        bitmap = rememberBitmapFromBytes(image),
+                        placeholder = painterResource(Resources.images.galleryAdd),
+                        onClick = { imagePicker.pickImage() }
+                    )
+                } else {
+                    BpRoundedImage(
+                        modifier = Modifier.sizeIn(minHeight = 120.dp).fillMaxWidth(),
+                        painter = rememberAsyncImagePainter(url = imageUrl),
+                        editPainter = painterResource(Resources.images.iconEdit),
+                        onClick = { imagePicker.pickImage() }
+                    )
+                }
+            }
             BpTitleWithContentSection(title = Resources.strings.ownerUsername) {
                 Text(
                     ownerUsername,
@@ -178,7 +215,7 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
     @Composable
     private fun RestaurantUpdateInformationCard(
         state: RestaurantInformationUiState,
-        listener: RestaurantInformationInteractionListener
+        listener: RestaurantInformationInteractionListener,
     ) {
         BpCard(
             modifier = Modifier.fillMaxWidth().padding(16.dp)
@@ -261,14 +298,16 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     private fun LogoutCard(
-        onClickLogout: () -> Unit
+        onClickLogout: () -> Unit,
     ) {
         BpCard(modifier = Modifier.fillMaxWidth().padding(
             start = 16.dp,
             end = 16.dp,
             bottom = 16.dp
-        ).clickable { onClickLogout() }) {
-            Row {
+        ).noRippleEffect { onClickLogout() }) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 Icon(
                     painter = painterResource(Resources.images.logout), modifier = Modifier
                         .padding(
@@ -283,7 +322,6 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
                 Text(
                     Resources.strings.logout,
                     style = Theme.typography.title.copy(color = Theme.colors.primary),
-                    modifier = Modifier.padding(vertical = 16.dp)
                 )
             }
         }

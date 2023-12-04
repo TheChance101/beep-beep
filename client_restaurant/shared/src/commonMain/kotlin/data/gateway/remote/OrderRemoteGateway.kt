@@ -1,78 +1,101 @@
 package data.gateway.remote
 
+import data.remote.mapper.toDto
 import data.remote.mapper.toEntity
 import data.remote.mapper.toOrderEntity
 import data.remote.model.BaseResponse
 import data.remote.model.OrderDto
+import data.remote.model.PaginationResponse
+import data.remote.model.TripDto
+import data.remote.model.AddressInfoDto
+import domain.entity.AddressInfo
 import domain.entity.Order
+import domain.entity.PaginationItems
+import domain.entity.Trip
 import domain.gateway.remote.IOrderRemoteGateway
 import io.ktor.client.HttpClient
+import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
 import io.ktor.client.request.post
-import io.ktor.client.request.setBody
+import io.ktor.client.request.put
+import io.ktor.http.HttpMethod
+import io.ktor.http.Parameters
+import io.ktor.util.InternalAPI
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.serialization.json.Json
+import presentation.base.UnknownErrorException
 
+class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway, BaseRemoteGateway(client) {
 
-class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway,
-    BaseRemoteGateway(client = client) {
-
-    override suspend fun getCurrentOrders(restaurantId: String): Flow<Order>? {
-        return null
-        /*return tryToExecute<BaseResponse<List<OrderDto>>> {
-
-            try {
-                ws("/order/restaurant/$restaurantId") {
-                    //connect
-                    //getCurrentOrders + get active orders
-                }
-            } catch (e: Exception) {
-                //disconnect
-                //get active orders
-            }
-
-            get("/orders/$restaurantId")
-            //todo add pagination
-        }.value.toOrderEntity()*/
+    override suspend fun getCurrentOrders(restaurantId: String): Flow<Order> {
+        return client.tryToExecuteWebSocket<OrderDto>("/orders/$restaurantId").map { it.toEntity() }
     }
 
     override suspend fun getActiveOrders(restaurantId: String): List<Order> {
-        return tryToExecute<BaseResponse<List<OrderDto>>> {
-            get("/order/$restaurantId/orders")
-        }.value?.toOrderEntity() ?: emptyList()
+        val result = tryToExecute<BaseResponse<List<OrderDto>>> {
+            get("/orders/active/$restaurantId")
+        }.value?.toOrderEntity()?: throw UnknownErrorException("")
+        println("getActiveOrdersFrom Gateway: ${result}")
+        return result
+    }
+    @OptIn(InternalAPI::class)
+    override suspend fun createOrderTrip(trip: Trip): Trip {
+        val tripDto = trip.toDto()
+        return tryToExecute<BaseResponse<TripDto>> {
+            post("/trip/delivery"){ body = Json.encodeToString(TripDto.serializer(), tripDto) }
+        }.value?.toEntity()?: throw UnknownErrorException("")
     }
 
-    override suspend fun updateOrderState(orderId: String, orderState: Int): Order {
+    override suspend fun updateOrderState(orderId: String): Order {
+        val result = tryToExecute<BaseResponse<OrderDto>>() {
+            put("/order/$orderId")
+        }.value?.toEntity() ?: throw Exception("Error!")
+        println("updateOrderStateFrom Gateway: ${result}")
+        return result
+    }
+    override suspend fun getAddressInfo(userId: String): AddressInfo {
+        val result = tryToExecute<BaseResponse<AddressInfoDto>> {
+            put("/user/address/$userId")
+        }.value?.toEntity() ?: throw Exception("Error!")
+        println("getUserLocation Gateway: ${result}")
+        return result
+    }
+    override suspend fun cancelOrder(orderId: String): Order {
         return tryToExecute<BaseResponse<OrderDto>>() {
-            post("/order/$orderId/status"){ setBody(orderState.toString()) }//todo check if correct
+            put("order/cancel/$orderId")
         }.value?.toEntity() ?: throw Exception("Error!")
     }
 
     override suspend fun getOrdersHistory(
         restaurantId: String,
         page: Int,
-        limit: Int
-    ): List<Order> {
-        return tryToExecute<BaseResponse<List<OrderDto>>> {
-            get("/order/history/$restaurantId?page=$page&limit=$limit")
-        }.value?.toOrderEntity() ?: emptyList()
+        limit: Int,
+    ): PaginationItems<Order> {
+        val result = tryToExecute<BaseResponse<PaginationResponse<OrderDto>>> {
+            get("/orders/restaurant/$restaurantId/history?page=$page&limit=$limit")
+        }.value
+        return paginateData(
+            result = result?.items?.map { it.toEntity() } ?: throw UnknownErrorException(""),
+            page = result.page,
+            total = result.total)
     }
 
-    //for charts
     override suspend fun getOrdersRevenueByDaysBefore(
-        restaurantId: String,
-        daysBack: Int
+        restaurantId: String, daysBack: Int,
     ): List<Map<String, Double>> {
-        return tryToExecute<BaseResponse<List<Map<String, Double>>>> {
-            get("/orders/revenue-by-days-back?restaurantId=$restaurantId&&daysBack=$daysBack")
+        val result = tryToExecute<BaseResponse<List<Map<String, Double>>>> {
+            get("/orders/$restaurantId/revenue-by-days-back")
         }.value ?: emptyList()
+        return result
     }
 
     override suspend fun getOrdersCountByDaysBefore(
-        restaurantId: String,
-        daysBack: Int
+        restaurantId: String, daysBack: Int,
     ): List<Map<String, Int>> {
-        return tryToExecute<BaseResponse<List<Map<String, Int>>>> {
-            get("/orders/count-by-days-back?restaurantId=$restaurantId&&daysBack=$daysBack")
+        val result = tryToExecute<BaseResponse<List<Map<String, Int>>>> {
+            get("/orders/$restaurantId/count-by-days-back")
         }.value ?: emptyList()
+        return result
     }
 }

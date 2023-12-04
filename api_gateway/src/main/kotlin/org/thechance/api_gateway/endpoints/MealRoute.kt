@@ -31,10 +31,7 @@ fun Route.mealRoute() {
                 val multipartDto = receiveMultipart<MealDto>(imageValidator)
                 val imageUrl =
                     multipartDto.image?.let { image ->
-                        imageService.uploadImage(
-                            image,
-                            multipartDto.data.name ?: "null"
-                        )
+                        imageService.uploadImage(image, multipartDto.data.name ?: "null")
                     }
                 val mealDto = multipartDto.data.copy(image = imageUrl)
                 val createdMeal = mealDto.let { meal -> restaurantService.addMeal(meal, language) }
@@ -44,10 +41,18 @@ fun Route.mealRoute() {
             put {
                 val language = extractLocalizationHeader()
                 val multipartDto = receiveMultipart<MealDto>(imageValidator)
-
+                val meal = restaurantService.getMeal(
+                    multipartDto.data.id.toString(), language
+                )
                 if (multipartDto.image != null) {
                     val imageUrl =
-                        multipartDto.image.let { image -> imageService.uploadImage(image, multipartDto.data.name!!) }
+                        multipartDto.image.let { image ->
+                            imageService.uploadImage(
+                                image,
+                                multipartDto.data.name ?: "null",
+                                meal.image
+                            )
+                        }
                     val mealDto = multipartDto.data.copy(image = imageUrl)
                     val updatedMeal = mealDto.let { restaurantService.updateMeal(mealDto, language) }
                     respondWithResult(HttpStatusCode.OK, updatedMeal)

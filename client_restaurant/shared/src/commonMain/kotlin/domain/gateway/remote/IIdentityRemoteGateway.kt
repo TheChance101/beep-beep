@@ -4,6 +4,7 @@ import domain.entity.Session
 
 
 interface IIdentityRemoteGateway {
+    suspend fun getDeviceToken(): String
 
     suspend fun loginUser(userName: String, password: String): Session
 

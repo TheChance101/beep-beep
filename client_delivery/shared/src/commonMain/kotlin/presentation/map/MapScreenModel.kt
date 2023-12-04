@@ -69,8 +69,11 @@ class MapScreenModel(
             updateState {
                 it.copy(
                     errorState = null,
-                    orderUiState = it.orderUiState.copy(restaurantLocation = location.toUiState())
+                    deliveryLocation = location.toUiState()
                 )
+            }
+            if (state.value.orderState == OrderState.RECEIVED) {
+                broadcastLocation(state.value.tripId, location.toUiState())
             }
         }
     }
@@ -119,8 +122,29 @@ class MapScreenModel(
     private fun onUpdateOrderSuccess(order: Order) {
         val currentStatus = when (order.tripStatus) {
             TripStatus.PENDING -> OrderState.LOADING
-            TripStatus.APPROVED -> OrderState.ACCEPTED
-            TripStatus.RECEIVED -> OrderState.RECEIVED
+            TripStatus.APPROVED -> {
+                viewModelScope.launch {
+                    val destinationInKM = manageOrderUseCase.calculateDistance(
+                        order.startPoint.latitude,
+                        order.startPoint.longitude,
+                        order.destination.latitude,
+                        order.destination.longitude,
+                    )
+                    val timeInMin = manageOrderUseCase.calculateTimeInMinutes(destinationInKM)
+                    updateState {
+                        it.copy(
+                            orderDistance = destinationInKM.toInt(),
+                            orderDuration = timeInMin.toInt()
+                        )
+                    }
+                }
+                OrderState.ACCEPTED
+            }
+
+            TripStatus.RECEIVED -> {
+                OrderState.RECEIVED
+            }
+
             TripStatus.FINISHED -> {
                 sendNewEffect(MapScreenUiEffect.CloseMap)
                 OrderState.LOADING
@@ -134,6 +158,19 @@ class MapScreenModel(
             )
         }
     }
+
+    private fun broadcastLocation(tripId: String, location: LocationUiState) {
+        tryToExecute(
+            function = { manageOrderUseCase.broadcastLocation(location.toEntity(), tripId) },
+            onSuccess = { onBroadCastLocationSuccess(location) },
+            onError = ::onError
+        )
+    }
+
+    private fun onBroadCastLocationSuccess(location: LocationUiState) {
+        println("New emitted Location is $location ")
+    }
+
 
     override fun onRejectClicked() {
         viewModelScope.launch {

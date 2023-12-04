@@ -19,6 +19,7 @@ interface IMangeCartUseCase {
 
     suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int): List<Order>
     suspend fun updateCart(userId: String, cart: Cart): Cart
+    suspend fun clearCart(userId: String): Boolean
 
 }
 
@@ -49,6 +50,17 @@ class MangeCartUseCase(
             restaurantOperationGateway.addOrder(order = cart.toOrder()) ?: throw MultiErrorException(listOf(NOT_FOUND))
         } else {
             throw MultiErrorException(listOf(RESTAURANT_CLOSED))
+        }
+    }
+    override suspend fun clearCart(userId: String): Boolean {
+        val cart = restaurantOperationGateway.getCart(userId)
+        return if (cart.meals.isNullOrEmpty()) {
+            throw MultiErrorException(listOf(CART_IS_EMPTY))
+        } else if (cart.restaurantId != null) {
+            restaurantOperationGateway.deleteCart(userId)
+            restaurantOperationGateway.isCartEmpty(userId)
+        } else {
+            throw MultiErrorException(listOf(NOT_FOUND))
         }
     }
 

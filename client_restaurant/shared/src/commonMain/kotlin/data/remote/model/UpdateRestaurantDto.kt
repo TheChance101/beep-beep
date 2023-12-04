@@ -21,6 +21,6 @@ data class UpdateRestaurantDto (
     val openingTime: String? = null,
     @SerialName("closingTime")
     val closingTime: String? = null,
-    @SerialName("address")
-    val address: String? = null
+    @SerialName("restaurantImage")
+    val imageUrl: String? = null,
 )

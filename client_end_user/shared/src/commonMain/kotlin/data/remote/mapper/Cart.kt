@@ -25,7 +25,6 @@ fun CartMealDto.toEntity(): MealCart {
     )
 }
 
-
 fun Cart.toDto(): CartDto {
     return CartDto(
         meals = meals?.map { it.toDto() },

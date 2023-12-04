@@ -8,6 +8,7 @@ import domain.gateway.local.ILocalRestaurantGateway
 import io.realm.kotlin.Realm
 import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
+import io.realm.kotlin.query.find
 
 class LocalRestaurantGateway(private val realm: Realm) : ILocalRestaurantGateway {
     override suspend fun addRestaurantToFavorites(vararg restaurant: Restaurant): Boolean {
@@ -35,14 +36,19 @@ class LocalRestaurantGateway(private val realm: Realm) : ILocalRestaurantGateway
         }
         return true
     }
-
-
     override suspend fun clearFavoriteRestaurants(): Boolean {
-        realm.write {
-            delete(realm.query<RestaurantCollection>().find())
-        }
-        return true
+        val restaurants = realm.query<RestaurantCollection>().find()
+            realm.write {
+                restaurants.forEach { restaurant ->
+                    val liveRestaurant = findLatest(restaurant)
+                    if (liveRestaurant != null) {
+                        delete(liveRestaurant)
+                    }
+                }
+            }
+        return restaurants.isEmpty()
     }
+
 
     private companion object {
         private const val ID = "id"

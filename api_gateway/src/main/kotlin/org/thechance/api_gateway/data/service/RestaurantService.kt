@@ -146,13 +146,19 @@ class RestaurantService(
         )
     }
 
-    suspend fun getMealsByRestaurantId(restaurantId: String, languageCode: String): List<MealDto> {
+    suspend fun getMealsByRestaurantId(
+        restaurantId: String, page: Int, limit: Int, languageCode: String
+    ): PaginationResponse<MealDto> {
         return client.tryToExecute(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
-            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
-            method = { get("restaurant/$restaurantId/meals") }
-        )
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
+        ) {
+            get("restaurant/$restaurantId/meals") {
+                parameter("page", page)
+                parameter("limit", limit)
+            }
+        }
     }
 
     suspend fun getCuisinesMealsInRestaurant(restaurantId: String, languageCode: String) =
@@ -278,6 +284,14 @@ class RestaurantService(
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, language) }
         ) {
             post("/cart/$userId/orderNow")
+        }
+    }
+    suspend fun clearCart(userId: String, language: String): Boolean {
+        return client.tryToExecute(
+            api = APIs.RESTAURANT_API, attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, language) }
+        ) {
+            put("/cart/$userId/clear")
         }
     }
     //endregion
@@ -479,4 +493,12 @@ class RestaurantService(
         setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
     ) { get("/categories/restaurants") }
     //endregion
+
+    suspend fun deleteAllCollections() {
+        client.tryToExecute<Boolean>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            method = { delete("/restaurant/allCollections") }
+        )
+    }
 }

@@ -12,6 +12,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAppBar
 import com.beepbeep.designSystem.ui.composable.BpPagingList
 import com.beepbeep.designSystem.ui.theme.Theme
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
@@ -23,7 +24,7 @@ import presentation.composable.MealCard
 import presentation.composable.ModalBottomSheetState
 import presentation.composable.modifier.noRippleEffect
 import presentation.resturantDetails.Composable.NeedToLoginSheet
-import presentation.resturantDetails.Composable.ToastMessage
+import com.beepbeep.designSystem.ui.composable.BpToastMessage
 import presentation.resturantDetails.MealUIState
 import resources.Resources
 import util.getNavigationBarPadding
@@ -43,6 +44,7 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
         }
     }
 
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun onRender(state: MealsUiState, listener: MealsInteractionListener) {
         val sheetState = remember { ModalBottomSheetState() }
@@ -81,14 +83,21 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
                 }
             )
 
-            ToastMessage(
-                modifier = Modifier.align(Alignment.BottomCenter),
+            LaunchedEffect(state.showToast) {
+                if (state.showToast) {
+                    delay(2000)
+                    listener.onDismissSnackBar()
+                }
+            }
+            BpToastMessage(
+                modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth()
+                    .padding(bottom = getNavigationBarPadding().calculateBottomPadding()),
                 state = state.showToast,
-                message = if (state.errorAddToCart == null) {
-                    Resources.strings.mealAddedToYourCart
-                } else {
-                    Resources.strings.mealFailedToAddInCart
-                },
+                message = if (state.errorAddToCart == null)
+                    Resources.strings.mealAddedToYourCart else Resources.strings.mealFailedToAddInCart,
+                isError = state.errorAddToCart != null,
+                successIcon = painterResource(Resources.images.unread),
+                warningIcon = painterResource(Resources.images.warningIcon)
             )
         }
 

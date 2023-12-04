@@ -103,13 +103,15 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
         ).toList().first().cuisines.filterNot { it.isDeleted }.toEntity()
     }
 
-    override suspend fun getMealsByRestaurantId(restaurantId: String): List<Meal> {
+    override suspend fun getMealsByRestaurantId(
+        restaurantId: String,
+        page: Int,
+        limit: Int
+    ): List<Meal> {
         return container.mealCollection.find(
-            and(
-                MealCollection::restaurantId eq ObjectId(restaurantId),
-                MealCollection::isDeleted eq false
-            )
-        ).toList().toMealEntity()
+            MealCollection::restaurantId eq ObjectId(restaurantId),
+            MealCollection::isDeleted eq false
+        ).paginate(page, limit).toList().toMealEntity()
 
     }
 
@@ -363,6 +365,18 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
                 MealCollection::isDeleted eq false
             )
         )
+    }
+    //endregion
+
+    //collections region
+    override suspend fun deleteAll() {
+        container.restaurantCollection.deleteMany()
+        container.mealCollection.deleteMany()
+        container.categoryCollection.deleteMany()
+        container.cuisineCollection.deleteMany()
+        container.restaurantPermissionRequestCollection.deleteMany()
+        container.cartCollection.deleteMany()
+        container.orderCollection.deleteMany()
     }
     //endregion
 }

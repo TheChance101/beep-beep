@@ -1,8 +1,6 @@
 package domain.gateway.local
 
-/**
- * Created by Aziza Helmy on 8/24/2023.
- */
+import domain.entity.AddressInfo
 
 interface ILocalConfigurationGateway {
 
@@ -13,5 +11,10 @@ interface ILocalConfigurationGateway {
     suspend fun saveKeepMeLoggedInFlag(isChecked: Boolean)
     suspend fun getKeepMeLoggedInFlag(): Boolean
     suspend fun clearTokens()
-
+    suspend fun saveRestaurantId(restaurantId: String)
+    suspend fun saveRestaurantLocation(addressInfo: AddressInfo)
+    suspend fun getRestaurantLocation(): AddressInfo
+    suspend fun getRestaurantId(): String
+    suspend fun saveNumberOfRestaurants(numberOfRestaurants: Int)
+    suspend fun getNumberOfRestaurants(): Int
 }

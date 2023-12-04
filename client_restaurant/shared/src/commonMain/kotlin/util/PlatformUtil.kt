@@ -8,7 +8,7 @@ import io.ktor.client.engine.HttpClientEngine
 expect fun getNavigationBarPadding(): PaddingValues
 
 @Composable
-expect fun SetInsetsController(isDark: Boolean)
+expect fun setInsetsController(isDark: Boolean)
 @Composable
 expect fun getStatusBarPadding(): PaddingValues
 
