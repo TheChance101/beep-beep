@@ -51,6 +51,17 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
     override suspend fun clearTokens() {
         realm.write { delete(query<UserConfigurationCollection>()) }
     }
+    override suspend fun saveTaxiId(taxiId: String) {
+        realm.write {
+            query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+                .find()?.taxiId = taxiId
+        }
+    }
+
+    override suspend fun getTaxiId(): String {
+        return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+            .find()?.taxiId ?: ""
+    }
 
     override suspend fun saveKeepMeLoggedInFlag(isChecked: Boolean) {
         realm.write {
