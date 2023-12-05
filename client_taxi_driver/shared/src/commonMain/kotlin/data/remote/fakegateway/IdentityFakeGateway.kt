@@ -4,6 +4,8 @@ import domain.InvalidPasswordException
 import domain.InvalidUserNameException
 import domain.PermissionDenied
 import domain.entity.Session
+import domain.entity.Taxi
+import domain.entity.TaxiRequestPermission
 import domain.gateway.remote.IIdentityRemoteGateway
 
 class IdentityFakeGateway : IIdentityRemoteGateway {
@@ -27,11 +29,13 @@ class IdentityFakeGateway : IIdentityRemoteGateway {
         return Pair("wertqyhgt", "qazswxza")
     }
 
-    override suspend fun createRequestPermission(
-        driverFullName: String,
-        driverEmail: String,
-        description: String
-    ) {
+    override suspend fun createRequestPermission(taxiRequestPermission: TaxiRequestPermission): Boolean {
+        TODO("Not yet implemented")
     }
+
+    override suspend fun getAllVehicles(): List<Taxi> {
+        TODO("Not yet implemented")
+    }
+
 
 }
