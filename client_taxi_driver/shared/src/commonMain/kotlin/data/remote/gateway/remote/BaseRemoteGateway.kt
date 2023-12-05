@@ -1,10 +1,12 @@
-package data.remote.gateway
+package data.remote.gateway.remote
 
 import data.remote.model.BaseResponse
+import domain.AlreadyExistException
 import domain.InvalidPasswordException
 import domain.InvalidUserNameException
 import domain.NoInternetException
 import domain.SocketException
+import domain.UnAuthorizedException
 import domain.UnknownErrorException
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -24,17 +26,18 @@ import kotlinx.coroutines.flow.flowOn
 abstract class BaseRemoteGateway(val client: HttpClient) {
 
     protected suspend inline fun <reified T> tryToExecute(
-        method: HttpClient.() -> HttpResponse
+        method: HttpClient.() -> HttpResponse,
     ): T {
         try {
             return client.method().body()
         } catch (e: ClientRequestException) {
-            val errorMessages = e.response.body<BaseResponse<*>>().status?.errorMessages
+            val errorMessages = e.response.body<BaseResponse<String>>().status?.errorMessages
             errorMessages?.let { throwMatchingException(it) }
             throw UnknownErrorException(e.message)
         } catch (e: UnresolvedAddressException) {
             throw NoInternetException()
         } catch (e: Exception) {
+            println("exception: $e")
             throw UnknownErrorException(e.message.toString())
         }
     }
@@ -71,10 +74,14 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
 
             errorMessages.containsErrors(USER_NOT_EXIST) ->
                 throw InvalidUserNameException(errorMessages.getOrEmpty(USER_NOT_EXIST))
+            errorMessages.containsErrors(ALREADY_EXIST) ->
+                throw AlreadyExistException(errorMessages.getOrEmpty(ALREADY_EXIST))
 
-            else -> throw UnknownErrorException("UnKnow Error")
+            errorMessages.containsErrors(INVALID_PERMISSION) ->
+                throw UnAuthorizedException(errorMessages.getOrEmpty(INVALID_PERMISSION))
         }
     }
+
 
     private fun Map<String, String>.containsErrors(vararg errorCodes: String): Boolean =
         keys.containsAll(errorCodes.toList())
@@ -84,5 +91,7 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
     companion object {
         const val WRONG_PASSWORD = "1013"
         const val USER_NOT_EXIST = "1043"
+        const val INVALID_PERMISSION = "1014"
+        const val ALREADY_EXIST = "3010"
     }
 }

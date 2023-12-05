@@ -6,10 +6,10 @@ import domain.entity.Trip
 fun Trip.toUiState() = TripInfoUiState(
     id = this.id,
     passengerName = passengerName,
-    dropOffLocation = this.dropOffLocation.toUiState(),
-    pickUpLocation = this.pickUpLocation.toUiState(),
-    dropOffAddress = this.dropOffAddress,
-    pickUpAddress = this.pickUpAddress
+    dropOffLocation = dropOffLocation.toUiState(),
+    pickUpLocation = pickUpLocation.toUiState(),
+    dropOffAddress = dropOffAddress,
+    pickUpAddress = pickUpAddress
 )
 
 fun Location.toUiState() = LocationInfoUiState(

@@ -2,6 +2,7 @@ package presentation.base
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.AlreadyExistException
 import domain.InvalidCredentialsException
 import domain.InvalidDriverEmailException
 import domain.InvalidDriverNameException
@@ -93,31 +94,14 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
                     is ServerSideException -> onError(ErrorState.ServerError)
                     is UnAuthorizedException -> onError(ErrorState.UnAuthorized)
                     is NotFoundedException -> onError(ErrorState.NotFound(exception.message.toString()))
-                    is UnknownErrorException -> onError(
-                        ErrorState.UnknownError(
-                            exception.message.toString()
-                        )
-                    )
-
-                    is InvalidCredentialsException -> onError(
-                        ErrorState.InvalidCredentials(
-                            exception.message.toString()
-                        )
-                    )
-
+                    is UnknownErrorException -> onError(ErrorState.UnknownError(exception.message.toString()))
+                    is InvalidCredentialsException -> onError(ErrorState.InvalidCredentials(exception.message.toString()))
                     is InvalidUserNameException -> onError(ErrorState.InvalidUserName(exception.message.toString()))
                     is InvalidPasswordException -> onError(ErrorState.InvalidPassword(exception.message.toString()))
                     is InvalidDriverNameException -> onError(ErrorState.InvalidDriverName(exception.message.toString()))
-                    is InvalidDriverEmailException -> onError(
-                        ErrorState.InvalidDriverEmail(
-                            exception.message.toString()
-                        )
-                    )
-
-                    is LocationPermissionDeniedAlwaysException -> onError(
-                        ErrorState.LocationPermissionDenied(message = exception.message.toString())
-                    )
-
+                    is InvalidDriverEmailException -> onError(ErrorState.InvalidDriverEmail(exception.message.toString()))
+                    is LocationPermissionDeniedAlwaysException -> onError(ErrorState.LocationPermissionDenied(message = exception.message.toString()))
+                    is AlreadyExistException -> onError(ErrorState.AlreadyExist(message = exception.message.toString()))
                     is LocationPermissionDeniedException -> onError(
                         ErrorState.LocationPermissionDenied(message = exception.message.toString())
                     )

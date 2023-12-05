@@ -9,7 +9,7 @@ class NoInternetException : InternetException("No internet connection")
 
 //region authorization
 open class AuthorizationException(message: String) : BpException(message)
-class UnAuthorizedException : AuthorizationException("You have to login")
+class UnAuthorizedException(message: String) : AuthorizationException(message)
 class PermissionDenied : AuthorizationException("You have to allow permission")
 //endregion
 
@@ -26,6 +26,7 @@ class UnknownErrorException(message: String) : BpException(message)
 class InvalidCredentialsException(message: String) : BpException(message)
 
 class InvalidUserNameException(private val errorMessage: String) : BpException(errorMessage)
+class AlreadyExistException(private val errorMessage: String) : BpException(errorMessage)
 
 class InvalidPasswordException(private val errorMessage: String) : BpException(errorMessage)
 

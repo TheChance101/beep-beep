@@ -83,19 +83,16 @@ class MapScreen :
             }
             MapCardAnimation(
                 modifier = Modifier.align(Alignment.BottomCenter),
-                visible = !state.isLoading,
-            ) {
-                FindingRideCard()
-            }
+                visible = !state.isNewOrderFound && !state.isAcceptedOrder,
+                content = { FindingRideCard() }
+            )
 
             MapCardAnimation(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 visible = state.isNewOrderFound,
             ) {
                 NewOrderCard(
-                    modifier = Modifier.align(
-                        Alignment.BottomCenter,
-                    ),
+                    modifier = Modifier.align(Alignment.BottomCenter,),
                     state = state.tripInfoUiState,
                     listener = listener,
                 )

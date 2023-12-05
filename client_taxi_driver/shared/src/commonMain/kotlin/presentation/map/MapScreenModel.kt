@@ -26,9 +26,10 @@ class MapScreenModel(
     }
 
     private fun findingNewOrder() {
-        tryToExecute(
+        println("findingNewOrder")
+        tryToCollect(
             function = manageTrip::findNewTrip,
-            onSuccess = ::onFoundNewOrderSuccess,
+            onNewValue= ::onFoundNewOrderSuccess,
             onError = ::onError
         )
     }
@@ -42,6 +43,7 @@ class MapScreenModel(
                 )
             }
         }
+        println("getUserName: ${state.value.driverName}")
     }
 
     private fun onFoundNewOrderSuccess(order: Trip) {
@@ -56,6 +58,7 @@ class MapScreenModel(
     }
 
     private fun onError(errorState: ErrorState) {
+        println("onError: $errorState")
         updateState {
             it.copy(
                 isLoading = false,
@@ -150,10 +153,15 @@ class MapScreenModel(
                 error = null,
                 tripInfoUiState = TripInfoUiState()
             ).also {
-                coroutineScope.launch(Dispatchers.IO) {
-                    manageTrip.updateTripStatus(it.tripInfoUiState.id)
+                try {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        manageTrip.updateTripStatus(it.tripInfoUiState.id)
+                    }
+                  //  findingNewOrder()
+                }catch (e: Exception) {
+                    onError(ErrorState.UnknownError(e.message ?: "Unknown Error"))
                 }
-                findingNewOrder()
+
             }
         }
     }

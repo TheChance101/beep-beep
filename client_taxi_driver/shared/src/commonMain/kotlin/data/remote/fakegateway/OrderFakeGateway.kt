@@ -2,7 +2,7 @@ package data.remote.fakegateway
 
 import data.remote.mapper.toEntity
 import data.remote.model.LocationDto
-import data.remote.model.TripDto
+import data.remote.model.TaxiTripDto
 import domain.entity.Trip
 import domain.gateway.IOrderGateway
 import kotlinx.coroutines.delay
@@ -10,7 +10,7 @@ import kotlinx.coroutines.delay
 class OrderFakeGateway : IOrderGateway {
     override suspend fun findingNewOrder(): Trip {
         delay(4000)
-        return TripDto(
+        return TaxiTripDto(
             id = "djsahdjadhjadjas45dsadas",
             clientName = "Cristiano Ronaldo",
             startPoint = LocationDto(
@@ -24,7 +24,7 @@ class OrderFakeGateway : IOrderGateway {
             startPointAddress = "ooveofe",
             destinationAddress = "h9viife",
             price = 100.0,
-            tripStatus = 1
+            tripStatus = 1,
         ).toEntity()
     }
 }
