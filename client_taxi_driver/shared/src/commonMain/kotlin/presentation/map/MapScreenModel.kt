@@ -6,8 +6,6 @@ import domain.entity.Trip
 import domain.usecase.IManageLocationUseCase
 import domain.usecase.IManageTripUseCase
 import domain.usecase.LoginUserUseCase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
@@ -29,7 +27,7 @@ class MapScreenModel(
         println("findingNewOrder")
         tryToCollect(
             function = manageTrip::findNewTrip,
-            onNewValue= ::onFoundNewOrderSuccess,
+            onNewValue = ::onFoundNewOrderSuccess,
             onError = ::onError
         )
     }
@@ -47,6 +45,8 @@ class MapScreenModel(
     }
 
     private fun onFoundNewOrderSuccess(order: Trip) {
+        println("onFoundNewOrderSuccess: $order")
+        println("state.value.tripInfoUiState:${state.value.tripInfoUiState}")
         updateState {
             it.copy(
                 isLoading = false,
@@ -58,7 +58,7 @@ class MapScreenModel(
     }
 
     private fun onError(errorState: ErrorState) {
-        println("onError: $errorState")
+        println("onEeeeeeeeeeeerror: $errorState")
         updateState {
             it.copy(
                 isLoading = false,
@@ -96,7 +96,7 @@ class MapScreenModel(
     private fun sendLocationIfTripAccepted(location: Location, tripId: String) {
         tryToExecute(
             function = { manageTrip.updateTripLocation(location, tripId) },
-            onSuccess = {},
+            onSuccess = { println("update trip location success") },
             onError = ::onError,
         )
     }
@@ -104,25 +104,20 @@ class MapScreenModel(
     override fun onClickAccept() {
         updateState { mapScreenUiState ->
             mapScreenUiState.copy(
-                isLoading = false,
-                error = null,
-                isNewOrderFound = false,
-                isAcceptedOrder = true,
-            ).also {
-                coroutineScope.launch(Dispatchers.IO) {
-                    manageTrip.updateTripStatus(it.tripInfoUiState.id)
-                }
-            }
+                isLoading = false, error = null,
+                isNewOrderFound = false, isAcceptedOrder = true,
+            )
         }
+        updateTrip()
     }
 
     override fun onClickCancel() {
         updateState {
             it.copy(
                 isLoading = true,
+                error = null,
                 isNewOrderFound = false,
                 isAcceptedOrder = false,
-                error = null,
                 tripInfoUiState = TripInfoUiState()
             )
         }
@@ -130,40 +125,31 @@ class MapScreenModel(
     }
 
     override fun onClickArrived() {
-        updateState {
-            it.copy(
-                isLoading = false,
-                error = null,
-                tripInfoUiState = it.tripInfoUiState.copy(
-                    isArrived = true
-                )
-            ).also {
-                coroutineScope.launch(Dispatchers.IO) {
-                    manageTrip.updateTripStatus(it.tripInfoUiState.id)
-                }
-            }
+        updateState { it.copy(isLoading = false, error = null,
+                tripInfoUiState = it.tripInfoUiState.copy(isArrived = true)
+            )
         }
+        updateTrip()
+    }
+
+    private fun updateTrip() {
+        println("///////////////////////trip ID:${state.value.tripInfoUiState.id}///////////////////////")
+        tryToExecute(
+            function = { manageTrip.updateTripStatus(state.value.tripInfoUiState.id) },
+            onSuccess = { println("update trip success") },
+            onError = ::onError
+        )
     }
 
     override fun onClickDropOff() {
         updateState {
             it.copy(
-                isLoading = true,
-                isAcceptedOrder = false,
-                error = null,
-                tripInfoUiState = TripInfoUiState()
-            ).also {
-                try {
-                    coroutineScope.launch(Dispatchers.IO) {
-                        manageTrip.updateTripStatus(it.tripInfoUiState.id)
-                    }
-                  //  findingNewOrder()
-                }catch (e: Exception) {
-                    onError(ErrorState.UnknownError(e.message ?: "Unknown Error"))
-                }
-
-            }
+                isLoading = true, error = null,
+                isAcceptedOrder = false, tripInfoUiState = TripInfoUiState()
+            )
         }
+        updateTrip()
+        findingNewOrder()
     }
 
     override fun onClickCloseIcon() {
