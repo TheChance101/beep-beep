@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -23,6 +24,7 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.map.MapScreen
 import presentation.resources.Resources
+import util.getNavigationBarPadding
 
 class MainScreen :
     BaseScreen<MainScreenModel, MainScreenUiState, MainUiEffect, MainScreenInteractionListener>() {
@@ -73,17 +75,30 @@ class MainScreen :
 
                     BpButton(
                         title = Resources.strings.start,
-                        onClick = listener::onCLickStart,
+                        onClick = listener::onClickStart,
                         modifier = Modifier.fillMaxWidth().padding(top = 24.dp, bottom = 22.dp)
                     )
                 }
+            }
+            BPSnackBar(
+                icon = painterResource(Resources.images.errorIcon),
+                iconBackgroundColor = Theme.colors.warningContainer,
+                iconTint = Theme.colors.warning,
+                isVisible = state.showSnackBar,
+                modifier = Modifier.padding(bottom = getNavigationBarPadding().calculateBottomPadding())
+                    .align(Alignment.BottomCenter)
+            ) {
+                Text(
+                    text = Resources.strings.accessDeniedMessage,
+                    style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
+                )
             }
         }
     }
 
     override fun onEffect(effect: MainUiEffect, navigator: Navigator) {
         when(effect){
-            MainUiEffect.MainEffect -> navigator.push(MapScreen())
+            MainUiEffect.Start -> navigator.push(MapScreen())
         }
 
     }

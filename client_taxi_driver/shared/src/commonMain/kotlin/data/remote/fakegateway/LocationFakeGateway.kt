@@ -7,6 +7,10 @@ import kotlinx.coroutines.flow.flow
 
 
 class LocationFakeGateway : ILocationGateway {
+    override suspend fun startTracking() {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun trackCurrentLocation() = flow {
         var lattiude = 30.044420
         while (true) {
@@ -19,5 +23,9 @@ class LocationFakeGateway : ILocationGateway {
             )
             delay(2000)
         }
+    }
+
+    override suspend fun stopTracking() {
+        TODO("Not yet implemented")
     }
 }

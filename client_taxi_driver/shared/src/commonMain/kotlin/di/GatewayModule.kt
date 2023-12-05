@@ -2,9 +2,9 @@ package di
 
 import data.local.gateway.LocalConfigurationGateway
 import data.remote.fakegateway.OrderFakeGateway
-import data.remote.gateway.IdentityRemoteGateway
-import data.remote.gateway.LocationRemoteGateway
-import data.remote.gateway.TripRemoteGateway
+import data.remote.gateway.remote.IdentityRemoteGateway
+import data.remote.gateway.local.LocationRemoteGateway
+import data.remote.gateway.remote.TripRemoteGateway
 import domain.gateway.ILocationGateway
 import domain.gateway.IOrderGateway
 import domain.gateway.local.ILocalConfigurationGateway
