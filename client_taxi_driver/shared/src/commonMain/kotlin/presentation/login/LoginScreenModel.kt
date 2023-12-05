@@ -1,6 +1,7 @@
 package presentation.login
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.TaxiRequestPermission
 import domain.usecase.ILoginUserUseCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -157,14 +158,9 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
         driverEmail: String,
         description: String
     ) {
+        val requestPermission = TaxiRequestPermission(driverFullName, driverEmail, description)
         tryToExecute(
-            {
-                loginUserUseCase.requestPermission(
-                    driverFullName,
-                    driverEmail,
-                    description
-                )
-            },
+            { loginUserUseCase.requestPermission(requestPermission) },
             { onAskForPermissionSuccess() },
             ::onLoginFailed
         )
