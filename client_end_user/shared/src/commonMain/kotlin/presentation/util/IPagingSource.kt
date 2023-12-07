@@ -8,7 +8,7 @@ import domain.entity.Restaurant
 import domain.entity.Trip
 import kotlinx.coroutines.flow.Flow
 
-interface IPagingDataSource {
+interface IPagingSource {
 
     fun getMealsInCuisine(cuisineId: String): Flow<PagingData<Meal>>
     suspend fun getRestaurants(): Flow<PagingData<Restaurant>>

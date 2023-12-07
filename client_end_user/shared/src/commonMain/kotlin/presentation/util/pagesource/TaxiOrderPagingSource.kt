@@ -1,8 +1,7 @@
-package data.gateway.remote.pagesource
+package presentation.util.pagesource
 
 import domain.entity.PaginationItems
 import domain.entity.Trip
-import domain.gateway.ITransactionsGateway
 import domain.usecase.IGetTransactionHistoryUseCase
 import org.koin.core.component.KoinComponent
 

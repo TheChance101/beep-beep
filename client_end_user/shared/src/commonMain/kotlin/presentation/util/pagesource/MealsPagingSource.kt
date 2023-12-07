@@ -1,8 +1,9 @@
-package data.gateway.remote.pagesource
+package presentation.util.pagesource
 
 import domain.entity.Meal
 import domain.entity.PaginationItems
 import domain.usecase.IExploreRestaurantUseCase
+import presentation.util.pagesource.BasePagingSource
 import kotlin.properties.Delegates
 
 class MealsPagingSource(

@@ -1,10 +1,15 @@
 package di
 
+import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import data.gateway.remote.pagesource.*
-import org.koin.core.module.dsl.bind
-import presentation.util.IPagingDataSource
+import presentation.util.IPagingSource
+import presentation.util.pagesource.FoodOrderPagingSource
+import presentation.util.pagesource.MealsPagingSource
+import presentation.util.pagesource.NotificationPagingSource
+import presentation.util.pagesource.PagingSource
+import presentation.util.pagesource.RestaurantsPagingSource
+import presentation.util.pagesource.TaxiOrderPagingSource
 
 val pagingDataSourceModule = module {
     singleOf(::MealsPagingSource)
@@ -12,6 +17,5 @@ val pagingDataSourceModule = module {
     singleOf(::TaxiOrderPagingSource)
     singleOf(::RestaurantsPagingSource)
     singleOf(::NotificationPagingSource)
-    singleOf(::PagingDataSource)
-    singleOf(::PagingDataSource) { bind<IPagingDataSource>() }
+    singleOf(::PagingSource) { bind<IPagingSource>() }
 }

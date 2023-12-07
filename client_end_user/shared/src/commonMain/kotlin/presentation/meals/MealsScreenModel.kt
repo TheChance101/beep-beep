@@ -2,7 +2,7 @@ package presentation.meals
 
 import app.cash.paging.PagingData
 import cafe.adriel.voyager.core.model.coroutineScope
-import presentation.util.IPagingDataSource
+import presentation.util.IPagingSource
 import domain.entity.Meal
 import domain.usecase.IExploreRestaurantUseCase
 import domain.usecase.IManageAuthenticationUseCase
@@ -22,7 +22,7 @@ class MealsScreenModel(
     private val manageRestaurant: IExploreRestaurantUseCase,
     private val manageAuthentication: IManageAuthenticationUseCase,
     private val manageCart: IManageCartUseCase,
-    private val datasource: IPagingDataSource
+    private val paginationSource: IPagingSource
 ) : BaseScreenModel<MealsUiState, MealsUiEffect>(MealsUiState()), MealsInteractionListener,
     MealInteractionListener {
 
@@ -36,7 +36,7 @@ class MealsScreenModel(
     private fun getData() {
         updateState { it.copy(isLoading = true, cuisineName = cuisineName) }
         tryToExecute(
-            { datasource.getMealsInCuisine(cuisineId) },
+            { paginationSource.getMealsInCuisine(cuisineId) },
             ::onGetMealsSuccess,
             ::onError
         )

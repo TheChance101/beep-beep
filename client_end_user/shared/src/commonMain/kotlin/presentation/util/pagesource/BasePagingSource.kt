@@ -1,4 +1,4 @@
-package data.gateway.remote.pagesource
+package presentation.util.pagesource
 
 
 import app.cash.paging.PagingSource

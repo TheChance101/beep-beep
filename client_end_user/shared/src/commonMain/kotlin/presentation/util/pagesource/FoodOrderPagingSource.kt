@@ -1,9 +1,10 @@
-package data.gateway.remote.pagesource
+package presentation.util.pagesource
 
 import domain.entity.FoodOrder
 import domain.entity.PaginationItems
 import domain.usecase.IGetTransactionHistoryUseCase
 import org.koin.core.component.KoinComponent
+import presentation.util.pagesource.BasePagingSource
 
 class FoodOrderPagingSource(
     private val transactionHistory: IGetTransactionHistoryUseCase

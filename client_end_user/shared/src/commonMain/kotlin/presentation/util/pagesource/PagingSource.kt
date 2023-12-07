@@ -1,4 +1,4 @@
-package data.gateway.remote.pagesource
+package presentation.util.pagesource
 
 import app.cash.paging.Pager
 import app.cash.paging.PagingConfig
@@ -9,15 +9,15 @@ import domain.entity.NotificationHistory
 import domain.entity.Restaurant
 import domain.entity.Trip
 import kotlinx.coroutines.flow.Flow
-import presentation.util.IPagingDataSource
+import presentation.util.IPagingSource
 
-class PagingDataSource(
+class PagingSource(
     private val mealDataSource: MealsPagingSource,
     private val restaurantDataSource: RestaurantsPagingSource,
     private val foodOrderPagingSource: FoodOrderPagingSource,
     private val notificationPagingSource: NotificationPagingSource,
     private val taxiOrderPagingSource: TaxiOrderPagingSource,
-) : IPagingDataSource {
+) : IPagingSource {
     override fun getMealsInCuisine(cuisineId: String): Flow<PagingData<Meal>> {
         mealDataSource.initCuisine(cuisineId)
         return Pager(config = PagingConfig(pageSize = 5), pagingSourceFactory = { mealDataSource }

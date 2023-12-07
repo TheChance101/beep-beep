@@ -10,11 +10,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
-import presentation.util.IPagingDataSource
+import presentation.util.IPagingSource
 
 class NotificationScreenModel(
     private val transaction: IGetTransactionHistoryUseCase,
-    private val transactionDatasource: IPagingDataSource,
+    private val transactionDatasource: IPagingSource,
     private val manageAuthentication: IManageAuthenticationUseCase,
 ) : BaseScreenModel<NotificationsUiState, NotificationUiEffect>(NotificationsUiState()),
     NotificationInteractionListener {

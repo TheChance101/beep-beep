@@ -1,17 +1,11 @@
 package domain.usecase
 
-import app.cash.paging.Pager
-import app.cash.paging.PagingConfig
-import app.cash.paging.PagingData
-import data.gateway.remote.pagesource.MealsPagingSource
-import data.gateway.remote.pagesource.RestaurantsPagingSource
 import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.PaginationItems
 import domain.entity.Restaurant
 import domain.gateway.IRestaurantGateway
 import domain.gateway.local.ILocalConfigurationGateway
-import kotlinx.coroutines.flow.Flow
 
 interface IExploreRestaurantUseCase {
     suspend fun getRestaurants(page:Int,limit:Int): PaginationItems<Restaurant>

@@ -10,10 +10,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
-import presentation.util.IPagingDataSource
+import presentation.util.IPagingSource
 
 class OrderHistoryScreenModel(
-    private val orderHistory: IPagingDataSource,
+    private val orderHistory: IPagingSource,
     private val manageAuthentication: IManageAuthenticationUseCase,
 ) : BaseScreenModel<OrderScreenUiState, OrderHistoryScreenUiEffect>(OrderScreenUiState()),
     OrderHistoryScreenInteractionListener {

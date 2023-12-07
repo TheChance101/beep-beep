@@ -1,18 +1,11 @@
 package domain.usecase
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import data.gateway.remote.pagesource.FoodOrderPagingSource
-import data.gateway.remote.pagesource.NotificationPagingSource
-import data.gateway.remote.pagesource.TaxiOrderPagingSource
 import domain.entity.FoodOrder
 import domain.entity.NotificationHistory
 import domain.entity.PaginationItems
 import domain.entity.Trip
 import domain.gateway.ITransactionsGateway
 import domain.gateway.IUserGateway
-import kotlinx.coroutines.flow.Flow
 
 interface IGetTransactionHistoryUseCase {
     suspend fun getOrdersHistory(page: Int, limit: Int): PaginationItems<FoodOrder>
