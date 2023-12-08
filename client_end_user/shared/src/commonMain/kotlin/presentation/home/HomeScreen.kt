@@ -66,7 +66,7 @@ import presentation.main.SearchTab
 import presentation.meals.MealsScreen
 import presentation.orderFoodTracking.OrderFoodTrackingScreen
 import presentation.restaurants.RestaurantsScreen
-import presentation.composable.ToastMessage
+import com.beepbeep.designSystem.ui.composable.BpToastMessage
 import presentation.resturantDetails.RestaurantScreen
 import presentation.taxi.TaxiOrderScreen
 import resources.Resources
@@ -220,12 +220,14 @@ class HomeScreen : BaseScreen<
                         listener.onDismissSnackBar()
                     }
                 }
-                ToastMessage(
+                BpToastMessage(
                     modifier = Modifier.fillMaxWidth()
                         .padding(bottom = getNavigationBarPadding().calculateBottomPadding()),
                     state = state.showSnackBar,
                     message = Resources.strings.accessDeniedMessage,
-                    isError = true
+                    isError = true,
+                    successIcon = painterResource(Resources.images.unread),
+                    warningIcon = painterResource(Resources.images.warningIcon)
                 )
             }
         }

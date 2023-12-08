@@ -2,14 +2,11 @@ package presentation.main
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.AddressInfo
-import domain.entity.Location
 import domain.entity.Restaurant
 import domain.usecase.ILoginUserUseCase
 import domain.usecase.IManageOrderUseCase
 import domain.usecase.IManageRestaurantInformationUseCase
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 import presentation.order.LocationUiSate
@@ -32,20 +29,19 @@ class MainScreenModel(
     }
 
     private fun fetchCharts() {
-        viewModelScope.launch {
-            async { getOrdersCountByDays() }.await()
-            async { getOrdersRevenueByDaysBefore() }.await()
-        }
+        updateState { it.copy(isLoading = true) }
+        getOrdersCountByDays()
+        getOrdersRevenueByDaysBefore()
     }
 
     private fun saveRestaurantId(restaurantId: String) {
-        updateState { it.copy(isLoading = true) }
         tryToExecute(
             { manageUser.saveRestaurantId(restaurantId) },
-            { onSaveRestaurantIdSuccess(restaurantId) },
+            { onSaveRestaurantIdSuccess() },
             ::onError
         )
     }
+
     private fun saveRestaurantLocation(addressInfo: AddressInfo) {
         tryToExecute(
             { manageUser.saveRestaurantLocation(addressInfo) },
@@ -54,15 +50,15 @@ class MainScreenModel(
         )
     }
 
-    private fun onSaveRestaurantIdSuccess(restaurantId: String) {
+    private fun onSaveRestaurantIdSuccess() {
         updateState {
             it.copy(
                 isLoading = false,
-                selectedRestaurantId = restaurantId,
                 expanded = false
             )
         }
     }
+
     private fun onSaveRestaurantLocationSuccess() {
         println("saved location")
     }
@@ -81,12 +77,8 @@ class MainScreenModel(
     }
 
     private fun getData() {
-        tryToExecute(this::callee, this::onSuccess, this::onError)
-    }
-
-    private suspend fun callee(): List<Restaurant> {
         updateState { it.copy(isLoading = true) }
-        return manageRestaurant.getOwnerRestaurants()
+        tryToExecute(manageRestaurant::getOwnerRestaurants, this::onSuccess, this::onError)
     }
 
     private fun getOrdersCountByDays() {
@@ -131,7 +123,7 @@ class MainScreenModel(
         if (!hasMultipleRestaurants) {
             println("saving restaurant id in if condition ")
             saveRestaurantId(restaurants.first().id)
-            val addressInfo = AddressInfo(restaurants.first().location,restaurants.first().address)
+            val addressInfo = AddressInfo(restaurants.first().location, restaurants.first().address)
             saveRestaurantLocation(addressInfo)
         }
     }
@@ -159,8 +151,9 @@ class MainScreenModel(
         location: LocationUiSate,
         address: String
     ) {
+        updateState { it.copy(isLoading = true, selectedRestaurantId = restaurantId) }
         saveRestaurantId(restaurantId)
-        val addressInfo = AddressInfo(location.toEntity(),address)
+        val addressInfo = AddressInfo(location.toEntity(), address)
         saveRestaurantLocation(addressInfo)
         fetchCharts()
     }

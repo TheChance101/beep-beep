@@ -19,7 +19,7 @@ fun BPDashedDivider(
     color: Color = Theme.colors.divider,
     strokeWidth: Float = 1f,
     dashWidth: Dp = 10.dp,
-    spaceWidth: Dp = 5.dp,
+    spaceWidth: Dp = 8.dp,
 ) {
     val diamondOffset = if (showDiamondIcon) { 40f } else { 0f }
     Row(modifier = modifier) {

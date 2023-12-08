@@ -9,11 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.BpButton
-import com.beepbeep.designSystem.ui.composable.BpCircleImage
+import com.beepbeep.designSystem.ui.composable.BpRoundedImage
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import com.seiko.imageloader.rememberAsyncImagePainter
@@ -138,24 +139,22 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
             )
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth().padding(
-                    bottom = 16.dp
-                ),
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 if (imageUrl.isEmpty() || image != null) {
-                    BpCircleImage(
-                        modifier = Modifier.sizeIn(minHeight = 104.dp, minWidth = 104.dp),
+                    BpRoundedImage(
+                        modifier = Modifier.sizeIn(minHeight = 120.dp).fillMaxWidth(),
                         bitmap = rememberBitmapFromBytes(image),
                         placeholder = painterResource(Resources.images.galleryAdd),
                         onClick = { imagePicker.pickImage() }
                     )
                 } else {
-                    BpCircleImage(
-                        imageSize = 104.dp,
-                        modifier = Modifier.sizeIn(minHeight = 104.dp, minWidth = 104.dp),
+                    BpRoundedImage(
+                        modifier = Modifier.sizeIn(minHeight = 120.dp).fillMaxWidth(),
                         painter = rememberAsyncImagePainter(url = imageUrl),
+                        editPainter = painterResource(Resources.images.iconEdit),
                         onClick = { imagePicker.pickImage() }
                     )
                 }
@@ -306,7 +305,9 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
             end = 16.dp,
             bottom = 16.dp
         ).noRippleEffect { onClickLogout() }) {
-            Row {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 Icon(
                     painter = painterResource(Resources.images.logout), modifier = Modifier
                         .padding(
@@ -321,7 +322,6 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
                 Text(
                     Resources.strings.logout,
                     style = Theme.typography.title.copy(color = Theme.colors.primary),
-                    modifier = Modifier.padding(vertical = 16.dp)
                 )
             }
         }

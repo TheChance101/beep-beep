@@ -29,7 +29,8 @@ fun OrderDto.toEntity(): Order {
         createdAt = createdAt?.let { createdAt ->
             createdAt.toLocalDateTime()
         } ?: Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        orderState = OrderStatus.getOrderStatus(orderStatus ?: OrderStatus.PENDING.key)
+        orderState = OrderStatus.getOrderStatus(orderStatus ?: OrderStatus.PENDING.key),
+        currency = if (!currency.isNullOrBlank()) { currency } else { "EGP" }
 
     )
 }

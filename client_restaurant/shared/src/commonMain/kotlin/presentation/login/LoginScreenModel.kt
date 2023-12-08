@@ -150,6 +150,10 @@ class LoginScreenModel(
 
     }
 
+    override fun onDismissSnackBar() {
+        updateState { it.copy(showSnackbar = false) }
+    }
+
     private fun showPermissionSheetWithDelay() {
         coroutineScope.launch {
             state.value.sheetState.dismiss()
@@ -182,16 +186,12 @@ class LoginScreenModel(
         coroutineScope.launch {
             delayAndChangePermissionSheetState(false)
         }
-        // todo send effect for that to show toast or something
+        updateState { it.copy(showSnackbar = true,errorPermission = null) }
     }
 
 
     private fun onAskForPermissionFailed(error: ErrorState) {
-        state.value.sheetState.dismiss()
-        coroutineScope.launch {
-            delayAndChangePermissionSheetState(false)
-        }
-        // todo send effect for that to show toast or something
+        updateState { it.copy(showSnackbar = true,errorPermission = error) }
     }
 
     override fun onCancelClicked() {

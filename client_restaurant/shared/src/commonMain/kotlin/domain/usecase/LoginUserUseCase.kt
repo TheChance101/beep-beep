@@ -55,11 +55,7 @@ class LoginUserUseCase(
     override suspend fun requestPermission(
         restaurantName: String, ownerEmail: String, description: String,
     ): Boolean {
-        return remoteGateway.createRequestPermission(
-            restaurantName,
-            ownerEmail,
-            description
-        )
+        return remoteGateway.createRequestPermission(restaurantName, ownerEmail, description)
     }
 
     private fun validateLoginFields(username: String, password: String): Boolean {
@@ -72,7 +68,7 @@ class LoginUserUseCase(
 
     private fun validatePermissionRestaurant(permission: String?): Boolean {
         if (permission != HAS_PERMISSION) {
-            throw PermissionDenied()
+            throw PermissionDenied("You don't have permission to login")
         } else return true
     }
 

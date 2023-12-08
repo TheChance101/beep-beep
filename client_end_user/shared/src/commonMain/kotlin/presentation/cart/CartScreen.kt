@@ -25,7 +25,7 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.cart.composable.ItemCart
 import presentation.cart.composable.OrderInfoCard
-import presentation.composable.ToastMessage
+import com.beepbeep.designSystem.ui.composable.BpToastMessage
 import presentation.composable.exitinstion.bottomBorder
 import resources.Resources
 import util.getNavigationBarPadding
@@ -103,12 +103,14 @@ class CartScreen :
                     listener.onDismissSnackBar()
                 }
             }
-            ToastMessage(
+            BpToastMessage(
                 modifier = Modifier.align(Alignment.BottomCenter)
                     .padding(getNavigationBarPadding()),
                 state = state.showToast,
                 message = Resources.strings.restaurantClosed,
-                isError = true
+                isError = true,
+                successIcon = painterResource(Resources.images.unread),
+                warningIcon = painterResource(Resources.images.warningIcon)
             )
         }
     }

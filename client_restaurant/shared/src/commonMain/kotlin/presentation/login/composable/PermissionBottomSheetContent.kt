@@ -39,21 +39,21 @@ fun PermissionBottomSheetContent(
         BpTextField(
             text = state.restaurantName,
             onValueChange = listener::onRestaurantNameChanged,
-            label = Resources.strings.name,
+            label = Resources.strings.restaurantName,
             keyboardType = KeyboardType.Text,
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )
         BpTextField(
             text = state.ownerEmail,
             onValueChange = listener::onOwnerEmailChanged,
-            label = Resources.strings.name,
+            label = Resources.strings.ownerEmail,
             keyboardType = KeyboardType.Text,
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )
         BpExpandableTextField(
             text = state.description,
             onValueChange = listener::onDescriptionChanged,
-            label = Resources.strings.description,
+            label = Resources.strings.whyBeepBeep,
             keyboardType = KeyboardType.Text,
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )
@@ -71,7 +71,7 @@ fun PermissionBottomSheetContent(
         BpTransparentButton(
             onClick = listener::onCancelClicked,
             title = Resources.strings.cancel,
-            modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
+            modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16, bottom = Theme.dimens.space24),
         )
     }
 }

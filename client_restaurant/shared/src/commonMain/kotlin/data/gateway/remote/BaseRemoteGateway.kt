@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import presentation.base.NoInternetException
+import presentation.base.PermissionDenied
 import presentation.base.ServerSideException
 import presentation.base.UnknownErrorException
 import presentation.base.UserNotFoundException
@@ -73,6 +74,9 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
                 throw UserNotFoundException(
                     errorMessages.getOrEmpty(USER_NOT_EXIST)
                 )
+            errorMessages.containsErrors(INVALID_PERMISSION) ->
+                throw PermissionDenied(errorMessages.getOrEmpty(INVALID_PERMISSION))
+
 
             else -> throw UnknownErrorException("UnKnow Error")
         }
@@ -86,6 +90,8 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
     companion object {
         private const val WRONG_PASSWORD = "1013"
         private const val USER_NOT_EXIST = "1043"
+        private const val INVALID_PERMISSION = "1014"
+
     }
     fun <T> paginateData(result: List<T>, page: Int, total: Long): PaginationItems<T> {
         return PaginationItems(total = total, page = page, items = result)
