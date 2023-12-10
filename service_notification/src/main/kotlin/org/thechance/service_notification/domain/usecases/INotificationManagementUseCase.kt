@@ -44,11 +44,12 @@ class NotificationManagementUseCase(
     override suspend fun sendNotificationToUser(notification: Notification): Boolean {
         val tokens = databaseGateway.getUserTokens(notification.userId ?: throw NotFoundException(MISSING_PARAMETER))
         return pushNotificationGateway.sendNotification(tokens, notification.title, notification.body).also {
-            if (it) {
-                databaseGateway.addNotificationToHistory(notification.toNotificationHistory())
-            } else {
-                throw InternalServerErrorException(NOTIFICATION_NOT_SENT)
-            }
+            databaseGateway.addNotificationToHistory(notification.toNotificationHistory())
+//            if (it) {
+//                databaseGateway.addNotificationToHistory(notification.toNotificationHistory())
+//            } else {
+//                throw InternalServerErrorException(NOTIFICATION_NOT_SENT)
+//            }
         }
     }
 
