@@ -14,7 +14,7 @@ version = "1.0-SNAPSHOT"
 
 kotlin {
     jvm {
-        jvmToolchain(libs.versions.jvmToolchain.get().toInt())
+        jvmToolchain(libs.versions.desktopjvmToolchain.get().toInt())
         withJava()
     }
     sourceSets {
