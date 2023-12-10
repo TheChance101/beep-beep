@@ -19,8 +19,8 @@ class AppScreenModel(private val manageUser: IManageSettingUseCase) : ScreenMode
     private val _language: MutableStateFlow<LanguageCode> = MutableStateFlow(LanguageCode.EN)
     val language: StateFlow<LanguageCode> = _language.asStateFlow()
 
-    private val _isFirstTimeOpenApp: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val isFirstTimeOpenApp: StateFlow<Boolean> = _isFirstTimeOpenApp.asStateFlow()
+    private val _isFirstTimeOpenApp: MutableStateFlow<Boolean?> = MutableStateFlow(null)
+    val isFirstTimeOpenApp: StateFlow<Boolean?> = _isFirstTimeOpenApp.asStateFlow()
 
     init {
         getUserLanguageCode()
