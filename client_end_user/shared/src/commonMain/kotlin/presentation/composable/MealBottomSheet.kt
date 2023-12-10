@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpImageLoader
@@ -57,13 +58,18 @@ fun MealBottomSheet(
             text = meal.name,
             style = Theme.typography.titleLarge,
             color = Theme.colors.contentPrimary,
-            modifier = Modifier.padding(horizontal = 16.dp)
+            modifier = Modifier.padding(horizontal = 16.dp),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
         Text(
-            text = meal.description,
+            text = meal.description.trim(),
             style = Theme.typography.body,
             color = Theme.colors.contentSecondary,
-            modifier = Modifier.padding(horizontal = 16.dp)
+            modifier = Modifier.padding(horizontal = 16.dp),
+            maxLines = 5,
+            overflow = TextOverflow.Ellipsis
+
         )
         Row(
             modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 24.dp),
