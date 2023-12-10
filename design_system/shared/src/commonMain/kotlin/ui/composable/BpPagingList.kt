@@ -41,7 +41,8 @@ fun <T : Any> BpPagingList(
     paddingValues: PaddingValues = PaddingValues(16.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(8.dp),
     optionalContent: @Composable (T) -> Unit = {},
-    content: @Composable (T?) -> Unit,
+    bottomPadding: PaddingValues = PaddingValues(0.dp),
+    content: @Composable (T? ,Modifier) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier
@@ -81,7 +82,13 @@ fun <T : Any> BpPagingList(
 
         items(data.itemCount) { index ->
             val item = data[index]
-            content(item)
+            // Check if this is the last index
+            if (index == data.itemCount - 1) {
+                // This is the last index, you can add padding or any other logic here
+                content(item,Modifier.padding(bottomPadding))
+            }else{
+                content(item,Modifier)
+            }
         }
 
         data.loadState.apply {
