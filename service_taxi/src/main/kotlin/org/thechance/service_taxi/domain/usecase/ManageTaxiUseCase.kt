@@ -26,6 +26,7 @@ interface IManageTaxiUseCase {
 
     suspend fun deleteTaxiByDriverId(driverId: String): Boolean
     suspend fun deleteAllCollections(): Boolean
+    suspend fun deleteTripsCollections(): Boolean
 }
 
 class ManageTaxiUseCase(
@@ -86,6 +87,10 @@ class ManageTaxiUseCase(
 
     override suspend fun deleteAllCollections(): Boolean {
         return taxiGateway.deleteAllCollections()
+    }
+
+    override suspend fun deleteTripsCollections(): Boolean {
+        return taxiGateway.deleteTripCollection()
     }
 
     private suspend fun isTaxiExistedBefore(taxi: Taxi): Boolean {

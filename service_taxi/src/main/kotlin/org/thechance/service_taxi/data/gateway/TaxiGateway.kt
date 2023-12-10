@@ -245,46 +245,50 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
         return trip.tripStatus
     }
 
+    private data class TripUpdate(val status: Trip.Status, val updates: List<Bson>)
+
     override suspend fun updateTrip(driverId: String, taxiId: String, tripId: String, statusCode: Int): Trip? {
-        val updates = mutableListOf<Bson>()
+        val status = Trip.getOrderStatus(statusCode)
 
-        when (Trip.getOrderStatus(statusCode)) {
-            Trip.Status.PENDING -> {
-                updates.add(Updates.set(TripCollection::tripStatus.name, statusCode))
-            }
+        val tripUpdates = when (status) {
+            Trip.Status.PENDING -> TripUpdate(
+                status,
+                listOf(Updates.set(TripCollection::tripStatus.name, statusCode))
+            )
 
-            Trip.Status.APPROVED -> {
-                updates.add(Updates.set(TripCollection::tripStatus.name, statusCode))
-                updates.add(Updates.set(TripCollection::taxiId.name, ObjectId(taxiId)))
-                updates.add(Updates.set(TripCollection::driverId.name, ObjectId(driverId)))
-                updates.add(
+            Trip.Status.APPROVED -> TripUpdate(
+                status,
+                listOf(
+                    Updates.set(TripCollection::tripStatus.name, statusCode),
+                    Updates.set(TripCollection::taxiId.name, ObjectId(taxiId)),
+                    Updates.set(TripCollection::driverId.name, ObjectId(driverId)),
                     Updates.set(
                         TripCollection::startDate.name,
                         Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toString()
                     )
                 )
-            }
+            )
 
-            Trip.Status.RECEIVED -> {
-                updates.add(Updates.set(TripCollection::tripStatus.name, statusCode))
-            }
+            Trip.Status.RECEIVED -> TripUpdate(
+                status,
+                listOf(Updates.set(TripCollection::tripStatus.name, statusCode))
+            )
 
-            Trip.Status.FINISHED -> {
-                updates.add(Updates.set(TripCollection::tripStatus.name, statusCode))
-                updates.add(
+            Trip.Status.FINISHED -> TripUpdate(
+                status,
+                listOf(
+                    Updates.set(TripCollection::tripStatus.name, statusCode),
                     Updates.set(
                         TripCollection::endDate.name,
                         Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toString()
                     )
                 )
-            }
+            )
         }
-
-        val combinedUpdates = Updates.combine(updates)
 
         container.tripCollection.updateOne(
             filter = and(TripCollection::id eq ObjectId(tripId)),
-            update = combinedUpdates
+            update = Updates.combine(tripUpdates.updates)
         )
 
         val pipeline = listOf(
@@ -364,6 +368,10 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
             e.printStackTrace()
             return@runBlocking false
         }
+    }
+
+    override suspend fun deleteTripCollection(): Boolean {
+        return container.tripCollection.deleteMany().wasAcknowledged()
     }
     //endregion
 }
