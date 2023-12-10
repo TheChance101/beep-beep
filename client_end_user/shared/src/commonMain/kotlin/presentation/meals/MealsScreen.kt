@@ -25,6 +25,8 @@ import presentation.composable.ModalBottomSheetState
 import presentation.composable.modifier.noRippleEffect
 import presentation.resturantDetails.Composable.NeedToLoginSheet
 import com.beepbeep.designSystem.ui.composable.BpToastMessage
+import presentation.cart.CartScreen
+import presentation.resturantDetails.Composable.WarningCartIsFullDialog
 import presentation.resturantDetails.MealUIState
 import resources.Resources
 import util.getNavigationBarPadding
@@ -41,6 +43,7 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
         when (effect) {
             is MealsUiEffect.NavigateBack -> navigator.pop()
             is MealsUiEffect.NavigateToLogin -> navigator.push(LoginScreen())
+            is MealsUiEffect.onGoToCart -> navigator.push(CartScreen())
         }
     }
 
@@ -52,6 +55,14 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.TopCenter
         ) {
+            WarningCartIsFullDialog(
+                modifier = Modifier.padding(getNavigationBarPadding()),
+                text = Resources.strings.addFromDifferentCartMessage,
+                onClickClearCart = listener::onClearCart,
+                onClickGoToCart = listener::onGoToCart,
+                onDismiss = listener::onDismissSheet,
+                isVisitable = state.showWarningCartIsFull
+            )
             BottomSheet(
                 sheetContent = {
                     if (state.showMealSheet) {
@@ -77,25 +88,38 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
                 content = {
                     content(
                         state,
+                        modifier = Modifier.background(Theme.colors.background),
                         onBackClicked = listener::onBackClicked,
                         onMealSelected = listener::onMealClicked
                     )
                 }
             )
-
             LaunchedEffect(state.showToast) {
                 if (state.showToast) {
                     delay(2000)
                     listener.onDismissSnackBar()
                 }
             }
+            LaunchedEffect(state.showToastClearCart) {
+                if (state.showToastClearCart) {
+                    delay(2000)
+                    listener.onDismissSnackBar()
+                }
+            }
             BpToastMessage(
-                modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth()
-                    .padding(bottom = getNavigationBarPadding().calculateBottomPadding()),
+                modifier = Modifier.align(Alignment.BottomCenter).padding(getNavigationBarPadding()),
                 state = state.showToast,
-                message = if (state.errorAddToCart == null)
-                    Resources.strings.mealAddedToYourCart else Resources.strings.mealFailedToAddInCart,
+                message = if (state.errorAddToCart == null) Resources.strings.mealAddedToYourCart else Resources.strings.mealFailedToAddInCart,
                 isError = state.errorAddToCart != null,
+                successIcon = painterResource(Resources.images.unread),
+                warningIcon = painterResource(Resources.images.warningIcon)
+            )
+
+            BpToastMessage(
+                modifier = Modifier.align(Alignment.BottomCenter).padding(getNavigationBarPadding()),
+                state = state.showToastClearCart,
+                message = Resources.strings.youCanAddMeal ,
+                isError = false,
                 successIcon = painterResource(Resources.images.unread),
                 warningIcon = painterResource(Resources.images.warningIcon)
             )
@@ -114,25 +138,22 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
     @Composable
     private fun content(
         state: MealsUiState,
+        modifier: Modifier = Modifier,
         onMealSelected: (MealUIState) -> Unit,
         onBackClicked: () -> Unit,
     ) {
         val meals = state.meals.collectAsLazyPagingItems()
-        Column(
-            Modifier.fillMaxSize().background(Theme.colors.background).padding(
-                getNavigationBarPadding()
-            )
-        ) {
+        Column(modifier.fillMaxSize()) {
             BpAppBar(
                 title = state.cuisineName,
                 onNavigateUp = onBackClicked,
                 painterResource = painterResource(Resources.images.arrowLeft)
             )
-            BpPagingList(data = meals) { meal ->
+            BpPagingList(data = meals, bottomPadding = getNavigationBarPadding()){ meal,modifier ->
                 meal?.let {
                     MealCard(
                         meal = it,
-                        modifier = Modifier.noRippleEffect { onMealSelected(it) }
+                        modifier = modifier.noRippleEffect { onMealSelected(it) }
                     )
                 }
             }
