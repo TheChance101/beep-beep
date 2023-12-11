@@ -1,19 +1,26 @@
 package presentation.profile
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -27,7 +34,6 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
-import presentation.composable.ContentVisibility
 import presentation.composable.LoginRequiredPlaceholder
 import presentation.composable.modifier.noRippleEffect
 import resources.Resources
@@ -56,7 +62,8 @@ class ProfileScreen :
             message = Resources.strings.profileLoginMessage,
             onClickLogin = listener::onClickLogin
         )
-        ContentVisibility(state.isLoggedIn) {
+        AnimatedVisibility(state.isLoggedIn, enter = fadeIn(), exit = fadeOut()
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -123,7 +130,22 @@ class ProfileScreen :
                 }
             }
         }
+
+        AnimatedVisibility(state.isLoading, enter = fadeIn(), exit = fadeOut()
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize()
+                    .background(Theme.colors.background),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(48.dp),
+                    color = Theme.colors.primary
+                )
+            }
+        }
     }
+
 
     @Composable
     private fun WhiteCard(content: @Composable () -> Unit) {

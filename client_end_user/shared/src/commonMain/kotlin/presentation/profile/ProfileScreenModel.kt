@@ -27,6 +27,7 @@ class ProfileScreenModel(
     }
 
     private fun checkIfLoggedIn() {
+        updateState { it.copy(isLoggedIn = false) }
         tryToExecute(
             { manageAuthentication.getAccessToken() },
             ::onCheckIfLoggedInSuccess,
@@ -35,8 +36,9 @@ class ProfileScreenModel(
     }
 
     private fun getUserProfile() {
+        updateState { it.copy(isLoading = true) }
         tryToExecute(
-            { manageProfile.getUserProfile() },
+             manageProfile::getUserProfile,
             ::onGetUserProfileSuccess,
             ::onGetUserProfileError
         )
@@ -44,13 +46,13 @@ class ProfileScreenModel(
 
     private fun onGetUserProfileSuccess(userDetails: User) {
         val result = userDetails.toUIState()
+        updateState { it.copy(isLoading = false) }
         updateState {
             it.copy(
                 user = result,
                 fullName = result.fullName,
                 phoneNumber = result.phoneNumber,
                 isButtonEnabled = false,
-                isLoading = false,
                 isLoggedIn = true,
             )
         }
@@ -94,7 +96,7 @@ class ProfileScreenModel(
     }
 
     override fun onSaveProfileInfo() {
-        updateState { it.copy(isLoading = true) }
+        updateState { it.copy(isLoading = true, isLoggedIn = true) }
         tryToExecute(
             { manageProfile.updateUserProfile(state.value.fullName, state.value.phoneNumber) },
             ::onGetUserProfileSuccess,
