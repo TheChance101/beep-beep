@@ -64,17 +64,16 @@ data class RestaurantsScreen(val offerId: String? = null) :
             Modifier
                 .fillMaxSize()
                 .background(Theme.colors.background)
-                .padding(getNavigationBarPadding())
         ) {
             BpAppBar(
                 title = Resources.strings.restaurants,
                 onNavigateUp = listener::onBackClicked,
                 painterResource = painterResource(Resources.images.arrowLeft)
             )
-            BpPagingList(data = restaurants) { restaurant ->
+            BpPagingList(data = restaurants, bottomPadding = getNavigationBarPadding()) { restaurant ,modifier->
                 restaurant?.let {
                     Restaurant(
-                        modifier = Modifier.padding(bottom = 16.dp),
+                        modifier = modifier,
                         restaurant = restaurant,
                         onClickCard = listener::onRestaurantClicked
                     )

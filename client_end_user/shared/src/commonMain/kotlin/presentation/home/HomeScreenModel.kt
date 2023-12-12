@@ -247,6 +247,9 @@ class HomeScreenModel(
     }
 
     private fun onTrackingError(errorState: ErrorState) {
+        if (errorState is ErrorState.SocketClosed){
+            println("Socket Closed $errorState")
+        }
         updateState { it.copy(isLoading = false) }
     }
 

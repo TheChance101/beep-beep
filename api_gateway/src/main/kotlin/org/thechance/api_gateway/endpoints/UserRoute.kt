@@ -154,7 +154,7 @@ fun Route.userRoutes() {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val userId = tokenClaim?.get(Claim.USER_ID).toString()
                 val language = extractLocalizationHeader()
-                val trips = taxiService.getActiveTripsByUserId(userId, language).filter { it.isATaxiTrip == true }
+                val trips = taxiService.getActiveTripsByUserId(userId, language).filter { it.restaurantId == "" }
                 respondWithResult(HttpStatusCode.OK, trips)
             }
 
@@ -162,7 +162,7 @@ fun Route.userRoutes() {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val userId = tokenClaim?.get(Claim.USER_ID).toString()
                 val language = extractLocalizationHeader()
-                val trips = taxiService.getActiveTripsByUserId(userId, language).filter { it.isATaxiTrip == false }
+                val trips = taxiService.getActiveTripsByUserId(userId, language).filter { it.restaurantId != "" }
                 val restaurantIds = trips.mapNotNull { it.restaurantId }.distinct()
                 val restaurantInfo = restaurantService.getRestaurants(restaurantIds, language)
                 val restaurantInfoMap = restaurantInfo.associateBy { it.id }

@@ -102,9 +102,10 @@ class NotificationScreen : BaseScreen<
                             }
                         )
                     },
-                    content = { notificationUiState ->
+                    content = { notificationUiState,modifier ->
                         notificationUiState?.let { notification ->
                             NotificationCard(
+                                modifier =modifier,
                                 title = notification.title,
                                 content = notification.body,
                                 time = notification.time,

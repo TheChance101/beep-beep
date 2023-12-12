@@ -5,6 +5,7 @@ import domain.entity.PaginationItems
 import domain.utils.AuthorizationException
 import domain.utils.InternetException
 import domain.utils.RestaurantException
+import domain.utils.SocketClosedException
 import domain.utils.UnknownErrorException
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -27,7 +28,7 @@ abstract class BaseGateway(val client: HttpClient) {
                     try {
                         emit(receiveDeserialized<T>())
                     } catch (e: Exception) {
-                        throw Exception(e.message.toString())
+                        throw SocketClosedException(e.message.toString())
                     }
                 }
             }
