@@ -6,6 +6,7 @@ import domain.utils.AuthorizationException
 import domain.utils.InternetException
 import domain.utils.NotFoundException
 import domain.utils.RestaurantException
+import domain.utils.SocketClosedException
 import domain.utils.UnknownErrorException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -88,6 +89,8 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
                 onError(ErrorState.LocationPermissionDenied)
             } catch (e: RestaurantException) {
                 handelRestaurantException(e, onError)
+            } catch (e: SocketClosedException) {
+                onError(ErrorState.SocketClosed)
             } catch (exception: NotFoundException) {
                 onError(ErrorState.RequestFailed)
             } catch (exception: UnknownErrorException) {
