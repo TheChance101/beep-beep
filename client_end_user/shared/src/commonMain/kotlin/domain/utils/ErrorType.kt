@@ -5,11 +5,14 @@ sealed class InternetException : Exception() {
     class NoInternetException : InternetException()
     class NetworkNotSupportedException : InternetException()
 }
+
 open class BpException(message: String) : Exception(message)
 
 class UnknownErrorException(message: String) : BpException(message)
 
 class NotFoundException(message: String) : BpException(message)
+
+class SocketClosedException(message: String) : BpException(message)
 
 open class AuthorizationException(val errorMessage: String = "") : BpException(errorMessage) {
     data object UnAuthorizedException : AuthorizationException()
