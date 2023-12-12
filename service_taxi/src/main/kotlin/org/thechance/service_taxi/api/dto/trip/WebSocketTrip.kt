@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 data class WebSocketTrip(
     val session: DefaultWebSocketServerSession? = null,
-    val isATaxiTrip: Boolean? = true,
+    val isATaxiTrip: Boolean? = null,
     val trip: MutableStateFlow<TripDto> = MutableStateFlow(TripDto())
 )

@@ -6,6 +6,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
+import kotlinx.coroutines.async
 import org.koin.ktor.ext.inject
 import org.thechance.service_taxi.api.dto.BasePaginationResponse
 import org.thechance.service_taxi.api.dto.trip.TripDto
@@ -13,7 +14,6 @@ import org.thechance.service_taxi.api.dto.trip.WebSocketTrip
 import org.thechance.service_taxi.api.dto.trip.toDto
 import org.thechance.service_taxi.api.dto.trip.toEntity
 import org.thechance.service_taxi.api.util.SocketHandler
-import org.thechance.service_taxi.domain.entity.Trip
 import org.thechance.service_taxi.domain.exceptions.MissingParameterException
 import org.thechance.service_taxi.domain.usecase.IClientTripsManagementUseCase
 import org.thechance.service_taxi.domain.usecase.IDriverTripsManagementUseCase
@@ -70,8 +70,8 @@ fun Route.tripRoutes() {
         }
 
         post {
-            val tripDto = call.receive<TripDto>()
-            val result = clientTripsManagementUseCase.createTrip(tripDto.toEntity()).toDto()
+            val tripDto = async { call.receive<TripDto>() }.await()
+            val result = async { clientTripsManagementUseCase.createTrip(tripDto.toEntity()) }.await().toDto()
             socketHandler.broadcastChannel.emit(result)
             call.respond(HttpStatusCode.Created, result)
         }
@@ -99,8 +99,13 @@ fun Route.tripRoutes() {
             val tripId = call.parameters["tripId"] ?: throw MissingParameterException()
             val driverId = parameters["driverId"] ?: throw MissingParameterException()
             val taxiId = parameters["taxiId"] ?: throw MissingParameterException()
-            val result =
-                driverTripsManagementUseCase.updateTrip(driverId = driverId, taxiId = taxiId, tripId = tripId).toDto()
+            val result = async {
+                driverTripsManagementUseCase.updateTrip(
+                    driverId = driverId,
+                    taxiId = taxiId,
+                    tripId = tripId
+                )
+            }.await().toDto()
             socketHandler.trips[tripId]?.trip?.emit(result)
             socketHandler.endSession(driverId)
             call.respond(HttpStatusCode.OK, result)

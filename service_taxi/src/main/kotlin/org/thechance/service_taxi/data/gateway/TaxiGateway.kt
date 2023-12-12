@@ -153,7 +153,6 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
     }
 
     override suspend fun getActiveTripsByUserId(userId: String): List<Trip> {
-
         val pipeline = listOf(
             match(
                 and(
@@ -211,8 +210,8 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
                 )
             ),
             lookup(
-                from = DataBaseContainer.TAXI_COLLECTION_NAME,
-                localField = TripCollection::taxiId.name,
+                from = "taxi",
+                localField = "taxiId",
                 foreignField = "_id",
                 newAs = "taxi"
             ),
@@ -222,6 +221,7 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
                 TripWithTaxi::driverId from "\$driverId",
                 TripWithTaxi::clientId from "\$clientId",
                 TripWithTaxi::orderId from "\$orderId",
+                TripWithTaxi::restaurantId from "\$restaurantId",
                 TripWithTaxi::taxi from "\$taxi",
                 TripWithTaxi::startPoint from "\$startPoint",
                 TripWithTaxi::destination from "\$destination",
@@ -231,7 +231,8 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
                 TripWithTaxi::price from "\$price",
                 TripWithTaxi::startDate from "\$startDate",
                 TripWithTaxi::endDate from "\$endDate",
-                TripWithTaxi::tripStatus from "\$tripStatus"
+                TripWithTaxi::tripStatus from "\$tripStatus",
+                TripWithTaxi::isATaxiTrip from "\$isATaxiTrip",
             ),
             skip((page - 1) * limit),
             limit(limit)
@@ -316,7 +317,7 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
                 TripWithTaxi::startDate from "\$startDate",
                 TripWithTaxi::endDate from "\$endDate",
                 TripWithTaxi::tripStatus from "\$tripStatus",
-                TripWithTaxi::isATaxiTrip from "\$isATaxiTrip"
+                TripWithTaxi::isATaxiTrip from "\$isATaxiTrip",
             )
         )
 
