@@ -278,7 +278,7 @@ data class RestaurantScreen(val restaurantId: String) :
             )
 
             BpToastMessage(
-                modifier = Modifier.align(Alignment.BottomCenter),
+                modifier = Modifier.align(Alignment.BottomCenter).padding(getNavigationBarPadding()),
                 state = state.showToastClearCart,
                 message = Resources.strings.youCanAddMeal ,
                 isError = false,
