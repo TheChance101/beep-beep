@@ -27,7 +27,7 @@ fun TripDto.toEntity(): Trip {
         price = price ?: throw CantBeNullException(),
         startDate = startDate?.let { LocalDateTime.parse(it) },
         endDate = endDate?.let { LocalDateTime.parse(it) },
-        isATaxiTrip = isATaxiTrip ?: throw CantBeNullException()  ,
+        isATaxiTrip = isATaxiTrip ?: throw CantBeNullException(),
         tripStatus = Trip.getOrderStatus(tripStatus)
     )
 }
