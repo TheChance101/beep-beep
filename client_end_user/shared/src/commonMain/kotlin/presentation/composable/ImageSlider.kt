@@ -60,7 +60,7 @@ fun ImageSlider(
             yield()
             delay(autoScrollDelayMillis)
             pagerState.animateScrollToPage(
-                page = (pagerState.currentPage + 1) % (pagerState.pageCount),
+                page = (pagerState.currentPage + 1) % (if(pagerState.pageCount == 0) 1 else pagerState.pageCount ),
                 animationSpec = tween(1000)
             )
         }
