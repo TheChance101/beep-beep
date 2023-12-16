@@ -53,19 +53,22 @@ class OrderFoodTrackingScreenModel(
 
     private fun onGetTripStatusSuccess(tripStatus: TripStatus) {
         val status = when (tripStatus) {
-            TripStatus.RECEIVED -> {
+            TripStatus.APPROVED -> {
                 trackDeliveryLocation(tripId)
                 OrderFoodTrackingUiState.FoodOrderStatus.ORDER_IN_THE_ROUTE
+            }
+            TripStatus.RECEIVED -> {
+                OrderFoodTrackingUiState.FoodOrderStatus.ORDER_IN_COOKING
             }
 
             TripStatus.FINISHED -> {
                 OrderFoodTrackingUiState.FoodOrderStatus.ORDER_ARRIVED
             }
-
             else -> {
                 OrderFoodTrackingUiState.FoodOrderStatus.ORDER_IN_COOKING
             }
         }
+        println("currentOrderStatus: ${status}")
         updateState { it.copy(order = it.order.copy(currentOrderStatus = status)) }
         trackDelivery(tripId)
     }
@@ -85,6 +88,7 @@ class OrderFoodTrackingScreenModel(
             } else {
                 OrderFoodTrackingUiState.FoodOrderStatus.ORDER_IN_COOKING
             }
+        println("currentOrderStatus: ${orderStatus}")
         updateState { it.copy(order = it.order.copy(currentOrderStatus = orderStatus)) }
         trackFoodOrderFromRestaurant(orderId)
     }
