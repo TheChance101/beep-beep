@@ -3,6 +3,7 @@ package presentation.composable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateOffsetAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
@@ -18,6 +19,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
@@ -33,6 +35,8 @@ import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.theme.Theme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.yield
 import presentation.composable.modifier.noRippleEffect
 import resources.Resources
 
@@ -44,10 +48,24 @@ fun ImageSlider(
     modifier: Modifier = Modifier,
     indicatorColor: Color = Theme.colors.primary,
     indicatorAlignment: Alignment = Alignment.BottomEnd,
+    autoScrollDelayMillis: Long = 3000L, // delay between automatic page changes
 ) {
-    val pagerState = rememberPagerState {
-        images.size
+    val pagerState = rememberPagerState(
+        initialPage = 0,
+        pageCount = { images.size },
+    )
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            yield()
+            delay(autoScrollDelayMillis)
+            pagerState.animateScrollToPage(
+                page = (pagerState.currentPage + 1) % (pagerState.pageCount),
+                animationSpec = tween(1000)
+            )
+        }
     }
+
 
     Box(
         modifier = modifier.fillMaxWidth().height(160.dp).clip(RoundedCornerShape(8.dp))
@@ -57,7 +75,7 @@ fun ImageSlider(
         HorizontalPager(
             state = pagerState,
             contentPadding = PaddingValues(0.dp),
-            pageSpacing = 0.dp
+            pageSpacing = 0.dp,
         ) { page ->
             BpImageLoader(
                 imageUrl = images[page],

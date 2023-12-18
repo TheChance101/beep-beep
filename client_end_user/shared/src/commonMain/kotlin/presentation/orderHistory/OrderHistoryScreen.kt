@@ -90,9 +90,9 @@ class OrderHistoryScreen :
                     OrderScreenUiState.OrderSelectType.MEALS -> {
                         BpPagingList(
                             data = foodOrders,
-                        ) { foodOrder ->
+                        ) { foodOrder ,modifier->
                             foodOrder?.let {
-                                MealOrderItem(orders = foodOrder)
+                                MealOrderItem(orders = foodOrder, modifier = modifier)
                                 HorizontalDivider(modifier = Modifier.fillMaxWidth())
                             }
                         }
@@ -102,7 +102,7 @@ class OrderHistoryScreen :
 
                         BpPagingList(
                             data = trips,
-                        ) { trip ->
+                        ) { trip ,modifier->
                             trip?.let {
                                 TripHistoryItem(it)
                                 HorizontalDivider(modifier = Modifier.fillMaxWidth())

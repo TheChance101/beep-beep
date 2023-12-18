@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -40,6 +39,7 @@ import com.beepbeep.designSystem.ui.composable.BpAppBar
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpImageLoader
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
+import com.beepbeep.designSystem.ui.composable.BpToastMessage
 import com.beepbeep.designSystem.ui.theme.Theme
 import domain.entity.FoodOrder
 import domain.entity.TripStatus
@@ -66,7 +66,6 @@ import presentation.main.SearchTab
 import presentation.meals.MealsScreen
 import presentation.orderFoodTracking.OrderFoodTrackingScreen
 import presentation.restaurants.RestaurantsScreen
-import com.beepbeep.designSystem.ui.composable.BpToastMessage
 import presentation.resturantDetails.RestaurantScreen
 import presentation.taxi.TaxiOrderScreen
 import resources.Resources
@@ -162,7 +161,11 @@ class HomeScreen : BaseScreen<
                 }
             }
 
-            this.inProgressSection(state, listener)
+            item {
+                AnimatedVisibility(state.hasLiveOrders && state.isLoggedIn) {
+                    InProgressSection(state, listener)
+                }
+            }
 
             item {
                 AnimatedVisibility(state.isLoggedIn) {
@@ -283,23 +286,20 @@ class HomeScreen : BaseScreen<
     }
 
     @OptIn(ExperimentalResourceApi::class)
-    private fun LazyListScope.inProgressSection(
+    @Composable
+    fun InProgressSection(
         state: HomeScreenUiState,
         listener: HomeScreenInteractionListener,
     ) {
-        if (state.hasLiveOrders && state.isLoggedIn) {
-            item {
-                Text(
-                    text = Resources.strings.inProgress,
-                    style = Theme.typography.titleLarge.copy(Theme.colors.contentPrimary),
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-            }
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(
+                text = Resources.strings.inProgress,
+                style = Theme.typography.titleLarge.copy(Theme.colors.contentPrimary),
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
 
             // taxi rides
-            items(
-                items = state.liveOrders.taxiRides,
-                key = { it.tripId }) { taxiRideUiState ->
+            state.liveOrders.taxiRides.forEach { taxiRideUiState ->
                 InProgressCard(
                     painter = painterResource(Resources.images.taxiOnTheWay),
                     titleText = if (taxiRideUiState.rideStatus == TripStatus.APPROVED.statusCode) {
@@ -335,10 +335,7 @@ class HomeScreen : BaseScreen<
             }
 
             // delivery rides
-            items(
-                items = state.liveOrders.deliveryOrders,
-                key = { it.tripId }
-            ) { deliveryOrder ->
+            state.liveOrders.deliveryOrders.forEach { deliveryOrder ->
                 InProgressCard(
                     painter = painterResource(Resources.images.orderOnTheWay),
                     titleText = Resources.strings.orderOnTheWay,
@@ -358,8 +355,9 @@ class HomeScreen : BaseScreen<
                 }
             }
 
+
             // food orders
-            items(items = state.liveOrders.foodOrders, key = { it.orderId }) { foodOrder ->
+            state.liveOrders.foodOrders.forEach { foodOrder ->
                 InProgressCard(
                     painter =
                     if (foodOrder.orderStatus == FoodOrder.OrderStatusInRestaurant.APPROVED.statusCode) {
@@ -374,7 +372,10 @@ class HomeScreen : BaseScreen<
                     },
                     id = foodOrder.orderId,
                     onClick = {
-                        listener.onClickActiveFoodOrder(orderId = foodOrder.orderId, tripId = "")
+                        listener.onClickActiveFoodOrder(
+                            orderId = foodOrder.orderId,
+                            tripId = ""
+                        )
                     }
                 ) { textStyle ->
                     Text(
@@ -386,6 +387,7 @@ class HomeScreen : BaseScreen<
 
         }
     }
+
 
     @OptIn(ExperimentalResourceApi::class)
     private fun LazyListScope.search(onClick: () -> Unit) {

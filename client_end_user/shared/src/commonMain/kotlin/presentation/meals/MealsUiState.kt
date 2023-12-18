@@ -11,7 +11,8 @@ import presentation.resturantDetails.MealUIState
 data class MealsUiState(
     val cuisineName: String = "",
     val meals: Flow<PagingData<MealUIState>> = emptyFlow(),
-
+    val showWarningCartIsFull : Boolean = false,
+    val showToastClearCart : Boolean = false,
     val showMealSheet: Boolean = false,
     val selectedMeal: MealUIState = MealUIState(),
 

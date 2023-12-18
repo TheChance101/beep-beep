@@ -27,6 +27,7 @@ sealed interface ErrorState {
     data object NoInternet : ErrorState
     data object NetworkNotSupported : ErrorState
     data object RequestFailed : ErrorState
+    data object SocketClosed : ErrorState
     // endregion
 }
 

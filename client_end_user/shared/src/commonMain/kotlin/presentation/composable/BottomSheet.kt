@@ -45,7 +45,7 @@ fun BottomSheet(
             enter = fadeIn(),
             exit = fadeOut(),
         ) {
-            Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = .4f)))
+            Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = .4f)).noRippleEffect {  })
         }
 
         AnimatedVisibility(

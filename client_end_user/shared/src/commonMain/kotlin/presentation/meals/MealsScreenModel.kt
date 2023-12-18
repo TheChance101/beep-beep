@@ -43,7 +43,28 @@ class MealsScreenModel(
     private fun onGetMealsSuccess(meals: Flow<PagingData<Meal>>) {
         updateState { it.copy(meals = meals.toUIState(), isLoading = false) }
     }
+    override fun onDismissDialog() {
+        updateState { it.copy(showWarningCartIsFull =false) }
+    }
 
+    override fun onGoToCart() {
+        onDismissDialog()
+        sendNewEffect(MealsUiEffect.onGoToCart)
+    }
+
+    override fun onClearCart() {
+        tryToExecute(
+            { manageCart.clearCart() },
+            ::onClearCartSuccess,
+            ::onError
+        )
+    }
+    private fun onClearCartSuccess(isClear:Boolean){
+        if(isClear){
+            onDismissDialog()
+            updateState { it.copy(showToastClearCart = true) }
+        }
+    }
     private fun checkLoginStatus() {
         tryToExecute(
             { manageAuthentication.getAccessToken() },
@@ -127,8 +148,14 @@ class MealsScreenModel(
     }
 
     private fun onAddToCartError(errorState: ErrorState) {
-        updateState { it.copy(isAddToCartLoading = false, errorAddToCart = errorState) }
-        updateState { it.copy(showToast = true) }
+        when(errorState){
+            is ErrorState.CartIsFull -> {
+                updateState { it.copy(isAddToCartLoading = false, showWarningCartIsFull = true,errorAddToCart = errorState) }
+            }
+            else -> {
+                updateState { it.copy(error = errorState) }
+            }
+        }
     }
 
     override fun onLoginClicked() {
@@ -137,8 +164,7 @@ class MealsScreenModel(
     }
 
     override fun onDismissSnackBar() {
-        updateState { it.copy(showToast = false) }
-
+        updateState { it.copy(showToast = false,showToastClearCart =false) }
     }
 
     override fun onMealClicked(meal: MealUIState) {
