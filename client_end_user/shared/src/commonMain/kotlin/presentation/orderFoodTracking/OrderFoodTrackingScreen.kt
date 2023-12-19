@@ -77,9 +77,9 @@ class OrderFoodTrackingScreen(private val orderId: String, private val tripId: S
                 OrderTrackerCard(
                     currentStatusDescription = when (state.order.currentOrderStatus) {
                         OrderFoodTrackingUiState.FoodOrderStatus.ORDER_PLACED -> Resources.strings.orderPlaced
-                        OrderFoodTrackingUiState.FoodOrderStatus.ORDER_ARRIVED -> Resources.strings.orderArrived
                         OrderFoodTrackingUiState.FoodOrderStatus.ORDER_IN_COOKING -> Resources.strings.orderInCooking
                         OrderFoodTrackingUiState.FoodOrderStatus.ORDER_IN_THE_ROUTE -> Resources.strings.orderInTheRoute
+                        OrderFoodTrackingUiState.FoodOrderStatus.ORDER_ARRIVED -> Resources.strings.orderArrived
                     },
                     state.order,
                     modifier = Modifier.padding(getNavigationBarPadding()).padding(16.dp)
