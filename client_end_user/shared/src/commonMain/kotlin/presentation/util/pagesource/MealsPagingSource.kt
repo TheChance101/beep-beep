@@ -1,16 +1,15 @@
-package data.gateway.remote.pagesource
+package presentation.util.pagesource
 
 import domain.entity.Meal
 import domain.entity.PaginationItems
-import domain.gateway.IRestaurantGateway
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
-import org.koin.core.parameter.parametersOf
+import domain.usecase.IExploreRestaurantUseCase
+import presentation.util.pagesource.BasePagingSource
 import kotlin.properties.Delegates
 
 class MealsPagingSource(
-    private val remoteGateway: IRestaurantGateway,
+    private val exploreRestaurant: IExploreRestaurantUseCase
 ) : BasePagingSource<Meal>() {
+
     private var cuisineId by Delegates.notNull<String>()
 
     fun initCuisine(id: String) {
@@ -18,7 +17,7 @@ class MealsPagingSource(
     }
 
     override suspend fun fetchData(page: Int, limit: Int): PaginationItems<Meal> {
-        return remoteGateway.getMealsInCuisine(cuisineId, page, limit)
+        return exploreRestaurant.getMealsInCuisine(cuisineId, page, limit)
     }
 
 }
