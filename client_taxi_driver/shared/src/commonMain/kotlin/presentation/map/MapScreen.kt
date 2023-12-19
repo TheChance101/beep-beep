@@ -49,6 +49,7 @@ class MapScreen :
 
     @Composable
     override fun onRender(state: MapScreenUiState, listener: MapScreenInteractionListener) {
+
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -56,11 +57,11 @@ class MapScreen :
                 modifier = Modifier,
                 url = MAP_URL,
                 currentLocation = state.currentLocation.toEntity(),
-                destination = state.orderInfoUiState.dropOffAddress?.toEntity(),
+                destination = state.tripInfoUiState.dropOffLocation?.toEntity(),
             )
             BpAppBar(
                 isBackIconVisible = false,
-                title = "${Resources.strings.mapScreenAppBarTitle}${state.userName}!"
+                title = "${Resources.strings.mapScreenAppBarTitle}${state.driverName}!"
             ) {
                 Box(
                     modifier = Modifier
@@ -82,20 +83,17 @@ class MapScreen :
             }
             MapCardAnimation(
                 modifier = Modifier.align(Alignment.BottomCenter),
-                visible = state.isLoading,
-            ) {
-                FindingRideCard()
-            }
+                visible = !state.isNewOrderFound && !state.isAcceptedOrder,
+                content = { FindingRideCard() }
+            )
 
             MapCardAnimation(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 visible = state.isNewOrderFound,
             ) {
                 NewOrderCard(
-                    modifier = Modifier.align(
-                        Alignment.BottomCenter,
-                    ),
-                    state = state.orderInfoUiState,
+                    modifier = Modifier.align(Alignment.BottomCenter,),
+                    state = state.tripInfoUiState,
                     listener = listener,
                 )
             }
@@ -108,7 +106,7 @@ class MapScreen :
                     modifier = Modifier.align(
                         Alignment.BottomCenter,
                     ),
-                    state = state.orderInfoUiState,
+                    state = state.tripInfoUiState,
                     listener = listener,
                 )
             }
@@ -203,7 +201,7 @@ class MapScreen :
     @Composable
     private fun NewOrderCard(
         modifier: Modifier = Modifier,
-        state: OrderInfoUiState,
+        state: TripInfoUiState,
         listener: MapScreenInteractionListener,
     ) {
         MapCard(
@@ -230,7 +228,7 @@ class MapScreen :
 
                 Text(
                     modifier = Modifier.padding(start = 4.dp),
-                    text = state.pickUpAddress?.addressName ?: "",
+                    text = state.pickUpAddress,
                     color = Theme.colors.contentSecondary,
                     style = Theme.typography.body,
                 )
@@ -256,7 +254,7 @@ class MapScreen :
     @Composable
     private fun OrderCard(
         modifier: Modifier = Modifier,
-        state: OrderInfoUiState,
+        state: TripInfoUiState,
         listener: MapScreenInteractionListener,
     ) {
         MapCard(
@@ -281,7 +279,7 @@ class MapScreen :
                         style = Theme.typography.caption,
                     )
                     Text(
-                        text = state.pickUpAddress?.addressName ?: "",
+                        text = state.pickUpAddress,
                         color = Theme.colors.contentPrimary,
                         style = Theme.typography.body,
                     )
@@ -301,7 +299,7 @@ class MapScreen :
                         style = Theme.typography.caption,
                     )
                     Text(
-                        text = state.dropOffAddress?.addressName ?: "",
+                        text = state.dropOffAddress,
                         color = Theme.colors.contentPrimary,
                         style = Theme.typography.body,
                     )

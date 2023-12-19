@@ -31,4 +31,5 @@ data class StringResources(
     val pickUp: String = "Pick up",
     val dropOff: String = "Drop off",
     val close: String = "Close",
-)
+    val accessDeniedMessage: String = "To continue, Please access location permission",
+    )

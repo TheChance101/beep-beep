@@ -26,14 +26,14 @@ fun CalfMapWebView(
 
     AnimatedVisibility(destination == null) {
         state.evaluateJavascript(
-            "createInfiniteLoopFunction(${currentLocation.lat},${currentLocation.lng})()",
+            "createInfiniteLoopFunction(${currentLocation.latitude},${currentLocation.longitude})()",
             null
         )
     }
     LaunchedEffect(key1 = currentLocation) {
         destination?.let { location ->
             state.evaluateJavascript(
-                "getDirections(${currentLocation.lat},${currentLocation.lng},${location.lat},${location.lng})",
+                "getDirections(${currentLocation.latitude},${currentLocation.longitude},${location.latitude},${location.longitude})",
                 null
             )
         }

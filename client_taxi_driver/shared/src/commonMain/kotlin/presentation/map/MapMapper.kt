@@ -1,30 +1,23 @@
 package presentation.map
 
 import domain.entity.Location
-import domain.entity.Order
+import domain.entity.Trip
 
-fun Order.toUiState() = OrderInfoUiState(
+fun Trip.toUiState() = TripInfoUiState(
+    id = this.id,
     passengerName = passengerName,
-    dropOffAddress = LocationInfoUiState(
-        addressName = dropOffAddress.addressName,
-        lat = dropOffAddress.lat,
-        lng = dropOffAddress.lng,
-    ),
-    pickUpAddress = LocationInfoUiState(
-        addressName = pickUpAddress.addressName,
-        lat = pickUpAddress.lat,
-        lng = pickUpAddress.lng,
-    ),
+    dropOffLocation = dropOffLocation.toUiState(),
+    pickUpLocation = pickUpLocation.toUiState(),
+    dropOffAddress = dropOffAddress,
+    pickUpAddress = pickUpAddress
 )
 
 fun Location.toUiState() = LocationInfoUiState(
-    lat = lat,
-    lng = lng,
-    addressName = addressName,
+    lat = latitude,
+    lng = longitude,
 )
 
 fun LocationInfoUiState.toEntity(): Location = Location(
-    lat = lat,
-    lng = lng,
-    addressName = addressName,
+    latitude = lat,
+    longitude = lng,
 )

@@ -1,7 +1,7 @@
 package domain.gateway
 
-import domain.entity.Order
+import domain.entity.Trip
 
 interface IOrderGateway {
-    suspend fun findingNewOrder(): Order
+    suspend fun findingNewOrder(): Trip
 }

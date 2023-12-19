@@ -17,9 +17,8 @@ class BpLocationDataSource(private val locationTracker: LocationTracker) : IBpLo
             locationTracker.startTracking()
             return locationTracker.getLocationsFlow().map {
                 Location(
-                    lat = it.latitude,
-                    lng = it.longitude,
-                    addressName = ""
+                    latitude = it.latitude,
+                    longitude = it.longitude,
                 )
             }
         } catch (deniedAlways: DeniedAlwaysException) {

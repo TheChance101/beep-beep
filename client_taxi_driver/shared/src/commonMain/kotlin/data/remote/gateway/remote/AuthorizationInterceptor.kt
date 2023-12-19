@@ -1,4 +1,4 @@
-package data.remote.gateway
+package data.remote.gateway.remote
 
 import data.local.gateway.LocalConfigurationGateway
 import io.ktor.client.HttpClient

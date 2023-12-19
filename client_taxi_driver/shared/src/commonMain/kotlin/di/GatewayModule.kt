@@ -2,12 +2,14 @@ package di
 
 import data.local.gateway.LocalConfigurationGateway
 import data.remote.fakegateway.OrderFakeGateway
-import data.remote.gateway.IdentityRemoteGateway
-import data.remote.gateway.LocationRemoteGateway
+import data.remote.gateway.remote.IdentityRemoteGateway
+import data.remote.gateway.local.LocationRemoteGateway
+import data.remote.gateway.remote.TripRemoteGateway
 import domain.gateway.ILocationGateway
 import domain.gateway.IOrderGateway
 import domain.gateway.local.ILocalConfigurationGateway
 import domain.gateway.remote.IIdentityRemoteGateway
+import domain.gateway.remote.ITripRemoteGateway
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -19,4 +21,5 @@ val GatewayModule = module {
     singleOf(::LocalConfigurationGateway) { bind<ILocalConfigurationGateway>() }
     singleOf(::OrderFakeGateway) { bind<IOrderGateway>() }
     singleOf(::LocationRemoteGateway) { bind<ILocationGateway>() }
+    singleOf(::TripRemoteGateway) {bind<ITripRemoteGateway>()}
 }

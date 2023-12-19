@@ -4,6 +4,7 @@ import domain.InvalidDriverEmailException
 import domain.InvalidDriverNameException
 import domain.InvalidPasswordException
 import domain.InvalidUserNameException
+import domain.entity.TaxiRequestPermission
 import domain.gateway.local.ILocalConfigurationGateway
 import domain.gateway.remote.IIdentityRemoteGateway
 
@@ -17,13 +18,10 @@ interface ILoginUserUseCase {
 
     suspend fun saveUsername(username: String)
     suspend fun getUsername(): String
+
     suspend fun getKeepMeLoggedInFlag(): Boolean
 
-    suspend fun requestPermission(
-        driverFullName: String,
-        driverEmail: String,
-        description: String,
-    )
+    suspend fun requestPermission(taxiRequestPermission: TaxiRequestPermission): Boolean
 }
 
 class LoginUserUseCase(
@@ -41,6 +39,7 @@ class LoginUserUseCase(
         localGateWay.saveAccessToken(userTokens.accessToken)
         localGateWay.saveRefreshToken(userTokens.refreshToken)
         localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
+        localGateWay.saveTaxiId(getTaxiId())
     }
 
     override suspend fun saveUsername(username: String) {
@@ -51,20 +50,20 @@ class LoginUserUseCase(
         return localGateWay.getUsername()
     }
 
+
     override suspend fun getKeepMeLoggedInFlag(): Boolean {
         return localGateWay.getKeepMeLoggedInFlag()
     }
 
-    override suspend fun requestPermission(
-        driverFullName: String, driverEmail: String, description: String,
-    ) {
-        checkValidationPermissionFields(driverFullName, driverEmail)
-
-        remoteGateway.createRequestPermission(
-            driverFullName,
-            driverEmail,
-            description
+    override suspend fun requestPermission(taxiRequestPermission: TaxiRequestPermission): Boolean {
+        checkValidationPermissionFields(
+            taxiRequestPermission.driverFullName,
+            taxiRequestPermission.driverEmail
         )
+        return remoteGateway.createRequestPermission(taxiRequestPermission)
+    }
+    private suspend fun getTaxiId(): String {
+        return remoteGateway.getAllVehicles().first().id
     }
 
 
